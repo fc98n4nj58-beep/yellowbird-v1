@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Yellowbird v1</title>
+    <style>
+      body { font-family: -apple-system, system-ui, Arial; padding: 40px; max-width: 720px; margin: 0 auto; }
+      .card { border: 1px solid #ddd; border-radius: 12px; padding: 18px; }
+      label { display: inline-block; width: 140px; }
+      input, select { font-size: 14px; padding: 8px; border-radius: 8px; border: 1px solid #bbb; }
+      .row { margin: 10px 0; }
+      button { font-size: 16px; padding: 12px 16px; border-radius: 10px; border: 1px solid #222; background: #111; color: #fff; cursor: pointer; }
+      button:disabled { opacity: .6; cursor: default; }
+      .small { color: #555; margin-top: 10px; }
+    </style>
+  </head>
+  <body>
+    <h1>Yellowbird v1</h1>
+
+    <div class="card">
+      <div class="row">
+        <label for="op">Operation:</label>
+        <select id="op">
+          <option value="+">Addition (+)</option>
+          <option value="-">Subtraction (−)</option>
+          <option value="*">Multiplication (×)</option>
+          <option value="/">Division (÷)</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label for="max">Max number:</label>
+        <input id="max" type="number" value="20" min="5" max="500" />
+      </div>
+
+      <div class="row">
+        <label for="count">Question count:</label>
+        <input id="count" type="number" value="30" min="10" max="120" />
+      </div>
+
+      <div class="row" style="margin-top: 16px;">
+        <button id="btn">Generate Worksheet PDF</button>
+        <div class="small">Clean, printable, no fluff.</div>
+      </div>
+    </div>
+
+    <script>
+      const btn = document.getElementById("btn");
+      const op = document.getElementById("op");
+      const max = document.getElementById("max");
+      const count = document.getElementById("count");
+
+      btn.addEventListener("click", () => {
+        btn.disabled = true;
+        btn.textContent = "Generating…";
+
+        const qs = new URLSearchParams({
+          op: op.value,
+          max: String(max.value || 20),
+          count: String(count.value || 30),
+        });
+
+        // triggers download because server sets Content-Disposition: attachment
+        window.location.href = `/api/worksheet.pdf?${qs.toString()}`;
+
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.textContent = "Generate Worksheet PDF";
+        }, 800);
+      });
+    </script>
+  </body>
+</html>
