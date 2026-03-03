@@ -5,14 +5,20 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Yellowbird v1</title>
     <style>
-      body { font-family: -apple-system, system-ui, Arial; padding: 40px; max-width: 720px; margin: 0 auto; }
+      body { font-family: -apple-system, system-ui, Arial; padding: 40px; max-width: 820px; margin: 0 auto; }
       .card { border: 1px solid #ddd; border-radius: 12px; padding: 18px; }
-      label { display: inline-block; width: 140px; }
+      .row { display: flex; gap: 12px; align-items: center; margin: 10px 0; flex-wrap: wrap; }
+      label { width: 140px; color: #222; }
       input, select { font-size: 14px; padding: 8px; border-radius: 8px; border: 1px solid #bbb; }
-      .row { margin: 10px 0; }
+      input[type="number"] { width: 110px; }
+      .wide { width: 420px; max-width: 100%; }
+      .mini { width: 90px; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; }
       button { font-size: 16px; padding: 12px 16px; border-radius: 10px; border: 1px solid #222; background: #111; color: #fff; cursor: pointer; }
       button:disabled { opacity: .6; cursor: default; }
-      .small { color: #555; margin-top: 10px; }
+      .small { color: #555; margin-top: 10px; line-height: 1.35; }
+      .hint { color: #666; font-size: 12px; }
+      .hr { height: 1px; background: #eee; margin: 14px 0; }
     </style>
   </head>
   <body>
@@ -20,48 +26,138 @@
 
     <div class="card">
       <div class="row">
-        <label for="op">Operation:</label>
-        <select id="op">
-          <option value="+">Addition (+)</option>
-          <option value="-">Subtraction (−)</option>
-          <option value="*">Multiplication (×)</option>
-          <option value="/">Division (÷)</option>
+        <label for="mode">Mode:</label>
+        <select id="mode" class="wide">
+          <option value="math.addition.basic">Addition (+)</option>
+          <option value="math.subtraction.nonnegative">Subtraction (−)</option>
+          <option value="math.multiplication.basic">Multiplication (×)</option>
+          <option value="math.division.integer">Division (÷, integer)</option>
+        </select>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="row">
+        <label>A range:</label>
+        <input id="aMin" type="number" value="1" min="-999" max="999" class="mini" />
+        <span class="hint">to</span>
+        <input id="aMax" type="number" value="20" min="-999" max="999" class="mini" />
+        <span class="hint">(first number)</span>
+      </div>
+
+      <div class="row">
+        <label>B range:</label>
+        <input id="bMin" type="number" value="1" min="-999" max="999" class="mini" />
+        <span class="hint">to</span>
+        <input id="bMax" type="number" value="20" min="-999" max="999" class="mini" />
+        <span class="hint">(second number)</span>
+      </div>
+
+      <div class="row">
+        <label for="only">Only numbers:</label>
+        <input id="only" class="wide" placeholder="e.g., 3,4,6,9  (optional)" />
+      </div>
+
+      <div class="row">
+        <label for="exclude">Exclude numbers:</label>
+        <input id="exclude" class="wide" placeholder="e.g., 7,8  (optional)" />
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="row">
+        <label for="count">Question count:</label>
+        <input id="count" type="number" value="30" min="5" max="200" />
+      </div>
+
+      <div class="row">
+        <label for="font">Font size:</label>
+        <input id="font" type="number" value="16" min="10" max="28" />
+      </div>
+
+      <div class="row">
+        <label for="cols">Columns:</label>
+        <select id="cols">
+          <option value="1">1</option>
+          <option value="2" selected>2</option>
+          <option value="3">3</option>
         </select>
       </div>
 
       <div class="row">
-        <label for="max">Max number:</label>
-        <input id="max" type="number" value="20" min="5" max="500" />
-      </div>
+        <label>Options:</label>
+        <span class="pill">
+          <input id="answers" type="checkbox" checked />
+          <span>Include answer key</span>
+        </span>
 
-      <div class="row">
-        <label for="count">Question count:</label>
-        <input id="count" type="number" value="30" min="10" max="120" />
+        <span class="pill">
+          <input id="nonneg" type="checkbox" checked />
+          <span>Subtraction non-negative</span>
+        </span>
+
+        <span class="pill">
+          <input id="intdiv" type="checkbox" checked />
+          <span>Division integer-only</span>
+        </span>
       </div>
 
       <div class="row" style="margin-top: 16px;">
         <button id="btn">Generate Worksheet PDF</button>
-        <div class="small">Clean, printable, no fluff.</div>
+        <div class="small">
+          Tips:
+          <div class="hint">• “Only numbers” overrides ranges (great for focusing facts).</div>
+          <div class="hint">• “Exclude numbers” removes specific values from both A and B pools.</div>
+        </div>
       </div>
     </div>
 
     <script>
       const btn = document.getElementById("btn");
-      const op = document.getElementById("op");
-      const max = document.getElementById("max");
+      const mode = document.getElementById("mode");
+      const aMin = document.getElementById("aMin");
+      const aMax = document.getElementById("aMax");
+      const bMin = document.getElementById("bMin");
+      const bMax = document.getElementById("bMax");
+      const only = document.getElementById("only");
+      const exclude = document.getElementById("exclude");
       const count = document.getElementById("count");
+      const font = document.getElementById("font");
+      const cols = document.getElementById("cols");
+      const answers = document.getElementById("answers");
+      const nonneg = document.getElementById("nonneg");
+      const intdiv = document.getElementById("intdiv");
+
+      function clampRange(minVal, maxVal) {
+        const mn = Number(minVal);
+        const mx = Number(maxVal);
+        if (Number.isNaN(mn) || Number.isNaN(mx)) return { mn: 1, mx: 20 };
+        return mn <= mx ? { mn, mx } : { mn: mx, mx: mn };
+      }
 
       btn.addEventListener("click", () => {
         btn.disabled = true;
         btn.textContent = "Generating…";
 
+        const A = clampRange(aMin.value, aMax.value);
+        const B = clampRange(bMin.value, bMax.value);
+
         const qs = new URLSearchParams({
-          op: op.value,
-          max: String(max.value || 20),
+          mode: mode.value,
+          aMin: String(A.mn),
+          aMax: String(A.mx),
+          bMin: String(B.mn),
+          bMax: String(B.mx),
+          only: (only.value || "").trim(),
+          exclude: (exclude.value || "").trim(),
           count: String(count.value || 30),
+          font: String(font.value || 16),
+          cols: String(cols.value || 2),
+          answers: answers.checked ? "1" : "0",
+          nonneg: nonneg.checked ? "1" : "0",
+          intdiv: intdiv.checked ? "1" : "0",
         });
 
-        // triggers download because server sets Content-Disposition: attachment
         window.location.href = `/api/worksheet.pdf?${qs.toString()}`;
 
         setTimeout(() => {
