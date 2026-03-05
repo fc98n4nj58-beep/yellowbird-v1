@@ -11,9 +11,11 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "archiver": "^7.0.1",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
-    "pdfkit": "^0.17.2"
+    "pdfkit": "^0.17.2",
+    "svg-to-pdfkit": "^0.1.8"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

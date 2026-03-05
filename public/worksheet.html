@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Yellowbird v1</title>
+    <style>
+      body { font-family: -apple-system, system-ui, Arial; padding: 40px; max-width: 980px; margin: 0 auto; }
+      .card { border: 1px solid #ddd; border-radius: 12px; padding: 18px; }
+      .row { display: flex; gap: 12px; align-items: center; margin: 10px 0; flex-wrap: wrap; }
+      label { width: 160px; color: #222; }
+      input, select { font-size: 14px; padding: 8px; border-radius: 8px; border: 1px solid #bbb; }
+      input[type="number"] { width: 110px; }
+      .wide { width: 520px; max-width: 100%; }
+      .mini { width: 90px; }
+      .pill { display: inline-flex; align-items: center; gap: 8px; }
+      button { font-size: 16px; padding: 12px 16px; border-radius: 10px; border: 1px solid #222; background: #111; color: #fff; cursor: pointer; }
+      button:disabled { opacity: .6; cursor: default; }
+      .small { color: #555; margin-top: 10px; line-height: 1.35; }
+      .hint { color: #666; font-size: 12px; }
+      .hr { height: 1px; background: #eee; margin: 14px 0; }
+      .section { border: 1px solid #eee; border-radius: 12px; padding: 12px; margin-top: 10px; }
+      .section h3 { margin: 0 0 8px; font-size: 14px; }
+      .grid { display: grid; grid-template-columns: 160px 1fr; gap: 10px 12px; align-items: center; }
+      .inline { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+      .inline input[type="number"]{ width: 90px; }
+    </style>
+  </head>
+
+  <body>
+    <h1>Yellowbird v1</h1>
+
+    <div class="card">
+      <div class="row">
+        <label for="mode">Mode:</label>
+        <select id="mode" class="wide">
+          <option value="math.addition.basic">Addition (+)</option>
+          <option value="math.subtraction.nonnegative">Subtraction (−)</option>
+          <option value="math.multiplication.basic">Multiplication (×)</option>
+          <option value="math.division.integer">Division (÷, integer)</option>
+          <option value="mixed">Mixed (custom)</option>
+        </select>
+      </div>
+
+      <!-- Single mode controls -->
+      <div id="singleControls">
+        <div class="hr"></div>
+
+        <div class="row">
+          <label>A range:</label>
+          <input id="aMin" type="number" value="1" class="mini" />
+          <span class="hint">to</span>
+          <input id="aMax" type="number" value="20" class="mini" />
+          <span class="hint">(first number)</span>
+        </div>
+
+        <div class="row">
+          <label>B range:</label>
+          <input id="bMin" type="number" value="1" class="mini" />
+          <span class="hint">to</span>
+          <input id="bMax" type="number" value="20" class="mini" />
+          <span class="hint">(second number)</span>
+        </div>
+
+        <div class="row">
+          <label for="only">Only numbers:</label>
+          <input id="only" class="wide" placeholder="e.g., 3,4,6,9 (optional)" />
+        </div>
+
+        <div class="row">
+          <label for="exclude">Exclude numbers:</label>
+          <input id="exclude" class="wide" placeholder="e.g., 7,8 (optional)" />
+        </div>
+
+        <div class="row">
+          <label for="count">Question count:</label>
+          <input id="count" type="number" value="30" min="5" max="200" />
+        </div>
+      </div>
+
+      <!-- Mixed mode controls -->
+      <div id="mixedControls" style="display:none;">
+        <div class="hr"></div>
+
+        <div class="hint">Mixed mode uses per-operation settings below (counts + A/B ranges + Only/Exclude).</div>
+
+        <div class="section">
+          <h3>Addition</h3>
+          <div class="grid">
+            <label>Count</label>
+            <input id="mixAddCount" type="number" value="10" min="0" max="200" />
+            <label>A range</label>
+            <div class="inline">
+              <input id="mixAddAMin" type="number" value="1" class="mini" />
+              <span class="hint">to</span>
+              <input id="mixAddAMax" type="number" value="20" class="mini" />
+            </div>
+            <label>B range</label>
+            <div class="inline">
+              <input id="mixAddBMin" type="number" value="1" class="mini" />
+              <span class="hint">to</span>
+              <input id="mixAddBMax" type="number" value="20" class="mini" />
+            </div>
+            <label>Only</label>
+            <input id="mixAddOnly" class="wide" placeholder="optional: 3,4,6,9" />
+            <label>Exclude</label>
+            <input id="mixAddExclude" class="wide" placeholder="optional: 7,8" />
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Subtraction</h3>
+          <div class="grid">
+            <label>Count</label>
+            <input id="mixSubCount" type="number" value="10" min="0" max="200" />
+            <label>A range</label>
+            <div class="inline">
+              <input id="mixSubAMin" type="number" value="1" class="mini" />
+              <span class="hint">to</span>
+              <input id="mixSubAMax" type="number" value="20" class="mini" />
+            </div>
+            <label>B range</label>
+            <div class="inline">
+              <input id="mixSubBMin" type="number" value="1" class="mini" />
+              <span class="hint">to</span>
+              <input id="mixSubBMax" type="number" value="20" class="mini" />
+            </div>
+            <label>Only</label>
+            <input id="mixSubOnly" class="wide" placeholder="optional: 3,4,6,9" />
+            <label>Exclude</label>
+            <input id="mixSubExclude" class="wide" placeholder="optional: 7,8" />
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Multiplication</h3>
+          <div class="grid">
+            <label>Count</label>
+            <input id="mixMulCount" type="number" value="10" min="0" max="200" />
+            <label>A range</label>
+            <div class="inline">
+              <input id="mixMulAMin" type="number" value="1" class="mini" />
+              <span class="hint">to</span>
+              <input id="mixMulAMax" type="number" value="12" class="mini" />
+            </div>
+            <label>B range</label>
+            <div class="inline">
+              <input id="mixMulBMin" type="number" value="1" class="mini" />
+              <span class="hint">to</span>
+              <input id="mixMulBMax" type="number" value="12" class="mini" />
+            </div>
+            <label>Only</label>
+            <input id="mixMulOnly" class="wide" placeholder="optional: 3,4,6,9" />
+            <label>Exclude</label>
+            <input id="mixMulExclude" class="wide" placeholder="optional: 7,8" />
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Division</h3>
+          <div class="grid">
+            <label>Count</label>
+            <input id="mixDivCount" type="number" value="0" min="0" max="200" />
+            <label>A range</label>
+            <div class="inline">
+              <input id="mixDivAMin" type="number" value="1" class="mini" />
+              <span class="hint">to</span>
+              <input id="mixDivAMax" type="number" value="144" class="mini" />
+            </div>
+            <label>B range</label>
+            <div class="inline">
+              <input id="mixDivBMin" type="number" value="1" class="mini" />
+              <span class="hint">to</span>
+              <input id="mixDivBMax" type="number" value="12" class="mini" />
+            </div>
+            <label>Only</label>
+            <input id="mixDivOnly" class="wide" placeholder="optional: 3,4,6,9" />
+            <label>Exclude</label>
+            <input id="mixDivExclude" class="wide" placeholder="optional: 7,8" />
+          </div>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="row">
+        <label for="font">Font size:</label>
+        <input id="font" type="number" value="11" min="10" max="28" />
+        <span class="hint">(default 11)</span>
+      </div>
+
+      <div class="row">
+        <label for="cols">Columns:</label>
+        <select id="cols">
+          <option value="1">1</option>
+          <option value="2" selected>2</option>
+          <option value="3">3</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label>Options:</label>
+        <span class="pill">
+          <input id="answers" type="checkbox" checked />
+          <span>Include answer key</span>
+        </span>
+        <span class="pill">
+          <input id="nonneg" type="checkbox" checked />
+          <span>Subtraction non-negative</span>
+        </span>
+        <span class="pill">
+          <input id="intdiv" type="checkbox" checked />
+          <span>Division integer-only</span>
+        </span>
+      </div>
+
+      <div class="row" style="margin-top: 16px;">
+        <button id="btn">Generate Worksheet PDF</button>
+        <div class="small">
+          <div class="hint">• Mixed mode: per-op counts + per-op A/B + per-op Only/Exclude.</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const btn = document.getElementById("btn");
+      const mode = document.getElementById("mode");
+      const singleControls = document.getElementById("singleControls");
+      const mixedControls = document.getElementById("mixedControls");
+
+      const aMin = document.getElementById("aMin");
+      const aMax = document.getElementById("aMax");
+      const bMin = document.getElementById("bMin");
+      const bMax = document.getElementById("bMax");
+      const only = document.getElementById("only");
+      const exclude = document.getElementById("exclude");
+      const count = document.getElementById("count");
+
+      const font = document.getElementById("font");
+      const cols = document.getElementById("cols");
+      const answers = document.getElementById("answers");
+      const nonneg = document.getElementById("nonneg");
+      const intdiv = document.getElementById("intdiv");
+
+      function clampRange(minVal, maxVal, dMin, dMax) {
+        let mn = Number(minVal);
+        let mx = Number(maxVal);
+        if (Number.isNaN(mn)) mn = dMin;
+        if (Number.isNaN(mx)) mx = dMax;
+        if (mn > mx) [mn, mx] = [mx, mn];
+        return { mn, mx };
+      }
+
+      function setModeUI() {
+        const isMixed = mode.value === "mixed";
+        singleControls.style.display = isMixed ? "none" : "block";
+        mixedControls.style.display = isMixed ? "block" : "block"; // keep layout stable
+        mixedControls.style.display = isMixed ? "block" : "none";
+      }
+      mode.addEventListener("change", setModeUI);
+      setModeUI();
+
+      btn.addEventListener("click", () => {
+        btn.disabled = true;
+        btn.textContent = "Generating…";
+
+        const qs = new URLSearchParams({
+          mode: mode.value,
+          font: String(font.value || 11),
+          cols: String(cols.value || 2),
+          answers: answers.checked ? "1" : "0",
+          nonneg: nonneg.checked ? "1" : "0",
+          intdiv: intdiv.checked ? "1" : "0",
+        });
+
+        if (mode.value !== "mixed") {
+          const A = clampRange(aMin.value, aMax.value, 1, 20);
+          const B = clampRange(bMin.value, bMax.value, 1, 20);
+
+          qs.set("aMin", String(A.mn));
+          qs.set("aMax", String(A.mx));
+          qs.set("bMin", String(B.mn));
+          qs.set("bMax", String(B.mx));
+          qs.set("only", (only.value || "").trim());
+          qs.set("exclude", (exclude.value || "").trim());
+          qs.set("count", String(count.value || 30));
+        } else {
+          // per-op settings
+          const ops = [
+            { p: "add", mode: "math.addition.basic", dA:[1,20], dB:[1,20] },
+            { p: "sub", mode: "math.subtraction.nonnegative", dA:[1,20], dB:[1,20] },
+            { p: "mul", mode: "math.multiplication.basic", dA:[1,12], dB:[1,12] },
+            { p: "div", mode: "math.division.integer", dA:[1,144], dB:[1,12] },
+          ];
+
+          for (const o of ops) {
+            const c = document.getElementById(`mix${o.p[0].toUpperCase()+o.p.slice(1)}Count`).value || "0";
+            const A = clampRange(
+              document.getElementById(`mix${o.p[0].toUpperCase()+o.p.slice(1)}AMin`).value,
+              document.getElementById(`mix${o.p[0].toUpperCase()+o.p.slice(1)}AMax`).value,
+              o.dA[0], o.dA[1]
+            );
+            const B = clampRange(
+              document.getElementById(`mix${o.p[0].toUpperCase()+o.p.slice(1)}BMin`).value,
+              document.getElementById(`mix${o.p[0].toUpperCase()+o.p.slice(1)}BMax`).value,
+              o.dB[0], o.dB[1]
+            );
+            const onlyV = (document.getElementById(`mix${o.p[0].toUpperCase()+o.p.slice(1)}Only`).value || "").trim();
+            const exclV = (document.getElementById(`mix${o.p[0].toUpperCase()+o.p.slice(1)}Exclude`).value || "").trim();
+
+            // send per-op params
+            qs.set(`${o.p}Count`, String(c));
+            qs.set(`${o.p}AMin`, String(A.mn));
+            qs.set(`${o.p}AMax`, String(A.mx));
+            qs.set(`${o.p}BMin`, String(B.mn));
+            qs.set(`${o.p}BMax`, String(B.mx));
+            qs.set(`${o.p}Only`, onlyV);
+            qs.set(`${o.p}Exclude`, exclV);
+          }
+        }
+
+        window.location.href = `/api/worksheet.pdf?${qs.toString()}`;
+
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.textContent = "Generate Worksheet PDF";
+        }, 900);
+      });
+    </script>
+  </body>
+</html>

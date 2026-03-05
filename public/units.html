@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Yellowbird v1 — Unit Generator</title>
+  <style>
+    :root { font-family: "Source Sans 3", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    body { margin: 0; padding: 24px; max-width: 1100px; margin-inline: auto; }
+    h1 { margin: 0 0 8px 0; font-size: 26px; font-weight: 700; }
+    .sub { opacity: .75; margin-bottom: 18px; }
+    .row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+    label { font-size: 12px; opacity: .8; display: block; margin-bottom: 6px; }
+    select, input { width: 100%; padding: 10px 10px; border: 1px solid #000; border-radius: 10px; font-size: 14px; }
+    .actions { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+    button { border: 1px solid #000; border-radius: 10px; padding: 10px 14px; font-weight: 700; background: #fff; cursor: pointer; }
+    button.primary { background: #000; color: #fff; }
+    .card { border: 1px solid #000; border-radius: 12px; padding: 14px; margin-top: 14px; }
+    .small { font-size: 12px; opacity: .75; }
+    a.wslink {
+      border: 1px solid #000;
+      border-radius: 10px;
+      padding: 10px 12px;
+      text-decoration: none;
+      color: inherit;
+      font-weight: 700;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>Unit Generator</h1>
+  <div class="sub">Generate a unit, then download worksheets individually or as one pack.</div>
+
+  <div class="row">
+    <div>
+      <label>Jurisdiction</label>
+      <select id="jurisdiction">
+        <option value="ontario" selected>Ontario</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Grade</label>
+      <select id="grade">
+        <option value="1" selected>Grade 1</option>
+        <option value="k">Kindergarten</option>
+        <option value="2">Grade 2</option>
+        <option value="3">Grade 3</option>
+        <option value="4">Grade 4</option>
+        <option value="5">Grade 5</option>
+        <option value="6">Grade 6</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Subject</label>
+      <select id="subject">
+        <option value="math" selected>Math</option>
+        <option value="language">Language</option>
+        <option value="science">Science</option>
+        <option value="social">Social Studies</option>
+        <option value="art">Art</option>
+        <option value="music">Music</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Number of Lessons</label>
+      <input id="numLessons" type="number" min="1" max="40" value="10" />
+    </div>
+  </div>
+
+  <div class="row" style="grid-template-columns: 2fr 1fr 1fr 1fr;">
+    <div>
+      <label>Mode</label>
+      <select id="modeKey"></select>
+      <div class="small" id="modeHint"></div>
+    </div>
+
+    <div>
+      <label>Theme (optional)</label>
+      <input id="theme" placeholder="e.g., Communities, Measurement, etc." />
+    </div>
+
+    <div>
+      <label>&nbsp;</label>
+      <div class="small">Ready when you are.</div>
+    </div>
+
+    <div class="actions" style="align-items:end;">
+      <button class="primary" id="generateBtn">Generate Unit</button>
+      <button id="unitPdfBtn">Download Unit PDF</button>
+      <button id="zipBtn">Download All Worksheets (ZIP)</button>
+    </div>
+  </div>
+
+  <div class="card" id="worksheetsCard" style="display:none;">
+    <div style="font-weight:700;margin-bottom:8px;">Worksheets</div>
+    <div class="small" style="margin-bottom:10px;">Download one worksheet per day.</div>
+    <div id="wsLinks" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;"></div>
+    <div class="actions" style="margin-top:12px;">
+      <button id="openAllBtn">Open All (10 tabs)</button>
+    </div>
+  </div>
+
+  <script>
+    const el = (id) => document.getElementById(id);
+
+    async function loadModes() {
+      const res = await fetch('/api/generate-unit/modes');
+      const data = await res.json();
+
+      const modeKey = el('modeKey');
+      modeKey.innerHTML = '';
+
+      (data.modes || []).forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.key;
+        opt.textContent = m.label;
+        modeKey.appendChild(opt);
+      });
+
+      el('modeHint').textContent = 'Select a unit blueprint mode.';
+    }
+
+    function getPayload() {
+      return {
+        jurisdiction: el('jurisdiction').value,
+        grade: el('grade').value,
+        subject: el('subject').value,
+        numLessons: Number(el('numLessons').value || 10),
+        modeKey: el('modeKey').value,
+        theme: el('theme').value || ''
+      };
+    }
+
+    function baseParams(payload) {
+      return new URLSearchParams({
+        jurisdiction: payload.jurisdiction,
+        grade: payload.grade,
+        subject: payload.subject,
+        numLessons: String(payload.numLessons),
+        modeKey: payload.modeKey,
+        theme: payload.theme
+      });
+    }
+
+    async function generateUnit() {
+      const payload = getPayload();
+      const res = await fetch('/api/generate-unit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      const unit = data && data.unit;
+      const lessons = unit && Array.isArray(unit.lessons) ? unit.lessons : [];
+
+      const wsCard = el('worksheetsCard');
+      const wsLinks = el('wsLinks');
+      wsLinks.innerHTML = '';
+
+      if (!payload.modeKey || lessons.length === 0) {
+        wsCard.style.display = 'none';
+        window.__openAllUrls = [];
+        return;
+      }
+
+      const paramsBase = baseParams(payload);
+
+      lessons.forEach((L) => {
+        const params = new URLSearchParams(paramsBase);
+        params.set('day', String(L.day));
+        const url = '/api/lesson-worksheet.pdf?' + params.toString();
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        a.className = 'wslink';
+        a.textContent = `Day ${L.day}: ${L.focus}`;
+        wsLinks.appendChild(a);
+      });
+
+      wsCard.style.display = 'block';
+
+      window.__openAllUrls = lessons.map(L => {
+        const p = new URLSearchParams(paramsBase);
+        p.set('day', String(L.day));
+        return '/api/lesson-worksheet.pdf?' + p.toString();
+      });
+
+      window.__lastUnitParams = paramsBase.toString();
+    }
+
+    function openAll() {
+      const urls = window.__openAllUrls || [];
+      urls.forEach(u => window.open(u, '_blank'));
+    }
+
+    function downloadUnitPdf() {
+      const payload = getPayload();
+      const params = baseParams(payload);
+      window.open('/api/unit.pdf?' + params.toString(), '_blank');
+    }
+
+    function downloadZip() {
+      const payload = getPayload();
+      const params = baseParams(payload);
+      window.open('/api/unit-pack.zip?' + params.toString(), '_blank');
+    }
+
+    el('generateBtn').addEventListener('click', generateUnit);
+    el('openAllBtn').addEventListener('click', openAll);
+    el('unitPdfBtn').addEventListener('click', downloadUnitPdf);
+    el('zipBtn').addEventListener('click', downloadZip);
+
+    loadModes();
+  </script>
+</body>
+</html>

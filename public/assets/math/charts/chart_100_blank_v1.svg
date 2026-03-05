@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <!-- 10x10 Chart Blank -->
+  <rect x="80" y="80" width="1040.0" height="1040.0" fill="none" stroke="#000000" stroke-width="8"/>
+<line x1="184.0" y1="80" x2="184.0" y2="1120.0" stroke="#000000" stroke-width="4.0"/>
+<line x1="80" y1="184.0" x2="1120.0" y2="184.0" stroke="#000000" stroke-width="4.0"/>
+<line x1="288.0" y1="80" x2="288.0" y2="1120.0" stroke="#000000" stroke-width="4.0"/>
+<line x1="80" y1="288.0" x2="1120.0" y2="288.0" stroke="#000000" stroke-width="4.0"/>
+<line x1="392.0" y1="80" x2="392.0" y2="1120.0" stroke="#000000" stroke-width="4.0"/>
+<line x1="80" y1="392.0" x2="1120.0" y2="392.0" stroke="#000000" stroke-width="4.0"/>
+<line x1="496.0" y1="80" x2="496.0" y2="1120.0" stroke="#000000" stroke-width="4.0"/>
+<line x1="80" y1="496.0" x2="1120.0" y2="496.0" stroke="#000000" stroke-width="4.0"/>
+<line x1="600.0" y1="80" x2="600.0" y2="1120.0" stroke="#000000" stroke-width="4.0"/>
+<line x1="80" y1="600.0" x2="1120.0" y2="600.0" stroke="#000000" stroke-width="4.0"/>
+<line x1="704.0" y1="80" x2="704.0" y2="1120.0" stroke="#000000" stroke-width="4.0"/>
+<line x1="80" y1="704.0" x2="1120.0" y2="704.0" stroke="#000000" stroke-width="4.0"/>
+<line x1="808.0" y1="80" x2="808.0" y2="1120.0" stroke="#000000" stroke-width="4.0"/>
+<line x1="80" y1="808.0" x2="1120.0" y2="808.0" stroke="#000000" stroke-width="4.0"/>
+<line x1="912.0" y1="80" x2="912.0" y2="1120.0" stroke="#000000" stroke-width="4.0"/>
+<line x1="80" y1="912.0" x2="1120.0" y2="912.0" stroke="#000000" stroke-width="4.0"/>
+<line x1="1016.0" y1="80" x2="1016.0" y2="1120.0" stroke="#000000" stroke-width="4.0"/>
+<line x1="80" y1="1016.0" x2="1120.0" y2="1016.0" stroke="#000000" stroke-width="4.0"/>
+</svg>

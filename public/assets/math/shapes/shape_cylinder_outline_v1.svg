@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+  <!-- Project Yellow Bird: 3D Cylinder Outline (v1) -->
+  
+<ellipse cx="300" cy="170" rx="170" ry="60" fill="none" stroke="#000000" stroke-width="8"/>
+<line x1="130" y1="170" x2="130" y2="430" stroke="#000000" stroke-width="8"/>
+<line x1="470" y1="170" x2="470" y2="430" stroke="#000000" stroke-width="8"/>
+<ellipse cx="300" cy="430" rx="170" ry="60" fill="none" stroke="#000000" stroke-width="8"/>
+
+</svg>

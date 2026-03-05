@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1400" viewBox="0 0 1800 1400">
+  <!-- Project Yellow Bird: Calendar Month Blank (v1) -->
+  <rect x="80" y="80" width="1640" height="160" fill="none" stroke="#000000" stroke-width="8"/>
+  <rect x="80" y="300" width="1640.00" height="120.00" fill="none" stroke="#000000" stroke-width="8"/>
+  <rect x="80" y="420.00" width="1640.00" height="900.00" fill="none" stroke="#000000" stroke-width="8"/>
+  <line x1="314.29" y1="300.00" x2="314.29" y2="1320.00" stroke="#000000" stroke-width="4.0"/>
+  <line x1="548.57" y1="300.00" x2="548.57" y2="1320.00" stroke="#000000" stroke-width="4.0"/>
+  <line x1="782.86" y1="300.00" x2="782.86" y2="1320.00" stroke="#000000" stroke-width="4.0"/>
+  <line x1="1017.14" y1="300.00" x2="1017.14" y2="1320.00" stroke="#000000" stroke-width="4.0"/>
+  <line x1="1251.43" y1="300.00" x2="1251.43" y2="1320.00" stroke="#000000" stroke-width="4.0"/>
+  <line x1="1485.71" y1="300.00" x2="1485.71" y2="1320.00" stroke="#000000" stroke-width="4.0"/>
+  <line x1="80.00" y1="570.00" x2="1720.00" y2="570.00" stroke="#000000" stroke-width="4.0"/>
+  <line x1="80.00" y1="720.00" x2="1720.00" y2="720.00" stroke="#000000" stroke-width="4.0"/>
+  <line x1="80.00" y1="870.00" x2="1720.00" y2="870.00" stroke="#000000" stroke-width="4.0"/>
+  <line x1="80.00" y1="1020.00" x2="1720.00" y2="1020.00" stroke="#000000" stroke-width="4.0"/>
+  <line x1="80.00" y1="1170.00" x2="1720.00" y2="1170.00" stroke="#000000" stroke-width="4.0"/>
+</svg>
