@@ -1,0 +1,12 @@
+{
+  "skill": "multiplication_facts",
+  "title": "Multiplication Facts",
+  "description": "Generate activities for multiplying whole numbers using models, groups, patterns, and equations.",
+  "activities": [
+    "arrays",
+    "equal_groups",
+    "skip_counting",
+    "missing_factor",
+    "word_problems"
+  ]
+}

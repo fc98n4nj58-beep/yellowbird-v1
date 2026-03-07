@@ -2,7 +2,6 @@
 'use strict';
 
 const layout = require("../config/layout/layoutSpec.json");
-
 const path = require('path');
 const PDFDocument = require('pdfkit');
 
@@ -17,33 +16,26 @@ function asLines(v) {
 }
 
 function tryRegisterFont(doc, name, relPath) {
-  try {
-    doc.registerFont(name, relPath);
-    return true;
-  } catch (_) {
-    return false;
-  }
+  try { doc.registerFont(name, relPath); return true; } catch { return false; }
 }
 
-function setFont(doc, families, size, bold = false) {
-  // families: { regular: 'Name', bold: 'NameBold' } OR fallback
-  const fontName = bold ? families.bold : families.regular;
-  try {
-    doc.font(fontName).fontSize(size);
-  } catch (_) {
-    // fallback
-    doc.font('Helvetica').fontSize(size);
-  }
+function setFont(doc, families, size, which = "regular") {
+  const fontName = families[which] || families.regular;
+  try { doc.font(fontName).fontSize(size); } catch { doc.font('Helvetica').fontSize(size); }
 }
 
 function hr(doc, x1, x2, y) {
+  const r = layout.rules?.headerDivider || {};
+  const strokeWidth = (r.strokeWidth ?? 0.25);
+  const color = (r.color ?? '#000');
+
   doc.save();
-  doc.moveTo(x1, y).lineTo(x2, y).lineWidth(1).strokeColor('#000').stroke();
+  doc.moveTo(x1, y).lineTo(x2, y).lineWidth(strokeWidth).strokeColor(color).stroke();
   doc.restore();
 }
 
 function sectionTitle(doc, families, title) {
-  setFont(doc, families, 14, true);
+  setFont(doc, families, 14, "bold");
   doc.text(title, { continued: false });
   doc.moveDown(0.35);
 }
@@ -52,8 +44,7 @@ function bulletList(doc, families, items) {
   const lines = asLines(items);
   if (!lines.length) return;
 
-  setFont(doc, families, 11, false);
-  const indent = 14;
+  setFont(doc, families, 11, "regular");
   for (const line of lines) {
     doc.text(`• ${line}`, { indent: 0 });
   }
@@ -63,14 +54,17 @@ function bulletList(doc, families, items) {
 function paragraph(doc, families, text) {
   const t = safeText(text);
   if (!t) return;
-  setFont(doc, families, 11, false);
+  setFont(doc, families, 11, "regular");
   doc.text(t);
   doc.moveDown(0.35);
 }
 
 /**
- * Renders a unit JSON object to PDF and streams to res.
- * Contract: expects `unitEnvelope.unit` as produced by engine/units/unitFactory
+ * Unit PDF header placement (matches your example):
+ * Name/Date
+ * TITLE
+ * SUBHEADING (Light)
+ * divider line under subheading with a small space
  */
 function renderUnitPDF({ res, unitEnvelope }) {
   const unit = unitEnvelope?.unit;
@@ -81,24 +75,19 @@ function renderUnitPDF({ res, unitEnvelope }) {
 
   const doc = new PDFDocument({
     size: 'LETTER',
-    margins: { top: 54, bottom: 54, left: 54, right: 54 }, // 0.75"
+    margins: { top: 54, bottom: 54, left: 54, right: 54 },
     autoFirstPage: true,
   });
 
-  // Attempt Source Sans 3 local fonts (optional)
   const regularPath = path.join(__dirname, '..', 'public', 'fonts', 'SourceSans3', 'SourceSans3-Regular.ttf');
-  const semiboldPath = path.join(__dirname, '..', 'public', 'fonts', 'SourceSans3', 'SourceSans3-Semibold.ttf');
   const boldPath = path.join(__dirname, '..', 'public', 'fonts', 'SourceSans3', 'SourceSans3-Bold.ttf');
+  const lightPath = path.join(__dirname, '..', 'public', 'fonts', 'SourceSans3', 'SourceSans3-Light.ttf');
 
-  const families = {
-    regular: 'SS3-Regular',
-    bold: 'SS3-Bold',
-  };
+  const families = { regular: 'SS3-Regular', bold: 'SS3-Bold', light: 'SS3-Light' };
 
-  const okReg = tryRegisterFont(doc, families.regular, regularPath);
-  const okBold = tryRegisterFont(doc, families.bold, boldPath);
-
-  // If Source Sans 3 missing, Helvetica will be used automatically by setFont
+  tryRegisterFont(doc, families.regular, regularPath);
+  tryRegisterFont(doc, families.bold, boldPath);
+  tryRegisterFont(doc, families.light, lightPath);
 
   const fileNameBase = (unit.title || 'unit').toString().trim().replace(/\s+/g, '_');
   res.setHeader('Content-Type', 'application/pdf');
@@ -106,26 +95,27 @@ function renderUnitPDF({ res, unitEnvelope }) {
 
   doc.pipe(res);
 
-  const pageWidth = doc.page.width;
   const xLeft = doc.page.margins.left;
-  const xRight = pageWidth - doc.page.margins.right;
+  const xRight = doc.page.width - doc.page.margins.right;
 
-  // ===== Cover-ish header (matches your worksheet vibe) =====
-  setFont(doc, families, 11, false);
+  // Name/Date
+  setFont(doc, families, 11, "light");
   doc.text('Name: ____________________________        Date: ______________');
+  doc.moveDown(0.6);
 
-  doc.moveDown(0.7);
-
-  setFont(doc, families, 18, true);
+  // TITLE
+  setFont(doc, families, 18, "bold");
   doc.text((unit.title || '').toString().toUpperCase());
 
-  setFont(doc, families, 12, false);
+  // SUBHEADING (Light)
+  setFont(doc, families, 12, "light");
   const subj = safeText(unit.subject);
   const grd = safeText(unit.grade);
   const jur = safeText(unit.jurisdiction);
   doc.text([jur, subj ? `• ${subj}` : '', grd ? `• Grade ${grd}` : ''].filter(Boolean).join(' '));
 
-  doc.moveDown(0.4);
+  // Divider line under subheading (small nice space)
+  doc.moveDown(0.35);
   hr(doc, xLeft, xRight, doc.y);
   doc.moveDown(0.7);
 
@@ -141,25 +131,27 @@ function renderUnitPDF({ res, unitEnvelope }) {
 
   // ===== Assessment =====
   sectionTitle(doc, families, 'ASSESSMENT');
-  setFont(doc, families, 12, true);
+
+  setFont(doc, families, 12, "bold");
   doc.text('For');
   bulletList(doc, families, unit?.assessment?.for);
 
-  setFont(doc, families, 12, true);
+  setFont(doc, families, 12, "bold");
   doc.text('As');
   bulletList(doc, families, unit?.assessment?.as);
 
-  setFont(doc, families, 12, true);
+  setFont(doc, families, 12, "bold");
   doc.text('Of');
   bulletList(doc, families, unit?.assessment?.of);
 
   // ===== Differentiation =====
   sectionTitle(doc, families, 'DIFFERENTIATION');
-  setFont(doc, families, 12, true);
+
+  setFont(doc, families, 12, "bold");
   doc.text('Universal Supports');
   bulletList(doc, families, unit?.differentiation?.universal);
 
-  setFont(doc, families, 12, true);
+  setFont(doc, families, 12, "bold");
   doc.text('Extensions');
   bulletList(doc, families, unit?.differentiation?.extension);
 
@@ -170,73 +162,71 @@ function renderUnitPDF({ res, unitEnvelope }) {
   // ===== Lessons =====
   doc.addPage();
 
-  setFont(doc, families, 18, true);
+  setFont(doc, families, 18, "bold");
   doc.text((unit.title || '').toString().toUpperCase());
 
-  setFont(doc, families, 12, false);
+  setFont(doc, families, 12, "light");
   doc.text(`Lesson Sequence (${unit.durationLessons || (unit.lessons?.length || 0)} lessons)`);
-  doc.moveDown(0.4);
+  doc.moveDown(0.35);
   hr(doc, xLeft, xRight, doc.y);
   doc.moveDown(0.6);
 
   const lessons = Array.isArray(unit.lessons) ? unit.lessons : [];
   for (const L of lessons) {
-    // Page break safety
     if (doc.y > doc.page.height - doc.page.margins.bottom - 220) {
       doc.addPage();
     }
 
-    setFont(doc, families, 14, true);
+    setFont(doc, families, 14, "bold");
     doc.text(`Day ${L.day}: ${safeText(L.focus)}`);
 
-    setFont(doc, families, 11, false);
+    setFont(doc, families, 11, "regular");
     doc.moveDown(0.25);
 
     if (asLines(L.bigIdeas).length) {
-      setFont(doc, families, 11, true);
+      setFont(doc, families, 11, "bold");
       doc.text('Big Ideas: ', { continued: true });
-      setFont(doc, families, 11, false);
+      setFont(doc, families, 11, "regular");
       doc.text(asLines(L.bigIdeas).join('  •  '));
     }
 
     if (asLines(L.learningGoals).length) {
-      setFont(doc, families, 11, true);
+      setFont(doc, families, 11, "bold");
       doc.text('Learning Goals: ', { continued: true });
-      setFont(doc, families, 11, false);
+      setFont(doc, families, 11, "regular");
       doc.text(asLines(L.learningGoals).join('  •  '));
     }
 
     if (asLines(L.successCriteria).length) {
-      setFont(doc, families, 11, true);
+      setFont(doc, families, 11, "bold");
       doc.text('Success Criteria:');
       bulletList(doc, families, L.successCriteria);
     }
 
     if (safeText(L.mindsOn)) {
-      setFont(doc, families, 11, true);
+      setFont(doc, families, 11, "bold");
       doc.text('Minds On: ', { continued: true });
-      setFont(doc, families, 11, false);
+      setFont(doc, families, 11, "regular");
       doc.text(safeText(L.mindsOn));
     }
 
     if (safeText(L.action)) {
-      setFont(doc, families, 11, true);
+      setFont(doc, families, 11, "bold");
       doc.text('Action: ', { continued: true });
-      setFont(doc, families, 11, false);
+      setFont(doc, families, 11, "regular");
       doc.text(safeText(L.action));
     }
 
     if (safeText(L.consolidation)) {
-      setFont(doc, families, 11, true);
+      setFont(doc, families, 11, "bold");
       doc.text('Consolidation: ', { continued: true });
-      setFont(doc, families, 11, false);
+      setFont(doc, families, 11, "regular");
       doc.text(safeText(L.consolidation));
     }
 
     if (asLines(L.materials).length) {
-      setFont(doc, families, 11, true);
+      setFont(doc, families, 11, "bold");
       doc.text('Materials/Assets:');
-      // Print asset paths as text (renderer-agnostic; future: embed icons)
       bulletList(doc, families, L.materials);
     }
 

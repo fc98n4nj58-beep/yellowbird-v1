@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Browse Library — Project Yellow Bird</title>
+  <link rel="stylesheet" href="/styles/site.css"/>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/"><span class="dot"></span> Project Yellow Bird</a>
+      <nav class="nav">
+        <a class="active" href="/browse">Browse Library</a>
+        <a href="/curriculum">Curriculum</a>
+        <a href="/worksheet">Worksheet Generator</a>
+        <a href="/units">Unit Generator</a>
+        <a href="/faq">FAQ</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1 class="h1">Browse Library</h1>
+    <p class="lede">Search, filter, preview, and download calm, print-first classroom resources. (Phase 1: instant downloads. Accounts later.)</p>
+
+    <div class="grid">
+      <!-- Filters -->
+      <aside class="card">
+        <div class="label">Search</div>
+        <input id="q" class="input" placeholder="Try: addition, ten frames, grade 1..." />
+
+        <div class="hr"></div>
+
+        <div class="label">Grade</div>
+        <select id="grade" class="select">
+          <option value="">All grades</option>
+          <option value="K">Kindergarten</option>
+          <option value="1">Grade 1</option>
+          <option value="2">Grade 2</option>
+          <option value="3">Grade 3</option>
+          <option value="4">Grade 4</option>
+          <option value="5">Grade 5</option>
+          <option value="6">Grade 6</option>
+        </select>
+
+        <div style="height:12px"></div>
+
+        <div class="label">Subject</div>
+        <select id="subject" class="select">
+          <option value="">All subjects</option>
+          <option value="math">Math</option>
+          <option value="language">Language</option>
+          <option value="science">Science</option>
+          <option value="social-studies">Social Studies</option>
+          <option value="art">Art</option>
+        </select>
+
+        <div style="height:12px"></div>
+
+        <div class="label">Strand</div>
+        <select id="strand" class="select">
+          <option value="">All strands</option>
+          <option value="number">Number</option>
+          <option value="patterns">Patterns</option>
+          <option value="data">Data</option>
+          <option value="geometry">Geometry</option>
+          <option value="generator">Generator</option>
+        </select>
+
+        <div style="height:12px"></div>
+
+        <div class="label">Format</div>
+        <select id="format" class="select">
+          <option value="">All formats</option>
+          <option value="pdf">PDF</option>
+          <option value="google slides">Google Slides</option>
+          <option value="google docs">Google Docs</option>
+        </select>
+
+        <div class="hr"></div>
+
+        <div class="label">Sort</div>
+        <select id="sort" class="select">
+          <option value="newest">Newest</option>
+          <option value="downloads">Most downloaded</option>
+        </select>
+
+        <div style="height:18px"></div>
+
+        <div class="row">
+          <button id="apply" class="btn primary">Apply</button>
+          <button id="clear" class="btn">Clear</button>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="label">Quick Links</div>
+        <div class="row">
+          <a class="btn mini" href="/curriculum">Curriculum</a>
+          <a class="btn mini" href="/worksheet">Worksheet</a>
+          <a class="btn mini" href="/units">Unit</a>
+        </div>
+      </aside>
+
+      <!-- Results -->
+      <main>
+        <div id="summary" class="resource-meta"></div>
+        <div id="results" class="results"></div>
+        <div id="empty" class="card" style="display:none; margin-top:18px;">
+          <h3 class="resource-title" style="margin:0 0 6px 0;">No results</h3>
+          <div class="resource-meta">Try widening filters or searching a different keyword.</div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="footer">© Project Yellow Bird — calm, print-first resources.</div>
+
+<script>
+  const el = (id) => document.getElementById(id);
+
+  function qsFromUI(){
+    const params = new URLSearchParams();
+    const q = el("q").value.trim();
+    const grade = el("grade").value.trim();
+    const subject = el("subject").value.trim();
+    const strand = el("strand").value.trim();
+    const format = el("format").value.trim();
+    const sort = el("sort").value.trim();
+
+    if(q) params.set("q", q);
+    if(grade) params.set("grade", grade);
+    if(subject) params.set("subject", subject);
+    if(strand) params.set("strand", strand);
+    if(format) params.set("format", format);
+    if(sort) params.set("sort", sort);
+
+    return params;
+  }
+
+  function renderCard(r){
+    const grades = (r.grades || []).join(", ");
+    const formats = (r.formats || []).slice(0,3);
+
+    const badge = (t) => `<span class="badge">${t}</span>`;
+    const badges = [
+      ...(grades ? [badge(`Grade ${grades}`)] : []),
+      ...(r.subject ? [badge(r.subject)] : []),
+      ...(r.strand ? [badge(r.strand)] : []),
+      ...(formats.map(f => badge(f)) ),
+      ...(r.prepTime ? [badge(r.prepTime)] : []),
+      ...(r.isFree ? [badge("Free")] : [])
+    ].join("");
+
+    return `
+      <div class="card resource-card">
+        <div>
+          <div class="resource-meta">
+            <span>${r.downloads || 0} downloads</span>
+            ${r.createdAt ? `<span>•</span><span>${r.createdAt}</span>` : ``}
+          </div>
+          <h3 class="resource-title">${r.title || "Untitled"}</h3>
+          <div class="badges">${badges}</div>
+        </div>
+        <div class="resource-actions">
+          <a class="btn" href="/resource/${encodeURIComponent(r.slug)}">Preview</a>
+          <a class="btn primary" href="/resource/${encodeURIComponent(r.slug)}">Download</a>
+        </div>
+      </div>
+    `;
+  }
+
+  async function load(){
+    const params = qsFromUI();
+    const url = "/api/library/resources?" + params.toString();
+
+    el("results").innerHTML = "";
+    el("empty").style.display = "none";
+    el("summary").textContent = "Loading...";
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if(!data.ok){
+      el("summary").textContent = "Error loading library.";
+      return;
+    }
+
+    el("summary").textContent = `${data.total} result${data.total === 1 ? "" : "s"}`;
+
+    if(!data.total){
+      el("empty").style.display = "block";
+      return;
+    }
+
+    el("results").innerHTML = data.resources.map(renderCard).join("");
+  }
+
+  el("apply").addEventListener("click", load);
+  el("clear").addEventListener("click", () => {
+    el("q").value = "";
+    el("grade").value = "";
+    el("subject").value = "";
+    el("strand").value = "";
+    el("format").value = "";
+    el("sort").value = "newest";
+    load();
+  });
+
+  el("q").addEventListener("keydown", (e) => {
+    if(e.key === "Enter") load();
+  });
+
+  load();
+</script>
+</body>
+</html>

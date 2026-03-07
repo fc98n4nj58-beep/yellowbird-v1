@@ -1,0 +1,47 @@
+{
+  "skill": "multiplication_facts",
+  "recipeGroups": [
+    {
+      "id": "core_practice",
+      "title": "Core Practice",
+      "activities": [
+        {
+          "type": "arrays",
+          "weight": 3,
+          "minQuestions": 2,
+          "maxQuestions": 4
+        },
+        {
+          "type": "equal_groups",
+          "weight": 3,
+          "minQuestions": 2,
+          "maxQuestions": 4
+        },
+        {
+          "type": "skip_counting",
+          "weight": 2,
+          "minQuestions": 1,
+          "maxQuestions": 3
+        }
+      ]
+    },
+    {
+      "id": "applied_practice",
+      "title": "Applied Practice",
+      "activities": [
+        {
+          "type": "missing_factor",
+          "weight": 2,
+          "minQuestions": 1,
+          "maxQuestions": 3
+        },
+        {
+          "type": "word_problems",
+          "weight": 2,
+          "minQuestions": 1,
+          "maxQuestions": 3
+        }
+      ]
+    }
+  ]
+}

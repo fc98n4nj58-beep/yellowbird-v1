@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Curriculum — Project Yellow Bird</title>
+  <link rel="stylesheet" href="/styles/site.css"/>
+  <style>
+    .page { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    .grid2 { display:grid; grid-template-columns: 360px 1fr; gap: 18px; align-items:start; }
+    .card { border: 1px solid #e6e6e6; border-radius: 12px; padding: 14px; background:#fff; }
+    .label { font-size: 12px; opacity: .75; margin-bottom: 6px; }
+    .input, .select { width:100%; padding: 10px 10px; border: 1px solid #cfcfcf; border-radius: 10px; font-size: 14px; }
+    .row { display:flex; gap: 10px; flex-wrap: wrap; align-items:center; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; padding: 10px 12px; border-radius: 10px; border: 1px solid #222; background:#fff; color:#111; text-decoration:none; cursor:pointer; font-weight:700; }
+    .btn.primary { background:#111; color:#fff; }
+    .muted { opacity:.72; }
+    .h1 { margin: 0 0 6px 0; }
+    .lede { margin:0 0 14px 0; opacity:.8; }
+    .hr { height:1px; background:#eee; margin: 12px 0; }
+    .tiny { font-size: 12px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size: 12px; }
+    .debugStrip { margin-bottom: 14px; padding: 10px 12px; border: 1px dashed #cfcfcf; border-radius: 12px; background:#fafafa; display:none; }
+    .dot { width: 10px; height: 10px; border-radius: 999px; background: #2ea44f; display:inline-block; }
+    .dot.red { background:#d1242f; }
+    details { border: 1px solid #eee; border-radius: 12px; padding: 10px 12px; background:#fff; }
+    summary { cursor:pointer; font-weight:700; }
+    pre { white-space: pre-wrap; word-break: break-word; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/"><span class="dot"></span> Project Yellow Bird</a>
+      <nav class="nav">
+        <a href="/browse">Browse Library</a>
+        <a href="/curriculum" class="active">Curriculum</a>
+        <a href="/worksheet">Worksheet Generator</a>
+        <a href="/units">Unit Generator</a>
+        <a href="/faq">FAQ</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="page">
+    <h1 class="h1">Curriculum</h1>
+    <p class="lede">Select an expectation and generate a curriculum-aligned worksheet using your existing generator. (Phase 1: Worksheet only.)</p>
+
+    <!-- Test Mode Toggle -->
+    <div class="row" style="margin-bottom:12px;">
+      <label class="tiny muted" style="display:flex;align-items:center;gap:10px;">
+        <input id="testMode" type="checkbox" style="transform:scale(1.1)"/>
+        Test Mode (dev)
+      </label>
+      <span class="tiny muted">When ON: shows debug strip + recipe preview + payloads.</span>
+    </div>
+
+    <!-- Debug strip -->
+    <div id="debugStrip" class="debugStrip tiny">
+      <div class="row" style="justify-content:space-between;">
+        <div><strong>Selected Path</strong> <span class="muted">(name + id)</span></div>
+        <div class="row tiny"><span id="apiDot" class="dot"></span><span class="muted">API</span></div>
+      </div>
+      <div class="hr"></div>
+      <div id="debugPath" class="mono"></div>
+    </div>
+
+    <div class="grid2">
+      <!-- Left: Cascading selectors -->
+      <aside class="card">
+        <div class="label">Jurisdiction</div>
+        <select id="jurisdiction" class="select"></select>
+
+        <div style="height:12px"></div>
+        <div class="label">Grade</div>
+        <select id="grade" class="select"></select>
+
+        <div style="height:12px"></div>
+        <div class="label">Subject</div>
+        <select id="subject" class="select"></select>
+
+        <div class="hr"></div>
+
+        <div class="label">Strand</div>
+        <select id="strand" class="select"></select>
+
+        <div style="height:12px"></div>
+        <div class="label">Topic</div>
+        <select id="topic" class="select"></select>
+
+        <div style="height:12px"></div>
+        <div class="label">Expectation</div>
+        <select id="expectation" class="select"></select>
+
+        <div class="hr"></div>
+
+        <div class="label">Recommended Downloads</div>
+        <div class="row" style="margin-top:8px;">
+         <a
+            id="genBtn"
+            class="btn primary"
+            href="/api/generateWorksheet?expectation=B2.4"
+            target="_blank"
+            style="display:inline-block; text-decoration:none;"
+        >
+            Generate Worksheet (Curriculum Default)
+        </a>
+          <button id="openPrefillBtn" class="btn" disabled>Open in Worksheet Generator (Prefilled)</button>
+          <button id="openExpectationBtn" class="btn" disabled>Open Expectation Page</button>
+        </div>
+
+        <div id="openExpHint" class="tiny muted" style="margin-top:8px;">
+          Tip: double-click an expectation to open its resource page.
+        </div>
+
+        <div id="miniStatus" class="tiny muted" style="margin-top:10px;">
+          Select an expectation to enable worksheet generation.
+        </div>
+      </aside>
+
+      <!-- Right: Expectation details -->
+      <main class="card">
+        <div class="row" style="justify-content:space-between;">
+          <h3 style="margin:0;">Expectation Details</h3>
+          <div class="tiny muted">Source: <span id="sourceLabel">—</span></div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="row" style="gap:12px; align-items:flex-start;">
+          <div style="flex:1;">
+            <div class="label">Expectation ID</div>
+            <div class="row">
+              <div id="expId" class="mono" style="padding:10px 12px;border:1px solid #eee;border-radius:12px;flex:1;">—</div>
+              <button id="copyIdBtn" class="btn" disabled>Copy</button>
+            </div>
+          </div>
+          <div style="width:240px;">
+            <div class="label">Expectation code</div>
+            <a id="expCodeLink" href="#" style="text-decoration:none;color:inherit;">
+            <div id="expCode" class="mono" style="padding:10px 12px;border:1px solid #eee;border-radius:12px;">—</div>
+            </a>
+          </div>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="label">Expectation text</div>
+        <div id="expText" style="padding:12px;border:1px solid #eee;border-radius:12px;min-height:76px;line-height:1.35;">—</div>
+
+        <div style="height:12px"></div>
+        <div class="tiny muted">Last loaded at: <span id="loadedAt">—</span></div>
+
+        <div id="recipeBoxWrap" style="margin-top:14px; display:none;">
+          <details id="recipeDetails">
+            <summary>Recipe → Params Preview</summary>
+            <div class="hr"></div>
+
+            <div class="label">worksheet_recipe JSON</div>
+            <pre id="recipeJson" class="mono">—</pre>
+
+            <div class="hr"></div>
+
+            <div class="label">Mapped worksheet params</div>
+            <pre id="mappedParams" class="mono">—</pre>
+
+            <div class="hr"></div>
+
+            <div class="label">Worksheet endpoint URL</div>
+            <pre id="finalUrl" class="mono">—</pre>
+          </details>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="footer">© Project Yellow Bird — calm, print-first resources.</div>
+
+<script>
+  const el = (id) => document.getElementById(id);
+
+  const DEV = (location.hostname === "localhost" || location.hostname === "127.0.0.1" || new URLSearchParams(location.search).get("qa") === "1");
+
+  function setApiHealth(ok){
+    const dot = el("apiDot");
+    if(!dot) return;
+    dot.classList.toggle("red", !ok);
+  }
+
+  function setTestModeUI(on){
+    el("debugStrip").style.display = on ? "block" : "none";
+    el("recipeBoxWrap").style.display = on ? "block" : "none";
+  }
+
+  function getTestMode(){
+    if(!DEV) return false;
+    const v = localStorage.getItem("yb_test_mode");
+    return v === "1";
+  }
+
+  function setTestMode(on){
+    localStorage.setItem("yb_test_mode", on ? "1" : "0");
+    setTestModeUI(on);
+  }
+
+  // Init toggle
+  el("testMode").disabled = !DEV;
+  el("testMode").checked = getTestMode();
+  setTestModeUI(getTestMode());
+  el("testMode").addEventListener("change", () => setTestMode(el("testMode").checked));
+
+  function optionize(select, items, placeholder){
+    select.innerHTML = "";
+    const ph = document.createElement("option");
+    ph.value = "";
+    ph.textContent = placeholder || "Select…";
+    select.appendChild(ph);
+
+    (items || []).forEach(it => {
+      const o = document.createElement("option");
+      o.value = it.id;
+      o.textContent = it.name || it.label || it.id;
+      select.appendChild(o);
+    });
+  }
+
+  function nowStr(){
+    const d = new Date();
+    return d.toLocaleString();
+  }
+
+  function updateDebugStrip(state){
+    if(!getTestMode()) return;
+
+    const parts = [
+      state.j ? `${state.jName || "—"} (${state.j})` : "—",
+      state.g ? `${state.gLabel || "Grade " + state.g} (${state.g})` : "—",
+      state.s ? `${state.sName || "—"} (${state.s})` : "—",
+      state.strand ? `${state.strandName || "—"} (${state.strand})` : "—",
+      state.topic ? `${state.topicName || "—"} (${state.topic})` : "—",
+      state.expCode ? `${state.expCode} (${state.expId || "—"})` : "—"
+    ];
+    el("debugPath").textContent = parts.join(" > ");
+  }
+
+  function readQS(){
+    const qs = new URLSearchParams(location.search);
+    return {
+      j: qs.get("j") || "ON",
+      g: qs.get("g") || "",
+      s: qs.get("s") || "MATH",
+      strand: qs.get("strand") || "",
+      topic: qs.get("topic") || "",
+      exp: qs.get("exp") || ""
+    };
+  }
+
+  function writeQS(state){
+    const qs = new URLSearchParams();
+    if(state.j) qs.set("j", state.j);
+    if(state.g) qs.set("g", state.g);
+    if(state.s) qs.set("s", state.s);
+    if(state.strand) qs.set("strand", state.strand);
+    if(state.topic) qs.set("topic", state.topic);
+    if(state.expId) qs.set("exp", state.expId);
+    const url = location.pathname + "?" + qs.toString();
+    history.replaceState(null, "", url);
+  }
+
+  async function fetchJson(url){
+    const t0 = performance.now();
+    const res = await fetch(url);
+    const text = await res.text();
+    const ms = Math.round(performance.now() - t0);
+    let data = null;
+    try { data = JSON.parse(text); } catch { data = { ok:false, error:"Bad JSON", raw:text }; }
+    return { res, data, ms };
+  }
+
+  // Recipe -> worksheet query mapping (MVP)
+  function mapRecipeToWorksheetParams(expPayload){
+    const E = expPayload.expectation || {};
+    const ctx = {
+      jurisdictionId: expPayload.jurisdiction?.id || "ON",
+      jurisdictionName: expPayload.jurisdiction?.name || "Ontario",
+      grade: String(expPayload.grade || ""),
+      subjectId: expPayload.subject?.id || "MATH",
+      subjectName: expPayload.subject?.name || "Math",
+      strandId: expPayload.strand?.id || "",
+      strandName: expPayload.strand?.name || "",
+      topicId: expPayload.topic?.id || "",
+      topicName: expPayload.topic?.name || "",
+      expectationId: E.expectation_id || "",
+      expectationCode: E.expectation_code || "",
+    };
+
+    const recipe = E.worksheet_recipe || null;
+    if(!recipe) return { ok:false, error:"No worksheet_recipe for this expectation.", ctx, recipe:null, params:null, url:null };
+
+    const params = new URLSearchParams();
+
+    // Core generator mapping
+    params.set("mode", String(recipe.mode || "math.addition.basic"));
+    params.set("count", String(recipe.questionCount ?? 30));
+    params.set("cols", String(recipe.columns ?? 3));
+    params.set("font", String(recipe.fontSize ?? 11));
+
+    // Range mapping (a/b)
+    const r = recipe.ranges || {};
+    params.set("aMin", String(r.aMin ?? 0));
+    params.set("aMax", String(r.aMax ?? 10));
+    params.set("bMin", String(r.bMin ?? 0));
+    params.set("bMax", String(r.bMax ?? 10));
+
+    // Options mapping
+    const o = recipe.options || {};
+    params.set("answers", (o.includeAnswerKey === false) ? "0" : "1");
+    params.set("nonneg", (o.subtractionNonNegative === false) ? "0" : "1");
+    params.set("intdiv", (o.divisionIntegerOnly === false) ? "0" : "1");
+
+    // Curriculum flags + metadata for renderer (TEST 3)
+    params.set("source", "curriculum");
+    params.set("jurisdictionId", ctx.jurisdictionId);
+    params.set("grade", ctx.grade);
+    params.set("subjectName", ctx.subjectName);
+    params.set("strandName", ctx.strandName);
+    params.set("topicName", ctx.topicName);
+    params.set("expectationId", ctx.expectationId);
+    params.set("expectationCode", ctx.expectationCode);
+
+    const url = "/api/worksheet.pdf?" + params.toString();
+
+    return { ok:true, ctx, recipe, paramsObj: Object.fromEntries(params.entries()), url };
+  }
+
+  const state = {
+    j: "", jName: "",
+    g: "", gLabel: "",
+    s: "", sName: "",
+    strand: "", strandName: "",
+    topic: "", topicName: "",
+    expId: "", expCode: "",
+    lastExpPayload: null,
+    lastMap: null,
+  };
+
+  async function loadJurisdictions(defaults){
+    const { data } = await fetchJson("/api/curriculum/jurisdictions");
+    if(!data.ok) throw new Error(data.error || "jurisdictions failed");
+    optionize(el("jurisdiction"), data.jurisdictions.map(x => ({ id:x.id, name:x.name })), "Select jurisdiction");
+    el("jurisdiction").value = defaults.j || "ON";
+    const sel = data.jurisdictions.find(x => x.id === el("jurisdiction").value);
+    state.j = el("jurisdiction").value;
+    state.jName = sel ? sel.name : "";
+  }
+
+  async function loadGrades(defaults){
+    const u = el("jurisdiction").value || "ON";
+    const { data } = await fetchJson(`/api/curriculum/grades?jurisdiction=${encodeURIComponent(u)}&subject=MATH`);
+    if(!data.ok) throw new Error(data.error || "grades failed");
+    optionize(el("grade"), data.grades.map(x => ({ id:x.id, name:x.name })), "Select grade");
+    el("grade").value = defaults.g || "3";
+    const sel = data.grades.find(x => x.id === el("grade").value);
+    state.g = el("grade").value;
+    state.gLabel = sel ? sel.name : "";
+  }
+
+  async function loadSubjects(defaults){
+    const u = el("jurisdiction").value || "ON";
+    const g = el("grade").value || "3";
+    const { data } = await fetchJson(`/api/curriculum/subjects?jurisdiction=${encodeURIComponent(u)}&grade=${encodeURIComponent(g)}`);
+    if(!data.ok) throw new Error(data.error || "subjects failed");
+    optionize(el("subject"), data.subjects.map(x => ({ id:x.id, name:x.name })), "Select subject");
+    el("subject").value = defaults.s || "MATH";
+    const sel = data.subjects.find(x => x.id === el("subject").value);
+    state.s = el("subject").value;
+    state.sName = sel ? sel.name : "";
+  }
+
+  async function loadStrands(defaultStrandId){
+    const u = el("jurisdiction").value || "ON";
+    const g = el("grade").value || "3";
+    const s = el("subject").value || "MATH";
+    const { data } = await fetchJson(`/api/curriculum/strands?jurisdiction=${encodeURIComponent(u)}&grade=${encodeURIComponent(g)}&subject=${encodeURIComponent(s)}`);
+    if(!data.ok) throw new Error(data.error || "strands failed");
+    optionize(el("strand"), data.strands.map(x => ({ id:x.id, name:x.name })), "Select strand");
+    el("strand").value = defaultStrandId || "";
+    const sel = data.strands.find(x => x.id === el("strand").value);
+    state.strand = el("strand").value;
+    state.strandName = sel ? sel.name : "";
+  }
+
+ function normalizeGradeValue(value) {
+  const v = String(value || "").trim().toLowerCase();
+  if (!v) return "grade3";
+  if (v === "k" || v === "kindergarten") return "kindergarten";
+  if (v.startsWith("grade")) return v;
+  if (/^\d+$/.test(v)) return `grade${v}`;
+  return v;
+}
+
+async function loadTopics(defaultTopicId) {
+  const u = el("jurisdiction").value || "ON";
+  const g = normalizeGradeValue(el("grade").value || "3");
+  const s = el("subject").value || "MATH";
+  const strandId = el("strand").value || "";
+
+  if (!strandId) {
+    optionize(el("topic"), [], "Select topic");
+    optionize(el("expectation"), [], "Select expectation");
+    return;
+  }
+
+  const url = `/api/curriculum/topics?jurisdiction=${encodeURIComponent(u)}&grade=${encodeURIComponent(g)}&subject=${encodeURIComponent(s)}&strandId=${encodeURIComponent(strandId)}`;
+  const { data } = await fetchJson(url);
+
+  if (!data.ok) throw new Error(data.error || "topics failed");
+
+  const items = (data.topics || []).map((x) => ({
+    id: x.id,
+    name: x.name
+  }));
+
+  optionize(el("topic"), items, "Select topic");
+  el("topic").value = defaultTopicId || "";
+  state.topic = el("topic").value || "";
+
+  const sel = items.find((x) => x.id === state.topic);
+  state.topicName = sel ? sel.name : "";
+}
+
+async function loadExpectations(defaultExpId) {
+  const u = el("jurisdiction").value || "ON";
+  const g = normalizeGradeValue(el("grade").value || "3");
+  const s = el("subject").value || "MATH";
+  const strandId = el("strand").value || "";
+  const topicId = el("topic").value || "";
+
+  if (!strandId || !topicId) {
+    optionize(el("expectation"), [], "Select expectation");
+    return;
+  }
+
+  const url = `/api/curriculum/expectations?jurisdiction=${encodeURIComponent(u)}&grade=${encodeURIComponent(g)}&subject=${encodeURIComponent(s)}&strandId=${encodeURIComponent(strandId)}&topicId=${encodeURIComponent(topicId)}`;
+  const { data } = await fetchJson(url);
+
+  if (!data.ok) throw new Error(data.error || "expectations failed");
+
+  const items = (data.expectations || []).map((x) => ({
+    id: x.id,
+    name: x.code ? x.code : x.id
+  }));
+
+  optionize(el("expectation"), items, "Select expectation");
+  el("expectation").value = defaultExpId || "";
+}
+
+  function clearDetails(){
+  el("expId").textContent = "—";
+  el("expCode").textContent = "—";
+  el("expCodeLink").href = "#";
+  el("expText").textContent = "—";
+  el("loadedAt").textContent = "—";
+  el("sourceLabel").textContent = "—";
+  el("copyIdBtn").disabled = true;
+  el("genBtn").disabled = true;
+  el("openPrefillBtn").disabled = true;
+  el("openExpectationBtn").disabled = true;
+  el("miniStatus").textContent = "Select an expectation to enable worksheet generation.";
+  state.expId = "";
+  state.expCode = "";
+  state.lastExpPayload = null;
+  state.lastMap = null;
+  updateDebugStrip(state);
+  writeQS(state);
+}
+
+  function renderRecipePreview(map){
+    if(!getTestMode()) return;
+    el("recipeJson").textContent = JSON.stringify(map.recipe, null, 2);
+    el("mappedParams").textContent = JSON.stringify(map.paramsObj, null, 2);
+    el("finalUrl").textContent = map.url;
+  }
+
+  async function loadExpectation(id){
+    if(!id){
+      clearDetails();
+      return;
+    }
+
+    const { res, data } = await fetchJson(`/api/curriculum/expectation?id=${encodeURIComponent(id)}`);
+    const ok = !!(data && data.ok);
+
+    setApiHealth(ok);
+
+    if(!ok){
+      el("sourceLabel").textContent = "curriculum dataset";
+      el("expText").textContent = "Failed to load expectation.";
+      el("loadedAt").textContent = nowStr();
+      el("miniStatus").textContent = "Error loading expectation.";
+      return;
+    }
+
+    const E = data.expectation || {};
+    state.lastExpPayload = data;
+       state.expId = E.id || id;
+    state.expCode = E.code || "";
+
+    // Update context names too
+    state.j = data.jurisdiction?.id || "ON";
+    state.jName = data.jurisdiction?.name || "Ontario";
+    state.g = String(data.grade || el("grade").value || "");
+    state.gLabel = data.gradeLabel || `Grade ${state.g}`;
+    state.s = data.subject?.id || "MATH";
+    state.sName = data.subject?.name || "Math";
+    state.strand = data.strand?.id || el("strand").value || "";
+    state.strandName = data.strand?.name || "";
+    state.topic = data.topic?.id || el("topic").value || "";
+    state.topicName = data.topic?.name || "";
+
+    el("expId").textContent = state.expId || "—";
+    el("expCode").textContent = state.expCode || "—";
+
+    const url = buildExpectationUrl();
+    el("expCodeLink").href = url || "#";
+
+    el("expText").textContent = E.text || "—";
+    el("loadedAt").textContent = nowStr();
+    el("sourceLabel").textContent = data.source || "curriculum dataset";
+
+    el("copyIdBtn").disabled = !state.expId;
+    el("copyIdBtn").onclick = async () => {
+      try { await navigator.clipboard.writeText(state.expId); } catch {}
+    };
+
+    // Map recipe
+    const map = mapRecipeToWorksheetParams(data);
+    state.lastMap = map.ok ? map : null;
+
+    if(map.ok){
+      el("genBtn").disabled = false;
+      el("openPrefillBtn").disabled = false;
+      el("openExpectationBtn").disabled = false;
+
+      el("miniStatus").textContent = "Ready. Open the expectation page, launch a worksheet, or double-click the expectation to continue.";
+
+      renderRecipePreview(map);
+    } else {
+      el("genBtn").disabled = true;
+      el("openPrefillBtn").disabled = true;
+      el("miniStatus").textContent = map.error || "No worksheet recipe available for this expectation yet.";
+      if(getTestMode()){
+        el("recipeJson").textContent = "—";
+        el("mappedParams").textContent = JSON.stringify({ error: map.error }, null, 2);
+        el("finalUrl").textContent = "—";
+      }
+    }
+
+    updateDebugStrip(state);
+    writeQS(state);
+  }
+
+  // Button actions
+  el("genBtn").addEventListener("click", () => {
+    if(!state.lastMap || !state.lastMap.ok) return;
+    window.location.href = state.lastMap.url;
+  });
+
+  el("openPrefillBtn").addEventListener("click", () => {
+    if(!state.lastMap || !state.lastMap.ok) return;
+    // This opens /worksheet with params so it can prefill its UI
+    const qs = new URLSearchParams(state.lastMap.paramsObj);
+    window.location.href = "/worksheet?" + qs.toString();
+  });
+
+  // Cascade listeners
+    el("jurisdiction").addEventListener("change", async () => {
+    state.j = el("jurisdiction").value;
+    state.jName = el("jurisdiction").selectedOptions[0]?.textContent || "";
+    await bootCascade({ j: state.j, strand:"", topic:"", exp:"" });
+  });
+
+  el("grade").addEventListener("change", async () => {
+    state.g = el("grade").value;
+    state.gLabel = el("grade").selectedOptions[0]?.textContent || "";
+    await bootCascade({ g: state.g, strand:"", topic:"", exp:"" });
+  });
+
+  el("subject").addEventListener("change", async () => {
+    state.s = el("subject").value;
+    state.sName = el("subject").selectedOptions[0]?.textContent || "";
+    await bootCascade({ s: state.s, strand:"", topic:"", exp:"" });
+  });
+
+  el("strand").addEventListener("change", async () => {
+    state.strand = el("strand").value;
+    state.strandName = el("strand").selectedOptions[0]?.textContent || "";
+    await loadTopics("");
+    await loadExpectations("");
+    clearDetails();
+    updateDebugStrip(state);
+    writeQS(state);
+  });
+
+  el("topic").addEventListener("change", async () => {
+    state.topic = el("topic").value;
+    state.topicName = el("topic").selectedOptions[0]?.textContent || "";
+    await loadExpectations("");
+    clearDetails();
+    updateDebugStrip(state);
+    writeQS(state);
+  });
+
+  el("expectation").addEventListener("change", async () => {
+    const id = el("expectation").value;
+    await loadExpectation(id);
+  });
+
+  // Double-click expectation to open the expectation page
+  el("expectation").addEventListener("dblclick", () => {
+    const url = buildExpectationUrl();
+    if (!url) return;
+    window.location.href = url;
+  });
+
+  // Boot loader with querystring restore
+  async function bootCascade(overrides){
+    const defaults = Object.assign(readQS(), overrides || {});
+    try{
+      setApiHealth(true);
+
+      await loadJurisdictions(defaults);
+      await loadGrades(defaults);
+      await loadSubjects(defaults);
+
+      // Strand/Topic/Expectation restore
+      await loadStrands(defaults.strand || "");
+      await loadTopics(defaults.topic || "");
+      await loadExpectations(defaults.exp || "");
+
+      // If expectation provided, load it
+      if(defaults.exp){
+        el("expectation").value = defaults.exp;
+        await loadExpectation(defaults.exp);
+      } else {
+        clearDetails();
+        updateDebugStrip(state);
+        writeQS(state);
+      }
+    } catch(e){
+      setApiHealth(false);
+      if(getTestMode()){
+        el("debugPath").textContent = "Error booting curriculum page: " + (e.message || String(e));
+      }
+      el("miniStatus").textContent = "Curriculum API error. Check dataset + server.";
+    }
+  }
+
+  bootCascade();
+  function slugify(value){
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g,"-")
+    .replace(/[^a-z0-9.-]/g,"")
+}
+
+function buildExpectationUrl(){
+
+  const subject = el("subject").value || "math";
+  const grade = el("grade").value;
+  const strand = el("strand").selectedOptions?.[0]?.textContent || "";
+  const expectation = state.expCode;
+
+  if(!subject || !grade || !strand || !expectation){
+    return null;
+  }
+
+  return `/curriculum/on/${slugify(subject)}/grade${grade}/${slugify(strand)}/${slugify(expectation)}`;
+}
+</script>
+</body>
+</html>

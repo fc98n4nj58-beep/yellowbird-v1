@@ -4,74 +4,53 @@
     "margins": { "top": 54, "bottom": 54, "left": 54, "right": 54 },
     "contentBox": { "x": 54, "y": 54, "width": 504, "height": 684, "centerX": 306 }
   },
+
   "zones": {
     "header": { "height": 120 },
     "content": { "height": 564 },
     "footerBuffer": { "height": 24 }
   },
+
   "grid": {
     "baseline": 12,
     "columns": 3,
     "columnWidth": 152,
     "gutter": 24
   },
+
+  "colors": {
+    "ink": "#111111",
+    "muted": "#666666",
+    "border": "#E5E5E5",
+    "accent": "#B86B4B",
+    "accentSoft": "#F3E6E0"
+  },
+
   "typography": {
-    "unitTitle": {
-      "font": "Source Sans 3",
-      "weight": "Bold",
-      "size": 21,
-      "lineHeight": 24,
-      "transform": "uppercase"
-    },
-    "worksheetTitle": {
-      "font": "Source Sans 3",
-      "weight": "Light",
-      "size": 18,
-      "lineHeight": 24
-    },
-    "focusAndSection": {
-      "font": "Source Sans 3",
-      "weight": "LightItalic",
-      "size": 15,
-      "lineHeight": 24
-    },
-    "body": {
-      "font": "Source Sans 3",
-      "weight": "Regular",
-      "size": 11,
-      "lineHeight": 14
-    },
-    "labels": {
-      "font": "Source Sans 3",
-      "weight": "Regular",
-      "size": 11,
-      "lineHeight": 14
-    },
-    "headerLabels": {
-      "font": "Source Sans 3",
-      "weight": "Light",
-      "size": 11,
-      "lineHeight": 14
-    }
+    "unitTitle": { "font": "Source Sans 3", "weight": "Bold", "size": 21, "lineHeight": 24, "transform": "uppercase" },
+    "worksheetTitle": { "font": "Source Sans 3", "weight": "Light", "size": 18, "lineHeight": 24 },
+    "focusAndSection": { "font": "Source Sans 3", "weight": "LightItalic", "size": 15, "lineHeight": 24 },
+    "body": { "font": "Source Sans 3", "weight": "Regular", "size": 11, "lineHeight": 14 },
+    "labels": { "font": "Source Sans 3", "weight": "Regular", "size": 11, "lineHeight": 14 },
+    "headerLabels": { "font": "Source Sans 3", "weight": "Light", "size": 11, "lineHeight": 14 }
   },
+
   "spacing": {
-    "xs": 6,
-    "sm": 12,
-    "md": 18,
-    "lg": 24,
-    "xl": 36,
-    "xxl": 48
+    "xs": 6, "sm": 12, "md": 18, "lg": 24, "xl": 36, "xxl": 48
   },
+
   "rules": {
-    "headerDivider": {
-      "strokeWidth": 0.25,
-      "color": "#000000",
-      "width": 504
-    }
+    "headerDivider": { "strokeWidth": 0.25, "color": "#000000", "width": 504 },
+    "footerRule": { "strokeWidth": 0.25, "color": "#000000" },
+    "nameDateLine": { "strokeWidth": 0.25, "color": "#000000" },
+    "boxStroke": { "strokeWidth": 0.75, "color": "#000000" },
+    "modelBoxStroke": { "strokeWidth": 0.75, "color": "#000000" }
   },
+
   "components": {
     "nameDateLine": {
       "gap": 24,
+
       "name": {
         "label": "Name:",
         "labelX": 54,
@@ -80,6 +59,7 @@
         "lineEnd": 282,
         "lineWidth": 0.25
       },
+
       "date": {
         "label": "Date:",
         "labelX": 306,

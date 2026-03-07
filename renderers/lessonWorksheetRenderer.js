@@ -1,4 +1,3 @@
-// renderers/lessonWorksheetRenderer.js
 'use strict';
 
 const layout = require("../config/layout/layoutSpec.json");
@@ -6,6 +5,9 @@ const path = require('path');
 const fs = require('fs');
 const PDFDocument = require('pdfkit');
 const SVGtoPDF = require('svg-to-pdfkit');
+
+// Charcoal only for ALL lesson worksheet PDFs
+const INK = "#2B2B2B";
 
 function safeText(s) { return (s ?? '').toString(); }
 
@@ -17,36 +19,32 @@ function setFont(doc, fontName, size) {
   try { doc.font(fontName).fontSize(size); } catch { doc.font('Helvetica').fontSize(size); }
 }
 
-function lineRule(doc, x1, x2, y, strokeWidth, color = '#000') {
+function lineRule(doc, x1, x2, y, strokeWidth) {
   doc.save();
-  doc.moveTo(x1, y).lineTo(x2, y).lineWidth(strokeWidth).strokeColor(color).stroke();
+  doc.moveTo(x1, y).lineTo(x2, y).lineWidth(strokeWidth).strokeColor(INK).stroke();
   doc.restore();
 }
 
-function rectRule(doc, x, y, w, h, strokeWidth, color = '#000') {
+function rectRule(doc, x, y, w, h, strokeWidth) {
   doc.save();
-  doc.rect(x, y, w, h).lineWidth(strokeWidth).strokeColor(color).stroke();
+  doc.rect(x, y, w, h).lineWidth(strokeWidth).strokeColor(INK).stroke();
   doc.restore();
 }
 
 function headerDividerRule() {
-  return layout.rules?.headerDivider ?? { strokeWidth: 0.25, color: '#000' };
+  return layout.rules?.headerDivider ?? { strokeWidth: 0.25 };
 }
-
 function footerRule() {
-  return layout.rules?.footerRule ?? { strokeWidth: 0.25, color: '#000' };
+  return layout.rules?.footerRule ?? { strokeWidth: 0.25 };
 }
-
 function nameDateRule() {
-  return layout.rules?.nameDateLine ?? { strokeWidth: 0.25, color: '#000' };
+  return layout.rules?.nameDateLine ?? { strokeWidth: 0.25 };
 }
-
 function boxRule() {
-  return layout.rules?.boxStroke ?? { strokeWidth: 0.75, color: '#000' };
+  return layout.rules?.boxStroke ?? { strokeWidth: 0.75 };
 }
-
 function modelBoxRule() {
-  return layout.rules?.modelBoxStroke ?? { strokeWidth: 0.75, color: '#000' };
+  return layout.rules?.modelBoxStroke ?? { strokeWidth: 0.75 };
 }
 
 function drawFooter(doc, fonts, pageNum) {
@@ -58,11 +56,13 @@ function drawFooter(doc, fonts, pageNum) {
   const yRule = doc.page.height - bottomMargin;
 
   const fr = footerRule();
-  lineRule(doc, xLeft, xRight, yRule, fr.strokeWidth, fr.color);
+  lineRule(doc, xLeft, xRight, yRule, fr.strokeWidth);
 
-  const pageNumY = yRule + (bottomMargin / 2);
+  const offset = Math.max(6, Math.min(10, (layout.spacing?.sm ?? 12) - 2));
+  const pageNumY = yRule + offset;
 
   setFont(doc, fonts.light || fonts.regular, layout.typography.headerLabels.size);
+  doc.fillColor(INK);
   doc.text(String(pageNum), xLeft, pageNumY, {
     width: cb.width,
     align: "center",
@@ -76,49 +76,68 @@ function drawNameDateLine(doc, fonts, y) {
   const nr = nameDateRule();
 
   setFont(doc, fonts.light, labelStyle.size);
+  doc.fillColor(INK);
 
   doc.text(header.name.label, header.name.labelX, y, { lineBreak: false });
-  lineRule(doc, header.name.lineStart, header.name.lineEnd, y + labelStyle.lineHeight, nr.strokeWidth, nr.color);
+  lineRule(doc, header.name.lineStart, header.name.lineEnd, y + labelStyle.lineHeight, nr.strokeWidth);
 
   doc.text(header.date.label, header.date.labelX, y, { lineBreak: false });
-  lineRule(doc, header.date.lineStart, header.date.lineEnd, y + labelStyle.lineHeight, nr.strokeWidth, nr.color);
+  lineRule(doc, header.date.lineStart, header.date.lineEnd, y + labelStyle.lineHeight, nr.strokeWidth);
 }
 
-function renderHeader(doc, fonts, unitTitle, worksheetTitle, dailyFocus) {
+function renderHeader(doc, fonts, unitTitle, worksheetTitle, subheading, dailyFocus) {
   const cb = layout.page.contentBox;
   const xLeft = cb.x;
   const xRight = cb.x + cb.width;
 
   let y = cb.y;
 
-  drawNameDateLine(doc, fonts, y);
+  const lift = layout.spacing?.xs ?? 6;
+  drawNameDateLine(doc, fonts, y - lift);
+
   y += layout.spacing.md;
 
+  // Unit title
   const unitStyle = layout.typography.unitTitle;
   setFont(doc, fonts.bold, unitStyle.size);
+  doc.fillColor(INK);
   doc.text(safeText(unitTitle).toUpperCase(), xLeft, y, { width: cb.width, align: 'left' });
   y += unitStyle.lineHeight;
 
+  // Worksheet title (bold)
   const wt = safeText(worksheetTitle).trim();
   if (wt) {
     const wsStyle = layout.typography.worksheetTitle;
-    setFont(doc, fonts.light, wsStyle.size);
+    setFont(doc, fonts.bold, wsStyle.size);
+    doc.fillColor(INK);
     doc.text(wt, xLeft, y, { width: cb.width, align: 'left' });
     y += wsStyle.lineHeight;
   }
 
+  // Subheading (light)
+  const sh = safeText(subheading).trim();
+  if (sh) {
+    const s = layout.typography.labels;
+    setFont(doc, fonts.light, s.size);
+    doc.fillColor(INK);
+    doc.text(sh, xLeft, y, { width: cb.width, align: 'left' });
+    y += s.lineHeight;
+  }
+
+  // Focus (light italic)
   const df = safeText(dailyFocus).trim();
   if (df) {
     const focusStyle = layout.typography.focusAndSection;
     setFont(doc, fonts.lightItalic, focusStyle.size);
+    doc.fillColor(INK);
     doc.text(df, xLeft, y, { width: cb.width, align: 'left' });
     y += focusStyle.lineHeight;
   }
 
-  y += layout.spacing.sm;
-
+  // ✅ RAISE THE DIVIDER LINE: use XS gap instead of SM
+  y += (layout.spacing?.xs ?? 6);
   const hd = headerDividerRule();
-  lineRule(doc, xLeft, xRight, y, hd.strokeWidth, hd.color);
+  lineRule(doc, xLeft, xRight, y, hd.strokeWidth);
 
   y += layout.spacing.md;
   doc.y = y;
@@ -194,10 +213,12 @@ function renderPrompts(doc, fonts, focus) {
   const bodyStyle = layout.typography.body;
 
   setFont(doc, fonts.lightItalic, sectionStyle.size);
+  doc.fillColor(INK);
   doc.text('Tasks', cb.x, doc.y, { width: cb.width, align: 'left' });
   doc.y += layout.spacing.sm;
 
   setFont(doc, fonts.regular, bodyStyle.size);
+  doc.fillColor(INK);
   for (const p of prompts) {
     doc.text(`• ${p}`, cb.x, doc.y, { width: cb.width, align: 'left' });
   }
@@ -205,6 +226,7 @@ function renderPrompts(doc, fonts, focus) {
   doc.y += layout.spacing.lg;
 
   setFont(doc, fonts.lightItalic, sectionStyle.size);
+  doc.fillColor(INK);
   doc.text('SHOW YOUR THINKING', cb.x, doc.y, { width: cb.width, align: 'left' });
   doc.y += layout.spacing.sm;
 
@@ -214,7 +236,7 @@ function renderPrompts(doc, fonts, focus) {
   const y = doc.y;
 
   const br = boxRule();
-  rectRule(doc, xLeft, y, width, h, br.strokeWidth, br.color);
+  rectRule(doc, xLeft, y, width, h, br.strokeWidth);
 
   doc.y = y + h + layout.spacing.md;
 }
@@ -232,10 +254,10 @@ function resolvePublicAssetFile(webPath) {
 
 function drawFallbackBox(doc, label, x, y, w, h) {
   const br = boxRule();
-  rectRule(doc, x, y, w, h, br.strokeWidth, br.color);
+  rectRule(doc, x, y, w, h, br.strokeWidth);
 
   doc.save();
-  doc.fontSize(9).fillColor('#000');
+  doc.fontSize(9).fillColor(INK);
   doc.text(label, x + 8, y + 8, { width: w - 16 });
   doc.restore();
 }
@@ -256,7 +278,7 @@ function embedSvg(doc, svgWebPath, x, y, w, h) {
   }
 
   const mr = modelBoxRule();
-  rectRule(doc, x, y, w, h, mr.strokeWidth, mr.color);
+  rectRule(doc, x, y, w, h, mr.strokeWidth);
 
   const pad = 10;
   const ix = x + pad;
@@ -276,6 +298,7 @@ function renderModels(doc, fonts, lesson) {
   const cb = layout.page.contentBox;
 
   setFont(doc, fonts.lightItalic, layout.typography.focusAndSection.size);
+  doc.fillColor(INK);
   doc.text('Models for Today', cb.x, doc.y, { width: cb.width, align: 'left' });
   doc.y += layout.spacing.sm;
 
@@ -336,7 +359,10 @@ function buildLessonWorksheetDoc({ unit, lesson, pipeTarget }) {
     safeText(lesson.topic).trim() ||
     safeText(lesson.title).trim();
 
-  renderHeader(doc, fonts, unit.title, worksheetTitle, lesson.focus);
+  // Keep blank unless you decide a rule later
+  const subheading = "";
+
+  renderHeader(doc, fonts, unit.title, worksheetTitle, subheading, lesson.focus);
   renderModels(doc, fonts, lesson);
   renderPrompts(doc, fonts, lesson.focus);
 

@@ -3,106 +3,117 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Yellowbird v1 — Unit Generator</title>
+  <title>Unit Generator — Project Yellow Bird</title>
+  <link rel="stylesheet" href="/styles/site.css"/>
   <style>
-    :root { font-family: "Source Sans 3", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-    body { margin: 0; padding: 24px; max-width: 1100px; margin-inline: auto; }
-    h1 { margin: 0 0 8px 0; font-size: 26px; font-weight: 700; }
-    .sub { opacity: .75; margin-bottom: 18px; }
-    .row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-    label { font-size: 12px; opacity: .8; display: block; margin-bottom: 6px; }
-    select, input { width: 100%; padding: 10px 10px; border: 1px solid #000; border-radius: 10px; font-size: 14px; }
-    .actions { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
-    button { border: 1px solid #000; border-radius: 10px; padding: 10px 14px; font-weight: 700; background: #fff; cursor: pointer; }
-    button.primary { background: #000; color: #fff; }
-    .card { border: 1px solid #000; border-radius: 12px; padding: 14px; margin-top: 14px; }
-    .small { font-size: 12px; opacity: .75; }
-    a.wslink {
-      border: 1px solid #000;
-      border-radius: 10px;
-      padding: 10px 12px;
-      text-decoration: none;
-      color: inherit;
-      font-weight: 700;
-      display: block;
+    /* small layout helpers only (site.css handles buttons/inputs) */
+    .grid4 { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
+    .grid4 > div { min-width: 0; }
+    .actions { display:flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .wsGrid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+    @media (max-width: 900px){
+      .grid4 { grid-template-columns: 1fr 1fr; }
+      .wsGrid { grid-template-columns: 1fr; }
     }
+    a.wslink { text-decoration:none; display:block; }
   </style>
 </head>
 <body>
-  <h1>Unit Generator</h1>
-  <div class="sub">Generate a unit, then download worksheets individually or as one pack.</div>
-
-  <div class="row">
-    <div>
-      <label>Jurisdiction</label>
-      <select id="jurisdiction">
-        <option value="ontario" selected>Ontario</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Grade</label>
-      <select id="grade">
-        <option value="1" selected>Grade 1</option>
-        <option value="k">Kindergarten</option>
-        <option value="2">Grade 2</option>
-        <option value="3">Grade 3</option>
-        <option value="4">Grade 4</option>
-        <option value="5">Grade 5</option>
-        <option value="6">Grade 6</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Subject</label>
-      <select id="subject">
-        <option value="math" selected>Math</option>
-        <option value="language">Language</option>
-        <option value="science">Science</option>
-        <option value="social">Social Studies</option>
-        <option value="art">Art</option>
-        <option value="music">Music</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Number of Lessons</label>
-      <input id="numLessons" type="number" min="1" max="40" value="10" />
+  <div class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/"><span class="dot"></span> Project Yellow Bird</a>
+      <nav class="nav">
+        <a href="/browse">Browse Library</a>
+        <a href="/curriculum">Curriculum</a>
+        <a href="/worksheet">Worksheet Generator</a>
+        <a class="active" href="/units">Unit Generator</a>
+        <a href="/faq">FAQ</a>
+      </nav>
     </div>
   </div>
 
-  <div class="row" style="grid-template-columns: 2fr 1fr 1fr 1fr;">
-    <div>
-      <label>Mode</label>
-      <select id="modeKey"></select>
-      <div class="small" id="modeHint"></div>
+  <div class="container">
+    <h1 class="h1">Unit Generator</h1>
+    <p class="lede">Generate a unit, then download worksheets individually or as one pack.</p>
+
+    <div class="card">
+      <div class="grid4">
+        <div>
+          <div class="label">Jurisdiction</div>
+          <select id="jurisdiction" class="select">
+            <option value="ontario" selected>Ontario</option>
+          </select>
+        </div>
+
+        <div>
+          <div class="label">Grade</div>
+          <select id="grade" class="select">
+            <option value="1" selected>Grade 1</option>
+            <option value="k">Kindergarten</option>
+            <option value="2">Grade 2</option>
+            <option value="3">Grade 3</option>
+            <option value="4">Grade 4</option>
+            <option value="5">Grade 5</option>
+            <option value="6">Grade 6</option>
+          </select>
+        </div>
+
+        <div>
+          <div class="label">Subject</div>
+          <select id="subject" class="select">
+            <option value="math" selected>Math</option>
+            <option value="language">Language</option>
+            <option value="science">Science</option>
+            <option value="social">Social Studies</option>
+            <option value="art">Art</option>
+            <option value="music">Music</option>
+          </select>
+        </div>
+
+        <div>
+          <div class="label">Number of Lessons</div>
+          <input id="numLessons" type="number" min="1" max="40" value="10" class="input input-mini"/>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="row" style="align-items:flex-end;">
+        <div style="flex: 1; min-width: 280px;">
+          <div class="label">Mode</div>
+          <select id="modeKey" class="select"></select>
+          <div class="hint" id="modeHint" style="margin-top:6px;">Loading modes…</div>
+        </div>
+
+        <div style="flex: 1; min-width: 240px;">
+          <div class="label">Theme (optional)</div>
+          <input id="theme" class="input" placeholder="e.g., Communities, Measurement, etc." />
+        </div>
+
+        <div class="actions" style="justify-content:flex-end;">
+          <button class="btn primary" id="generateBtn">Generate Unit</button>
+          <button class="btn" id="unitPdfBtn">Download Unit PDF</button>
+          <button class="btn" id="zipBtn">Download All Worksheets (ZIP)</button>
+        </div>
+      </div>
     </div>
 
-    <div>
-      <label>Theme (optional)</label>
-      <input id="theme" placeholder="e.g., Communities, Measurement, etc." />
-    </div>
+    <div class="card" id="worksheetsCard" style="display:none; margin-top:14px;">
+      <div class="label" style="margin-bottom:8px;">Worksheets</div>
+      <div class="hint" style="margin-bottom:10px;">Download one worksheet per day.</div>
 
-    <div>
-      <label>&nbsp;</label>
-      <div class="small">Ready when you are.</div>
-    </div>
+      <div id="wsLinks" class="wsGrid"></div>
 
-    <div class="actions" style="align-items:end;">
-      <button class="primary" id="generateBtn">Generate Unit</button>
-      <button id="unitPdfBtn">Download Unit PDF</button>
-      <button id="zipBtn">Download All Worksheets (ZIP)</button>
+      <div class="hr"></div>
+
+      <div class="actions">
+        <button class="btn" id="openAllBtn">Open All (tabs)</button>
+        <a class="btn mini" href="/curriculum">Try Curriculum</a>
+      </div>
     </div>
   </div>
 
-  <div class="card" id="worksheetsCard" style="display:none;">
-    <div style="font-weight:700;margin-bottom:8px;">Worksheets</div>
-    <div class="small" style="margin-bottom:10px;">Download one worksheet per day.</div>
-    <div id="wsLinks" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;"></div>
-    <div class="actions" style="margin-top:12px;">
-      <button id="openAllBtn">Open All (10 tabs)</button>
-    </div>
-  </div>
+  <div class="footer">© Project Yellow Bird — calm, print-first resources.</div>
 
   <script>
     const el = (id) => document.getElementById(id);
@@ -179,7 +190,10 @@
         a.href = url;
         a.target = '_blank';
         a.className = 'wslink';
-        a.textContent = `Day ${L.day}: ${L.focus}`;
+        a.innerHTML = `<div class="card" style="padding:12px;">
+          <div class="resource-meta">Day ${L.day}</div>
+          <div class="resource-title" style="margin:4px 0 0 0;">${L.focus}</div>
+        </div>`;
         wsLinks.appendChild(a);
       });
 

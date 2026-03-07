@@ -1,0 +1,2073 @@
+{
+  "version": "2026-03-06",
+  "jurisdiction": {
+    "id": "ON",
+    "name": "Ontario"
+  },
+  "subject": {
+    "id": "MATH",
+    "name": "Math"
+  },
+  "grades": [
+    {
+      "grade": "grade1",
+      "gradeLabel": "Grade 1",
+      "strands": [
+        {
+          "id": "A",
+          "name": "Social-Emotional Learning Skills",
+          "topics": [
+            {
+              "id": "A1",
+              "name": "Social-Emotional Learning Skills",
+              "expectations": [
+                {
+                  "id": "ON-M1-A-A1.1",
+                  "code": "A1.1",
+                  "text": "Develop a positive identity as a math learner and persevere when solving problems.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "B",
+          "name": "Number",
+          "topics": [
+            {
+              "id": "B1_NUMBER_SENSE",
+              "name": "Number Sense",
+              "expectations": [
+                {
+                  "id": "ON-M1-B-B1.1",
+                  "code": "B1.1",
+                  "text": "Read and represent whole numbers up to and including 50, and describe various ways they are used in everyday life.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-B-B1.2",
+                  "code": "B1.2",
+                  "text": "Compose and decompose whole numbers up to and including 50 using a variety of tools and strategies.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-B-B1.3",
+                  "code": "B1.3",
+                  "text": "Compare and order whole numbers up to and including 50.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-B-B1.4",
+                  "code": "B1.4",
+                  "text": "Estimate the number of objects in collections of up to 50 and verify their estimates by counting.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-B-B1.5",
+                  "code": "B1.5",
+                  "text": "Count to 50 by 1s, 2s, 5s, and 10s using a variety of tools and strategies.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-B-B1.6",
+                  "code": "B1.6",
+                  "text": "Use drawings to represent and solve fair-sharing problems involving up to 10 items shared among 2–5 sharers.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-B-B1.7",
+                  "code": "B1.7",
+                  "text": "Recognize that one half and two fourths of the same whole are equal in fair-sharing contexts.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-B-B1.8",
+                  "code": "B1.8",
+                  "text": "Use drawings to compare and order unit fractions representing portions of a whole.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "B2_OPERATIONS",
+              "name": "Operations",
+              "expectations": [
+                {
+                  "id": "ON-M1-B-B2.1",
+                  "code": "B2.1",
+                  "text": "Use the properties of addition and subtraction to solve problems and check calculations.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-B-B2.2",
+                  "code": "B2.2",
+                  "text": "Recall addition facts for numbers up to 10 and related subtraction facts.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": {
+                    "mode": "math.addition.basic",
+                    "questionCount": 24,
+                    "columns": 3,
+                    "fontSize": 11,
+                    "ranges": {
+                      "aMin": 0,
+                      "aMax": 10,
+                      "bMin": 0,
+                      "bMax": 10
+                    },
+                    "options": {
+                      "includeAnswerKey": true,
+                      "subtractionNonNegative": true,
+                      "divisionIntegerOnly": true
+                    }
+                  }
+                },
+                {
+                  "id": "ON-M1-B-B2.3",
+                  "code": "B2.3",
+                  "text": "Use mental math strategies to add and subtract numbers that total no more than 20.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": {
+                    "mode": "math.addition.basic",
+                    "questionCount": 20,
+                    "columns": 2,
+                    "fontSize": 11,
+                    "ranges": {
+                      "aMin": 0,
+                      "aMax": 20,
+                      "bMin": 0,
+                      "bMax": 20
+                    },
+                    "options": {
+                      "includeAnswerKey": true,
+                      "subtractionNonNegative": true,
+                      "divisionIntegerOnly": true
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "C",
+          "name": "Algebra",
+          "topics": [
+            {
+              "id": "C1_PATTERNS_RELATIONSHIPS",
+              "name": "Patterns and Relationships",
+              "expectations": [
+                {
+                  "id": "ON-M1-C-C1.1",
+                  "code": "C1.1",
+                  "text": "Identify and describe repeating elements in patterns.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-C-C1.2",
+                  "code": "C1.2",
+                  "text": "Create and translate repeating patterns.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-C-C1.3",
+                  "code": "C1.3",
+                  "text": "Determine pattern rules for repeating patterns.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-C-C1.4",
+                  "code": "C1.4",
+                  "text": "Create and describe growing patterns.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "C2_MODELLING",
+              "name": "Mathematical Modelling",
+              "expectations": [
+                {
+                  "id": "ON-M1-C-C2.1",
+                  "code": "C2.1",
+                  "text": "Identify mathematical situations in everyday contexts.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "C3_CODING",
+              "name": "Coding",
+              "expectations": [
+                {
+                  "id": "ON-M1-C-C3.1",
+                  "code": "C3.1",
+                  "text": "Solve problems and represent mathematical situations using simple code involving sequential events.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "D",
+          "name": "Data",
+          "topics": [
+            {
+              "id": "D1_DATA_LITERACY",
+              "name": "Data Literacy",
+              "expectations": [
+                {
+                  "id": "ON-M1-D-D1.1",
+                  "code": "D1.1",
+                  "text": "Sort sets of data according to an attribute.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-D-D1.2",
+                  "code": "D1.2",
+                  "text": "Collect data by asking counting questions.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-D-D1.3",
+                  "code": "D1.3",
+                  "text": "Display data using graphs and pictographs.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-D-D1.4",
+                  "code": "D1.4",
+                  "text": "Interpret data represented in graphs.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "E",
+          "name": "Spatial Sense",
+          "topics": [
+            {
+              "id": "E1_GEOMETRY",
+              "name": "Geometry",
+              "expectations": [
+                {
+                  "id": "ON-M1-E-E1.1",
+                  "code": "E1.1",
+                  "text": "Identify common two-dimensional shapes and three-dimensional objects.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-E-E1.2",
+                  "code": "E1.2",
+                  "text": "Compose and decompose shapes.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-E-E1.3",
+                  "code": "E1.3",
+                  "text": "Describe object locations using positional language.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "E2_MEASUREMENT",
+              "name": "Measurement",
+              "expectations": [
+                {
+                  "id": "ON-M1-E-E2.1",
+                  "code": "E2.1",
+                  "text": "Compare objects by measurable attributes.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-E-E2.2",
+                  "code": "E2.2",
+                  "text": "Measure and record length, height, and distance.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-E-E2.3",
+                  "code": "E2.3",
+                  "text": "Tell time to the hour and half-hour.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-E-E2.4",
+                  "code": "E2.4",
+                  "text": "Identify Canadian coins and describe their value.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "F",
+          "name": "Financial Literacy",
+          "topics": [
+            {
+              "id": "F1_FINANCIAL_LITERACY",
+              "name": "Financial Literacy",
+              "expectations": [
+                {
+                  "id": "ON-M1-F-F1.1",
+                  "code": "F1.1",
+                  "text": "Identify ways people earn money.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M1-F-F1.2",
+                  "code": "F1.2",
+                  "text": "Describe ways money is used.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "grade": "grade2",
+      "gradeLabel": "Grade 2",
+      "strands": [
+        {
+          "id": "A",
+          "name": "Social-Emotional Learning Skills",
+          "topics": [
+            {
+              "id": "A1",
+              "name": "Social-Emotional Learning Skills",
+              "expectations": [
+                {
+                  "id": "ON-M2-A-A1.1",
+                  "code": "A1.1",
+                  "text": "Develop confidence and perseverance when solving mathematical problems.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "B",
+          "name": "Number",
+          "topics": [
+            {
+              "id": "B1_NUMBER_SENSE",
+              "name": "Number Sense",
+              "expectations": [
+                {
+                  "id": "ON-M2-B-B1.1",
+                  "code": "B1.1",
+                  "text": "Read, represent, compose, and decompose whole numbers up to 200.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M2-B-B1.2",
+                  "code": "B1.2",
+                  "text": "Compare and order whole numbers up to 200.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M2-B-B1.3",
+                  "code": "B1.3",
+                  "text": "Estimate quantities up to 200.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M2-B-B1.4",
+                  "code": "B1.4",
+                  "text": "Count by 1s, 2s, 5s, 10s, and 25s.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M2-B-B1.5",
+                  "code": "B1.5",
+                  "text": "Use place value concepts to represent numbers.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M2-B-B1.6",
+                  "code": "B1.6",
+                  "text": "Represent fractions as equal parts of a whole.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "B2_OPERATIONS",
+              "name": "Operations",
+              "expectations": [
+                {
+                  "id": "ON-M2-B-B2.1",
+                  "code": "B2.1",
+                  "text": "Add and subtract whole numbers up to 100.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M2-B-B2.2",
+                  "code": "B2.2",
+                  "text": "Recall addition facts to 20 and related subtraction facts.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": {
+                    "mode": "math.addition.basic",
+                    "questionCount": 24,
+                    "columns": 3,
+                    "fontSize": 11,
+                    "ranges": {
+                      "aMin": 0,
+                      "aMax": 20,
+                      "bMin": 0,
+                      "bMax": 20
+                    },
+                    "options": {
+                      "includeAnswerKey": true,
+                      "subtractionNonNegative": true,
+                      "divisionIntegerOnly": true
+                    }
+                  }
+                },
+                {
+                  "id": "ON-M2-B-B2.3",
+                  "code": "B2.3",
+                  "text": "Use mental math strategies to solve problems.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": {
+                    "mode": "math.addition.basic",
+                    "questionCount": 20,
+                    "columns": 2,
+                    "fontSize": 11,
+                    "ranges": {
+                      "aMin": 0,
+                      "aMax": 20,
+                      "bMin": 0,
+                      "bMax": 20
+                    },
+                    "options": {
+                      "includeAnswerKey": true,
+                      "subtractionNonNegative": true,
+                      "divisionIntegerOnly": true
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "C",
+          "name": "Algebra",
+          "topics": [
+            {
+              "id": "C1_PATTERNS",
+              "name": "Patterns",
+              "expectations": [
+                {
+                  "id": "ON-M2-C-C1.1",
+                  "code": "C1.1",
+                  "text": "Identify and extend repeating patterns.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M2-C-C1.2",
+                  "code": "C1.2",
+                  "text": "Describe pattern rules.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M2-C-C1.3",
+                  "code": "C1.3",
+                  "text": "Create growing patterns.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M2-C-C1.4",
+                  "code": "C1.4",
+                  "text": "Represent patterns in different ways.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "C2_MODELLING",
+              "name": "Mathematical Modelling",
+              "expectations": [
+                {
+                  "id": "ON-M2-C-C2.1",
+                  "code": "C2.1",
+                  "text": "Identify mathematical situations in real contexts.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "C3_CODING",
+              "name": "Coding",
+              "expectations": [
+                {
+                  "id": "ON-M2-C-C3.1",
+                  "code": "C3.1",
+                  "text": "Create and execute code involving sequential events.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "D",
+          "name": "Data",
+          "topics": [
+            {
+              "id": "D1_DATA",
+              "name": "Data",
+              "expectations": [
+                {
+                  "id": "ON-M2-D-D1.1",
+                  "code": "D1.1",
+                  "text": "Sort and classify data.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M2-D-D1.2",
+                  "code": "D1.2",
+                  "text": "Collect data through surveys and observations.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M2-D-D1.3",
+                  "code": "D1.3",
+                  "text": "Represent data using graphs.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M2-D-D1.4",
+                  "code": "D1.4",
+                  "text": "Interpret data.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "E",
+          "name": "Spatial Sense",
+          "topics": [
+            {
+              "id": "E1_GEOMETRY",
+              "name": "Geometry",
+              "expectations": [
+                {
+                  "id": "ON-M2-E-E1.1",
+                  "code": "E1.1",
+                  "text": "Identify attributes of shapes and objects.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M2-E-E1.2",
+                  "code": "E1.2",
+                  "text": "Compose and decompose shapes.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M2-E-E1.3",
+                  "code": "E1.3",
+                  "text": "Describe spatial relationships.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "E2_MEASUREMENT",
+              "name": "Measurement",
+              "expectations": [
+                {
+                  "id": "ON-M2-E-E2.1",
+                  "code": "E2.1",
+                  "text": "Measure length and height using standard units.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M2-E-E2.2",
+                  "code": "E2.2",
+                  "text": "Tell time to the quarter hour.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M2-E-E2.3",
+                  "code": "E2.3",
+                  "text": "Compare capacity and mass.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "F",
+          "name": "Financial Literacy",
+          "topics": [
+            {
+              "id": "F1_FINANCIAL_LITERACY",
+              "name": "Financial Literacy",
+              "expectations": [
+                {
+                  "id": "ON-M2-F-F1.1",
+                  "code": "F1.1",
+                  "text": "Identify Canadian coins and their value.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M2-F-F1.2",
+                  "code": "F1.2",
+                  "text": "Describe spending and saving decisions.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "grade": "grade3",
+      "gradeLabel": "Grade 3",
+      "strands": [
+        {
+          "id": "A",
+          "name": "Social-Emotional Learning Skills",
+          "topics": [
+            {
+              "id": "A1",
+              "name": "Social-Emotional Learning Skills",
+              "expectations": [
+                {
+                  "id": "ON-M3-A-A1.1",
+                  "code": "A1.1",
+                  "text": "Apply social-emotional learning skills to mathematical learning.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "B",
+          "name": "Number",
+          "topics": [
+            {
+              "id": "B1_NUMBER_SENSE",
+              "name": "Number Sense",
+              "expectations": [
+                {
+                  "id": "ON-M3-B-B1.1",
+                  "code": "B1.1",
+                  "text": "Read and represent numbers to 1000.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M3-B-B1.2",
+                  "code": "B1.2",
+                  "text": "Compose and decompose numbers to 1000.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M3-B-B1.3",
+                  "code": "B1.3",
+                  "text": "Compare and order numbers to 1000.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M3-B-B1.4",
+                  "code": "B1.4",
+                  "text": "Round numbers to the nearest ten or hundred.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M3-B-B1.5",
+                  "code": "B1.5",
+                  "text": "Represent fractions as parts of a whole.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M3-B-B1.6",
+                  "code": "B1.6",
+                  "text": "Represent fractions on number lines.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "B2_OPERATIONS",
+              "name": "Operations",
+              "expectations": [
+                {
+                  "id": "ON-M3-B-B2.1",
+                  "code": "B2.1",
+                  "text": "Add and subtract numbers up to 1000.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M3-B-B2.2",
+                  "code": "B2.2",
+                  "text": "Recall multiplication facts to 10 × 10.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": {
+                    "mode": "math.multiplication.basic",
+                    "questionCount": 30,
+                    "columns": 3,
+                    "fontSize": 11,
+                    "ranges": {
+                      "aMin": 0,
+                      "aMax": 10,
+                      "bMin": 0,
+                      "bMax": 10
+                    },
+                    "options": {
+                      "includeAnswerKey": true,
+                      "subtractionNonNegative": true,
+                      "divisionIntegerOnly": true
+                    }
+                  }
+                },
+                {
+                  "id": "ON-M3-B-B2.3",
+                  "code": "B2.3",
+                  "text": "Solve problems involving multiplication and division.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": {
+                    "mode": "math.multiplication.basic",
+                    "questionCount": 24,
+                    "columns": 3,
+                    "fontSize": 11,
+                    "ranges": {
+                      "aMin": 0,
+                      "aMax": 10,
+                      "bMin": 0,
+                      "bMax": 10
+                    },
+                    "options": {
+                      "includeAnswerKey": true,
+                      "subtractionNonNegative": true,
+                      "divisionIntegerOnly": true
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "C",
+          "name": "Algebra",
+          "topics": [
+            {
+              "id": "C1_PATTERNS_RELATIONSHIPS",
+              "name": "Patterns and Relationships",
+              "expectations": [
+                {
+                  "id": "ON-M3-C-C1.1",
+                  "code": "C1.1",
+                  "text": "Identify and describe repeating elements and operations in patterns.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M3-C-C1.2",
+                  "code": "C1.2",
+                  "text": "Create and extend patterns.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M3-C-C1.3",
+                  "code": "C1.3",
+                  "text": "Represent relationships using equations.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M3-C-C1.4",
+                  "code": "C1.4",
+                  "text": "Use algebraic reasoning to solve problems.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "C2_MODELLING",
+              "name": "Mathematical Modelling",
+              "expectations": [
+                {
+                  "id": "ON-M3-C-C2.1",
+                  "code": "C2.1",
+                  "text": "Model mathematical situations.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "C3_CODING",
+              "name": "Coding",
+              "expectations": [
+                {
+                  "id": "ON-M3-C-C3.1",
+                  "code": "C3.1",
+                  "text": "Write code using sequences and loops.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "D",
+          "name": "Data",
+          "topics": [
+            {
+              "id": "D1_DATA",
+              "name": "Data",
+              "expectations": [
+                {
+                  "id": "ON-M3-D-D1.1",
+                  "code": "D1.1",
+                  "text": "Sort and classify data.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M3-D-D1.2",
+                  "code": "D1.2",
+                  "text": "Collect and organize data.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M3-D-D1.3",
+                  "code": "D1.3",
+                  "text": "Represent data using graphs.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M3-D-D1.4",
+                  "code": "D1.4",
+                  "text": "Analyse and interpret data.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "E",
+          "name": "Spatial Sense",
+          "topics": [
+            {
+              "id": "E1_GEOMETRY",
+              "name": "Geometry",
+              "expectations": [
+                {
+                  "id": "ON-M3-E-E1.1",
+                  "code": "E1.1",
+                  "text": "Describe properties of shapes.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M3-E-E1.2",
+                  "code": "E1.2",
+                  "text": "Compose and decompose shapes.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M3-E-E1.3",
+                  "code": "E1.3",
+                  "text": "Describe transformations.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "E2_MEASUREMENT",
+              "name": "Measurement",
+              "expectations": [
+                {
+                  "id": "ON-M3-E-E2.1",
+                  "code": "E2.1",
+                  "text": "Measure length, perimeter, mass, and capacity.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M3-E-E2.2",
+                  "code": "E2.2",
+                  "text": "Tell time to the minute.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M3-E-E2.3",
+                  "code": "E2.3",
+                  "text": "Relate area to covering surfaces.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "F",
+          "name": "Financial Literacy",
+          "topics": [
+            {
+              "id": "F1_FINANCIAL_LITERACY",
+              "name": "Financial Literacy",
+              "expectations": [
+                {
+                  "id": "ON-M3-F-F1.1",
+                  "code": "F1.1",
+                  "text": "Describe different ways people earn money.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M3-F-F1.2",
+                  "code": "F1.2",
+                  "text": "Explain the difference between needs and wants.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "grade": "grade4",
+      "gradeLabel": "Grade 4",
+      "strands": [
+        {
+          "id": "A",
+          "name": "Social-Emotional Learning Skills",
+          "topics": [
+            {
+              "id": "A1",
+              "name": "Social-Emotional Learning Skills",
+              "expectations": [
+                {
+                  "id": "ON-M4-A-A1.1",
+                  "code": "A1.1",
+                  "text": "Apply social-emotional learning skills to support mathematics learning.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "B",
+          "name": "Number",
+          "topics": [
+            {
+              "id": "B1_NUMBER_SENSE",
+              "name": "Number Sense",
+              "expectations": [
+                {
+                  "id": "ON-M4-B-B1.1",
+                  "code": "B1.1",
+                  "text": "Read, represent, and compare whole numbers up to 10 000.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M4-B-B1.2",
+                  "code": "B1.2",
+                  "text": "Use place value relationships.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M4-B-B1.3",
+                  "code": "B1.3",
+                  "text": "Represent fractions.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M4-B-B1.4",
+                  "code": "B1.4",
+                  "text": "Compare fractions.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "B2_OPERATIONS",
+              "name": "Operations",
+              "expectations": [
+                {
+                  "id": "ON-M4-B-B2.1",
+                  "code": "B2.1",
+                  "text": "Add and subtract numbers up to 10 000.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M4-B-B2.2",
+                  "code": "B2.2",
+                  "text": "Multiply two-digit numbers.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": {
+                    "mode": "math.multiplication.basic",
+                    "questionCount": 24,
+                    "columns": 3,
+                    "fontSize": 11,
+                    "ranges": {
+                      "aMin": 10,
+                      "aMax": 99,
+                      "bMin": 2,
+                      "bMax": 12
+                    },
+                    "options": {
+                      "includeAnswerKey": true,
+                      "subtractionNonNegative": true,
+                      "divisionIntegerOnly": true
+                    }
+                  }
+                },
+                {
+                  "id": "ON-M4-B-B2.3",
+                  "code": "B2.3",
+                  "text": "Divide whole numbers.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": {
+                    "mode": "math.division.integer",
+                    "questionCount": 24,
+                    "columns": 3,
+                    "fontSize": 11,
+                    "ranges": {
+                      "aMin": 12,
+                      "aMax": 144,
+                      "bMin": 2,
+                      "bMax": 12
+                    },
+                    "options": {
+                      "includeAnswerKey": true,
+                      "subtractionNonNegative": true,
+                      "divisionIntegerOnly": true
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "C",
+          "name": "Algebra",
+          "topics": [
+            {
+              "id": "C1_ALGEBRA",
+              "name": "Algebra",
+              "expectations": [
+                {
+                  "id": "ON-M4-C-C1.1",
+                  "code": "C1.1",
+                  "text": "Identify and describe patterns.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M4-C-C1.2",
+                  "code": "C1.2",
+                  "text": "Create patterns.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M4-C-C1.3",
+                  "code": "C1.3",
+                  "text": "Represent relationships with equations.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M4-C-C1.4",
+                  "code": "C1.4",
+                  "text": "Solve problems using algebraic thinking.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "C2_MODELLING",
+              "name": "Mathematical Modelling",
+              "expectations": [
+                {
+                  "id": "ON-M4-C-C2.1",
+                  "code": "C2.1",
+                  "text": "Model real-life mathematical situations.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "C3_CODING",
+              "name": "Coding",
+              "expectations": [
+                {
+                  "id": "ON-M4-C-C3.1",
+                  "code": "C3.1",
+                  "text": "Write and execute code using loops.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "D",
+          "name": "Data",
+          "topics": [
+            {
+              "id": "D1_DATA",
+              "name": "Data",
+              "expectations": [
+                {
+                  "id": "ON-M4-D-D1.1",
+                  "code": "D1.1",
+                  "text": "Collect and organize data.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M4-D-D1.2",
+                  "code": "D1.2",
+                  "text": "Represent data in graphs.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M4-D-D1.3",
+                  "code": "D1.3",
+                  "text": "Interpret data.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M4-D-D1.4",
+                  "code": "D1.4",
+                  "text": "Describe trends.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "E",
+          "name": "Spatial Sense",
+          "topics": [
+            {
+              "id": "E1_GEOMETRY",
+              "name": "Geometry",
+              "expectations": [
+                {
+                  "id": "ON-M4-E-E1.1",
+                  "code": "E1.1",
+                  "text": "Classify polygons.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M4-E-E1.2",
+                  "code": "E1.2",
+                  "text": "Describe angles.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M4-E-E1.3",
+                  "code": "E1.3",
+                  "text": "Describe transformations.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "E2_MEASUREMENT",
+              "name": "Measurement",
+              "expectations": [
+                {
+                  "id": "ON-M4-E-E2.1",
+                  "code": "E2.1",
+                  "text": "Measure perimeter and area.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M4-E-E2.2",
+                  "code": "E2.2",
+                  "text": "Measure mass and capacity.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M4-E-E2.3",
+                  "code": "E2.3",
+                  "text": "Tell time using 24-hour clocks.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "F",
+          "name": "Financial Literacy",
+          "topics": [
+            {
+              "id": "F1_FINANCIAL_LITERACY",
+              "name": "Financial Literacy",
+              "expectations": [
+                {
+                  "id": "ON-M4-F-F1.1",
+                  "code": "F1.1",
+                  "text": "Explain ways people earn and spend money.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M4-F-F1.2",
+                  "code": "F1.2",
+                  "text": "Describe saving and budgeting.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "grade": "grade5",
+      "gradeLabel": "Grade 5",
+      "strands": [
+        {
+          "id": "A",
+          "name": "Social-Emotional Learning Skills",
+          "topics": [
+            {
+              "id": "A1",
+              "name": "Social-Emotional Learning Skills",
+              "expectations": [
+                {
+                  "id": "ON-M5-A-A1.1",
+                  "code": "A1.1",
+                  "text": "Use social-emotional learning skills to support problem solving.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "B",
+          "name": "Number",
+          "topics": [
+            {
+              "id": "B1_NUMBER_SENSE",
+              "name": "Number Sense",
+              "expectations": [
+                {
+                  "id": "ON-M5-B-B1.1",
+                  "code": "B1.1",
+                  "text": "Read and represent numbers up to 100 000.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M5-B-B1.2",
+                  "code": "B1.2",
+                  "text": "Represent decimals to hundredths.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M5-B-B1.3",
+                  "code": "B1.3",
+                  "text": "Compare and order decimals and fractions.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "B2_OPERATIONS",
+              "name": "Operations",
+              "expectations": [
+                {
+                  "id": "ON-M5-B-B2.1",
+                  "code": "B2.1",
+                  "text": "Add and subtract decimals.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M5-B-B2.2",
+                  "code": "B2.2",
+                  "text": "Multiply multi-digit numbers.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": {
+                    "mode": "math.multiplication.basic",
+                    "questionCount": 24,
+                    "columns": 3,
+                    "fontSize": 11,
+                    "ranges": {
+                      "aMin": 10,
+                      "aMax": 999,
+                      "bMin": 10,
+                      "bMax": 99
+                    },
+                    "options": {
+                      "includeAnswerKey": true,
+                      "subtractionNonNegative": true,
+                      "divisionIntegerOnly": true
+                    }
+                  }
+                },
+                {
+                  "id": "ON-M5-B-B2.3",
+                  "code": "B2.3",
+                  "text": "Divide numbers.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": {
+                    "mode": "math.division.integer",
+                    "questionCount": 24,
+                    "columns": 3,
+                    "fontSize": 11,
+                    "ranges": {
+                      "aMin": 12,
+                      "aMax": 999,
+                      "bMin": 2,
+                      "bMax": 12
+                    },
+                    "options": {
+                      "includeAnswerKey": true,
+                      "subtractionNonNegative": true,
+                      "divisionIntegerOnly": true
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "C",
+          "name": "Algebra",
+          "topics": [
+            {
+              "id": "C1_ALGEBRA",
+              "name": "Algebra",
+              "expectations": [
+                {
+                  "id": "ON-M5-C-C1.1",
+                  "code": "C1.1",
+                  "text": "Identify and describe patterns.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M5-C-C1.2",
+                  "code": "C1.2",
+                  "text": "Create and extend patterns.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M5-C-C1.3",
+                  "code": "C1.3",
+                  "text": "Represent relationships with equations.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M5-C-C1.4",
+                  "code": "C1.4",
+                  "text": "Solve problems using algebraic reasoning.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "C2_MODELLING",
+              "name": "Mathematical Modelling",
+              "expectations": [
+                {
+                  "id": "ON-M5-C-C2.1",
+                  "code": "C2.1",
+                  "text": "Model real-life problems mathematically.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "C3_CODING",
+              "name": "Coding",
+              "expectations": [
+                {
+                  "id": "ON-M5-C-C3.1",
+                  "code": "C3.1",
+                  "text": "Write code using loops and conditional statements.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "D",
+          "name": "Data",
+          "topics": [
+            {
+              "id": "D1_DATA",
+              "name": "Data",
+              "expectations": [
+                {
+                  "id": "ON-M5-D-D1.1",
+                  "code": "D1.1",
+                  "text": "Collect and organize data.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M5-D-D1.2",
+                  "code": "D1.2",
+                  "text": "Represent data using graphs.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M5-D-D1.3",
+                  "code": "D1.3",
+                  "text": "Interpret data.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M5-D-D1.4",
+                  "code": "D1.4",
+                  "text": "Analyse relationships in data.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "E",
+          "name": "Spatial Sense",
+          "topics": [
+            {
+              "id": "E1_GEOMETRY",
+              "name": "Geometry",
+              "expectations": [
+                {
+                  "id": "ON-M5-E-E1.1",
+                  "code": "E1.1",
+                  "text": "Classify shapes.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M5-E-E1.2",
+                  "code": "E1.2",
+                  "text": "Measure angles.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M5-E-E1.3",
+                  "code": "E1.3",
+                  "text": "Describe transformations.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "E2_MEASUREMENT",
+              "name": "Measurement",
+              "expectations": [
+                {
+                  "id": "ON-M5-E-E2.1",
+                  "code": "E2.1",
+                  "text": "Calculate perimeter and area.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M5-E-E2.2",
+                  "code": "E2.2",
+                  "text": "Measure volume.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "F",
+          "name": "Financial Literacy",
+          "topics": [
+            {
+              "id": "F1_FINANCIAL_LITERACY",
+              "name": "Financial Literacy",
+              "expectations": [
+                {
+                  "id": "ON-M5-F-F1.1",
+                  "code": "F1.1",
+                  "text": "Describe financial goals.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M5-F-F1.2",
+                  "code": "F1.2",
+                  "text": "Explain saving and spending decisions.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "grade": "grade6",
+      "gradeLabel": "Grade 6",
+      "strands": [
+        {
+          "id": "A",
+          "name": "Social-Emotional Learning Skills",
+          "topics": [
+            {
+              "id": "A1",
+              "name": "Social-Emotional Learning Skills",
+              "expectations": [
+                {
+                  "id": "ON-M6-A-A1.1",
+                  "code": "A1.1",
+                  "text": "Use social-emotional learning skills to support mathematical thinking.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "B",
+          "name": "Number",
+          "topics": [
+            {
+              "id": "B1_NUMBER_SENSE",
+              "name": "Number Sense",
+              "expectations": [
+                {
+                  "id": "ON-M6-B-B1.1",
+                  "code": "B1.1",
+                  "text": "Read and represent numbers up to 1 000 000.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M6-B-B1.2",
+                  "code": "B1.2",
+                  "text": "Represent fractions and decimals.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M6-B-B1.3",
+                  "code": "B1.3",
+                  "text": "Compare and order fractions and decimals.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "B2_OPERATIONS",
+              "name": "Operations",
+              "expectations": [
+                {
+                  "id": "ON-M6-B-B2.1",
+                  "code": "B2.1",
+                  "text": "Add and subtract fractions.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M6-B-B2.2",
+                  "code": "B2.2",
+                  "text": "Multiply decimals.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M6-B-B2.3",
+                  "code": "B2.3",
+                  "text": "Divide whole numbers and decimals.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "C",
+          "name": "Algebra",
+          "topics": [
+            {
+              "id": "C1_ALGEBRA",
+              "name": "Algebra",
+              "expectations": [
+                {
+                  "id": "ON-M6-C-C1.1",
+                  "code": "C1.1",
+                  "text": "Identify patterns and relationships.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M6-C-C1.2",
+                  "code": "C1.2",
+                  "text": "Create and extend patterns.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M6-C-C1.3",
+                  "code": "C1.3",
+                  "text": "Represent relationships using variables and equations.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M6-C-C1.4",
+                  "code": "C1.4",
+                  "text": "Solve algebraic problems.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "C2_MODELLING",
+              "name": "Mathematical Modelling",
+              "expectations": [
+                {
+                  "id": "ON-M6-C-C2.1",
+                  "code": "C2.1",
+                  "text": "Model mathematical situations.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "C3_CODING",
+              "name": "Coding",
+              "expectations": [
+                {
+                  "id": "ON-M6-C-C3.1",
+                  "code": "C3.1",
+                  "text": "Write and execute code using loops and conditional logic.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "D",
+          "name": "Data",
+          "topics": [
+            {
+              "id": "D1_DATA",
+              "name": "Data",
+              "expectations": [
+                {
+                  "id": "ON-M6-D-D1.1",
+                  "code": "D1.1",
+                  "text": "Collect and organize data.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M6-D-D1.2",
+                  "code": "D1.2",
+                  "text": "Represent data using graphs.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M6-D-D1.3",
+                  "code": "D1.3",
+                  "text": "Interpret and analyse data.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M6-D-D1.4",
+                  "code": "D1.4",
+                  "text": "Draw conclusions from data.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "E",
+          "name": "Spatial Sense",
+          "topics": [
+            {
+              "id": "E1_GEOMETRY",
+              "name": "Geometry",
+              "expectations": [
+                {
+                  "id": "ON-M6-E-E1.1",
+                  "code": "E1.1",
+                  "text": "Classify shapes and solids.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M6-E-E1.2",
+                  "code": "E1.2",
+                  "text": "Measure angles and triangles.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M6-E-E1.3",
+                  "code": "E1.3",
+                  "text": "Describe transformations.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            },
+            {
+              "id": "E2_MEASUREMENT",
+              "name": "Measurement",
+              "expectations": [
+                {
+                  "id": "ON-M6-E-E2.1",
+                  "code": "E2.1",
+                  "text": "Calculate area and perimeter.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M6-E-E2.2",
+                  "code": "E2.2",
+                  "text": "Calculate volume.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "F",
+          "name": "Financial Literacy",
+          "topics": [
+            {
+              "id": "F1_FINANCIAL_LITERACY",
+              "name": "Financial Literacy",
+              "expectations": [
+                {
+                  "id": "ON-M6-F-F1.1",
+                  "code": "F1.1",
+                  "text": "Describe budgeting and saving strategies.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                },
+                {
+                  "id": "ON-M6-F-F1.2",
+                  "code": "F1.2",
+                  "text": "Explain financial decision-making.",
+                  "learningGoal": "",
+                  "successCriteria": [],
+                  "worksheet_recipe": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

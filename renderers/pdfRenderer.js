@@ -1,17 +1,10 @@
-// renderers/pdfRenderer.js
 'use strict';
 
 const layout = require("../config/layout/layoutSpec.json");
 const path = require("path");
 const PDFDocument = require("pdfkit");
 
-/**
- * Yellowbird Worksheet PDF Renderer (LayoutSpec-driven)
- * UPGRADE:
- * - True "fill-to-bottom" column layout with clamped spacing.
- * - Columns distribute questions from startY to bottomContentY cleanly.
- * - Keeps baseline rhythm using typography.body.lineHeight as the min.
- */
+const MAX_PER_COLUMN = 30;
 
 function safeStr(v) { return (v ?? "").toString(); }
 function isEquation(item) { return item && item.type === "equation"; }
@@ -32,9 +25,9 @@ function promptWithoutEquals(prompt) {
 }
 
 function clampCols(n) {
-  const v = parseInt(n || String(layout.grid?.columns || 3), 10);
-  if (![1, 2, 3].includes(v)) return 3;
-  return v;
+  const v = parseInt(n ?? "", 10);
+  const base = Number.isFinite(v) ? v : (layout.grid?.columns ?? 3);
+  return Math.max(1, Math.min(4, base));
 }
 
 function tryRegisterFont(doc, name, filePath) {
@@ -53,32 +46,18 @@ function lineRule(doc, x1, x2, y, strokeWidth, color = "#000") {
 
 function headerDividerRule() {
   const r = layout.rules?.headerDivider || {};
-  return {
-    strokeWidth: (r.strokeWidth ?? 0.25),
-    color: (r.color ?? "#000"),
-  };
+  return { strokeWidth: (r.strokeWidth ?? 0.25), color: (r.color ?? "#000") };
 }
-
 function footerRule() {
   const r = layout.rules?.footerRule || layout.rules?.headerDivider || {};
-  return {
-    strokeWidth: (r.strokeWidth ?? 0.25),
-    color: (r.color ?? "#000"),
-  };
+  return { strokeWidth: (r.strokeWidth ?? 0.25), color: (r.color ?? "#000") };
 }
-
 function nameDateRule() {
   const r = layout.rules?.nameDateLine || layout.rules?.headerDivider || {};
-  return {
-    strokeWidth: (r.strokeWidth ?? 0.25),
-    color: (r.color ?? "#000"),
-  };
+  return { strokeWidth: (r.strokeWidth ?? 0.25), color: (r.color ?? "#000") };
 }
 
-/**
- * Footer drawn AFTER content.
- */
-function drawFooter(doc, fonts, pageNum) {
+function drawFooter(doc, fonts, pageNum, meta = {}) {
   const cb = layout.page.contentBox;
   const xLeft = cb.x;
   const xRight = cb.x + cb.width;
@@ -89,8 +68,27 @@ function drawFooter(doc, fonts, pageNum) {
   const fr = footerRule();
   lineRule(doc, xLeft, xRight, yRule, fr.strokeWidth, fr.color);
 
-  const pageNumY = yRule + (bottomMargin / 2);
+  // Curriculum footer text ONLY when present
+  const footerText = meta?.curriculum?.footerText ? safeStr(meta.curriculum.footerText).trim() : "";
+  if (footerText) {
+    doc.save();
+    setFont(doc, fonts.light || fonts.regular, 9);
+    doc.fillColor("#222222");
+    // Put it just above the rule (inside the footer buffer area)
+    doc.text(footerText, xLeft, yRule - 11, {
+      width: cb.width,
+      align: "left",
+      lineBreak: false,
+    });
+    doc.restore();
+  }
+
+  // Page number below the rule
+  const offset = Math.max(6, Math.min(10, (layout.spacing?.sm ?? 12) - 2));
+  const pageNumY = yRule + offset;
+
   setFont(doc, fonts.light || fonts.regular, layout.typography.headerLabels.size);
+  doc.fillColor("#222222");
   doc.text(String(pageNum), xLeft, pageNumY, {
     width: cb.width,
     align: "center",
@@ -104,6 +102,7 @@ function drawNameDateLine(doc, fonts, y) {
   const nr = nameDateRule();
 
   setFont(doc, fonts.light, labelStyle.size);
+  doc.fillColor("#222222");
 
   doc.text(header.name.label, header.name.labelX, y, { lineBreak: false });
   lineRule(doc, header.name.lineStart, header.name.lineEnd, y + labelStyle.lineHeight, nr.strokeWidth, nr.color);
@@ -119,41 +118,55 @@ function renderHeader(doc, fonts, meta = {}) {
 
   let y = cb.y;
 
-  drawNameDateLine(doc, fonts, y);
+  // name/date line
+  const lift = layout.spacing?.xs ?? 6;
+  drawNameDateLine(doc, fonts, y - lift);
+
+  // header block "thirds" feel: title in middle third, subheading in bottom third
   y += layout.spacing.md;
 
   const unitTitle = safeStr(meta.unitTitle).trim();
   const worksheetTitle = safeStr(meta.title).trim();
+  const subheading = safeStr(meta.subheading).trim();
   const dailyFocus = safeStr(meta.dailyFocus).trim() || safeStr(meta.focus).trim();
 
   if (unitTitle) {
     const s = layout.typography.unitTitle;
     setFont(doc, fonts.bold, s.size);
+    doc.fillColor("#222222");
     doc.text(unitTitle.toUpperCase(), xLeft, y, { width: cb.width, align: "left" });
     y += s.lineHeight;
   }
 
   if (worksheetTitle) {
     const s = layout.typography.worksheetTitle;
-    setFont(doc, fonts.light, s.size);
+    // Title should be Bold per your rule
+    setFont(doc, fonts.bold, s.size);
+    doc.fillColor("#222222");
     doc.text(worksheetTitle, xLeft, y, { width: cb.width, align: "left" });
     y += s.lineHeight;
   }
 
-  if (dailyFocus) {
+  if (subheading) {
+    const s = layout.typography.headerLabels;
+    setFont(doc, fonts.light, s.size);
+    doc.fillColor("#222222");
+    doc.text(subheading, xLeft, y, { width: cb.width, align: "left" });
+    y += s.lineHeight;
+  } else if (dailyFocus) {
     const s = layout.typography.focusAndSection;
     setFont(doc, fonts.lightItalic, s.size);
+    doc.fillColor("#222222");
     doc.text(dailyFocus, xLeft, y, { width: cb.width, align: "left" });
     y += s.lineHeight;
   }
 
+  // divider line should sit BELOW subheading with a small nice space
   y += layout.spacing.sm;
-
   const hd = headerDividerRule();
   lineRule(doc, xLeft, xRight, y, hd.strokeWidth, hd.color);
 
   y += layout.spacing.md;
-
   doc.y = y;
   return y;
 }
@@ -161,82 +174,61 @@ function renderHeader(doc, fonts, meta = {}) {
 function getColumns(cols) {
   const cb = layout.page.contentBox;
   const gutter = cols === 1 ? 0 : (layout.grid?.gutter ?? 24);
-
-  const colW = cols === 1
-    ? cb.width
-    : (cb.width - gutter * (cols - 1)) / cols;
-
+  const colW = cols === 1 ? cb.width : (cb.width - gutter * (cols - 1)) / cols;
   const xForCol = (i) => cb.x + i * (colW + gutter);
   return { cb, gutter, colW, xForCol };
 }
 
-/**
- * We distribute items "column-first" to keep columns balanced:
- * - counts differ by at most 1
- */
 function distributeBalanced(items, cols) {
   const buckets = Array.from({ length: cols }, () => []);
   items.forEach((it, idx) => buckets[idx % cols].push(it));
   return buckets;
 }
 
-/**
- * Compute positions that:
- * - start at startY
- * - end at bottomY - lineHeight (so last line fits)
- * - use even spacing
- * - clamp spacing so it doesn't get absurdly large on short columns
- */
-function computeYPositions(startY, bottomY, n, lineHeight) {
-  const top = startY;
-  const bottom = Math.max(top, bottomY - lineHeight);
+function paginateEven(items, maxPerPage) {
+  const n = items.length;
+  if (n <= maxPerPage) return [items];
 
-  if (n <= 0) return [];
-  if (n === 1) return [top + (bottom - top) / 2];
+  const pagesNeeded = Math.ceil(n / maxPerPage);
+  const pages = [];
+  let i = 0;
+  let remaining = n;
 
-  // ideal even step
-  const span = bottom - top;
-  let step = span / (n - 1);
+  for (let p = pagesNeeded; p > 0; p--) {
+    const ideal = Math.ceil(remaining / p);
+    const take = Math.min(maxPerPage, ideal);
+    pages.push(items.slice(i, i + take));
+    i += take;
+    remaining -= take;
+  }
+  return pages;
+}
 
-  // Clamp step: keep it airy but not ridiculous.
-  // Min step = lineHeight * 1.35 (readable)
-  // Max step = lineHeight * 2.6 (still looks intentional)
+function computeFillStep(startY, bottomContentY, lineHeight, maxCountInAnyColumn) {
+  const usable = Math.max(0, (bottomContentY - startY) - lineHeight);
+
+  if (maxCountInAnyColumn <= 1) {
+    return lineHeight * 1.6;
+  }
+
+  let step = usable / (maxCountInAnyColumn - 1);
   const minStep = lineHeight * 1.35;
   const maxStep = lineHeight * 2.6;
   step = Math.max(minStep, Math.min(maxStep, step));
-
-  // If clamped step would exceed bottom, fall back to min-step stacking
-  const neededSpan = step * (n - 1);
-  const start = neededSpan <= span ? top : top;
-
-  const ys = [];
-  for (let i = 0; i < n; i++) ys.push(start + i * step);
-
-  // If we overflow, stack with minStep and let bottom breathing room be smaller
-  if (ys[ys.length - 1] > bottom) {
-    const ys2 = [];
-    const step2 = minStep;
-    for (let i = 0; i < n; i++) ys2.push(top + i * step2);
-    return ys2;
-  }
-
-  return ys;
+  return step;
 }
 
-/**
- * Paginate based on minimum line step (minStep) so we never overflow.
- */
-function paginateByMinStep(items, cols, startY, bottomY, lineHeight) {
-  const minStep = lineHeight * 1.35;
-  const usableH = Math.max(1, bottomY - startY);
-  const linesPerCol = Math.max(1, Math.floor(usableH / minStep));
-  const perPage = cols * linesPerCol;
+function renderPageColumns(doc, cols, columns, startY, bottomContentY, xForCol, colW, step, renderLineFn, lineHeight) {
+  for (let c = 0; c < cols; c++) {
+    const colItems = columns[c];
+    if (!colItems.length) continue;
 
-  const pages = [];
-  for (let i = 0; i < items.length; i += perPage) {
-    pages.push(items.slice(i, i + perPage));
+    for (let i = 0; i < colItems.length; i++) {
+      const y = startY + i * step;
+      if (y > bottomContentY - lineHeight) break;
+      renderLineFn(colItems[i], xForCol(c), y, colW);
+    }
   }
-  return pages;
 }
 
 function renderQuestionsPages(doc, fonts, contentObject, options, pageState) {
@@ -253,53 +245,54 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState) {
 
   let startY = renderHeader(doc, fonts, meta);
   setFont(doc, fonts.regular, bodyStyle.size);
+  doc.fillColor("#222222");
 
-  const pages = paginateByMinStep(allItems, cols, startY, bottomContentY, bodyStyle.lineHeight);
+  const maxPerPage = cols * MAX_PER_COLUMN;
+  const pages = paginateEven(allItems, maxPerPage);
 
   pages.forEach((pageItems, pageIndex) => {
     if (pageIndex > 0) {
       doc.addPage();
       pageState.pageNum += 1;
-
       startY = renderHeader(doc, fonts, meta);
       setFont(doc, fonts.regular, bodyStyle.size);
+      doc.fillColor("#222222");
     }
 
     const columns = distributeBalanced(pageItems, cols);
+    const maxColCount = Math.max(1, ...columns.map(c => c.length));
+    const step = computeFillStep(startY, bottomContentY, bodyStyle.lineHeight, maxColCount);
 
-    for (let c = 0; c < cols; c++) {
-      const colItems = columns[c];
-      if (!colItems.length) continue;
+    const usable = Math.max(0, (bottomContentY - startY) - bodyStyle.lineHeight);
+    const span = Math.max(0, step * (maxColCount - 1));
+    const topForCenter = startY + Math.max(0, (usable - span) / 2);
 
-      const x = xForCol(c);
-      const ys = computeYPositions(startY, bottomContentY, colItems.length, bodyStyle.lineHeight);
-
-      for (let i = 0; i < colItems.length; i++) {
-        const item = colItems[i];
-        const y = ys[i];
-
+    renderPageColumns(
+      doc,
+      cols,
+      columns,
+      topForCenter,
+      bottomContentY,
+      xForCol,
+      colW,
+      step,
+      (item, x, y, w) => {
         const label = item.id != null ? `${item.id})  ` : "";
-        const prompt = safeStr(item.prompt);
+        doc.text(`${label}${safeStr(item.prompt)}`, x, y, { width: w, align: "left" });
+      },
+      bodyStyle.lineHeight
+    );
 
-        doc.text(`${label}${prompt}`, x, y, { width: colW, align: "left" });
-      }
-    }
-
-    drawFooter(doc, fonts, pageState.pageNum);
+    drawFooter(doc, fonts, pageState.pageNum, meta);
   });
 }
 
-function renderAnswerKey(doc, fonts, contentObject, pageState) {
+function renderAnswerKey(doc, fonts, contentObject, options, pageState) {
   const meta = contentObject?.meta || {};
   const answers = buildAnswerKeyItems(contentObject?.content?.items || []);
   if (!answers.length) return;
 
-  doc.addPage();
-  pageState.pageNum += 1;
-
-  const keyMeta = { ...meta, title: "ANSWER KEY" };
-
-  const cols = 2;
+  const cols = clampCols(options.cols);
   const bodyStyle = layout.typography.body;
   const { colW, xForCol } = getColumns(cols);
 
@@ -307,33 +300,43 @@ function renderAnswerKey(doc, fonts, contentObject, pageState) {
   const footerBufferH = layout.zones?.footerBuffer?.height ?? 24;
   const bottomContentY = footerRuleY - footerBufferH;
 
-  let startY = renderHeader(doc, fonts, keyMeta);
-  setFont(doc, fonts.regular, bodyStyle.size);
+  const maxPerPage = cols * MAX_PER_COLUMN;
+  const pages = paginateEven(answers, maxPerPage);
 
-  const pages = paginateByMinStep(answers, cols, startY, bottomContentY, bodyStyle.lineHeight);
+  doc.addPage();
+  pageState.pageNum += 1;
+
+  let startY = renderHeader(doc, fonts, { ...meta, title: "ANSWER KEY", subheading: "" });
+  setFont(doc, fonts.regular, bodyStyle.size);
+  doc.fillColor("#222222");
 
   pages.forEach((pageItems, pageIndex) => {
     if (pageIndex > 0) {
       doc.addPage();
       pageState.pageNum += 1;
-
-      startY = renderHeader(doc, fonts, keyMeta);
+      startY = renderHeader(doc, fonts, { ...meta, title: "ANSWER KEY", subheading: "" });
       setFont(doc, fonts.regular, bodyStyle.size);
+      doc.fillColor("#222222");
     }
 
     const columns = distributeBalanced(pageItems, cols);
+    const maxColCount = Math.max(1, ...columns.map(c => c.length));
+    const step = computeFillStep(startY, bottomContentY, bodyStyle.lineHeight, maxColCount);
 
-    for (let c = 0; c < cols; c++) {
-      const colItems = columns[c];
-      if (!colItems.length) continue;
+    const usable = Math.max(0, (bottomContentY - startY) - bodyStyle.lineHeight);
+    const span = Math.max(0, step * (maxColCount - 1));
+    const topForCenter = startY + Math.max(0, (usable - span) / 2);
 
-      const x = xForCol(c);
-      const ys = computeYPositions(startY, bottomContentY, colItems.length, bodyStyle.lineHeight);
-
-      for (let i = 0; i < colItems.length; i++) {
-        const it = colItems[i];
-        const y = ys[i];
-
+    renderPageColumns(
+      doc,
+      cols,
+      columns,
+      topForCenter,
+      bottomContentY,
+      xForCol,
+      colW,
+      step,
+      (it, x, y, w) => {
         const id = it.id != null ? `${it.id})  ` : "";
         const left = promptWithoutEquals(it.prompt);
 
@@ -345,11 +348,12 @@ function renderAnswerKey(doc, fonts, contentObject, pageState) {
           if (it.op === "/") ans = it.b !== 0 ? it.a / it.b : "";
         }
 
-        doc.text(`${id}${left} = ${ans ?? ""}`, x, y, { width: colW, align: "left", lineBreak: false });
-      }
-    }
+        doc.text(`${id}${left} = ${ans ?? ""}`, x, y, { width: w, align: "left", lineBreak: false });
+      },
+      bodyStyle.lineHeight
+    );
 
-    drawFooter(doc, fonts, pageState.pageNum);
+    drawFooter(doc, fonts, pageState.pageNum, meta);
   });
 }
 
@@ -373,22 +377,24 @@ function renderWorksheetPDF({ res, contentObject, options = {} }) {
   tryRegisterFont(doc, fonts.light, path.join(fontsDir, "SourceSans3-Light.ttf"));
   tryRegisterFont(doc, fonts.lightItalic, path.join(fontsDir, "SourceSans3-LightItalic.ttf"));
 
+  const filename = (options && options.filename) ? safeStr(options.filename) : "yellowbird-worksheet.pdf";
+
   res.setHeader("Content-Type", "application/pdf");
-  res.setHeader("Content-Disposition", `attachment; filename="yellowbird-worksheet.pdf"`);
+  res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
 
   doc.pipe(res);
-
-  const pageState = { pageNum: 1 };
 
   const normalized = {
     cols: clampCols(options.cols ?? layout.grid?.columns ?? 3),
     includeAnswerKey: options.includeAnswerKey !== false,
   };
 
+  const pageState = { pageNum: 1 };
+
   renderQuestionsPages(doc, fonts, contentObject, normalized, pageState);
 
   if (normalized.includeAnswerKey) {
-    renderAnswerKey(doc, fonts, contentObject, pageState);
+    renderAnswerKey(doc, fonts, contentObject, normalized, pageState);
   }
 
   doc.end();

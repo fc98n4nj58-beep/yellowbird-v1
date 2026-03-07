@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>QA Smoke — Project Yellow Bird</title>
+  <link rel="stylesheet" href="/styles/site.css"/>
+  <style>
+    .wrap { max-width: 1100px; margin:0 auto; padding: 24px; }
+    .card { border:1px solid #e6e6e6; border-radius: 12px; padding: 14px; background:#fff; }
+    .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; padding: 10px 12px; border-radius: 10px; border: 1px solid #222; background:#fff; color:#111; text-decoration:none; cursor:pointer; font-weight:700; }
+    .btn.primary { background:#111; color:#fff; }
+    table { width:100%; border-collapse: collapse; margin-top: 12px; }
+    th, td { border-bottom: 1px solid #eee; padding: 10px 8px; text-align:left; font-size: 14px; }
+    th { font-size: 12px; opacity:.7; }
+    .ok { color: #2ea44f; font-weight:700; }
+    .bad { color: #d1242f; font-weight:700; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size: 12px; }
+    .banner { display:none; padding: 10px 12px; border-radius: 12px; border:1px solid #ffd7d7; background:#fff1f1; color:#7a1f1f; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/"><span class="dot"></span> Project Yellow Bird</a>
+      <nav class="nav">
+        <a href="/browse">Browse Library</a>
+        <a href="/curriculum">Curriculum</a>
+        <a href="/worksheet">Worksheet Generator</a>
+        <a href="/units">Unit Generator</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <h1 style="margin:0 0 6px 0;">QA Smoke</h1>
+    <div style="opacity:.8;margin-bottom:14px;">Runs 3 smoke calls (worksheet, unit, curriculum expectation) and reports status, time, and size.</div>
+
+    <div id="banner" class="banner"><strong>Smoke test failed.</strong> One or more calls returned non-OK.</div>
+
+    <div class="card">
+      <div class="row">
+        <button id="run" class="btn primary">Run Smoke Tests</button>
+        <div id="hint" style="opacity:.75;">Tip: open this page at <span class="mono">/qa/smoke</span></div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Test</th>
+            <th>Status</th>
+            <th>Elapsed</th>
+            <th>Size</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </div>
+
+<script>
+  const rows = document.getElementById("rows");
+  const banner = document.getElementById("banner");
+
+  function fmtBytes(n){
+    if(!Number.isFinite(n)) return "—";
+    if(n < 1024) return n + " B";
+    if(n < 1024*1024) return (n/1024).toFixed(1) + " KB";
+    return (n/(1024*1024)).toFixed(2) + " MB";
+  }
+
+  function rowHtml(name, result){
+    const ok = result.ok;
+    const status = ok ? `<span class="ok">OK</span>` : `<span class="bad">FAIL</span>`;
+    const link = result.link ? `<a class="mono" href="${result.link}" target="_blank">open</a>` : "—";
+    return `
+      <tr>
+        <td>${name}</td>
+        <td>${status} <span class="mono">(${result.status})</span></td>
+        <td class="mono">${result.ms} ms</td>
+        <td class="mono">${fmtBytes(result.size)}</td>
+        <td>${link}</td>
+      </tr>
+    `;
+  }
+
+  async function runOne(url, expectBinary){
+    const t0 = performance.now();
+    let res, buf;
+    try{
+      res = await fetch(url);
+      if(expectBinary){
+        buf = await res.arrayBuffer();
+      } else {
+        buf = new TextEncoder().encode(await res.text()).buffer;
+      }
+    } catch(e){
+      return { ok:false, status:"ERR", ms: Math.round(performance.now()-t0), size: 0, link: "" };
+    }
+
+    const ms = Math.round(performance.now() - t0);
+    const size = buf ? buf.byteLength : 0;
+    const ok = res.ok;
+
+    return { ok, status: res.status, ms, size, link: url };
+  }
+
+  async function run(){
+    banner.style.display = "none";
+    rows.innerHTML = "";
+
+    const tests = [
+      {
+        name: "Worksheet PDF",
+        url: "/api/worksheet.pdf?mode=math.addition.basic&aMin=1&aMax=20&bMin=1&bMax=20&count=12&cols=2&font=11&answers=1&nonneg=1&intdiv=1",
+        binary: true
+      },
+      {
+        name: "Unit PDF",
+        // NEW: omit modeKey so server auto-selects default modeKey
+        url: "/api/unit.pdf?jurisdiction=ontario&grade=1&subject=math&numLessons=10&theme=",
+        binary: true
+      },
+      {
+        name: "Curriculum Expectation",
+        url: "/api/curriculum/expectation?id=ON-M3-N-MULT-100-DIV-100-B2.6",
+        binary: false
+      }
+    ];
+
+    let anyFail = false;
+
+    for(const t of tests){
+      const r = await runOne(t.url, t.binary);
+      if(!r.ok) anyFail = true;
+      rows.innerHTML += rowHtml(t.name, r);
+    }
+
+    if(anyFail) banner.style.display = "block";
+  }
+
+  document.getElementById("run").addEventListener("click", run);
+</script>
+</body>
+</html>

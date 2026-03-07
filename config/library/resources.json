@@ -1,0 +1,81 @@
+{
+  "resources": [
+    {
+      "slug": "g1-attributes-and-numbers-unit-overview",
+      "title": "Grade 1 — Attributes & Numbers (10-Lesson Unit Overview)",
+      "description": "Ontario Math Grade 1 unit overview aligned to Attributes and Numbers sequence.",
+      "jurisdiction": "ontario",
+      "grades": ["1"],
+      "subject": "math",
+      "strand": "number",
+      "topics": ["attributes", "number sense", "representing numbers"],
+      "keywords": ["grade 1", "ontario", "unit plan", "number"],
+      "formats": ["PDF"],
+      "prepTime": "Quick prep",
+      "isFree": true,
+      "createdAt": "2026-03-05",
+      "downloads": 0,
+      "previewImages": [],
+      "files": [
+        {
+          "id": "yb_g1_unit_overview_pdf",
+          "type": "pdf",
+          "label": "Unit Overview PDF",
+          "path": "/downloads/sample/g1_attributes_numbers_unit_overview.pdf",
+          "filename": "G1_Attributes_and_Numbers_Unit_Overview.pdf"
+        }
+      ]
+    },
+    {
+      "slug": "math-addition-basic-worksheet-pack",
+      "title": "Addition Practice — Basic Facts (Printable Worksheets)",
+      "description": "Clean, print-first addition practice pages. Great for independent work or centers.",
+      "jurisdiction": "ontario",
+      "grades": ["1", "2"],
+      "subject": "math",
+      "strand": "number",
+      "topics": ["addition", "basic facts"],
+      "keywords": ["addition", "facts", "practice", "centers"],
+      "formats": ["PDF"],
+      "prepTime": "No prep",
+      "isFree": true,
+      "createdAt": "2026-03-05",
+      "downloads": 0,
+      "previewImages": [],
+      "files": [
+        {
+          "id": "yb_addition_basic_pack_pdf",
+          "type": "pdf",
+          "label": "Worksheet Pack PDF",
+          "path": "/downloads/sample/addition_basic_pack.pdf",
+          "filename": "Addition_Basic_Practice.pdf"
+        }
+      ]
+    },
+    {
+      "slug": "worksheet-generator",
+      "title": "Worksheet Generator (Instant)",
+      "description": "Generate clean practice worksheets instantly — choose mode, ranges, columns, and answer key.",
+      "grades": ["K", "1", "2", "3", "4", "5", "6"],
+      "subject": "math",
+      "strand": "generator",
+      "topics": ["generator"],
+      "keywords": ["generator", "worksheet"],
+      "formats": ["PDF"],
+      "prepTime": "Instant",
+      "isFree": true,
+      "createdAt": "2026-03-05",
+      "downloads": 0,
+      "previewImages": [],
+      "files": [
+        {
+          "id": "yb_generator_link",
+          "type": "link",
+          "label": "Open Generator",
+          "path": "/worksheet",
+          "filename": "Worksheet_Generator"
+        }
+      ]
+    }
+  ]
+}
