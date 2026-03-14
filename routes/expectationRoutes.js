@@ -3,6 +3,11 @@ const router = express.Router();
 
 const curriculumService = require("../services/curriculumService");
 const { getCurriculumRecipe } = require("../config/curriculumRecipes");
+const {
+  buildWorksheetUrl,
+  buildExitTicketUrl,
+  buildPackUrl,
+} = require("../services/curriculumPageService");
 
 /* =========================
    EXPECTATION PAGE ROUTE
@@ -111,23 +116,6 @@ router.get("/curriculum/on/:subject/:grade/:strand/:expectationCode", (req, res)
               letter-spacing: 0;
             }
 
-            .site-actions {
-              display: flex;
-              align-items: center;
-              gap: 10px;
-              flex-wrap: wrap;
-            }
-
-            .site-link {
-              font-size: 15px;
-              color: var(--yb-text-soft);
-              padding: 6px 0;
-            }
-
-            .site-link:hover {
-              color: var(--yb-text);
-            }
-
             .page-wrap {
               max-width: var(--yb-max);
               margin: 0 auto;
@@ -144,22 +132,19 @@ router.get("/curriculum/on/:subject/:grade/:strand/:expectationCode", (req, res)
               margin-bottom: 24px;
             }
 
-            .breadcrumbs a {
-              color: var(--yb-text-soft);
-              border-bottom: 1px solid transparent;
-            }
-
-            .breadcrumbs a:hover {
-              color: var(--yb-text);
-              border-bottom-color: var(--yb-border-strong);
-            }
-
             .crumb-sep {
               color: #9aa6b2;
             }
 
-            .hero {
-              margin-bottom: 24px;
+            .card {
+              background: var(--yb-surface);
+              border: 1px solid var(--yb-border);
+              border-radius: var(--yb-radius);
+              box-shadow: var(--yb-shadow);
+            }
+
+            .card-pad {
+              padding: 24px;
             }
 
             .eyebrow {
@@ -170,30 +155,6 @@ router.get("/curriculum/on/:subject/:grade/:strand/:expectationCode", (req, res)
               letter-spacing: 0.08em;
               text-transform: uppercase;
               color: var(--yb-text-soft);
-            }
-
-            .hero-pills {
-              display: flex;
-              flex-wrap: wrap;
-              gap: 10px;
-              margin-bottom: 18px;
-            }
-
-            .pill {
-              display: inline-flex;
-              align-items: center;
-              min-height: 34px;
-              padding: 6px 12px;
-              border: 1px solid var(--yb-border);
-              border-radius: 999px;
-              background: rgba(255,255,255,0.9);
-              font-size: 14px;
-              color: var(--yb-text);
-            }
-
-            .pill-soft {
-              background: var(--yb-accent-soft);
-              border-color: #d8e8f6;
             }
 
             .hero-title {
@@ -210,214 +171,6 @@ router.get("/curriculum/on/:subject/:grade/:strand/:expectationCode", (req, res)
               font-size: 22px;
               line-height: 1.4;
               color: #41505c;
-            }
-
-            .content-grid {
-              display: grid;
-              grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-              gap: 24px;
-              align-items: start;
-            }
-
-            .stack {
-              display: grid;
-              gap: 24px;
-            }
-
-            .card {
-              background: var(--yb-surface);
-              border: 1px solid var(--yb-border);
-              border-radius: var(--yb-radius);
-              box-shadow: var(--yb-shadow);
-            }
-
-            .card-pad {
-              padding: 24px;
-            }
-
-            .card-title {
-              margin: 0 0 18px;
-              font-size: 24px;
-              line-height: 1.2;
-              font-weight: 700;
-              color: var(--yb-text);
-            }
-
-            .section + .section {
-              margin-top: 24px;
-              padding-top: 24px;
-              border-top: 1px solid #edf2f6;
-            }
-
-            .label {
-              display: block;
-              margin-bottom: 8px;
-              font-size: 13px;
-              line-height: 1.2;
-              letter-spacing: 0.08em;
-              text-transform: uppercase;
-              color: var(--yb-text-soft);
-            }
-
-            .body-copy {
-              font-size: 18px;
-              line-height: 1.55;
-              color: var(--yb-text);
-            }
-
-            .muted {
-              margin: 0;
-              font-size: 17px;
-              line-height: 1.5;
-              color: var(--yb-text-soft);
-            }
-
-            .criteria-list {
-              margin: 0;
-              padding-left: 20px;
-            }
-
-            .criteria-list li {
-              margin-bottom: 10px;
-              font-size: 18px;
-              line-height: 1.5;
-            }
-
-            .resource-intro {
-              margin: -4px 0 18px;
-              font-size: 16px;
-              line-height: 1.45;
-              color: var(--yb-text-soft);
-            }
-
-            .generator-grid {
-              display: grid;
-              grid-template-columns: 1fr 1fr;
-              gap: 12px;
-            }
-
-            .resource-card,
-            .resource-card-soon {
-              display: flex;
-              flex-direction: column;
-              justify-content: space-between;
-              min-height: 124px;
-              padding: 18px;
-              border: 1px solid var(--yb-border);
-              border-radius: var(--yb-radius);
-              background: #fff;
-              transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
-            }
-
-            .resource-card:hover {
-              background: var(--yb-surface-soft);
-              border-color: var(--yb-border-strong);
-              transform: translateY(-1px);
-            }
-
-            .resource-card-soon {
-              background: #fbfcfd;
-              color: var(--yb-text-soft);
-            }
-
-            .resource-card--wide {
-              grid-column: 1 / -1;
-            }
-
-            .resource-title {
-              margin: 0 0 8px;
-              font-size: 19px;
-              line-height: 1.2;
-              font-weight: 700;
-              color: var(--yb-text);
-            }
-
-            .resource-card-soon .resource-title {
-              color: #65717c;
-            }
-
-            .resource-copy {
-              margin: 0;
-              font-size: 16px;
-              line-height: 1.45;
-              color: #50606c;
-            }
-
-            .status {
-              margin-top: 14px;
-              font-size: 12px;
-              line-height: 1.2;
-              letter-spacing: 0.06em;
-              text-transform: uppercase;
-              color: #6f7e8a;
-            }
-
-            .meta-list {
-              display: grid;
-              gap: 12px;
-            }
-
-            .meta-row {
-              display: grid;
-              grid-template-columns: 140px 1fr;
-              gap: 12px;
-              align-items: start;
-              font-size: 16px;
-              line-height: 1.45;
-            }
-
-            .meta-key {
-              color: var(--yb-text-soft);
-              font-weight: 600;
-            }
-
-            .meta-value {
-              color: var(--yb-text);
-              word-break: break-word;
-            }
-
-            @media (max-width: 900px) {
-              .content-grid {
-                grid-template-columns: 1fr;
-              }
-
-              .generator-grid {
-                grid-template-columns: 1fr;
-              }
-
-              .resource-card--wide {
-                grid-column: auto;
-              }
-            }
-
-            @media (max-width: 640px) {
-              .sitebar-inner,
-              .page-wrap {
-                padding-left: 18px;
-                padding-right: 18px;
-              }
-
-              .sitebar-inner {
-                align-items: flex-start;
-                flex-direction: column;
-              }
-
-              .hero-title {
-                font-size: 32px;
-              }
-
-              .hero-text {
-                font-size: 20px;
-              }
-
-              .card-pad {
-                padding: 20px;
-              }
-
-              .meta-row {
-                grid-template-columns: 1fr;
-                gap: 4px;
-              }
             }
           </style>
         </head>
@@ -474,42 +227,9 @@ router.get("/curriculum/on/:subject/:grade/:strand/:expectationCode", (req, res)
   const packRecipe = curriculumRecipe?.pack || null;
   const exitTicketType = curriculumRecipe?.exitTicket?.type || "general-check";
 
-  const gradeParam = String(found.grade || found.gradeLabel || "")
-    .trim()
-    .toLowerCase()
-    .replace(/^grade\s*/i, "grade");
-
-  const worksheetUrl =
-    `/worksheet?subject=${encodeURIComponent(found.subject?.name || "Math")}` +
-    `&grade=${encodeURIComponent(gradeParam)}` +
-    `&strand=${encodeURIComponent(found.strand?.name || "")}` +
-    `&topic=${encodeURIComponent(found.topic?.name || "")}` +
-    `&expectation=${encodeURIComponent(found.expectation?.code || "")}` +
-    `&expectationId=${encodeURIComponent(found.expectation?.id || "")}` +
-    `&expectationText=${encodeURIComponent(found.expectation?.text || "")}` +
-    `&recipeMode=${encodeURIComponent(worksheetRecipe?.mode || "")}` +
-    `&recipeTitle=${encodeURIComponent(worksheetRecipe?.title || "")}` +
-    `&recipeQuestionCount=${encodeURIComponent(worksheetRecipe?.suggestedQuestionCount || "")}` +
-    `&recipeDifficulty=${encodeURIComponent(worksheetRecipe?.suggestedDifficulty || "")}` +
-    `&operation=${encodeURIComponent(worksheetRecipe?.config?.operation || "")}` +
-    `&aMin=${encodeURIComponent(worksheetRecipe?.config?.aMin ?? "")}` +
-    `&aMax=${encodeURIComponent(worksheetRecipe?.config?.aMax ?? "")}` +
-    `&bMin=${encodeURIComponent(worksheetRecipe?.config?.bMin ?? "")}` +
-    `&bMax=${encodeURIComponent(worksheetRecipe?.config?.bMax ?? "")}`;
-
-  const exitTicketUrl =
-    `/exit-ticket?expectation=${encodeURIComponent(found.expectation?.code || "")}` +
-    `&expectationId=${encodeURIComponent(found.expectation?.id || "")}` +
-    `&exitTicketType=${encodeURIComponent(exitTicketType)}`;
-
-  const packUrl =
-    `/pack-preview?subject=${encodeURIComponent(found.subject?.name || "Math")}` +
-    `&grade=${encodeURIComponent(gradeParam)}` +
-    `&strand=${encodeURIComponent(found.strand?.name || "")}` +
-    `&topic=${encodeURIComponent(found.topic?.name || "")}` +
-    `&expectation=${encodeURIComponent(found.expectation?.code || "")}` +
-    `&expectationId=${encodeURIComponent(found.expectation?.id || "")}` +
-    `&expectationText=${encodeURIComponent(found.expectation?.text || "")}`;
+  const worksheetUrl = buildWorksheetUrl(found, worksheetRecipe);
+  const exitTicketUrl = buildExitTicketUrl(found, exitTicketType);
+  const packUrl = buildPackUrl(found);
 
   res.send(`
     <!doctype html>

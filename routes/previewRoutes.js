@@ -4,6 +4,11 @@ const router = express.Router();
 const curriculumService = require("../services/curriculumService");
 const { buildResourcePack } = require("../services/resourcePackService");
 const { buildExitTicket } = require("../services/exitTicketService");
+const {
+  buildExpectationUrl,
+  buildWorksheetUrl,
+  buildExitTicketUrl,
+} = require("../services/curriculumPageService");
 
 /* =========================
    PACK PREVIEW PAGE
@@ -153,54 +158,12 @@ router.get("/pack-preview", (req, res) => {
     `);
   }
 
-  const normalizedPackGrade = String(found.grade || "")
-    .trim()
-    .toLowerCase()
-    .replace(/^grade/, "");
-
-  const expectationUrl =
-    `/curriculum/on/${String(found.subject?.name || "Math")
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9.-]/g, "")}` +
-    `/grade${normalizedPackGrade}` +
-    `/${String(found.strand?.name || "")
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9.-]/g, "")}` +
-    `/${String(found.expectation?.code || "")
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9.-]/g, "")}`;
-
-  const exitTicketUrl =
-    `/exit-ticket?subject=${encodeURIComponent(found.subject?.name || "Math")}` +
-    `&grade=${encodeURIComponent(found.grade || "")}` +
-    `&strand=${encodeURIComponent(found.strand?.name || "")}` +
-    `&expectation=${encodeURIComponent(found.expectation?.code || "")}` +
-    `&expectationId=${encodeURIComponent(found.expectation?.id || "")}` +
-    `&exitTicketType=${encodeURIComponent(pack.exitTicket?.type || "general-check")}`;
-
-  const worksheetUrl =
-    `/worksheet?subject=${encodeURIComponent(found.subject?.name || "Math")}` +
-    `&grade=${encodeURIComponent(found.grade || "")}` +
-    `&strand=${encodeURIComponent(found.strand?.name || "")}` +
-    `&topic=${encodeURIComponent(found.topic?.name || "")}` +
-    `&expectation=${encodeURIComponent(found.expectation?.code || "")}` +
-    `&expectationId=${encodeURIComponent(found.expectation?.id || "")}` +
-    `&expectationText=${encodeURIComponent(found.expectation?.text || "")}` +
-    `&recipeMode=${encodeURIComponent(pack.worksheet?.recipe?.mode || "")}` +
-    `&recipeTitle=${encodeURIComponent(pack.worksheet?.recipe?.title || "")}` +
-    `&recipeQuestionCount=${encodeURIComponent(pack.worksheet?.recipe?.suggestedQuestionCount || "")}` +
-    `&recipeDifficulty=${encodeURIComponent(pack.worksheet?.recipe?.suggestedDifficulty || "")}` +
-    `&operation=${encodeURIComponent(pack.worksheet?.recipe?.config?.operation || "")}` +
-    `&aMin=${encodeURIComponent(pack.worksheet?.recipe?.config?.aMin ?? "")}` +
-    `&aMax=${encodeURIComponent(pack.worksheet?.recipe?.config?.aMax ?? "")}` +
-    `&bMin=${encodeURIComponent(pack.worksheet?.recipe?.config?.bMin ?? "")}` +
-    `&bMax=${encodeURIComponent(pack.worksheet?.recipe?.config?.bMax ?? "")}`;
+  const expectationUrl = buildExpectationUrl(found);
+  const exitTicketUrl = buildExitTicketUrl(
+    found,
+    pack?.exitTicket?.type || "general-check"
+  );
+  const worksheetUrl = buildWorksheetUrl(found, pack?.worksheet?.recipe || null);
 
   const includesHtml = Object.entries(pack.includes || {})
     .filter(([, enabled]) => enabled)
@@ -804,29 +767,6 @@ router.get("/exit-ticket", (req, res) => {
   const expectationId = String(req.query.expectationId || "");
   const exitTicketType = String(req.query.exitTicketType || "general-check");
 
-  const normalizedExitGrade = String(req.query.grade || "")
-    .trim()
-    .toLowerCase()
-    .replace(/^grade/, "");
-
-  const expectationUrl =
-    `/curriculum/on/${String(req.query.subject || "math")
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9.-]/g, "")}` +
-    `/grade${normalizedExitGrade}` +
-    `/${String(req.query.strand || "")
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9.-]/g, "")}` +
-    `/${String(req.query.expectation || "")
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9.-]/g, "")}`;
-
   let found = null;
 
   if (expectationId) {
@@ -891,6 +831,7 @@ router.get("/exit-ticket", (req, res) => {
     `);
   }
 
+  const expectationUrl = buildExpectationUrl(found);
   const ticket = buildExitTicket(found, exitTicketType);
 
   res.send(`
