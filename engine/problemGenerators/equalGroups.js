@@ -1,21 +1,14 @@
-function randInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+const generateArithmeticProblem = require("../engines/arithmeticEngine");
 
 function generateEqualGroupsProblem() {
-  const groups = randInt(2, 10);
-  const perGroup = randInt(2, 10);
-
-  return {
-    type: "equal_groups",
-    prompt: `${groups} groups have ${perGroup} items in each group. How many items are there in all?`,
-    equation: `${groups} × ${perGroup} = ___`,
-    answer: groups * perGroup,
-    meta: {
-      groups,
-      perGroup
-    }
-  };
+  return generateArithmeticProblem({
+    operation: "multiplication",
+    format: "equal_groups",
+    minA: 2,
+    maxA: 10,
+    minB: 2,
+    maxB: 10
+  });
 }
 
 module.exports = generateEqualGroupsProblem;

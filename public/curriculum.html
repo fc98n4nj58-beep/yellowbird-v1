@@ -99,8 +99,7 @@
          <a
             id="genBtn"
             class="btn primary"
-            href="/api/generateWorksheet?expectation=B2.4"
-            target="_blank"
+            href="#"
             style="display:inline-block; text-decoration:none;"
         >
             Generate Worksheet (Curriculum Default)
@@ -298,12 +297,23 @@
     if(!recipe) return { ok:false, error:"No worksheet_recipe for this expectation.", ctx, recipe:null, params:null, url:null };
 
     const params = new URLSearchParams();
+    const gradeParam = String(ctx.grade || "")
+        .trim()
+        .toLowerCase()
+        .replace(/^grade\s*/i, "grade");
 
     // Core generator mapping
     params.set("mode", String(recipe.mode || "math.addition.basic"));
     params.set("count", String(recipe.questionCount ?? 30));
     params.set("cols", String(recipe.columns ?? 3));
     params.set("font", String(recipe.fontSize ?? 11));
+    params.set("subject", String(ctx.subjectName || "Math"));
+    params.set("grade", gradeParam);
+    params.set("strand", String(ctx.strandName || ""));
+    params.set("topic", String(ctx.topicName || ""));
+    params.set("expectation", String(ctx.expectationCode || ""));
+    params.set("expectationCode", String(ctx.expectationCode || ""));
+    params.set("expectationId", String(ctx.expectationId || ""));
 
     // Range mapping (a/b)
     const r = recipe.ranges || {};
@@ -321,7 +331,6 @@
     // Curriculum flags + metadata for renderer (TEST 3)
     params.set("source", "curriculum");
     params.set("jurisdictionId", ctx.jurisdictionId);
-    params.set("grade", ctx.grade);
     params.set("subjectName", ctx.subjectName);
     params.set("strandName", ctx.strandName);
     params.set("topicName", ctx.topicName);
@@ -488,7 +497,21 @@ async function loadExpectations(defaultExpId) {
       return;
     }
 
-    const { res, data } = await fetchJson(`/api/curriculum/expectation?id=${encodeURIComponent(id)}`);
+    const u = el("jurisdiction").value || "ON";
+const g = normalizeGradeValue(el("grade").value || "3");
+const s = el("subject").value || "MATH";
+const strandId = el("strand").value || "";
+const topicId = el("topic").value || "";
+
+const { res, data } = await fetchJson(
+  `/api/curriculum/expectation?id=${encodeURIComponent(id)}` +
+  `&jurisdiction=${encodeURIComponent(u)}` +
+  `&grade=${encodeURIComponent(g)}` +
+  `&subject=${encodeURIComponent(s)}` +
+  `&strandId=${encodeURIComponent(strandId)}` +
+  `&topicId=${encodeURIComponent(topicId)}`
+);
+
     const ok = !!(data && data.ok);
 
     setApiHealth(ok);
@@ -561,10 +584,11 @@ async function loadExpectations(defaultExpId) {
   }
 
   // Button actions
-  el("genBtn").addEventListener("click", () => {
-    if(!state.lastMap || !state.lastMap.ok) return;
-    window.location.href = state.lastMap.url;
-  });
+  el("genBtn").addEventListener("click", (e) => {
+  e.preventDefault();
+  if (!state.lastMap || !state.lastMap.ok) return;
+  window.location.href = state.lastMap.url;
+});
 
   el("openPrefillBtn").addEventListener("click", () => {
     if(!state.lastMap || !state.lastMap.ok) return;
@@ -676,7 +700,8 @@ function buildExpectationUrl(){
     return null;
   }
 
-  return `/curriculum/on/${slugify(subject)}/grade${grade}/${slugify(strand)}/${slugify(expectation)}`;
+  const normalizedGrade = String(grade || "").trim().toLowerCase().replace(/^grade/, "");
+return `/curriculum/on/${slugify(subject)}/grade${normalizedGrade}/${slugify(strand)}/${slugify(expectation)}`;
 }
 </script>
 </body>

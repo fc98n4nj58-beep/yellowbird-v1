@@ -1,73 +1,69 @@
 /* =========================================================
-   Project Yellow Bird — Site UI System (Option A)
-   Updated:
-   - Dropdowns no longer look “over-wide” for small values
-   - Guaranteed minimum spacing so buttons/controls NEVER touch
-   NOTE: PDFs stay charcoal-only; this CSS is for website UI only.
+   Project Yellow Bird — Shared Site UI System
+   Calm, modern, print-friendly education UI
    ========================================================= */
 
 /* ---------- Fonts (local) ---------- */
-@font-face{
-  font-family:"Source Sans 3";
-  src:url("/fonts/SourceSans3/SourceSans3-Regular.ttf") format("truetype");
-  font-weight:400;
-  font-style:normal;
+@font-face {
+  font-family: "Source Sans 3";
+  src: url("/fonts/SourceSans3/SourceSans3-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
 }
-@font-face{
-  font-family:"Source Sans 3";
-  src:url("/fonts/SourceSans3/SourceSans3-Bold.ttf") format("truetype");
-  font-weight:700;
-  font-style:normal;
+@font-face {
+  font-family: "Source Sans 3";
+  src: url("/fonts/SourceSans3/SourceSans3-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
 }
-@font-face{
-  font-family:"Source Sans 3";
-  src:url("/fonts/SourceSans3/SourceSans3-Light.ttf") format("truetype");
-  font-weight:300;
-  font-style:normal;
+@font-face {
+  font-family: "Source Sans 3";
+  src: url("/fonts/SourceSans3/SourceSans3-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
 }
-@font-face{
-  font-family:"Source Sans 3";
-  src:url("/fonts/SourceSans3/SourceSans3-LightItalic.ttf") format("truetype");
-  font-weight:300;
-  font-style:italic;
+@font-face {
+  font-family: "Source Sans 3";
+  src: url("/fonts/SourceSans3/SourceSans3-LightItalic.ttf") format("truetype");
+  font-weight: 300;
+  font-style: italic;
 }
 
 /* ---------- Tokens ---------- */
-:root{
-  /* Typography */
+:root {
   --font: "Source Sans 3", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 
-  /* Ink */
-  --ink: #2B2B2B;
-  --muted: #6F6F6F;
-  --placeholder: #8A8A8A;
+  /* Core Yellow Bird palette */
+  --yb-text: #2f3a45;
+  --yb-text-soft: #5f6b76;
+  --yb-text-faint: #8a97a3;
 
-  /* Surfaces */
-  --bg: #FBFAF8;
-  --surface: #FFFFFF;
-  --sand: #E6D7C8;
+  --yb-bg: #f8fafc;
+  --yb-bg-top: #f6faff;
+  --yb-surface: #ffffff;
+  --yb-surface-soft: #f3f7fb;
+  --yb-surface-muted: #fafcff;
 
-  /* Lines */
-  --border: #D9D9D9;
-  --hairline: #EEE;
+  --yb-border: #dbe3ea;
+  --yb-border-strong: #c8d3dd;
+  --yb-hairline: #edf2f6;
 
-  /* Accents */
-  --terra: #C46A4A;
-  --terraHover: #B55C3F;
-  --terraActive: #A95239;
+  --yb-accent: #6fa8dc;
+  --yb-accent-soft: #eef5fb;
+  --yb-sun: #f4d35e;
 
-  --sage: #6F8A6B;
-  --clay: #7A5A48;
+  --yb-danger: #b42318;
+  --yb-danger-soft: #fff1f2;
+  --yb-danger-border: #fecaca;
 
-  /* Quiet shadow */
-  --shadow: 0 1px 0 rgba(0,0,0,0.03);
+  --yb-shadow: 0 1px 0 rgba(47, 58, 69, 0.03);
 
-  /* Radius */
+  --r8: 8px;
   --r10: 10px;
   --r12: 12px;
   --pill: 999px;
 
-  /* Spacing (6/12/18/24/36/48) */
+  /* Spacing */
   --xs: 6px;
   --sm: 12px;
   --md: 18px;
@@ -75,71 +71,99 @@
   --xl: 36px;
   --xxl: 48px;
 
-  /* Controls (smaller + calmer than before) */
-  --controlH: 40px;
-  --controlHsm: 34px;
-  --controlHmini: 30px;
-
-  /* HARD RULE: minimum space between any UI objects in stacks/rows */
   --minGap: 12px;
 
-  /* Focus ring */
-  --focusRing: 0 0 0 3px rgba(196,106,74,0.16);
+  --controlH: 44px;
+  --controlHsm: 36px;
+  --controlHmini: 30px;
 
-  /* Key tweak: compact dropdown width */
+  --focusRing: 0 0 0 3px rgba(111, 168, 220, 0.14);
+
   --selectW: 220px;
   --selectWMax: 260px;
+
+  --maxW: 1120px;
 }
 
 /* ---------- Base ---------- */
-*{ box-sizing: border-box; }
-html, body{ height: 100%; }
-body{
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
   margin: 0;
+  padding: 0;
+}
+
+body {
   font-family: var(--font);
-  color: var(--ink);
-  background: var(--bg);
+  color: var(--yb-text);
+  background: linear-gradient(180deg, var(--yb-bg-top) 0%, var(--yb-bg) 180px, var(--yb-bg) 100%);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a{ color: inherit; text-decoration: none; }
-a:hover{ text-decoration: none; }
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
-/* Prevent “touching” due to collapsing/odd inline spacing */
-button, .btn, input, select, textarea{ margin: 0; }
+a:hover {
+  text-decoration: none;
+}
+
+button,
+.btn,
+input,
+select,
+textarea {
+  margin: 0;
+}
 
 /* ---------- Layout ---------- */
-.container{
-  max-width: 1120px;
+.container {
+  max-width: var(--maxW);
   margin: 0 auto;
   padding: var(--lg);
 }
 
-.h1{
+.h1 {
   margin: 0 0 var(--sm) 0;
-  font-size: 28px;
-  line-height: 1.15;
-  letter-spacing: 0.2px;
+  font-size: 38px;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--yb-text);
 }
-.lede{
+
+.h2 {
+  margin: 0 0 var(--sm) 0;
+  font-size: 24px;
+  line-height: 1.2;
+  color: var(--yb-text);
+}
+
+.lede {
   margin: 0 0 var(--lg) 0;
-  color: var(--muted);
+  color: #41505c;
   line-height: 1.45;
   max-width: 70ch;
+  font-size: 21px;
 }
 
 /* ---------- Topbar ---------- */
-.topbar{
+.topbar {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(251,250,248,0.90);
+  background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--yb-border);
 }
-.topbar-inner{
-  max-width: 1120px;
+
+.topbar-inner {
+  max-width: var(--maxW);
   margin: 0 auto;
   padding: 14px var(--lg);
   display: flex;
@@ -147,183 +171,208 @@ button, .btn, input, select, textarea{ margin: 0; }
   justify-content: space-between;
   gap: var(--md);
 }
-.brand{
+
+.brand {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   font-weight: 700;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.01em;
+  font-size: 18px;
+  color: var(--yb-text);
 }
-.brand .dot{
-  width: 10px;
-  height: 10px;
+
+.brand .dot {
+  width: 12px;
+  height: 12px;
   border-radius: var(--pill);
-  background: var(--terra);
-  box-shadow: 0 0 0 3px rgba(196,106,74,0.12);
+  background: var(--yb-sun);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
 }
-.nav{
+
+.nav {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
   align-items: center;
 }
-.nav a{
+
+.nav a {
   display: inline-flex;
   align-items: center;
   height: 34px;
   padding: 0 12px;
   border-radius: var(--pill);
   border: 1px solid transparent;
-  color: var(--ink);
+  color: var(--yb-text-soft);
   font-weight: 600;
-  font-size: 13px;
+  font-size: 14px;
 }
-.nav a:hover{
-  background: rgba(196,106,74,0.08);
-  border-color: rgba(196,106,74,0.25);
+
+.nav a:hover,
+.nav a.active {
+  color: var(--yb-text);
+  background: var(--yb-surface-soft);
+  border-color: var(--yb-border);
 }
 
 /* ---------- Grid ---------- */
-.grid{
+.grid {
   display: grid;
   grid-template-columns: 340px 1fr;
   gap: var(--lg);
   align-items: start;
 }
-@media (max-width: 980px){
-  .grid{ grid-template-columns: 1fr; }
-  .topbar-inner{ padding: 14px var(--md); }
-  .container{ padding: var(--md); }
+
+@media (max-width: 980px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar-inner {
+    padding: 14px var(--md);
+  }
+
+  .container {
+    padding: var(--md);
+  }
 }
 
 /* ---------- Cards ---------- */
-.card{
-  background: var(--surface);
-  border: 1px solid var(--border);
+.card {
+  background: var(--yb-surface);
+  border: 1px solid var(--yb-border);
   border-radius: var(--r12);
   padding: 18px;
-  box-shadow: var(--shadow);
-}
-.card.tinted{
-  background: linear-gradient(rgba(230,215,200,0.55), rgba(230,215,200,0.22));
+  box-shadow: var(--yb-shadow);
 }
 
-.hr{
+.card.tinted {
+  background: linear-gradient(var(--yb-accent-soft), rgba(238, 245, 251, 0.55));
+}
+
+.hr {
   height: 1px;
-  background: var(--hairline);
+  background: var(--yb-hairline);
   margin: var(--md) 0;
 }
 
-/* =========================================================
-   GLOBAL SPACING RULE (prevents “touching”)
-   - Any direct children in these containers get MIN gap
-   ========================================================= */
-
-/* Filter sidebar: enforce consistent vertical spacing */
-aside.card{
+/* ---------- Vertical spacing rules ---------- */
+aside.card {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* key: prevents full-stretch look */
+  align-items: flex-start;
 }
-aside.card > * + *{
+
+aside.card > * + * {
   margin-top: var(--minGap);
 }
-/* Don’t double-space around dividers */
-aside.card .hr{
+
+aside.card .hr {
   width: 100%;
   margin: var(--md) 0;
 }
-aside.card .hr + *{
+
+aside.card .hr + * {
   margin-top: var(--md);
 }
 
-/* Any row of items: guarantee spacing and never touch */
-.row{
+.row {
   display: flex;
   gap: var(--minGap);
   align-items: center;
   flex-wrap: wrap;
 }
-.row > *{
+
+.row > * {
   flex: 0 0 auto;
 }
 
-/* ---------- Labels ---------- */
-.label{
-  font-size: 12px;
+/* ---------- Typography helpers ---------- */
+.label {
+  font-size: 13px;
   font-weight: 600;
-  color: var(--muted);
-  margin: 0; /* spacing handled by container rules above */
+  color: var(--yb-text-soft);
+  margin: 0;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hint {
+  color: var(--yb-text-soft);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.muted {
+  color: var(--yb-text-soft);
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.95em;
 }
 
 /* ---------- Controls ---------- */
 .input,
 .select,
-textarea{
+textarea {
   height: var(--controlH);
   padding: 8px 12px;
   font-size: 14px;
   border-radius: var(--r10);
-  border: 1px solid var(--border);
+  border: 1px solid var(--yb-border);
   background: #fff;
-  color: var(--ink);
+  color: var(--yb-text);
   outline: none;
   line-height: 1.2;
 }
 
-/* Textareas */
-textarea{
+textarea {
   height: auto;
   min-height: calc(var(--controlH) * 2);
   padding: 12px;
   resize: vertical;
 }
 
-.input::placeholder{ color: var(--placeholder); }
+.input::placeholder {
+  color: var(--yb-text-faint);
+}
 
 .input:hover,
 .select:hover,
-textarea:hover{
-  border-color: rgba(122,90,72,0.35);
+textarea:hover {
+  border-color: var(--yb-border-strong);
 }
 
 .input:focus,
 .select:focus,
-textarea:focus{
-  border-color: var(--terra);
+textarea:focus {
+  border-color: #b9d3ea;
   box-shadow: var(--focusRing);
 }
 
-/* Optional error class */
-.is-error{
-  border-color: #B24B4B !important;
-  box-shadow: 0 0 0 3px rgba(178,75,75,0.16) !important;
+.is-error {
+  border-color: var(--yb-danger) !important;
+  box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.14) !important;
 }
 
-/* =========================================================
-   DROPDOWN LENGTH FIX (the main issue you reported)
-   - selects no longer stretch full sidebar width
-   - they become compact “content-sized” controls
-   ========================================================= */
-
-/* By default, inputs still can be full width (search), but selects are compact. */
-select.select{
+/* ---------- Selects ---------- */
+select.select {
   width: var(--selectW);
   max-width: var(--selectWMax);
   min-width: 160px;
   display: inline-block;
 
-  /* Native select cleanup */
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
 
   padding-right: 34px;
 
-  /* Caret */
   background-image:
-    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
-    linear-gradient(135deg, var(--muted) 50%, transparent 50%),
+    linear-gradient(45deg, transparent 50%, var(--yb-text-soft) 50%),
+    linear-gradient(135deg, var(--yb-text-soft) 50%, transparent 50%),
     linear-gradient(to right, transparent, transparent);
   background-position:
     calc(100% - 18px) 52%,
@@ -336,143 +385,152 @@ select.select{
   background-repeat: no-repeat;
 }
 
-/* In the sidebar specifically, keep selects compact and aligned */
-aside.card select.select{
+aside.card select.select {
   width: var(--selectW);
   max-width: var(--selectWMax);
 }
 
-/* Keep text inputs full-width ONLY when it makes sense (Search) */
-aside.card input.input{
+aside.card input.input {
   width: 100%;
   max-width: 100%;
 }
 
-/* Browse page search input ID (your file uses id="q") */
-#q.input{
+#q.input {
   width: 100%;
 }
 
 /* ---------- Buttons ---------- */
-.btn{
+.btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: var(--controlH);
-  padding: 10px 14px;
-  font-size: 14px;
-  font-weight: 700;
+  min-height: var(--controlH);
+  padding: 10px 16px;
+  font-size: 16px;
+  font-weight: 600;
   border-radius: var(--r10);
-  border: 1px solid var(--border);
+  border: 1px solid var(--yb-border);
   background: #fff;
-  color: var(--ink);
+  color: var(--yb-text);
   cursor: pointer;
   user-select: none;
   gap: 10px;
   line-height: 1;
   white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
 }
 
-.btn:hover{
-  background: rgba(196,106,74,0.08);
-  border-color: rgba(196,106,74,0.35);
+.btn:hover {
+  background: var(--yb-surface-soft);
+  border-color: var(--yb-border-strong);
+  transform: translateY(-1px);
 }
-.btn:active{
-  background: rgba(196,106,74,0.12);
-  border-color: rgba(196,106,74,0.45);
+
+.btn:active {
+  background: #eaf2f8;
+  border-color: var(--yb-border-strong);
 }
-.btn:focus{
+
+.btn:focus {
   outline: none;
   box-shadow: var(--focusRing);
 }
 
-.btn.primary{
-  background: var(--terra);
+.btn.primary {
+  background: var(--yb-text);
   color: #fff;
-  border-color: var(--terra);
-}
-.btn.primary:hover{
-  background: var(--terraHover);
-  border-color: var(--terraHover);
-}
-.btn.primary:active{
-  background: var(--terraActive);
-  border-color: var(--terraActive);
+  border-color: var(--yb-text);
 }
 
-.btn.secondary{
+.btn.primary:hover {
+  background: #3a4753;
+  border-color: #3a4753;
+}
+
+.btn.secondary {
   background: #fff;
-  color: var(--ink);
-  border-color: var(--border);
-}
-.btn.secondary:hover{
-  background: rgba(196,106,74,0.08);
-  border-color: rgba(196,106,74,0.35);
+  color: var(--yb-text);
+  border-color: var(--yb-border);
 }
 
-.btn.tertiary{
+.btn.secondary:hover {
+  background: var(--yb-surface-soft);
+  border-color: var(--yb-border-strong);
+}
+
+.btn.tertiary {
   background: transparent;
   border-color: transparent;
-  color: var(--ink);
+  color: var(--yb-text-soft);
 }
-.btn.tertiary:hover{
-  background: rgba(111,138,107,0.10);
-  border-color: rgba(111,138,107,0.35);
+
+.btn.tertiary:hover {
+  background: var(--yb-surface-soft);
+  border-color: var(--yb-border);
+  color: var(--yb-text);
 }
 
 .btn:disabled,
-.btn[aria-disabled="true"]{
+.btn[aria-disabled="true"] {
   opacity: 0.6;
   cursor: default;
   pointer-events: none;
 }
 
-.btn.sm{
-  height: var(--controlHsm);
+.btn.sm {
+  min-height: var(--controlHsm);
   padding: 8px 12px;
   font-size: 13px;
 }
-.btn.mini{
-  height: var(--controlHmini);
+
+.btn.mini {
+  min-height: var(--controlHmini);
   padding: 6px 10px;
   font-size: 12px;
   border-radius: var(--pill);
 }
 
-/* Ensure mini buttons in the sidebar never touch */
-aside.card .row .btn{
+aside.card .row .btn {
   margin: 0;
 }
 
 /* ---------- Results ---------- */
-.results{
+.results {
   display: grid;
   gap: var(--sm);
 }
 
 /* ---------- Resource cards ---------- */
-.resource-card{
+.resource-card {
   display: flex;
   justify-content: space-between;
   gap: var(--md);
   align-items: flex-start;
 }
-@media (max-width: 760px){
-  .resource-card{ flex-direction: column; }
+
+@media (max-width: 760px) {
+  .resource-card {
+    flex-direction: column;
+  }
 }
-.resource-title{
+
+.resource-title {
   margin: 6px 0 10px 0;
   font-size: 18px;
   line-height: 1.25;
+  color: var(--yb-text);
 }
-.resource-meta{
+
+.resource-meta {
   display: inline-flex;
   gap: 10px;
   flex-wrap: wrap;
-  color: var(--muted);
-  font-size: 12px;
+  color: var(--yb-text-soft);
+  font-size: 13px;
+  line-height: 1.45;
 }
-.resource-actions{
+
+.resource-actions {
   display: flex;
   gap: var(--minGap);
   align-items: center;
@@ -480,78 +538,133 @@ aside.card .row .btn{
 }
 
 /* ---------- Badges ---------- */
-.badges{
+.badges {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
-.badge{
+
+.badge {
   display: inline-flex;
   align-items: center;
-  height: 26px;
+  min-height: 28px;
   padding: 0 10px;
   border-radius: var(--pill);
-  border: 1px solid rgba(111,138,107,0.45);
-  background: rgba(111,138,107,0.12);
-  color: var(--ink);
+  border: 1px solid var(--yb-border);
+  background: var(--yb-surface-soft);
+  color: var(--yb-text);
   font-size: 12px;
   font-weight: 600;
 }
-.badge.terra{
-  border-color: rgba(196,106,74,0.45);
-  background: rgba(196,106,74,0.12);
+
+.badge.terra {
+  border-color: #d8e8f6;
+  background: var(--yb-accent-soft);
 }
-.badge.neutral{
-  border-color: rgba(0,0,0,0.10);
-  background: rgba(0,0,0,0.04);
+
+.badge.neutral {
+  border-color: var(--yb-border);
+  background: #f8fafc;
+}
+
+/* ---------- Pills ---------- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 6px 12px;
+  border-radius: var(--pill);
+  border: 1px solid var(--yb-border);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--yb-text);
+  font-size: 14px;
+}
+
+.pill.soft {
+  background: var(--yb-accent-soft);
+  border-color: #d8e8f6;
+}
+
+/* ---------- Empty / status states ---------- */
+.empty-state,
+.notice {
+  padding: 18px;
+  border: 1px dashed var(--yb-border-strong);
+  border-radius: var(--r12);
+  background: var(--yb-surface-muted);
+  color: var(--yb-text-soft);
+}
+
+.error-state {
+  padding: 18px;
+  border: 1px solid var(--yb-danger-border);
+  border-radius: var(--r12);
+  background: var(--yb-danger-soft);
+  color: var(--yb-danger);
 }
 
 /* ---------- Footer ---------- */
-.footer{
+.footer {
   margin-top: var(--xxl);
   padding: var(--lg);
   text-align: center;
-  color: var(--muted);
-  font-size: 12px;
-  border-top: 1px solid var(--hairline);
+  color: var(--yb-text-soft);
+  font-size: 13px;
+  border-top: 1px solid var(--yb-hairline);
 }
 
-/* ---------- Landing helpers (optional) ---------- */
-.landing{
+/* ---------- Landing helpers ---------- */
+.landing {
   min-height: calc(100vh - 62px);
   display: grid;
   place-items: center;
   padding: var(--xl) var(--lg);
 }
-.landing-card{
+
+.landing-card {
   width: min(520px, 92vw);
   padding: 22px;
   border-radius: var(--r12);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
+  background: var(--yb-surface);
+  border: 1px solid var(--yb-border);
+  box-shadow: var(--yb-shadow);
 }
-.landing-title{
+
+.landing-title {
   margin: 0 0 var(--md) 0;
   font-size: 30px;
-  letter-spacing: 1.6px;
+  letter-spacing: 0.2px;
+  color: var(--yb-text);
 }
-.landing-sub{
+
+.landing-sub {
   margin: 0 0 var(--lg) 0;
-  color: var(--muted);
+  color: var(--yb-text-soft);
   line-height: 1.45;
 }
-.landing-actions{
+
+.landing-actions {
   display: grid;
   gap: var(--sm);
 }
 
 /* ---------- Mobile tightening ---------- */
-@media (max-width: 980px){
-  :root{
-    --controlH: 38px;
+@media (max-width: 980px) {
+  :root {
+    --controlH: 40px;
     --selectW: 210px;
     --selectWMax: 240px;
   }
-  .card{ padding: 16px; }
+
+  .card {
+    padding: 16px;
+  }
+
+  .h1 {
+    font-size: 32px;
+  }
+
+  .lede {
+    font-size: 19px;
+  }
 }

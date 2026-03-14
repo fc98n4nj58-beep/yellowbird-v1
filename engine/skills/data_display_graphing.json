@@ -1,0 +1,12 @@
+{
+  "skill": "data_display_graphing",
+  "title": "Data Display and Graph Interpretation",
+  "description": "Generate activities that involve reading, interpreting, and completing data displays such as bar graphs, pictographs, and tables.",
+  "activities": [
+    "read_graph",
+    "complete_graph",
+    "match_data_to_graph",
+    "graph_questions",
+    "interpret_data"
+  ]
+}

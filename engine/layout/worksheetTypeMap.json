@@ -1,0 +1,122 @@
+{
+  "math.addition.basic": {
+    "worksheetType": "arithmetic_fact_fluency",
+    "templateId": "fluency_grid",
+    "interactionType": "write_answer",
+    "instruction": "Solve each problem."
+  },
+  "math.subtraction.nonnegative": {
+    "worksheetType": "related_subtraction",
+    "templateId": "fluency_grid",
+    "interactionType": "write_answer",
+    "instruction": "Solve each problem."
+  },
+  "math.multiplication.basic": {
+    "worksheetType": "arithmetic_fact_fluency",
+    "templateId": "fluency_grid",
+    "interactionType": "write_answer",
+    "instruction": "Solve each problem."
+  },
+  "math.division.integer": {
+    "worksheetType": "arithmetic_fact_fluency",
+    "templateId": "fluency_grid",
+    "interactionType": "write_answer",
+    "instruction": "Solve each problem."
+  },
+  "mixed": {
+    "worksheetType": "mixed_practice",
+    "templateId": "equation_practice",
+    "interactionType": "write_answer",
+    "instruction": "Solve each problem."
+  },
+  "missing_addend": {
+    "worksheetType": "missing_addend",
+    "templateId": "fluency_grid",
+    "interactionType": "fill_blank",
+    "instruction": "Fill in the missing number."
+  },
+  "related_subtraction": {
+    "worksheetType": "related_subtraction",
+    "templateId": "fluency_grid",
+    "interactionType": "write_answer",
+    "instruction": "Solve each problem."
+  },
+  "missing_factor": {
+    "worksheetType": "missing_factor",
+    "templateId": "fluency_grid",
+    "interactionType": "fill_blank",
+    "instruction": "Fill in the missing number."
+  },
+  "compare_numbers": {
+    "worksheetType": "compare_numbers",
+    "templateId": "equation_practice",
+    "interactionType": "compare_symbol",
+    "instruction": "Insert the correct symbol."
+  },
+  "skip_counting": {
+    "worksheetType": "skip_counting",
+    "templateId": "equation_practice",
+    "interactionType": "write_answer",
+    "instruction": "Complete the pattern."
+  },
+  "expanded_form": {
+    "worksheetType": "expanded_form",
+    "templateId": "representation",
+    "interactionType": "convert_representation",
+    "instruction": "Write the matching form."
+  },
+  "standard_form": {
+    "worksheetType": "standard_form",
+    "templateId": "representation",
+    "interactionType": "convert_representation",
+    "instruction": "Write the matching form."
+  },
+  "equation_match": {
+    "worksheetType": "equation_match",
+    "templateId": "matching",
+    "interactionType": "match",
+    "instruction": "Match each item in column A with column B."
+  },
+  "number_word_match": {
+    "worksheetType": "number_word_match",
+    "templateId": "matching",
+    "interactionType": "match",
+    "instruction": "Match each item in column A with column B."
+  },
+  "fact_family": {
+    "worksheetType": "fact_family",
+    "templateId": "matching",
+    "interactionType": "match",
+    "instruction": "Match each item in column A with column B."
+  },
+  "arrays": {
+    "worksheetType": "arrays",
+    "templateId": "model_interpretation",
+    "interactionType": "interpret_model",
+    "instruction": "Use the model to answer."
+  },
+  "equal_groups": {
+    "worksheetType": "equal_groups",
+    "templateId": "model_interpretation",
+    "interactionType": "interpret_model",
+    "instruction": "Use the model to answer."
+  },
+  "base_ten_blocks": {
+    "worksheetType": "base_ten_blocks",
+    "templateId": "visual_model",
+    "interactionType": "interpret_model",
+    "instruction": "Use the model to answer."
+  },
+  "ten_frame": {
+    "worksheetType": "ten_frame",
+    "templateId": "visual_model",
+    "interactionType": "interpret_model",
+    "instruction": "Use the model to answer."
+  },
+  "number_line_identify": {
+    "worksheetType": "number_line_identify",
+    "templateId": "visual_model",
+    "interactionType": "interpret_model",
+    "instruction": "Use the model to answer."
+  }
+}

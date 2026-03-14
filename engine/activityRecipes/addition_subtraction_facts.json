@@ -1,0 +1,82 @@
+{
+  "skill": "addition_subtraction_facts",
+  "defaultMode": "standard_practice",
+  "supportedModes": [
+    "standard_practice",
+    "fact_fluency",
+    "review_mixed",
+    "word_problem_focus",
+    "exit_ticket"
+  ],
+  "defaultProblemCount": 12,
+  "difficulty": {
+    "easy": {
+      "min": 0,
+      "max": 20,
+      "activities": [
+        "fact_fluency",
+        "missing_addend",
+        "related_subtraction"
+      ]
+    },
+    "medium": {
+  "min": 0,
+  "max": 100,
+  "activities": [
+    "fact_fluency",
+    "missing_addend",
+    "equation_match",
+    "related_subtraction",
+    "fact_family"
+  ]
+    },
+    "challenge": {
+      "min": 0,
+      "max": 1000,
+      "activities": [
+        "equation_match",
+        "word_problems",
+        "missing_addend"
+      ]
+    }
+  },
+  "variants": {
+   "standard_practice": {
+  "activityMix": {
+    "fact_fluency": 4,
+    "missing_addend": 3,
+    "related_subtraction": 3,
+    "equation_match": 2,
+    "fact_family": 2
+  }
+    },
+    "fact_fluency": {
+      "activityMix": {
+        "fact_fluency": 8,
+        "missing_addend": 4
+      }
+    },
+    "review_mixed": {
+      "activityMix": {
+        "fact_fluency": 3,
+        "missing_addend": 3,
+        "related_subtraction": 3,
+        "equation_match": 3
+      }
+    },
+    "word_problem_focus": {
+      "activityMix": {
+        "word_problems": 6,
+        "fact_fluency": 3,
+        "related_subtraction": 3
+      }
+    },
+    "exit_ticket": {
+      "activityMix": {
+        "fact_fluency": 2,
+        "missing_addend": 2,
+        "related_subtraction": 1
+      }
+    }
+  }
+}

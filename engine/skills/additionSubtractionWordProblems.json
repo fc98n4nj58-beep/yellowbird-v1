@@ -1,0 +1,10 @@
+{
+  "skill": "addition_subtraction_word_problems",
+  "title": "Addition and Subtraction Word Problems",
+  "description": "Generate one-step addition and subtraction story problems using numbers within an appropriate grade range.",
+  "activities": [
+    "addition_word_problem",
+    "subtraction_word_problem",
+    "missing_addend_word_problem"
+  ]
+}

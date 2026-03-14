@@ -1,22 +1,12 @@
-function randInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+const generateArithmeticProblem = require("../engines/arithmeticEngine");
 
 function generateSkipCountingProblem() {
-  const step = randInt(2, 10);
-  const count = randInt(3, 10);
-  const total = step * count;
-
-  return {
-    type: "skip_counting",
-    prompt: `Skip count by ${step}: ${step}, ${step * 2}, ${step * 3} ... What is the ${count}th number?`,
-    equation: `${step} × ${count} = ___`,
-    answer: total,
-    meta: {
-      step,
-      count
-    }
-  };
+  return generateArithmeticProblem({
+    operation: "multiplication",
+    format: "skip_counting",
+    minA: 2,
+    maxA: 10
+  });
 }
 
 module.exports = generateSkipCountingProblem;

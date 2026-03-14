@@ -1,0 +1,81 @@
+{
+  "skill": "multiplication_facts",
+  "defaultMode": "standard_practice",
+  "supportedModes": [
+    "standard_practice",
+    "array_models",
+    "fact_fluency",
+    "review_mixed",
+    "exit_ticket"
+  ],
+  "defaultProblemCount": 12,
+  "difficulty": {
+    "easy": {
+      "min": 0,
+      "max": 5,
+      "activities": [
+        "arrays",
+        "equal_groups",
+        "skip_counting"
+      ]
+    },
+    "medium": {
+      "min": 0,
+      "max": 10,
+      "activities": [
+        "arrays",
+        "equal_groups",
+        "skip_counting",
+        "missing_factor"
+      ]
+    },
+    "challenge": {
+      "min": 0,
+      "max": 12,
+      "activities": [
+        "missing_factor",
+        "word_problems",
+        "equal_groups"
+      ]
+    }
+  },
+  "variants": {
+    "standard_practice": {
+      "activityMix": {
+        "arrays": 3,
+        "equal_groups": 3,
+        "skip_counting": 3,
+        "missing_factor": 3
+      }
+    },
+    "array_models": {
+      "activityMix": {
+        "arrays": 8,
+        "equal_groups": 4
+      }
+    },
+    "fact_fluency": {
+      "activityMix": {
+        "missing_factor": 4,
+        "skip_counting": 4,
+        "equal_groups": 4
+      }
+    },
+    "review_mixed": {
+      "activityMix": {
+        "arrays": 2,
+        "equal_groups": 3,
+        "skip_counting": 3,
+        "missing_factor": 2,
+        "word_problems": 2
+      }
+    },
+    "exit_ticket": {
+      "activityMix": {
+        "arrays": 2,
+        "missing_factor": 2,
+        "word_problems": 1
+      }
+    }
+  }
+}

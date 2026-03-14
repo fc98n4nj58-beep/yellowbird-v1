@@ -1,0 +1,12 @@
+{
+  "skill": "fraction_equivalence",
+  "title": "Fraction Equivalence",
+  "description": "Generate activities that help students understand equivalent fractions using visual models, number lines, and symbolic representations.",
+  "activities": [
+    "shade_fraction_models",
+    "match_equivalent_fractions",
+    "fraction_number_line",
+    "compare_fractions",
+    "fraction_word_problems"
+  ]
+}

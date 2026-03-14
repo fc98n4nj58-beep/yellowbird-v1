@@ -446,40 +446,60 @@
   "grade": "grade3",
   "gradeLabel": "Grade 3",
   "strands": [
+   {
+  "id": "B",
+  "name": "Number",
+  "topics": [
     {
-      "id": "B",
-      "name": "Number",
-      "topics": [
-        {
-          "id": "B1",
-          "name": "Number Sense",
-          "expectations": [
-            { "id": "B1.1", "code": "B1.1", "text": "read, represent, compose, and decompose whole numbers up to and including 1000, using a variety of tools and strategies, and describe various ways they are used in everyday life" },
-            { "id": "B1.2", "code": "B1.2", "text": "compare and order whole numbers up to and including 1000, in various contexts" },
-            { "id": "B1.3", "code": "B1.3", "text": "round whole numbers to the nearest ten or hundred, in various contexts" },
-            { "id": "B1.4", "code": "B1.4", "text": "count to 1000, including by 50s, 100s, and 200s, using a variety of tools and strategies" },
-            { "id": "B1.5", "code": "B1.5", "text": "use place value when describing and representing multi-digit numbers in a variety of ways, including with base ten materials" },
-            { "id": "B1.6", "code": "B1.6", "text": "use drawings to represent, solve, and compare the results of fair-share problems that involve sharing up to 20 items among 2, 3, 4, 5, 6, 8, and 10 sharers, including problems that result in whole numbers, mixed numbers, and fractional amounts" },
-            { "id": "B1.7", "code": "B1.7", "text": "represent and solve fair-share problems that focus on determining and using equivalent fractions, including problems that involve halves, fourths, and eighths; thirds and sixths; and fifths and tenths" }
-          ]
-        },
-        {
-          "id": "B2",
-          "name": "Operations",
-          "expectations": [
-            { "id": "B2.1", "code": "B2.1", "text": "use the properties of operations, and the relationships between multiplication and division, to solve problems and check calculations" },
-            { "id": "B2.2", "code": "B2.2", "text": "recall and demonstrate multiplication facts of 2, 5, and 10, and related division facts" },
-            { "id": "B2.3", "code": "B2.3", "text": "use mental math strategies, including estimation, to add and subtract whole numbers that add up to no more than 1000, and explain the strategies used" },
-            { "id": "B2.4", "code": "B2.4", "text": "demonstrate an understanding of algorithms for adding and subtracting whole numbers by making connections to and describing the way other tools and strategies are used to add and subtract" },
-            { "id": "B2.5", "code": "B2.5", "text": "represent and solve problems involving the addition and subtraction of whole numbers that add up to no more than 1000, using various tools and algorithms" },
-            { "id": "B2.6", "code": "B2.6", "text": "represent multiplication of numbers up to 10 × 10 and division up to 100 ÷ 10, using a variety of tools and drawings, including arrays" },
-            { "id": "B2.7", "code": "B2.7", "text": "represent and solve problems involving multiplication and division, including problems that involve groups of one half, one fourth, and one third, using tools and drawings" },
-            { "id": "B2.8", "code": "B2.8", "text": "represent the connection between the numerator of a fraction and the repeated addition of the unit fraction with the same denominator using various tools and drawings, and standard fractional notation" },
-            { "id": "B2.9", "code": "B2.9", "text": "use the ratios of 1 to 2, 1 to 5, and 1 to 10 to scale up numbers and to solve problems" }
-          ]
-        }
+      "id": "B1",
+      "name": "Number Sense",
+      "expectations": [
+        { "id": "B1.1", "code": "B1.1", "text": "read, represent, compose, and decompose whole numbers up to and including 1000, using a variety of tools and strategies, and describe various ways they are used in everyday life" },
+        { "id": "B1.2", "code": "B1.2", "text": "compare and order whole numbers up to and including 1000, in various contexts" },
+        { "id": "B1.3", "code": "B1.3", "text": "round whole numbers to the nearest ten or hundred, in various contexts" },
+        { "id": "B1.4", "code": "B1.4", "text": "count to 1000, including by 50s, 100s, and 200s, using a variety of tools and strategies" },
+        { "id": "B1.5", "code": "B1.5", "text": "use place value when describing and representing multi-digit numbers in a variety of ways, including with base ten materials" },
+        { "id": "B1.6", "code": "B1.6", "text": "use drawings to represent, solve, and compare the results of fair-share problems that involve sharing up to 20 items among 2, 3, 4, 5, 6, 8, and 10 sharers, including problems that result in whole numbers, mixed numbers, and fractional amounts" },
+        { "id": "B1.7", "code": "B1.7", "text": "represent and solve fair-share problems that focus on determining and using equivalent fractions, including problems that involve halves, fourths, and eighths; thirds and sixths; and fifths and tenths" }
       ]
     },
+    {
+      "id": "B2",
+      "name": "Operations",
+      "expectations": [
+        { "id": "B2.1", "code": "B2.1", "text": "use the properties of operations, and the relationships between multiplication and division, to solve problems and check calculations" },
+        { "id": "B2.2", "code": "B2.2", "text": "recall and demonstrate multiplication facts of 2, 5, and 10, and related division facts" },
+        { "id": "B2.3", "code": "B2.3", "text": "use mental math strategies, including estimation, to add and subtract whole numbers that add up to no more than 1000, and explain the strategies used" },
+        {
+          "id": "B2.4",
+          "code": "B2.4",
+          "text": "demonstrate an understanding of algorithms for adding and subtracting whole numbers by making connections to and describing the way other tools and strategies are used to add and subtract",
+          "worksheet_recipe": {
+            "mode": "math.addition.basic",
+            "questionCount": 30,
+            "columns": 3,
+            "fontSize": 11,
+            "ranges": {
+              "aMin": 0,
+              "aMax": 50,
+              "bMin": 0,
+              "bMax": 50
+            },
+            "options": {
+              "includeAnswerKey": true,
+              "subtractionNonNegative": true
+            }
+          }
+        },
+        { "id": "B2.5", "code": "B2.5", "text": "represent and solve problems involving the addition and subtraction of whole numbers that add up to no more than 1000, using various tools and algorithms" },
+        { "id": "B2.6", "code": "B2.6", "text": "represent multiplication of numbers up to 10 × 10 and division up to 100 ÷ 10, using a variety of tools and drawings, including arrays" },
+        { "id": "B2.7", "code": "B2.7", "text": "represent and solve problems involving multiplication and division, including problems that involve groups of one half, one fourth, and one third, using tools and drawings" },
+        { "id": "B2.8", "code": "B2.8", "text": "represent the connection between the numerator of a fraction and the repeated addition of the unit fraction with the same denominator using various tools and drawings, and standard fractional notation" },
+        { "id": "B2.9", "code": "B2.9", "text": "use the ratios of 1 to 2, 1 to 5, and 1 to 10 to scale up numbers and to solve problems" }
+      ]
+    }
+  ]
+},
     {
       "id": "C",
       "name": "Algebra",

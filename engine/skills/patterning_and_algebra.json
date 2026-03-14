@@ -1,0 +1,12 @@
+{
+  "skill": "patterning_and_algebra",
+  "title": "Patterning and Algebraic Thinking",
+  "description": "Generate activities that involve identifying, extending, and describing patterns and relationships in numbers and shapes.",
+  "activities": [
+    "extend_pattern",
+    "identify_pattern_rule",
+    "function_table",
+    "missing_value_pattern",
+    "pattern_word_problems"
+  ]
+}

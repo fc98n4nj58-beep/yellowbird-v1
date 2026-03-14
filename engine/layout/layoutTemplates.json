@@ -1,0 +1,104 @@
+{
+  "fluency_grid": {
+    "id": "fluency_grid",
+    "label": "Fluency Grid",
+    "defaultColumns": 4,
+    "maxColumns": 4,
+    "spacingDensity": "compact",
+    "answerSpaceType": "inline_blank",
+    "visualSupport": false,
+    "blockStyle": "minimal",
+    "supportsSectionHeaders": false,
+    "maxProblemsPerPage": 40,
+    "gradeBandOverrides": {
+      "K1": { "answerHeight": 1.0 },
+      "G2_3": { "answerHeight": 0.7 },
+      "G4_6": { "answerHeight": 0.45 }
+    }
+  },
+  "equation_practice": {
+    "id": "equation_practice",
+    "label": "Equation Practice",
+    "defaultColumns": 2,
+    "maxColumns": 2,
+    "spacingDensity": "medium",
+    "answerSpaceType": "line",
+    "visualSupport": true,
+    "blockStyle": "minimal",
+    "supportsSectionHeaders": false,
+    "maxProblemsPerPage": 20,
+    "gradeBandOverrides": {
+      "K1": { "answerHeight": 1.0 },
+      "G2_3": { "answerHeight": 0.7 },
+      "G4_6": { "answerHeight": 0.45 }
+    }
+  },
+  "visual_model": {
+    "id": "visual_model",
+    "label": "Visual Model Sheet",
+    "defaultColumns": 1,
+    "maxColumns": 1,
+    "spacingDensity": "spacious",
+    "answerSpaceType": "box",
+    "visualSupport": true,
+    "blockStyle": "minimal",
+    "supportsSectionHeaders": false,
+    "maxProblemsPerPage": 10,
+    "gradeBandOverrides": {
+      "K1": { "answerHeight": 1.0 },
+      "G2_3": { "answerHeight": 0.7 },
+      "G4_6": { "answerHeight": 0.45 }
+    }
+  },
+  "representation": {
+    "id": "representation",
+    "label": "Representation Sheet",
+    "defaultColumns": 2,
+    "maxColumns": 2,
+    "spacingDensity": "medium",
+    "answerSpaceType": "line",
+    "visualSupport": true,
+    "blockStyle": "minimal",
+    "supportsSectionHeaders": false,
+    "maxProblemsPerPage": 16,
+    "gradeBandOverrides": {
+      "K1": { "answerHeight": 1.0 },
+      "G2_3": { "answerHeight": 0.7 },
+      "G4_6": { "answerHeight": 0.45 }
+    }
+  },
+  "matching": {
+    "id": "matching",
+    "label": "Matching Sheet",
+    "defaultColumns": 2,
+    "maxColumns": 2,
+    "spacingDensity": "medium",
+    "answerSpaceType": "matching_column",
+    "visualSupport": false,
+    "blockStyle": "minimal",
+    "supportsSectionHeaders": false,
+    "maxProblemsPerPage": 12,
+    "gradeBandOverrides": {
+      "K1": { "answerHeight": 1.0 },
+      "G2_3": { "answerHeight": 0.7 },
+      "G4_6": { "answerHeight": 0.45 }
+    }
+  },
+  "model_interpretation": {
+    "id": "model_interpretation",
+    "label": "Model Interpretation",
+    "defaultColumns": 1,
+    "maxColumns": 2,
+    "spacingDensity": "spacious",
+    "answerSpaceType": "box",
+    "visualSupport": true,
+    "blockStyle": "minimal",
+    "supportsSectionHeaders": false,
+    "maxProblemsPerPage": 12,
+    "gradeBandOverrides": {
+      "K1": { "answerHeight": 1.0 },
+      "G2_3": { "answerHeight": 0.7 },
+      "G4_6": { "answerHeight": 0.45 }
+    }
+  }
+}

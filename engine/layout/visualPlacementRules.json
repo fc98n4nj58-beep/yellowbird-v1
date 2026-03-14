@@ -1,0 +1,22 @@
+{
+  "arrays": {
+    "visualRequired": true,
+    "position": "above_prompt"
+  },
+  "equal_groups": {
+    "visualRequired": true,
+    "position": "above_prompt"
+  },
+  "ten_frame": {
+    "visualRequired": true,
+    "position": "center"
+  },
+  "base_ten_blocks": {
+    "visualRequired": true,
+    "position": "above_prompt"
+  },
+  "number_line_identify": {
+    "visualRequired": true,
+    "position": "above_prompt"
+  }
+}

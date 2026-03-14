@@ -1,21 +1,29 @@
-function randInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+const generateArithmeticProblem = require("../engines/arithmeticEngine");
+const generateArraySvg = require("../visuals/arraySvg");
 
 function generateArrayProblem() {
-  const rows = randInt(2, 10);
-  const cols = randInt(2, 10);
 
-  return {
-    type: "arrays",
-    prompt: `There are ${rows} rows with ${cols} objects in each row. How many objects are there altogether?`,
-    equation: `${rows} × ${cols} = ___`,
-    answer: rows * cols,
-    meta: {
-      rows,
-      cols
-    }
-  };
+  const problem = generateArithmeticProblem({
+    operation: "multiplication",
+    format: "array",
+    minA: 2,
+    maxA: 10,
+    minB: 2,
+    maxB: 10
+  });
+
+  const rows = problem.a;
+  const cols = problem.b;
+
+  const svg = generateArraySvg({
+    rows,
+    cols,
+    cellSize: 30
+  });
+
+  problem.visual = svg;
+
+  return problem;
 }
 
 module.exports = generateArrayProblem;

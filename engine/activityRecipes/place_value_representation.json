@@ -1,0 +1,76 @@
+{
+  "skill": "place_value_representation",
+  "defaultMode": "standard_practice",
+  "supportedModes": [
+    "standard_practice",
+    "base_ten_focus",
+    "compare_and_order",
+    "expanded_form",
+    "exit_ticket"
+  ],
+  "defaultProblemCount": 12,
+  "difficulty": {
+    "easy": {
+      "min": 0,
+      "max": 100,
+      "activities": [
+        "base_ten_blocks",
+        "expanded_form",
+        "standard_form"
+      ]
+    },
+    "medium": {
+      "min": 0,
+      "max": 1000,
+      "activities": [
+        "base_ten_blocks",
+        "expanded_form",
+        "standard_form",
+        "compare_numbers"
+      ]
+    },
+    "challenge": {
+      "min": 0,
+      "max": 100000,
+      "activities": [
+        "compare_numbers",
+        "number_word_match",
+        "expanded_form"
+      ]
+    }
+  },
+  "variants": {
+    "standard_practice": {
+  "activityMix": {
+    "base_ten_blocks": 8,
+    "expanded_form": 2,
+    "standard_form": 2
+  }
+    },
+    "base_ten_focus": {
+      "activityMix": {
+        "base_ten_blocks": 8,
+        "standard_form": 4
+      }
+    },
+    "compare_and_order": {
+      "activityMix": {
+        "compare_numbers": 8,
+        "number_word_match": 4
+      }
+    },
+    "expanded_form": {
+      "activityMix": {
+        "expanded_form": 6,
+        "standard_form": 6
+      }
+    },
+    "exit_ticket": {
+      "activityMix": {
+        "base_ten_blocks": 2,
+        "expanded_form": 2,
+        "compare_numbers": 1
+      }
+    }
+  }
+}

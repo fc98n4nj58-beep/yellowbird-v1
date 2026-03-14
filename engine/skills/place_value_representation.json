@@ -1,0 +1,13 @@
+{
+  "skill": "place_value_representation",
+  "title": "Place Value Representation",
+  "description": "Generate activities for representing, composing, decomposing, comparing, and reading numbers using place value models and forms.",
+  "activities": [
+  "base_ten_blocks",
+  "expanded_form",
+  "standard_form",
+  "compare_numbers",
+  "number_word_match",
+  "number_line_identify"
+]
+}

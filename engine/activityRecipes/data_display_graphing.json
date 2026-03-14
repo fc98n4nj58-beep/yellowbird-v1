@@ -1,0 +1,78 @@
+{
+  "skill": "data_display_graphing",
+  "defaultMode": "standard_practice",
+  "supportedModes": [
+    "standard_practice",
+    "read_graphs",
+    "complete_graphs",
+    "graph_questions",
+    "exit_ticket"
+  ],
+  "defaultProblemCount": 10,
+  "difficulty": {
+    "easy": {
+      "min": 0,
+      "max": 10,
+      "activities": [
+        "read_graph",
+        "complete_graph",
+        "match_data_to_graph"
+      ]
+    },
+    "medium": {
+      "min": 0,
+      "max": 20,
+      "activities": [
+        "read_graph",
+        "complete_graph",
+        "match_data_to_graph",
+        "graph_questions"
+      ]
+    },
+    "challenge": {
+      "min": 0,
+      "max": 50,
+      "activities": [
+        "graph_questions",
+        "graph_word_problems",
+        "match_data_to_graph"
+      ]
+    }
+  },
+  "variants": {
+    "standard_practice": {
+      "activityMix": {
+        "read_graph": 3,
+        "complete_graph": 3,
+        "match_data_to_graph": 2,
+        "graph_questions": 2
+      }
+    },
+    "read_graphs": {
+      "activityMix": {
+        "read_graph": 6,
+        "graph_questions": 4
+      }
+    },
+    "complete_graphs": {
+      "activityMix": {
+        "complete_graph": 6,
+        "match_data_to_graph": 4
+      }
+    },
+    "graph_questions": {
+      "activityMix": {
+        "graph_questions": 6,
+        "read_graph": 2,
+        "graph_word_problems": 2
+      }
+    },
+    "exit_ticket": {
+      "activityMix": {
+        "read_graph": 2,
+        "complete_graph": 2,
+        "graph_questions": 1
+      }
+    }
+  }
+}

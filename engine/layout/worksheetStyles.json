@@ -1,0 +1,18 @@
+{
+  "fontFamily": "Source Sans 3",
+  "titleSize": 28,
+  "subtitleSize": 14,
+  "metaSize": 13,
+  "instructionSize": 14,
+  "problemSize": 19,
+  "problemNumberSize": 15,
+  "borderRadius": 12,
+  "lineColor": "#d6d3d1",
+  "softLineColor": "#e7e5e4",
+  "textColor": "#1f2937",
+  "mutedTextColor": "#6b7280",
+  "surfaceColor": "#ffffff",
+  "surfaceMutedColor": "#fafaf9",
+  "answerLineColor": "#94a3b8",
+  "pageMaxWidth": 900
+}

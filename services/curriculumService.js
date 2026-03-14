@@ -253,6 +253,242 @@ function getExpectationsByFilters(filters = {}) {
     return true;
   });
 }
+function normalizeGradeKey(value) {
+  const v = String(value || "").trim().toLowerCase();
+  if (!v) return "";
+  if (v === "k" || v === "kindergarten") return "kindergarten";
+  if (v.startsWith("grade")) return v;
+  if (/^\d+$/.test(v)) return `grade${v}`;
+  return v;
+}
+
+function getGradeNode(grade) {
+  const raw = getCurriculumRaw();
+  const grades = Array.isArray(raw?.grades) ? raw.grades : [];
+  const target = normalizeGradeKey(grade);
+
+  return grades.find((g) => String(g?.grade || "").toLowerCase() === target) || null;
+}
+
+function getStrandsByGrade(grade) {
+  const gradeNode = getGradeNode(grade);
+  const strands = Array.isArray(gradeNode?.strands) ? gradeNode.strands : [];
+
+  return strands.map((s) => ({
+    id: s.id,
+    name: s.name,
+  }));
+}
+
+function getTopicsByGradeAndStrand(grade, strandId) {
+  const gradeNode = getGradeNode(grade);
+  const strands = Array.isArray(gradeNode?.strands) ? gradeNode.strands : [];
+
+  const strand = strands.find(
+    (s) => String(s?.id || "").toUpperCase() === String(strandId || "").toUpperCase()
+  );
+
+  const topics = Array.isArray(strand?.topics) ? strand.topics : [];
+
+  return topics.map((t) => ({
+    id: t.id,
+    name: t.name,
+  }));
+}
+
+function getExpectationsByGradeStrandAndTopic(grade, strandId, topicId) {
+  const gradeNode = getGradeNode(grade);
+  const strands = Array.isArray(gradeNode?.strands) ? gradeNode.strands : [];
+
+  const strand = strands.find(
+    (s) => String(s?.id || "").toUpperCase() === String(strandId || "").toUpperCase()
+  );
+
+  const topics = Array.isArray(strand?.topics) ? strand.topics : [];
+
+  const topic = topics.find(
+    (t) => String(t?.id || "").toUpperCase() === String(topicId || "").toUpperCase()
+  );
+
+  const expectations = Array.isArray(topic?.expectations) ? topic.expectations : [];
+
+  return expectations.map((e) => ({
+    id: e.id,
+    code: e.code || "",
+    name: e.code ? `${e.code}` : (e.id || ""),
+    text: e.text || "",
+  }));
+}
+
+function getExpectationContextById(id) {
+  const raw = getCurriculumRaw();
+  const grades = Array.isArray(raw?.grades) ? raw.grades : [];
+
+  for (const g of grades) {
+    const strands = Array.isArray(g?.strands) ? g.strands : [];
+
+    for (const s of strands) {
+      const topics = Array.isArray(s?.topics) ? s.topics : [];
+
+      for (const t of topics) {
+        const expectations = Array.isArray(t?.expectations) ? t.expectations : [];
+
+        for (const e of expectations) {
+          if (String(e?.id) !== String(id)) continue;
+
+          const expRecipe = e?.worksheet_recipe || t?.topic_recipe || null;
+
+          return {
+            ok: true,
+            source: "curriculum dataset",
+            loadedFrom: "data/curriculum/ontario/math_k6.json",
+            version: raw.version || "",
+            jurisdiction: raw.jurisdiction,
+            subject: raw.subject,
+            grade: g.grade,
+            gradeLabel: g.gradeLabel || `Grade ${g.grade}`,
+            strand: { id: s.id, name: s.name },
+            topic: { id: t.id, name: t.name },
+            expectation: {
+              id: e.id,
+              code: e.code || "",
+              text: e.text || "",
+              worksheet_recipe: expRecipe,
+              learningGoal: e.learningGoal || "",
+              successCriteria: Array.isArray(e.successCriteria) ? e.successCriteria : [],
+            },
+          };
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
+function getExpectationContextByRoute({ subject, grade, strand, expectationCode }) {
+  const raw = getCurriculumRaw();
+  const grades = Array.isArray(raw?.grades) ? raw.grades : [];
+
+  const normalizeRoutePart = (value) =>
+    String(value || "")
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9.-]/g, "");
+
+  const gradeTarget = String(grade || "").trim().toLowerCase();
+  const strandTarget = normalizeRoutePart(strand);
+  const codeTarget = String(expectationCode || "").trim().toUpperCase();
+  const subjectTarget = normalizeRoutePart(subject);
+
+  for (const g of grades) {
+    if (String(g?.grade || "").toLowerCase() !== gradeTarget) continue;
+
+    const strands = Array.isArray(g?.strands) ? g.strands : [];
+
+    for (const s of strands) {
+      const strandSlug = normalizeRoutePart(s?.name || s?.id);
+      if (strandSlug !== strandTarget) continue;
+
+      const topics = Array.isArray(s?.topics) ? s.topics : [];
+
+      for (const t of topics) {
+        const expectations = Array.isArray(t?.expectations) ? t.expectations : [];
+
+        for (const e of expectations) {
+          if (String(e?.code || "").toUpperCase() !== codeTarget) continue;
+
+          const subjectSlug = normalizeRoutePart(raw?.subject?.name || raw?.subject?.id || "");
+          if (subjectTarget && subjectSlug && subjectTarget !== subjectSlug) continue;
+
+          return {
+            jurisdiction: raw.jurisdiction,
+            subject: raw.subject,
+            grade: g.grade,
+            gradeLabel: g.gradeLabel || `Grade ${g.grade}`,
+            strand: { id: s.id, name: s.name },
+            topic: { id: t.id, name: t.name },
+            expectation: {
+              id: e.id,
+              code: e.code || "",
+              text: e.text || "",
+              worksheet_recipe: e.worksheet_recipe || null,
+              learningGoal: e.learningGoal || "",
+              successCriteria: Array.isArray(e.successCriteria) ? e.successCriteria : [],
+            },
+          };
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
+function getExpectationContext({ jurisdiction, grade, subject, strandId, topicId, expectationId }) {
+  const raw = getCurriculumRaw();
+  const grades = Array.isArray(raw?.grades) ? raw.grades : [];
+
+  const gradeObj = grades.find(
+    (g) => String(g?.grade || "").toLowerCase() === String(grade || "").toLowerCase()
+  );
+  if (!gradeObj) return null;
+
+  const subjectObj = raw?.subject || {};
+  if (
+    subject &&
+    String(subjectObj.id || "").toLowerCase() !== String(subject || "").toLowerCase()
+  ) {
+    return null;
+  }
+
+  const strandObj = (gradeObj.strands || []).find(
+    (s) => String(s?.id || "").toLowerCase() === String(strandId || "").toLowerCase()
+  );
+  if (!strandObj) return null;
+
+  const topicObj = (strandObj.topics || []).find(
+    (t) => String(t?.id || "").toLowerCase() === String(topicId || "").toLowerCase()
+  );
+  if (!topicObj) return null;
+
+  const expectationObj = (topicObj.expectations || []).find(
+    (e) => String(e?.id || "").toLowerCase() === String(expectationId || "").toLowerCase()
+  );
+  if (!expectationObj) return null;
+
+  const expRecipe = expectationObj?.worksheet_recipe || topicObj?.topic_recipe || null;
+
+  return {
+    ok: true,
+    source: "curriculum dataset",
+    loadedFrom: "data/curriculum/ontario/math_k6.json",
+    version: raw.version || "",
+    jurisdiction: raw.jurisdiction,
+    subject: raw.subject,
+    grade: gradeObj.grade,
+    gradeLabel: gradeObj.gradeLabel || `Grade ${gradeObj.grade}`,
+    strand: {
+      id: strandObj.id,
+      name: strandObj.name
+    },
+    topic: {
+      id: topicObj.id,
+      name: topicObj.name
+    },
+    expectation: {
+      id: expectationObj.id,
+      code: expectationObj.code || "",
+      text: expectationObj.text || "",
+      worksheet_recipe: expRecipe,
+      learningGoal: expectationObj.learningGoal || "",
+      successCriteria: Array.isArray(expectationObj.successCriteria)
+        ? expectationObj.successCriteria
+        : []
+    }
+  };
+}
 
 module.exports = {
   loadCurriculum,
@@ -260,5 +496,13 @@ module.exports = {
   getAllExpectations,
   getExpectationByCode,
   getExpectationByRoute,
+  getExpectationContext,
   getExpectationsByFilters,
+  normalizeGradeKey,
+  getGradeNode,
+  getStrandsByGrade,
+  getTopicsByGradeAndStrand,
+  getExpectationsByGradeStrandAndTopic,
+  getExpectationContextById,
+  getExpectationContextByRoute,
 };

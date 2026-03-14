@@ -1,30 +1,14 @@
-function randInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+const generateArithmeticProblem = require("../engines/arithmeticEngine");
 
 function generateMissingFactorProblem() {
-  const a = randInt(2, 10);
-  const b = randInt(2, 10);
-  const product = a * b;
-
-  const hideFirst = Math.random() < 0.5;
-
-  return {
-    type: "missing_factor",
-    prompt: hideFirst
-      ? `___ × ${b} = ${product}`
-      : `${a} × ___ = ${product}`,
-    equation: hideFirst
-      ? `___ × ${b} = ${product}`
-      : `${a} × ___ = ${product}`,
-    answer: hideFirst ? a : b,
-    meta: {
-      a,
-      b,
-      product,
-      hideFirst
-    }
-  };
+  return generateArithmeticProblem({
+    operation: "multiplication",
+    missingPosition: "a",
+    minA: 2,
+    maxA: 10,
+    minB: 2,
+    maxB: 10
+  });
 }
 
 module.exports = generateMissingFactorProblem;

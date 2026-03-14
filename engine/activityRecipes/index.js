@@ -8,14 +8,14 @@ function loadJson(filePath) {
 function getRecipeForSkill(skillKey) {
   if (!skillKey) return null;
 
-  const fileNameMap = {
-    multiplication_facts: "multiplicationFacts.json"
-  };
+  const filePath = path.join(__dirname, `${skillKey}.json`);
+  console.log("recipe lookup:", filePath);
 
-  const fileName = fileNameMap[skillKey];
-  if (!fileName) return null;
+  if (!fs.existsSync(filePath)) {
+    console.log("recipe missing for skill:", skillKey);
+    return null;
+  }
 
-  const filePath = path.join(__dirname, fileName);
   return loadJson(filePath);
 }
 

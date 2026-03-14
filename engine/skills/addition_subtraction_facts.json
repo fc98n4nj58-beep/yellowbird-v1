@@ -1,0 +1,14 @@
+{
+  "skill": "addition_subtraction_facts",
+  "title": "Addition and Subtraction Facts",
+  "description": "Generate activities for recalling addition facts and related subtraction facts with fluency and accuracy.",
+ "activities": [
+  "fact_fluency",
+  "missing_addend",
+  "related_subtraction",
+  "equation_match",
+  "fact_family",
+  "ten_frame",
+  "word_problems"
+]
+}

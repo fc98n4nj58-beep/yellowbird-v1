@@ -1,4 +1,4 @@
-const { getSkillKeyForExpectation, getSkillDefinition } = require("../skills");
+const { getSkillDefinition } = require("../skills");
 const { getRecipeForSkill } = require("../activityRecipes");
 const { getGenerator } = require("../problemGenerators");
 
@@ -6,65 +6,104 @@ function randInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function pickActivitiesFromRecipe(recipe) {
+function pickActivitiesFromRecipe(recipe, requestedCount = null) {
   const selectedActivities = [];
 
-  if (!recipe || !Array.isArray(recipe.recipeGroups)) {
+  if (!recipe || !recipe.variants) {
     return selectedActivities;
   }
 
-  recipe.recipeGroups.forEach((group) => {
-    if (!group.activities || !Array.isArray(group.activities)) return;
+  const mode = recipe.defaultMode || Object.keys(recipe.variants)[0];
+  const variant = recipe.variants[mode];
 
-    group.activities.forEach((activity) => {
-      const count = randInt(activity.minQuestions || 1, activity.maxQuestions || 1);
+  if (!variant || !variant.activityMix) {
+    return selectedActivities;
+  }
 
-      for (let i = 0; i < count; i++) {
-        selectedActivities.push(activity.type);
-      }
-    });
+  Object.entries(variant.activityMix).forEach(([activityType, count]) => {
+    for (let i = 0; i < count; i++) {
+      selectedActivities.push(activityType);
+    }
   });
 
-  return selectedActivities;
+  if (!requestedCount || requestedCount <= 0) {
+    return selectedActivities;
+  }
+
+  if (selectedActivities.length >= requestedCount) {
+    return selectedActivities.slice(0, requestedCount);
+  }
+
+  const expanded = [...selectedActivities];
+  let index = 0;
+
+  while (expanded.length < requestedCount && selectedActivities.length > 0) {
+    expanded.push(selectedActivities[index % selectedActivities.length]);
+    index += 1;
+  }
+
+  return expanded;
 }
 
-function buildWorksheet(expectationCode) {
-  const skillKey = getSkillKeyForExpectation(expectationCode);
+function normalizeExpectationCode(expectationCode = "") {
+  const code = String(expectationCode).trim().toUpperCase();
 
-  if (!skillKey) {
-    throw new Error(`No skill mapping found for expectation '${expectationCode}'.`);
+  if (code.includes("-")) {
+    const parts = code.split("-");
+    return parts[parts.length - 1];
   }
 
-  const skillDefinition = getSkillDefinition(skillKey);
-  if (!skillDefinition) {
-    throw new Error(`No skill definition found for skill '${skillKey}'.`);
+  return code;
+}
+
+function buildExpectationKey(grade, expectationCode) {
+  const gradeNumber = String(grade).replace("grade", "");
+  const normalizedCode = normalizeExpectationCode(expectationCode);
+  return `ON-MATH-G${gradeNumber}-${normalizedCode}`;
+}
+
+function buildWorksheet(grade, expectationCode, skillContext = null, options = {}) {
+  const normalizedExpectationCode = normalizeExpectationCode(expectationCode);
+  const expectationKey = buildExpectationKey(grade, expectationCode);
+
+  const resolvedSkillKey = skillContext?.skillKey || null;
+  const resolvedSkillDefinition =
+    skillContext?.skill ||
+    (resolvedSkillKey ? getSkillDefinition(resolvedSkillKey) : null);
+
+  if (!resolvedSkillKey) {
+    throw new Error(`No skill mapping found for expectation '${expectationKey}'.`);
   }
 
-  const recipe = getRecipeForSkill(skillKey);
+  if (!resolvedSkillDefinition) {
+    throw new Error(`No skill definition found for skill '${resolvedSkillKey}'.`);
+  }
+
+  const recipe = getRecipeForSkill(resolvedSkillKey);
+
   if (!recipe) {
-    throw new Error(`No activity recipe found for skill '${skillKey}'.`);
+    throw new Error(`No activity recipe found for skill '${resolvedSkillKey}'.`);
   }
 
-  const activityList = pickActivitiesFromRecipe(recipe);
+ const activityList = pickActivitiesFromRecipe(recipe, options.questionCount);
 
   const problems = activityList.map((activityType) => {
-    const generator = getGenerator(activityType);
+  const generator = getGenerator(activityType);
 
-    if (!generator) {
-      throw new Error(`No problem generator found for activity '${activityType}'.`);
-    }
+  if (!generator) {
+    throw new Error(`No problem generator found for activity '${activityType}'.`);
+  }
 
-    return generator();
-  });
+  return generator(options);
+});
 
   return {
-    expectationCode,
-    skill: skillDefinition.skill,
-    title: skillDefinition.title,
-    description: skillDefinition.description,
-    totalProblems: problems.length,
-    problems
-  };
+  expectationCode: normalizedExpectationCode,
+  expectationKey,
+  skillKey: resolvedSkillKey,
+  skill: resolvedSkillDefinition,
+  problems
+};
 }
 
 module.exports = {

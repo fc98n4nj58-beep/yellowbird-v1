@@ -1,37 +1,37 @@
-const RECIPES = {
-  "B1.1": {
-    mode: "number-representation",
-    title: "Number Representation",
-    description: "Represent numbers in different ways",
-    suggestedQuestionCount: 12,
-    suggestedDifficulty: "easy",
-    tags: ["number-sense", "representation", "primary"],
+const WORKSHEET_TEMPLATES = {
+  "standard-practice": {
+    layout: "standard",
+    defaultColumns: 2,
+    showNameLine: true,
+    showDateLine: true,
+    spacing: "md"
   },
 
-  "B2.4": {
-    mode: "multiplication-arrays",
-    title: "Multiplication Arrays",
-    description: "Represent and solve multiplication using arrays",
-    suggestedQuestionCount: 15,
-    suggestedDifficulty: "medium",
-    tags: ["multiplication", "arrays", "facts"],
+  "fluency-grid": {
+    layout: "grid",
+    defaultColumns: 3,
+    showNameLine: true,
+    showDateLine: false,
+    spacing: "sm"
   },
 
-  "C1.1": {
-    mode: "patterning",
-    title: "Patterning",
-    description: "Identify, extend, and create patterns",
-    suggestedQuestionCount: 10,
-    suggestedDifficulty: "easy",
-    tags: ["patterns", "algebra"],
-  },
+  "word-problem-set": {
+    layout: "stacked",
+    defaultColumns: 1,
+    showNameLine: true,
+    showDateLine: true,
+    spacing: "lg"
+  }
 };
 
-function getWorksheetRecipe(expectationCode) {
-  return RECIPES[String(expectationCode || "").toUpperCase()] || null;
+function getWorksheetTemplate(templateId = "standard-practice") {
+  return (
+    WORKSHEET_TEMPLATES[templateId] ||
+    WORKSHEET_TEMPLATES["standard-practice"]
+  );
 }
 
 module.exports = {
-  RECIPES,
-  getWorksheetRecipe,
+  WORKSHEET_TEMPLATES,
+  getWorksheetTemplate
 };

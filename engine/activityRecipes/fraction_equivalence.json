@@ -1,0 +1,78 @@
+{
+  "skill": "fraction_equivalence",
+  "defaultMode": "standard_practice",
+  "supportedModes": [
+    "standard_practice",
+    "model_focus",
+    "equivalent_match",
+    "compare_fractions",
+    "exit_ticket"
+  ],
+  "defaultProblemCount": 12,
+  "difficulty": {
+    "easy": {
+      "min": 0,
+      "max": 10,
+      "activities": [
+        "shade_fraction_models",
+        "match_equivalent_fractions",
+        "compare_fractions"
+      ]
+    },
+    "medium": {
+      "min": 0,
+      "max": 20,
+      "activities": [
+        "shade_fraction_models",
+        "match_equivalent_fractions",
+        "fraction_number_line",
+        "compare_fractions"
+      ]
+    },
+    "challenge": {
+      "min": 0,
+      "max": 50,
+      "activities": [
+        "fraction_number_line",
+        "compare_fractions",
+        "word_problems"
+      ]
+    }
+  },
+  "variants": {
+    "standard_practice": {
+      "activityMix": {
+        "shade_fraction_models": 3,
+        "match_equivalent_fractions": 3,
+        "fraction_number_line": 3,
+        "compare_fractions": 3
+      }
+    },
+    "model_focus": {
+      "activityMix": {
+        "shade_fraction_models": 8,
+        "match_equivalent_fractions": 4
+      }
+    },
+    "equivalent_match": {
+      "activityMix": {
+        "match_equivalent_fractions": 8,
+        "fraction_number_line": 4
+      }
+    },
+    "compare_fractions": {
+      "activityMix": {
+        "compare_fractions": 6,
+        "fraction_number_line": 3,
+        "shade_fraction_models": 3
+      }
+    },
+    "exit_ticket": {
+      "activityMix": {
+        "shade_fraction_models": 2,
+        "match_equivalent_fractions": 2,
+        "compare_fractions": 1
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "K1": {
+    "answerHeightIn": 1.0,
+    "answerSpaceTypeDefault": "box"
+  },
+  "G2_3": {
+    "answerHeightIn": 0.7,
+    "answerSpaceTypeDefault": "box_or_line"
+  },
+  "G4_6": {
+    "answerHeightIn": 0.45,
+    "answerSpaceTypeDefault": "line"
+  }
+}

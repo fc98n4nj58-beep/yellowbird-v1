@@ -212,14 +212,15 @@ function computeFillStep(startY, bottomContentY, lineHeight, maxCountInAnyColumn
   }
 
   let step = usable / (maxCountInAnyColumn - 1);
-  const minStep = lineHeight * 1.35;
-  const maxStep = lineHeight * 2.6;
+ const minStep = lineHeight * 1.35;
+const maxStep = lineHeight * 2.6;
   step = Math.max(minStep, Math.min(maxStep, step));
   return step;
 }
 
 function renderPageColumns(doc, cols, columns, startY, bottomContentY, xForCol, colW, step, renderLineFn, lineHeight) {
-  for (let c = 0; c < cols; c++) {
+
+for (let c = 0; c < cols; c++) {
     const colItems = columns[c];
     if (!colItems.length) continue;
 
@@ -231,11 +232,12 @@ function renderPageColumns(doc, cols, columns, startY, bottomContentY, xForCol, 
   }
 }
 
-function renderQuestionsPages(doc, fonts, contentObject, options, pageState) {
+function renderQuestionsPages(doc, fonts, contentObject, options, pageState, layoutObject = null) {
   const meta = contentObject?.meta || {};
   const allItems = (contentObject?.content?.items || []).filter(isEquation);
 
-  const cols = clampCols(options.cols);
+  const cols = clampCols(layoutObject?.template?.columns || options.cols);
+  const instruction = layoutObject?.instruction || "";
   const bodyStyle = layout.typography.body;
   const { colW, xForCol } = getColumns(cols);
 
@@ -244,6 +246,14 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState) {
   const bottomContentY = footerRuleY - footerBufferH;
 
   let startY = renderHeader(doc, fonts, meta);
+  if (instruction) {
+  setFont(doc, fonts.light || fonts.regular, 11);
+  doc.fillColor("#4b5563");
+  doc.text(instruction, layout.page.contentBox.x, startY - 12, {
+    width: layout.page.contentBox.width,
+    align: "left"
+  });
+}
   setFont(doc, fonts.regular, bodyStyle.size);
   doc.fillColor("#222222");
 
@@ -267,21 +277,21 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState) {
     const span = Math.max(0, step * (maxColCount - 1));
     const topForCenter = startY + Math.max(0, (usable - span) / 2);
 
-    renderPageColumns(
-      doc,
-      cols,
-      columns,
-      topForCenter,
-      bottomContentY,
-      xForCol,
-      colW,
-      step,
-      (item, x, y, w) => {
-        const label = item.id != null ? `${item.id})  ` : "";
-        doc.text(`${label}${safeStr(item.prompt)}`, x, y, { width: w, align: "left" });
-      },
-      bodyStyle.lineHeight
-    );
+   renderPageColumns(
+  doc,
+  cols,
+  columns,
+  topForCenter,
+  bottomContentY,
+  xForCol,
+  colW,
+  step,
+  (item, x, y, w) => {
+    const label = item.id != null ? `${item.id})  ` : "";
+    doc.text(`${label}${safeStr(item.prompt)}`, x, y, { width: w, align: "left" });
+  },
+  bodyStyle.lineHeight
+);
 
     drawFooter(doc, fonts, pageState.pageNum, meta);
   });
@@ -357,8 +367,8 @@ function renderAnswerKey(doc, fonts, contentObject, options, pageState) {
   });
 }
 
-function renderWorksheetPDF({ res, contentObject, options = {} }) {
-  const doc = new PDFDocument({
+function renderWorksheetPDF({ res, contentObject, options = {}, layoutObject = null }) {
+    const doc = new PDFDocument({
     size: "LETTER",
     margins: { top: 0, bottom: 0, left: 0, right: 0 },
     bufferPages: false,
@@ -391,8 +401,7 @@ function renderWorksheetPDF({ res, contentObject, options = {} }) {
 
   const pageState = { pageNum: 1 };
 
-  renderQuestionsPages(doc, fonts, contentObject, normalized, pageState);
-
+  renderQuestionsPages(doc, fonts, contentObject, normalized, pageState, layoutObject);
   if (normalized.includeAnswerKey) {
     renderAnswerKey(doc, fonts, contentObject, normalized, pageState);
   }

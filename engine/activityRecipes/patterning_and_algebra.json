@@ -1,0 +1,77 @@
+{
+  "skill": "patterning_and_algebra",
+  "defaultMode": "standard_practice",
+  "supportedModes": [
+    "standard_practice",
+    "pattern_extension",
+    "rule_identification",
+    "missing_value",
+    "word_problem_focus"
+  ],
+  "defaultProblemCount": 12,
+  "difficulty": {
+    "easy": {
+      "min": 0,
+      "max": 20,
+      "activities": [
+        "extend_pattern",
+        "identify_pattern_rule",
+        "missing_value_pattern"
+      ]
+    },
+    "medium": {
+      "min": 0,
+      "max": 100,
+      "activities": [
+        "extend_pattern",
+        "identify_pattern_rule",
+        "function_table",
+        "missing_value_pattern"
+      ]
+    },
+    "challenge": {
+      "min": 0,
+      "max": 1000,
+      "activities": [
+        "function_table",
+        "missing_value_pattern",
+        "pattern_word_problems"
+      ]
+    }
+  },
+  "variants": {
+    "standard_practice": {
+      "activityMix": {
+        "extend_pattern": 4,
+        "identify_pattern_rule": 3,
+        "missing_value_pattern": 3,
+        "function_table": 2
+      }
+    },
+    "pattern_extension": {
+      "activityMix": {
+        "extend_pattern": 8,
+        "missing_value_pattern": 4
+      }
+    },
+    "rule_identification": {
+      "activityMix": {
+        "identify_pattern_rule": 6,
+        "function_table": 6
+      }
+    },
+    "missing_value": {
+      "activityMix": {
+        "missing_value_pattern": 8,
+        "function_table": 4
+      }
+    },
+    "word_problem_focus": {
+      "activityMix": {
+        "pattern_word_problems": 6,
+        "identify_pattern_rule": 3,
+        "missing_value_pattern": 3
+      }
+    }
+  }
+}
