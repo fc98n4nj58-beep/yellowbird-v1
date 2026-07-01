@@ -31,17 +31,20 @@ function resolveModeMapping({ modeId, skillKey }) {
 
 function normalizeProblem(problem, index, context) {
   const prompt = safeStr(problem.prompt || problem.question || problem.text || "");
-  const visual = safeStr(problem.visual || "");
   const interactionType = context.interactionType || "write_answer";
   const templateType = context.templateId;
   const answerSpaceType = context.template.answerSpaceType || "line";
 
-  const visualRule = visualPlacementRules[context.skillKey] || null;
+  const visual = problem.visual || null;
+  const visualRule =
+    visualPlacementRules[problem.visual?.kind] ||
+    visualPlacementRules[context.skillKey] ||
+    null;
 
   return {
     problemNumber: index + 1,
     prompt,
-    visual: visual || null,
+    visual,
     interactionType,
     templateType,
     answerSpace: {
@@ -49,7 +52,10 @@ function normalizeProblem(problem, index, context) {
       answerHeightIn: context.gradeSpacing.answerHeightIn
     },
     gradeSpacingRule: context.gradeBand,
-    visualPlacement: visualRule?.position || (visual ? "above_prompt" : "none")
+    visualPlacement: visualRule?.position || (visual ? "above_prompt" : "none"),
+    answer: problem.answer,
+    type: problem.type || "equation",
+    id: problem.id ?? index + 1
   };
 }
 
