@@ -1,5 +1,5 @@
-function randInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+function randInt(min, max, random = Math.random) {
+  return Math.floor(random() * (max - min + 1)) + min;
 }
 
 function numberToWords(n) {
@@ -33,10 +33,11 @@ function numberToWords(n) {
 }
 
 function generateNumberWordMatchProblem(options = {}) {
+  const random = options.random || Math.random;
   const min = Number.isFinite(options.minA) ? options.minA : 0;
   const max = Number.isFinite(options.maxA) ? options.maxA : 999;
 
-  const value = randInt(min, max);
+  const value = randInt(min, max, random);
 
   return {
     prompt: `Write this number in words: ${value}`,

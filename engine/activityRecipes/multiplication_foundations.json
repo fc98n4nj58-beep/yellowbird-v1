@@ -1,0 +1,6 @@
+{
+  "skill": "multiplication_foundations",
+  "title": "Multiplication Foundations",
+  "baseSkill": "multiplication_facts",
+  "activities": ["arrays", "equal_groups", "skip_counting", "missing_factor"]
+}

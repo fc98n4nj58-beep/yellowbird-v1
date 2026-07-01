@@ -1,13 +1,14 @@
 const generateArithmeticProblem = require("../engines/arithmeticEngine");
 
-function generateMissingFactorProblem() {
+function generateMissingFactorProblem(options = {}) {
   return generateArithmeticProblem({
     operation: "multiplication",
     missingPosition: "a",
     minA: 2,
     maxA: 10,
     minB: 2,
-    maxB: 10
+    maxB: 10,
+    random: options.random
   });
 }
 

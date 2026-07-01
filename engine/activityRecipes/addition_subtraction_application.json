@@ -1,0 +1,6 @@
+{
+  "skill": "addition_subtraction_application",
+  "title": "Addition and Subtraction Application",
+  "baseSkill": "addition_subtraction_word_problems",
+  "activities": ["addition_word_problem", "subtraction_word_problem", "missing_addend_word_problem"]
+}

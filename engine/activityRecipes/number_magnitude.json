@@ -1,0 +1,6 @@
+{
+  "skill": "number_magnitude",
+  "title": "Number Magnitude",
+  "baseSkill": "place_value_representation",
+  "activities": ["number_line_identify", "compare_numbers", "standard_form"]
+}

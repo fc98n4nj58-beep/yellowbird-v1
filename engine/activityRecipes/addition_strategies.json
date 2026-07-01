@@ -1,0 +1,12 @@
+{
+  "skill": "addition_strategies",
+  "title": "Addition Strategies",
+  "baseSkill": "addition_subtraction_facts",
+  "activities": [
+    "ten_frame",
+    "number_line_identify",
+    "equation_match",
+    "missing_addend",
+    "word_problems"
+  ]
+}

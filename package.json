@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon server.js",
     "validate:curriculum": "node scripts/validateCurriculum.js",
-    "normalize:curriculum": "node scripts/normalizeCurriculum.js"
+    "normalize:curriculum": "node scripts/normalizeCurriculum.js",
+    "audit:worksheets": "node scripts/auditWorksheetCatalog.js"
   },
   "keywords": [],
   "author": "",

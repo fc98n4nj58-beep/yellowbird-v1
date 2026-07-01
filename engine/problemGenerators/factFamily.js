@@ -1,8 +1,9 @@
-function randInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+function randInt(min, max, random = Math.random) {
+  return Math.floor(random() * (max - min + 1)) + min;
 }
 
 function generateFactFamilyProblem(options = {}) {
+  const random = options.random || Math.random;
   const {
     minA = 0,
     maxA = 10,
@@ -10,8 +11,8 @@ function generateFactFamilyProblem(options = {}) {
     maxB = 10
   } = options;
 
-  let a = randInt(minA, maxA);
-  let b = randInt(minB, maxB);
+  let a = randInt(minA, maxA, random);
+  let b = randInt(minB, maxB, random);
   const sum = a + b;
 
   return {

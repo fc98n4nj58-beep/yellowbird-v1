@@ -1,7 +1,8 @@
-function generateCompleteGraphProblem() {
+function generateCompleteGraphProblem(options = {}) {
+  const random = options.random || Math.random;
   const categories = ["Cats", "Dogs", "Birds"];
   const values = [4, 7, 5];
-  const missingIndex = Math.floor(Math.random() * categories.length);
+  const missingIndex = Math.floor(random() * categories.length);
 
   const visibleData = categories.map((label, index) => {
     return index === missingIndex

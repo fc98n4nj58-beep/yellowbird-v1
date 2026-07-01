@@ -1,0 +1,6 @@
+{
+  "skill": "early_number_sense",
+  "title": "Early Number Sense",
+  "baseSkill": "place_value_representation",
+  "activities": ["ten_frame", "number_line_identify", "compare_numbers", "number_word_match"]
+}

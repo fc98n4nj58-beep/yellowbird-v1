@@ -1,19 +1,67 @@
 const { getSkillDefinition } = require("../skills");
 const { getRecipeForSkill } = require("../activityRecipes");
 const { getGenerator } = require("../problemGenerators");
+const { createSeededRandom } = require("../../utils/seededRandom");
 
-function randInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+function pickActivitiesFromRecipe(recipe, requestedCount = null, preferredActivity = null) {
+  if (!recipe) return [];
 
-function pickActivitiesFromRecipe(recipe, requestedCount = null) {
+  const aliasMap = {
+    array: "arrays",
+    arrays: "array"
+  };
+
+  function resolvePreferredMatch(activityList = []) {
+    if (!preferredActivity) return null;
+
+    return (
+      activityList.find((a) => a === preferredActivity) ||
+      activityList.find((a) => a === aliasMap[preferredActivity]) ||
+      null
+    );
+  }
+
+  if (Array.isArray(recipe.activities) && recipe.activities.length) {
+    let baseActivities = recipe.activities;
+    const matched = resolvePreferredMatch(recipe.activities);
+
+    if (matched) {
+      baseActivities = [matched];
+    }
+
+    if (!requestedCount || requestedCount <= 0) {
+      return matched ? Array(8).fill(matched) : [baseActivities[0]];
+    }
+
+    return Array(requestedCount).fill(baseActivities[0]);
+  }
+
   const selectedActivities = [];
 
-  if (!recipe || !recipe.variants) {
+  if (!recipe.variants) {
     return selectedActivities;
   }
 
-  const mode = recipe.defaultMode || Object.keys(recipe.variants)[0];
+  let mode = recipe.defaultMode || Object.keys(recipe.variants)[0];
+
+  if (preferredActivity) {
+    const preferred = String(preferredActivity).toLowerCase();
+
+    if (
+      preferred.includes("fact_fluency") ||
+      preferred.includes("addition.basic") ||
+      preferred.includes("subtraction.basic")
+    ) {
+      mode = "fact_fluency";
+    } else if (preferred.includes("word")) {
+      mode = "word_problem_focus";
+    } else if (preferred.includes("exit")) {
+      mode = "exit_ticket";
+    } else if (preferred.includes("review") || preferred.includes("mixed")) {
+      mode = "review_mixed";
+    }
+  }
+
   const variant = recipe.variants[mode];
 
   if (!variant || !variant.activityMix) {
@@ -26,19 +74,30 @@ function pickActivitiesFromRecipe(recipe, requestedCount = null) {
     }
   });
 
+  let baseActivities = selectedActivities;
+  const matched = resolvePreferredMatch(selectedActivities);
+
+  if (matched) {
+    baseActivities = [matched];
+  }
+
   if (!requestedCount || requestedCount <= 0) {
-    return selectedActivities;
+    return matched ? Array(8).fill(matched) : baseActivities;
   }
 
-  if (selectedActivities.length >= requestedCount) {
-    return selectedActivities.slice(0, requestedCount);
+  if (matched) {
+    return Array(requestedCount).fill(matched);
   }
 
-  const expanded = [...selectedActivities];
+  if (baseActivities.length >= requestedCount) {
+    return baseActivities.slice(0, requestedCount);
+  }
+
+  const expanded = [...baseActivities];
   let index = 0;
 
-  while (expanded.length < requestedCount && selectedActivities.length > 0) {
-    expanded.push(selectedActivities[index % selectedActivities.length]);
+  while (expanded.length < requestedCount && baseActivities.length > 0) {
+    expanded.push(baseActivities[index % baseActivities.length]);
     index += 1;
   }
 
@@ -60,6 +119,28 @@ function buildExpectationKey(grade, expectationCode) {
   const gradeNumber = String(grade).replace("grade", "");
   const normalizedCode = normalizeExpectationCode(expectationCode);
   return `ON-MATH-G${gradeNumber}-${normalizedCode}`;
+}
+
+function resolveDefaultQuestionCount(options = {}, preferredActivity = null) {
+  const questionCount = Number(options.questionCount);
+
+  if (Number.isFinite(questionCount) && questionCount > 0) {
+    return questionCount;
+  }
+
+  const visualActivities = new Set([
+    "ten_frame",
+    "number_line_identify",
+    "base_ten_blocks",
+    "array",
+    "arrays"
+  ]);
+
+  if (preferredActivity && visualActivities.has(preferredActivity)) {
+    return 10;
+  }
+
+  return 12;
 }
 
 function buildWorksheet(grade, expectationCode, skillContext = null, options = {}) {
@@ -85,25 +166,46 @@ function buildWorksheet(grade, expectationCode, skillContext = null, options = {
     throw new Error(`No activity recipe found for skill '${resolvedSkillKey}'.`);
   }
 
- const activityList = pickActivitiesFromRecipe(recipe, options.questionCount);
+  const preferredActivity =
+    options.preferredActivityType ||
+    options.activityType ||
+    null;
+
+  const questionCount = resolveDefaultQuestionCount(options, preferredActivity);
+
+  const activityList = pickActivitiesFromRecipe(
+    recipe,
+    questionCount,
+    preferredActivity
+  );
+
+  const usedProblemKeys = new Set();
+  const random = createSeededRandom(options.worksheetSeed || "yellowbird-default");
 
   const problems = activityList.map((activityType) => {
-  const generator = getGenerator(activityType);
+    const generator = getGenerator(activityType);
 
-  if (!generator) {
-    throw new Error(`No problem generator found for activity '${activityType}'.`);
-  }
+    if (!generator) {
+      throw new Error(
+        `No problem generator found for activity '${activityType}'.`
+      );
+    }
 
-  return generator(options);
-});
+    return generator({
+      ...options,
+      activityType,
+      usedProblemKeys,
+      random
+    });
+  });
 
   return {
-  expectationCode: normalizedExpectationCode,
-  expectationKey,
-  skillKey: resolvedSkillKey,
-  skill: resolvedSkillDefinition,
-  problems
-};
+    expectationCode: normalizedExpectationCode,
+    expectationKey,
+    skillKey: resolvedSkillKey,
+    skill: resolvedSkillDefinition,
+    problems
+  };
 }
 
 module.exports = {

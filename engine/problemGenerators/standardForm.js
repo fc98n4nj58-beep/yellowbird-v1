@@ -1,13 +1,14 @@
-function randInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+function randInt(min, max, random = Math.random) {
+  return Math.floor(random() * (max - min + 1)) + min;
 }
 
 function generateStandardFormProblem(options = {}) {
 
+  const random = options.random || Math.random;
   const min = options.minA || 100;
   const max = options.maxA || 999;
 
-  const value = randInt(min, max);
+  const value = randInt(min, max, random);
 
   const hundreds = Math.floor(value / 100);
   const tens = Math.floor((value % 100) / 10);

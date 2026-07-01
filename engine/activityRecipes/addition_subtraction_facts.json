@@ -51,10 +51,9 @@
   }
     },
     "fact_fluency": {
-      "activityMix": {
-        "fact_fluency": 8,
-        "missing_addend": 4
-      }
+  "activityMix": {
+    "fact_fluency": 12
+  }
     },
     "review_mixed": {
       "activityMix": {

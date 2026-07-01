@@ -1,0 +1,6 @@
+{
+  "skill": "counting_patterns",
+  "title": "Counting Patterns",
+  "baseSkill": "patterning_and_algebra",
+  "activities": ["skip_counting", "number_line_identify", "extend_pattern"]
+}

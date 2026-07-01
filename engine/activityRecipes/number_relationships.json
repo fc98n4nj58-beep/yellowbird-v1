@@ -1,0 +1,6 @@
+{
+  "skill": "number_relationships",
+  "title": "Number Relationships",
+  "baseSkill": "place_value_representation",
+  "activities": ["compare_numbers", "standard_form", "expanded_form"]
+}

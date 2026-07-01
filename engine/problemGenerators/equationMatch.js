@@ -1,7 +1,8 @@
 const generateArithmeticProblem = require("../engines/arithmeticEngine");
 
-function generateEquationMatchProblem() {
-  const useAddition = Math.random() < 0.5;
+function generateEquationMatchProblem(options = {}) {
+  const random = options.random || Math.random;
+  const useAddition = random() < 0.5;
 
   return generateArithmeticProblem({
     operation: useAddition ? "addition" : "subtraction",
@@ -10,7 +11,8 @@ function generateEquationMatchProblem() {
     minB: 0,
     maxB: 20,
     allowNegative: false,
-    missingPosition: "result"
+    missingPosition: "result",
+    random: options.random
   });
 }
 

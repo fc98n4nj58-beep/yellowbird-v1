@@ -1,0 +1,6 @@
+{
+  "skill": "division_foundations",
+  "title": "Division Foundations",
+  "baseSkill": "multiplication_facts",
+  "activities": ["equal_groups", "fact_family", "related_subtraction"]
+}

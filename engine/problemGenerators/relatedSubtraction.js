@@ -1,6 +1,6 @@
 const generateArithmeticProblem = require("../engines/arithmeticEngine");
 
-function generateRelatedSubtractionProblem() {
+function generateRelatedSubtractionProblem(options = {}) {
   return generateArithmeticProblem({
     operation: "subtraction",
     minA: 0,
@@ -8,7 +8,8 @@ function generateRelatedSubtractionProblem() {
     minB: 0,
     maxB: 20,
     allowNegative: false,
-    missingPosition: "result"
+    missingPosition: "result",
+    random: options.random
   });
 }
 

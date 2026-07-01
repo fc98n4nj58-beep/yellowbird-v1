@@ -1,0 +1,6 @@
+{
+  "skill": "fraction_magnitude",
+  "title": "Fraction Magnitude",
+  "baseSkill": "fraction_equivalence",
+  "activities": ["fraction_number_line", "compare_fractions", "shade_fraction_models"]
+}

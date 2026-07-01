@@ -1,0 +1,6 @@
+{
+  "skill": "multiplication_relationships",
+  "title": "Multiplication Relationships",
+  "baseSkill": "multiplication_facts",
+  "activities": ["missing_factor", "fact_family", "arrays"]
+}
