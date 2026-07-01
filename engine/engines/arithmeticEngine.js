@@ -1,12 +1,13 @@
-function randInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+function randInt(min, max, random = Math.random) {
+  return Math.floor(random() * (max - min + 1)) + min;
 }
 
-function pick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
+function pick(arr, random = Math.random) {
+  return arr[Math.floor(random() * arr.length)];
 }
 
 function generateArithmeticProblem(options = {}) {
+  const random = options.random || Math.random;
   const {
   operation = "addition",
   format = "equation",
@@ -25,8 +26,8 @@ function generateArithmeticProblem(options = {}) {
   excludeNumbers = ""
 } = options;
 
-  let a = randInt(minA, maxA);
-let b = randInt(minB, maxB);
+  let a = randInt(minA, maxA, random);
+let b = randInt(minB, maxB, random);
 
 if (onlyNumbers) {
   const allowed = onlyNumbers
@@ -35,8 +36,8 @@ if (onlyNumbers) {
     .filter(n => !isNaN(n));
 
   if (allowed.length > 0) {
-    a = allowed[Math.floor(Math.random() * allowed.length)];
-    b = allowed[Math.floor(Math.random() * allowed.length)];
+    a = allowed[Math.floor(random() * allowed.length)];
+    b = allowed[Math.floor(random() * allowed.length)];
   }
 }
 
@@ -47,11 +48,11 @@ if (excludeNumbers) {
     .filter(n => !isNaN(n));
 
   while (banned.includes(a)) {
-    a = randInt(minA, maxA);
+    a = randInt(minA, maxA, random);
   }
 
   while (banned.includes(b)) {
-    b = randInt(minB, maxB);
+    b = randInt(minB, maxB, random);
   }
 }
 
@@ -74,8 +75,8 @@ if (excludeNumbers) {
     case "division":
       answer = integerOnly ? a : a * b;
       if (integerOnly) {
-        answer = randInt(minB || 1, maxB || 10);
-        b = randInt(Math.max(1, minB), Math.max(1, maxB));
+        answer = randInt(minB || 1, maxB || 10, random);
+        b = randInt(Math.max(1, minB), Math.max(1, maxB), random);
         a = answer * b;
       } else {
         answer = a / b;
@@ -121,7 +122,7 @@ if (excludeNumbers) {
   }
 
   if (format === "skip_counting" && operation === "multiplication") {
-    const n = randInt(3, 10);
+    const n = randInt(3, 10, random);
     return {
       prompt: `Skip count by ${a}: ${buildSkipSequence(a, n - 1)}, ... What is the ${n}th number?`,
       answer: a * n

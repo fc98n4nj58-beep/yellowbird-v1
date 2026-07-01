@@ -23,10 +23,9 @@ function clampRange(minVal, maxVal, fallbackMin, fallbackMax) {
   if (mn > mx) [mn, mx] = [mx, mn];
   return { mn, mx };
 }
-
-function shuffle(arr) {
+function shuffle(arr, random = Math.random) {
   for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
@@ -82,6 +81,7 @@ function buildUniqueDivisionPool(aPool, bPool, integerOnly) {
 }
 
 function generate(params = {}) {
+  const random = params.random || Math.random;
   const { aPool, bPool } = buildPools(params);
   const count = Math.min(200, Math.max(5, parseInt(params.count ?? "30", 10)));
   const integerOnly = (params.intdiv ?? "1").toString() !== "0";
@@ -97,7 +97,7 @@ function generate(params = {}) {
   let id = 1;
 
   while (items.length < count) {
-    const batch = shuffle([...pool]);
+    const batch = shuffle([...pool], random);
     for (const p of batch) {
       items.push({
         id,
