@@ -3419,8 +3419,8 @@
     },
     {
       "id": "g3_complete_a_graph",
-      "title": "Complete a Graph",
-      "shortTitle": "Complete a Graph",
+      "title": "Use Data to Answer Questions",
+      "shortTitle": "Data Questions",
       "subject": "Math",
       "grades": [
         "grade3"
@@ -3447,7 +3447,7 @@
       "curriculumTags": [
         "D1"
       ],
-      "description": "Students use provided data to complete a graph.",
+      "description": "Students read provided data and answer text-based graph questions.",
       "sourceType": "curated"
     },
     {
@@ -3646,8 +3646,8 @@
     },
     {
       "id": "g3_match_data_to_graph",
-      "title": "Match Data to Graph",
-      "shortTitle": "Match Data to Graph",
+      "title": "Match Data Descriptions",
+      "shortTitle": "Data Matching",
       "subject": "Math",
       "grades": [
         "grade3"
@@ -3675,7 +3675,7 @@
       "curriculumTags": [
         "D1"
       ],
-      "description": "Students match datasets to the correct graph.",
+      "description": "Students match data descriptions using text-based graph information.",
       "sourceType": "curated"
     },
     {
@@ -3712,8 +3712,8 @@
     },
     {
       "id": "g3_read_a_graph",
-      "title": "Read a Graph",
-      "shortTitle": "Read a Graph",
+      "title": "Read Data and Answer Questions",
+      "shortTitle": "Read Data",
       "subject": "Math",
       "grades": [
         "grade3"
@@ -3740,7 +3740,7 @@
       "curriculumTags": [
         "D1"
       ],
-      "description": "Students read a graph and answer questions about the data.",
+      "description": "Students read data and answer text-based graph questions.",
       "sourceType": "curated"
     },
     {
@@ -5160,8 +5160,8 @@
     },
     {
       "id": "g4_read_and_interpret_graphs",
-      "title": "Read and Interpret Graphs",
-      "shortTitle": "Interpret Graphs",
+      "title": "Read Data and Interpret Results",
+      "shortTitle": "Interpret Data",
       "subject": "Math",
       "grades": [
         "grade4"
@@ -5189,7 +5189,7 @@
       "curriculumTags": [
         "D1"
       ],
-      "description": "Students read graphs and answer interpretation questions in context.",
+      "description": "Students read data and answer interpretation questions in context.",
       "sourceType": "curated"
     },
     {
@@ -6417,8 +6417,8 @@
     },
     {
       "id": "g5_complete_graphs",
-      "title": "Complete Graphs",
-      "shortTitle": "Complete Graphs",
+      "title": "Use Data to Answer Questions",
+      "shortTitle": "Data Questions",
       "subject": "Math",
       "grades": [
         "grade5"
@@ -6445,7 +6445,7 @@
       "curriculumTags": [
         "D1"
       ],
-      "description": "Students use provided data to complete graph displays.",
+      "description": "Students read provided data and answer text-based graph questions.",
       "sourceType": "curated"
     },
     {
@@ -6546,8 +6546,8 @@
     },
     {
       "id": "g5_interpret_graphs",
-      "title": "Interpret Graphs",
-      "shortTitle": "Interpret Graphs",
+      "title": "Data Interpretation Questions",
+      "shortTitle": "Interpret Data",
       "subject": "Math",
       "grades": [
         "grade5"
@@ -6575,7 +6575,7 @@
       "curriculumTags": [
         "D1"
       ],
-      "description": "Students interpret graph displays and answer comparison questions.",
+      "description": "Students interpret data and answer comparison questions.",
       "sourceType": "curated"
     },
     {
@@ -7767,8 +7767,8 @@
     },
     {
       "id": "g6_graph_interpretation",
-      "title": "Graph Interpretation",
-      "shortTitle": "Graph Interpretation",
+      "title": "Data Interpretation Questions",
+      "shortTitle": "Interpret Data",
       "subject": "Math",
       "grades": [
         "grade6"
@@ -7796,7 +7796,7 @@
       "curriculumTags": [
         "D1"
       ],
-      "description": "Students interpret graphs and justify conclusions using data.",
+      "description": "Students interpret data and justify conclusions.",
       "sourceType": "curated"
     },
     {

@@ -39,13 +39,33 @@ const friendlyWorksheetLabels = {
   word_problems: "Word problems",
   fact_fluency: "Fact fluency",
   problem_solving: "Word problems",
+  relational_thinking: "Number relationships",
+  daily_review: "Skip counting",
   visual_models: "Visual models",
   visual_model: "Visual model",
-  representation: "Representation",
+  representation: "Number forms",
+  place_value_representation: "Place value practice",
   fluency_grid: "Fluency practice",
   equation_practice: "Equation practice",
   matching: "Matching",
   model_interpretation: "Model interpretation",
+  related_subtraction: "Subtraction facts",
+  missing_addend: "Missing addends",
+  missing_factor: "Missing factors",
+  fact_family: "Fact relationships",
+  compare_numbers: "Compare numbers",
+  number_line_identify: "Number line practice",
+  number_word_match: "Number word match",
+  expanded_form: "Expanded form",
+  standard_form: "Standard form",
+  skip_counting: "Skip counting",
+  complete_graph: "Text-based graph questions",
+  read_graph: "Text-based graph questions",
+  graph_questions: "Text-based graph questions",
+  interpret_data: "Data interpretation",
+  match_data_to_graph: "Text-based graph questions",
+  equal_groups: "Equal groups",
+  array: "Arrays",
   math_addition_basic: "Addition facts",
   "math.addition.basic": "Addition facts",
   math_subtraction_nonnegative: "Subtraction facts",
@@ -84,6 +104,34 @@ function worksheetPracticeFocus(item) {
 function worksheetQuestionStyle(item) {
   const activityTypes = Array.isArray(item.activityTypes) ? item.activityTypes : [];
   return activityTypes.map(friendlyWorksheetLabel).filter(Boolean).join(", ") || "—";
+}
+
+function worksheetTypeLabel(item) {
+  const activityTypes = Array.isArray(item.activityTypes) ? item.activityTypes : [];
+  if (item.worksheetFamily === "relational_thinking") {
+    if (activityTypes.includes("fact_family") || String(item.skillKey || "").includes("multiplication")) {
+      return "Fact relationships";
+    }
+    return "Number relationships";
+  }
+
+  if (item.worksheetFamily === "representation" && item.domain === "Place Value") {
+    return "Number forms";
+  }
+
+  if (item.worksheetFamily === "daily_review" && activityTypes.includes("skip_counting")) {
+    return "Skip counting";
+  }
+
+  return friendlyWorksheetLabel(item.worksheetFamily || "");
+}
+
+function worksheetFormatLabel(item) {
+  if (item.templateId === "representation" && item.domain === "Place Value") {
+    return "Place value practice";
+  }
+
+  return friendlyWorksheetLabel(item.templateId || "");
 }
 
 function getPrimaryAction(resource) {
@@ -317,8 +365,8 @@ function worksheetPdfUrl(id) {
 
 function renderWorksheetDetailPage(item) {
   const id = item.id;
-  const worksheetType = friendlyWorksheetLabel(item.worksheetFamily || "");
-  const worksheetFormat = friendlyWorksheetLabel(item.templateId || "");
+  const worksheetType = worksheetTypeLabel(item);
+  const worksheetFormat = worksheetFormatLabel(item);
   const domain = worksheetDomainLabel(item);
   const badges = [
     ...(item.gradeLabels || []),
