@@ -52,10 +52,6 @@ app.use(worksheetPreviewRoutes);
 app.use("/", libraryRoutes);
 app.use(worksheetCatalogRoutes);
 
-app.listen(PORT, () => {
-  console.log(`YellowBird server running on port ${PORT}`);
-});
-
 /* =========================
    PAGES ROUTES
    ========================= */
@@ -152,5 +148,6 @@ function normalizeGrade(value) {
 }
 
 app.listen(PORT, () => {
+  console.log(`YellowBird server running on port ${PORT}`);
   console.log(`Yellow Bird running at http://localhost:${PORT}`);
 });
