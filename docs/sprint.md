@@ -4,22 +4,24 @@ Goal:
 Stabilize the worksheet publishing engine and complete the transition toward one production-ready workflow.
 
 Current Milestone:
-Milestone 2 — Publishing Engine
+Milestone 2 — Publishing Engine — Closed
 
 Milestone Goal:
 Create one stable publishing engine where a worksheet is generated once, transformed into multiple outputs, and rendered consistently.
 
-Active Tasks:
+Post-Close Follow-Ups:
 
-[ ] Decide whether to defer visual fraction generators or create a focused visual-support plan
+[ ] Clean up duplicate `app.listen` startup calls in `server.js`
 
-[ ] Decide whether to defer graph visual support or create a focused `bar_graph` implementation plan
+[ ] Clean up stale `public/resource.html`
 
-[ ] Continue migrating renderer constants into design tokens
+[ ] Add graph visual support with a focused `bar_graph` plan
 
-[ ] Document known partial generator mappings
+[ ] Add a true addition-jump number-line generator
 
-[ ] Continue worksheet quality improvements
+[ ] Plan visual fraction support
+
+[ ] Implement planned/deferred `pattern_word_problems`
 
 Rules:
 
@@ -300,8 +302,19 @@ Known Partials / Existing Issues:
 - Generator failures for ready items: 0
 - Other failures: 0
 - Remaining raw failures are only planned/deferred `pattern_word_problems` entries and are not launch-facing
-- Launch-facing Browse -> Detail -> Preview/PDF path is stable pending final manual browser QA
+- Launch-facing Browse -> Detail -> Preview/PDF path is stable
 - Milestone 2 is effectively at closeout stage, with deferred worksheet types still explicitly out of scope
+
+[x] Closed Milestone 2 — Publishing Engine
+- Final manual browser QA passed for `/browse`
+- Final manual browser QA passed for `/resource/worksheet/:id`
+- Final manual browser QA passed for `/catalog-preview.html?id={id}`
+- Final manual browser QA passed for `/api/catalog-pdf/{id}?disposition=inline`
+- Generator Completion is stable
+- Public Browse -> Detail -> Preview -> PDF flow is stable
+- Ready / launch-facing worksheets remain 46 / 46 working, 0 failures
+- Remaining raw failures are only planned/deferred `pattern_word_problems` entries and are not launch-facing
+- Milestone 2 — Publishing Engine is closed
 
 Known Partials / Existing Issues:
 
@@ -319,10 +332,11 @@ Known Partials / Existing Issues:
 
 [ ] `server.js` appears to contain duplicate `app.listen` startup calls and should be reviewed in a focused cleanup
 
-Next:
+Post-Close Follow-Ups:
 
-[ ] Decide whether to defer visual fraction generators or create a focused visual-support plan
-[ ] Decide whether to defer graph visual support or create a focused `bar_graph` implementation plan
-[ ] Continue migrating renderer constants into design tokens
-[ ] Document known partial generator mappings
-[ ] Continue worksheet quality improvements
+[ ] Clean up duplicate `app.listen` startup calls in `server.js`
+[ ] Clean up stale `public/resource.html`
+[ ] Add graph visual support with a focused `bar_graph` plan
+[ ] Add a true addition-jump number-line generator
+[ ] Plan visual fraction support
+[ ] Implement planned/deferred `pattern_word_problems`

@@ -2,13 +2,13 @@
 
 ## Current Status
 
-Project Yellow Bird is in Milestone 2 — Publishing Engine, now effectively at closeout stage.
+Project Yellow Bird has closed Milestone 2 — Publishing Engine.
 
-The current goal is to create one stable publishing engine where a worksheet is generated once, transformed into multiple outputs, and rendered consistently.
+Milestone 2 created one stable publishing engine where a worksheet is generated once, transformed into multiple outputs, and rendered consistently.
 
 The project has moved significantly away from duplicate worksheet creation paths. The catalog worksheet flow now uses a shared runtime, and preview/PDF parity has been established for the catalog workflow.
 
-The launch-facing discovery/publishing flow is stable at the code/service level pending final manual browser QA:
+The launch-facing discovery/publishing flow passed final manual browser QA:
 
 Browse
 ↓
@@ -353,7 +353,7 @@ Completed:
 
 ### Public Browse and Worksheet Detail Launch Flow
 
-The public Browse -> Detail -> Preview/PDF path is stable at the code/service level, pending final manual browser QA.
+The public Browse -> Detail -> Preview/PDF path is stable and passed final manual browser QA.
 
 Completed:
 
@@ -379,12 +379,16 @@ Completed:
 * Generator failures for ready items: 0
 * Other failures: 0
 * Remaining raw failures are only planned/deferred `pattern_word_problems` entries and are not launch-facing
+* Final manual browser QA passed for `/browse`
+* Final manual browser QA passed for `/resource/worksheet/:id`
+* Final manual browser QA passed for `/catalog-preview.html?id={id}`
+* Final manual browser QA passed for `/api/catalog-pdf/{id}?disposition=inline`
 
 Status:
 
-* Milestone 2 is effectively at closeout stage
+* Milestone 2 — Publishing Engine is closed
 * Generator Completion is stable
-* Launch-facing discovery and publishing routes are stable pending final manual browser QA
+* Launch-facing discovery and publishing routes are stable
 * Deferred worksheet types are not complete and should not be described as complete
 
 Known partial:
@@ -575,27 +579,28 @@ Do not change `pdfRenderer` to compensate for incorrect generator or catalog out
 
 ## Current High Priority
 
-Milestone 2 closeout.
+Post-close cleanup and follow-up planning.
 
 Known issues / next targets:
 
-1. Complete final manual browser QA for Browse -> Detail -> Preview/PDF.
-2. Keep graph visual support deferred until a focused `bar_graph` implementation plan is created.
-3. Keep true addition-jump number-line work deferred until a focused generator plan is created.
-4. Keep visual fraction work deferred until focused visual support is planned.
-5. Keep planned/deferred `pattern_word_problems` entries out of launch-facing scope.
-6. Clean up stale `public/resource.html` when safe.
-7. Review possible duplicate `app.listen` startup calls in `server.js` in a focused cleanup.
+1. Clean up duplicate `app.listen` startup calls in `server.js`.
+2. Clean up stale `public/resource.html`.
+3. Keep graph visual support deferred until a focused `bar_graph` implementation plan is created.
+4. Keep true addition-jump number-line work deferred until a focused generator plan is created.
+5. Keep visual fraction work deferred until focused visual support is planned.
+6. Keep planned/deferred `pattern_word_problems` entries out of launch-facing scope until implemented.
 
 ---
 
 ## Next Fix Targets
 
-1. Final manual browser QA for `/browse`, `/resource/worksheet/:id`, preview, and PDF links.
+1. Focused cleanup review for duplicate `app.listen` calls in `server.js`.
 2. Focused cleanup of stale `public/resource.html` when safe.
-3. Focused cleanup review for possible duplicate `app.listen` calls in `server.js`.
-4. Continue documenting partial generator mappings and semantic mismatches.
-5. Verify future changes with syntax checks, deterministic runtime checks, and manual catalog preview tests.
+3. Focused `bar_graph` support plan for graph visuals.
+4. Focused generator plan for true addition-jump number-line worksheets.
+5. Focused visual support plan for visual fractions.
+6. Planned/deferred `pattern_word_problems` implementation.
+7. Verify future changes with syntax checks, deterministic runtime checks, and manual catalog preview tests.
 
 Do not work on:
 
