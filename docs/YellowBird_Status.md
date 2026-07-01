@@ -403,8 +403,25 @@ Additional known partials / existing issues:
 * `shadeFractionModels.js` and `fractionNumberLine.js` still have the array-return issue and imply visual models that are not implemented yet
 * Planned/deferred `pattern_word_problems` entries remain out of launch-facing scope
 * Broader `patterning_and_algebra` catalog/recipe entries that use skill-like activity types may still be mapping concerns
-* Stale `public/resource.html` remains a cleanup target
-* `server.js` appears to contain duplicate `app.listen` startup calls and should be reviewed in a focused cleanup
+
+### Post-Close Cleanup Checkpoint
+
+Completed:
+
+* Duplicate `app.listen` / server startup cleanup is complete
+* Stale `public/resource.html` cleanup is complete
+* Current active public flow remains `/browse` -> `/resource/worksheet/:id` -> `/catalog-preview.html?id={id}` -> `/api/catalog-pdf/{id}?disposition=inline`
+* Legacy static `/resource/:slug` still works
+* `/resource.html` now intentionally returns 404
+
+Remaining follow-ups:
+
+* Graph visual / `bar_graph` support
+* True addition-jump number-line generator
+* Visual fractions
+* Pattern word problems
+* Grade 6 pattern rename/remap review if needed
+* Optional git identity configuration
 
 ---
 
@@ -583,23 +600,23 @@ Post-close cleanup and follow-up planning.
 
 Known issues / next targets:
 
-1. Clean up duplicate `app.listen` startup calls in `server.js`.
-2. Clean up stale `public/resource.html`.
-3. Keep graph visual support deferred until a focused `bar_graph` implementation plan is created.
-4. Keep true addition-jump number-line work deferred until a focused generator plan is created.
-5. Keep visual fraction work deferred until focused visual support is planned.
-6. Keep planned/deferred `pattern_word_problems` entries out of launch-facing scope until implemented.
+1. Keep graph visual support deferred until a focused `bar_graph` implementation plan is created.
+2. Keep true addition-jump number-line work deferred until a focused generator plan is created.
+3. Keep visual fraction work deferred until focused visual support is planned.
+4. Keep planned/deferred `pattern_word_problems` entries out of launch-facing scope until implemented.
+5. Review Grade 6 pattern naming/remapping if needed.
+6. Configure git identity if needed.
 
 ---
 
 ## Next Fix Targets
 
-1. Focused cleanup review for duplicate `app.listen` calls in `server.js`.
-2. Focused cleanup of stale `public/resource.html` when safe.
-3. Focused `bar_graph` support plan for graph visuals.
-4. Focused generator plan for true addition-jump number-line worksheets.
-5. Focused visual support plan for visual fractions.
-6. Planned/deferred `pattern_word_problems` implementation.
+1. Focused `bar_graph` support plan for graph visuals.
+2. Focused generator plan for true addition-jump number-line worksheets.
+3. Focused visual support plan for visual fractions.
+4. Planned/deferred `pattern_word_problems` implementation.
+5. Grade 6 pattern rename/remap review if needed.
+6. Optional git identity configuration.
 7. Verify future changes with syntax checks, deterministic runtime checks, and manual catalog preview tests.
 
 Do not work on:

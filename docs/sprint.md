@@ -11,10 +11,6 @@ Create one stable publishing engine where a worksheet is generated once, transfo
 
 Post-Close Follow-Ups:
 
-[ ] Clean up duplicate `app.listen` startup calls in `server.js`
-
-[ ] Clean up stale `public/resource.html`
-
 [ ] Add graph visual support with a focused `bar_graph` plan
 
 [ ] Add a true addition-jump number-line generator
@@ -22,6 +18,10 @@ Post-Close Follow-Ups:
 [ ] Plan visual fraction support
 
 [ ] Implement planned/deferred `pattern_word_problems`
+
+[ ] Review Grade 6 pattern naming/remapping if needed
+
+[ ] Configure git identity if needed
 
 Rules:
 
@@ -328,15 +328,22 @@ Known Partials / Existing Issues:
 
 [ ] Planned/deferred `pattern_word_problems` entries remain out of launch-facing scope
 
-[ ] Stale `public/resource.html` remains a cleanup target
+[x] Stale `public/resource.html` cleanup complete
 
-[ ] `server.js` appears to contain duplicate `app.listen` startup calls and should be reviewed in a focused cleanup
+[x] Duplicate `app.listen` cleanup complete
 
 Post-Close Follow-Ups:
 
-[ ] Clean up duplicate `app.listen` startup calls in `server.js`
-[ ] Clean up stale `public/resource.html`
 [ ] Add graph visual support with a focused `bar_graph` plan
 [ ] Add a true addition-jump number-line generator
 [ ] Plan visual fraction support
 [ ] Implement planned/deferred `pattern_word_problems`
+[ ] Review Grade 6 pattern naming/remapping if needed
+[ ] Configure git identity if needed
+
+[x] Post-close cleanup checkpoint
+- Duplicate `app.listen` / server startup cleanup is complete
+- Stale `public/resource.html` cleanup is complete
+- Current active public flow remains `/browse` -> `/resource/worksheet/:id` -> `/catalog-preview.html?id={id}` -> `/api/catalog-pdf/{id}?disposition=inline`
+- Legacy static `/resource/:slug` still works
+- `/resource.html` now intentionally returns 404
