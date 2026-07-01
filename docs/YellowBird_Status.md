@@ -293,6 +293,48 @@ Completed:
 * Catalog audit ran successfully
 * Note: `scripts/auditWorksheetCatalog.js` should be tracked in git if it is intended as a project tool
 
+### Final Milestone 2 Catalog Audit Health Check
+
+The catalog audit is stable for launch-facing worksheet generation.
+
+Completed:
+
+* `node --check scripts/auditWorksheetCatalog.js` passed
+* `node scripts/auditWorksheetCatalog.js` ran successfully
+* Full raw catalog audit: 305 / 312 working
+* Ready / launch-facing result: 46 / 46 working, 0 failures
+* Generated: 252 / 252 working, 0 failures
+* Partial: 5 / 5 working, 0 failures
+* Planned / deferred: 2 / 9 working, 7 failures
+* All 7 remaining failures are planned `pattern_word_problems` entries
+* Ready launch-facing worksheet runtime has 0 missing skill definitions
+* Ready launch-facing worksheet runtime has 0 generator failures
+* Ready launch-facing worksheet runtime has 0 other failures
+* Milestone 2 Generator Completion was functionally stable pending manual preview/PDF spot checks
+* Remaining untracked files are future/unused/placeholder material: `engine/catalog/`, `engine/visuals/index`, `engine/visuals/renderVisual.js`, `public/styles/images/`
+
+### Milestone 2 Generator Completion Closeout
+
+Generator Completion is stable after manual / targeted QA.
+
+Completed:
+
+* Manual / targeted QA found a semantic mismatch in `g1_addition_facts_within_20`
+* Before: the master catalog used `skillKey: "addition_strategies"` and generated ten-frame prompts
+* After: the master catalog uses `skillKey: "addition_subtraction_facts"` and generates actual addition facts within 20
+* The fix was catalog-only in `data/worksheetCatalog.master.json`
+* No route changes
+* No renderer changes
+* Preview/PDF parity remains preserved through the shared catalog runtime
+* Seeded deterministic behavior remains intact: same seed output is identical, different seed changes output
+* `node --check scripts/auditWorksheetCatalog.js` passed
+* `npm run audit:worksheets` passed
+* Ready / launch-facing result remains 46 / 46 working, 0 failures
+* Missing skill definitions: 0
+* Generator failures: 0
+* Other failures: 0
+* Remaining raw failures are only planned/deferred `pattern_word_problems` entries and are not launch-facing
+
 Known partial:
 
 * `g1_addition_on_number_line_to_20` still maps to `number_line_identify`
@@ -301,8 +343,9 @@ Known partial:
 
 Additional known partials / existing issues:
 
-* Data/graph worksheets need future structured `bar_graph` visual support
+* Data/graph worksheets remain text-only and need future structured `bar_graph` visual support
 * `shadeFractionModels.js` and `fractionNumberLine.js` still have the array-return issue and imply visual models that are not implemented yet
+* Planned/deferred `pattern_word_problems` entries remain out of launch-facing scope
 * Broader `patterning_and_algebra` catalog/recipe entries that use skill-like activity types may still be mapping concerns
 
 ---

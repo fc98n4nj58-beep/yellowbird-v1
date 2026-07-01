@@ -7,6 +7,7 @@ const {
   getRelatedResources,
   getAvailableFilters
 } = require("../services/resourceLibraryService");
+const { getWorksheetCatalogById } = require("../services/worksheetCatalogService");
 
 function escapeHtml(value = "") {
   return String(value)
@@ -242,6 +243,112 @@ function renderResourceDetailPage(resource, relatedResources = []) {
 </html>`;
 }
 
+function worksheetPreviewUrl(id) {
+  return `/catalog-preview.html?id=${encodeURIComponent(id)}`;
+}
+
+function worksheetPdfUrl(id) {
+  return `/api/catalog-pdf/${encodeURIComponent(id)}?disposition=inline`;
+}
+
+function renderWorksheetDetailPage(item) {
+  const id = item.id;
+  const badges = [
+    ...(item.gradeLabels || []),
+    item.subject,
+    item.domain,
+    item.worksheetFamily ? item.worksheetFamily.replace(/_/g, " ") : "",
+    item.templateId ? item.templateId.replace(/_/g, " ") : "",
+    item.difficulty,
+    item.estimatedTimeMinutes ? `${item.estimatedTimeMinutes} min` : "",
+    item.hasAnswerKey ? "Answer Key Included" : "",
+    ...(item.curriculumTags || [])
+  ]
+    .filter(Boolean)
+    .map(renderBadge)
+    .join("");
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>${escapeHtml(item.title)} — Project Yellow Bird</title>
+  <link rel="stylesheet" href="/styles/site.css"/>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/"><span class="dot"></span> Project Yellow Bird</a>
+      <nav class="nav">
+        <a href="/browse">Browse Library</a>
+        <a href="/curriculum">Curriculum</a>
+        <a href="/worksheet">Worksheet Generator</a>
+        <a href="/units">Unit Generator</a>
+        <a href="/faq">FAQ</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container resource-detail-page">
+    <div class="detail-back">
+      <a class="btn mini" href="/browse">Back to Browse</a>
+    </div>
+
+    <div class="resource-detail-layout">
+      <section class="resource-main-panel card">
+        <div class="resource-meta">
+          <span>${escapeHtml((item.gradeLabels || []).join(", "))}</span>
+          <span>•</span>
+          <span>${escapeHtml(item.subject || "Math")}</span>
+          <span>•</span>
+          <span>${escapeHtml(item.domain || "")}</span>
+        </div>
+
+        <h1 class="h1" style="margin-bottom:12px;">${escapeHtml(item.title)}</h1>
+        <div class="badges" style="margin-bottom:18px;">${badges}</div>
+
+        <p class="lede">${escapeHtml(item.description || "")}</p>
+
+        <div class="resource-actions" style="margin-top:18px;">
+          <a class="btn" href="${worksheetPreviewUrl(id)}">Preview</a>
+          <a class="btn primary" href="${worksheetPdfUrl(id)}">PDF</a>
+          <a class="btn" href="/browse">Browse More</a>
+        </div>
+      </section>
+
+      <aside class="resource-side-panel">
+        <div class="card">
+          <div class="section-title">Worksheet details</div>
+          <div class="resource-meta-stack">
+            <div><strong>Family:</strong> ${escapeHtml(item.worksheetFamily || "—")}</div>
+            <div><strong>Template:</strong> ${escapeHtml(item.templateId || "—")}</div>
+            <div><strong>Difficulty:</strong> ${escapeHtml(item.difficulty || "—")}</div>
+            <div><strong>Estimated time:</strong> ${escapeHtml(item.estimatedTimeMinutes ? `${item.estimatedTimeMinutes} min` : "—")}</div>
+            <div><strong>Answer key:</strong> ${item.hasAnswerKey ? "Included" : "Not included"}</div>
+            <div><strong>Skill:</strong> ${escapeHtml(item.skillKey || "—")}</div>
+            <div><strong>Activity:</strong> ${escapeHtml((item.activityTypes || []).join(", ") || "—")}</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:18px;">
+          <div class="section-title">Curriculum</div>
+          <div class="resource-meta-stack">
+            <div><strong>Subject:</strong> ${escapeHtml(item.subject || "Math")}</div>
+            <div><strong>Grade:</strong> ${escapeHtml((item.gradeLabels || []).join(", ") || "—")}</div>
+            <div><strong>Domain:</strong> ${escapeHtml(item.domain || "—")}</div>
+            <div><strong>Tags:</strong> ${escapeHtml((item.curriculumTags || []).join(", ") || "—")}</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="footer">© Project Yellow Bird — calm, print-first resources.</div>
+</body>
+</html>`;
+}
+
 /* =========================
    LIBRARY API
    ========================= */
@@ -273,6 +380,36 @@ router.get("/api/library/resources", (req, res) => {
       ok: false,
       error: error.message || "Failed to load library resources"
     });
+  }
+});
+
+router.get("/resource/worksheet/:id", (req, res) => {
+  try {
+    const item = getWorksheetCatalogById(req.params.id);
+
+    if (!item || item.status !== "ready") {
+      return res.status(404).send(`<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Worksheet Not Found — Project Yellow Bird</title>
+  <link rel="stylesheet" href="/styles/site.css"/>
+</head>
+<body>
+  <div class="container" style="padding-top:48px; padding-bottom:48px;">
+    <h1 class="h1">Worksheet not found</h1>
+    <p class="lede">That worksheet is not available in the public library.</p>
+    <a class="btn primary" href="/browse">Back to Browse</a>
+  </div>
+</body>
+</html>`);
+    }
+
+    return res.send(renderWorksheetDetailPage(item));
+  } catch (error) {
+    console.error("WORKSHEET DETAIL ERROR:", error);
+    return res.status(500).send("Failed to load worksheet.");
   }
 });
 

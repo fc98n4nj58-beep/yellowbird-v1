@@ -22,79 +22,49 @@
 
   <div class="container">
     <h1 class="h1">Browse Library</h1>
-    <p class="lede">Search, filter, preview, and open calm, print-first classroom resources.</p>
+    <p class="lede">Ready-to-print worksheets for Ontario K-6 math.</p>
 
     <div class="grid">
       <aside class="card">
         <div class="label">Search</div>
-        <input id="q" class="input" placeholder="Try: fractions, ten frames, Grade 1, number bonds..." />
+        <input id="q" class="input" placeholder="Try: ten frame, addition, Grade 2..." />
 
         <div class="hr"></div>
 
         <div class="label">Grade</div>
         <select id="grade" class="select">
           <option value="">All grades</option>
-          <option value="kindergarten">Kindergarten</option>
-          <option value="grade1">Grade 1</option>
-          <option value="grade2">Grade 2</option>
-          <option value="grade3">Grade 3</option>
-          <option value="grade4">Grade 4</option>
-          <option value="grade5">Grade 5</option>
-          <option value="grade6">Grade 6</option>
         </select>
 
         <div style="height:12px"></div>
 
-        <div class="label">Subject</div>
-        <select id="subject" class="select">
-          <option value="">All subjects</option>
-          <option value="Math">Math</option>
-          <option value="Language">Language</option>
-          <option value="Science">Science</option>
-          <option value="Social Studies">Social Studies</option>
-          <option value="Art">Art</option>
+        <div class="label">Domain</div>
+        <select id="domain" class="select">
+          <option value="">All domains</option>
         </select>
 
         <div style="height:12px"></div>
 
-        <div class="label">Strand</div>
-        <select id="strand" class="select">
-          <option value="">All strands</option>
-          <option value="Number">Number</option>
-          <option value="Geometry">Geometry</option>
-          <option value="Measurement">Measurement</option>
-          <option value="Data">Data</option>
-          <option value="Patterns">Patterns</option>
+        <div class="label">Worksheet family</div>
+        <select id="worksheetFamily" class="select">
+          <option value="">All families</option>
         </select>
 
         <div style="height:12px"></div>
 
-        <div class="label">Resource type</div>
-        <select id="resourceType" class="select">
-          <option value="">All resource types</option>
-          <option value="Worksheet">Worksheet</option>
-          <option value="Unit">Unit</option>
-          <option value="Lesson">Lesson</option>
-          <option value="Assessment">Assessment</option>
-          <option value="Slides">Slides</option>
+        <div class="label">Template</div>
+        <select id="templateId" class="select">
+          <option value="">All templates</option>
         </select>
 
         <div style="height:12px"></div>
 
-        <div class="label">Format</div>
-        <select id="format" class="select">
-          <option value="">All formats</option>
-          <option value="PDF">PDF</option>
-          <option value="Google Slides">Google Slides</option>
-          <option value="Google Docs">Google Docs</option>
+        <div class="label">Difficulty</div>
+        <select id="difficulty" class="select">
+          <option value="">All difficulty levels</option>
         </select>
 
         <div class="hr"></div>
-
-        <label class="check">
-          <input id="isFree" type="checkbox"/>
-          <span>Free only</span>
-        </label>
 
         <label class="check">
           <input id="hasAnswerKey" type="checkbox"/>
@@ -105,12 +75,9 @@
 
         <div class="label">Sort</div>
         <select id="sort" class="select">
-          <option value="newest">Newest</option>
-          <option value="downloads">Most downloaded</option>
-          <option value="rating">Highest rated</option>
           <option value="title">Title</option>
-          <option value="free">Free first</option>
-          <option value="quick-prep">Quick prep</option>
+          <option value="grade">Grade</option>
+          <option value="time">Estimated time</option>
         </select>
 
         <div style="height:18px"></div>
@@ -126,7 +93,7 @@
         <div class="row">
           <a class="btn mini" href="/curriculum">Curriculum</a>
           <a class="btn mini" href="/worksheet">Worksheet</a>
-          <a class="btn mini" href="/units">Unit</a>
+          <a class="btn mini" href="/worksheet-catalog.html">Catalog</a>
         </div>
       </aside>
 
@@ -135,7 +102,7 @@
         <div id="results" class="results"></div>
 
         <div id="empty" class="card" style="display:none; margin-top:18px;">
-          <h3 class="resource-title" style="margin:0 0 6px 0;">No results</h3>
+          <h3 class="resource-title" style="margin:0 0 6px 0;">No worksheets found</h3>
           <div class="resource-meta">Try widening filters or searching a different keyword.</div>
         </div>
       </main>
@@ -146,179 +113,244 @@
 
 <script>
   const el = (id) => document.getElementById(id);
+  const state = {
+    allItems: [],
+    visibleItems: []
+  };
 
-  function qsFromUI() {
-    const params = new URLSearchParams();
+  function escapeHtml(value = "") {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
 
-    const q = el("q").value.trim();
-    const grade = el("grade").value.trim();
-    const subject = el("subject").value.trim();
-    const strand = el("strand").value.trim();
-    const resourceType = el("resourceType").value.trim();
-    const format = el("format").value.trim();
-    const sort = el("sort").value.trim();
-    const isFree = el("isFree").checked;
-    const hasAnswerKey = el("hasAnswerKey").checked;
-
-    if (q) params.set("q", q);
-    if (grade) params.set("grade", grade);
-    if (subject) params.set("subject", subject);
-    if (strand) params.set("strand", strand);
-    if (resourceType) params.set("resourceType", resourceType);
-    if (format) params.set("format", format);
-    if (sort) params.set("sort", sort);
-    if (isFree) params.set("isFree", "true");
-    if (hasAnswerKey) params.set("hasAnswerKey", "true");
-
-    return params;
+  function niceLabel(value = "") {
+    return String(value || "")
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (letter) => letter.toUpperCase());
   }
 
   function badge(text) {
-    return `<span class="badge">${text}</span>`;
+    if (!text) return "";
+    return `<span class="badge">${escapeHtml(text)}</span>`;
   }
 
-  function getPrimaryAction(resource) {
-    const type = String(resource.resourceType || "").toLowerCase();
-    const fileTypes = Array.isArray(resource.fileTypes) ? resource.fileTypes : [];
-    const hasPdf = fileTypes.some((typeName) => String(typeName).toLowerCase() === "pdf");
-    const url = `/resource/${encodeURIComponent(resource.slug)}`;
-
-    if (resource.downloadUrl && String(resource.downloadUrl).toLowerCase().endsWith(".pdf")) {
-      return {
-        label: "Download PDF",
-        href: url
-      };
-    }
-
-    if (type === "worksheet") {
-      return {
-        label: "Open Worksheet",
-        href: url
-      };
-    }
-
-    if (type === "unit") {
-      return {
-        label: "Open Unit",
-        href: url
-      };
-    }
-
-    if (type === "lesson") {
-      return {
-        label: "Open Lesson",
-        href: url
-      };
-    }
-
-    if (type === "assessment") {
-      return {
-        label: "Open Assessment",
-        href: url
-      };
-    }
-
-    if (type === "slides") {
-      return {
-        label: hasPdf ? "View Slides" : "Open Slides",
-        href: url
-      };
-    }
-
-    return {
-      label: "View Resource",
-      href: url
-    };
+  function uniqueSorted(values) {
+    return [...new Set(values.filter(Boolean).map((value) => String(value).trim()))]
+      .sort((a, b) => a.localeCompare(b));
   }
 
-  function renderCard(resource) {
-    const primaryAction = getPrimaryAction(resource);
+  function fillSelect(selectId, values, labelFormatter = (value) => value) {
+    const select = el(selectId);
+    const first = select.options[0];
+    select.innerHTML = "";
+    select.appendChild(first);
 
+    values.forEach((value) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = labelFormatter(value);
+      select.appendChild(option);
+    });
+  }
+
+  function populateFilters(items) {
+    fillSelect(
+      "grade",
+      uniqueSorted(items.flatMap((item) => item.grades || [])),
+      (grade) => {
+        const match = items.find((item) => (item.grades || []).includes(grade));
+        return match?.gradeLabels?.[0] || niceLabel(grade);
+      }
+    );
+    fillSelect("domain", uniqueSorted(items.map((item) => item.domain)));
+    fillSelect("worksheetFamily", uniqueSorted(items.map((item) => item.worksheetFamily)), niceLabel);
+    fillSelect("templateId", uniqueSorted(items.map((item) => item.templateId)), niceLabel);
+    fillSelect("difficulty", uniqueSorted(items.map((item) => item.difficulty)), niceLabel);
+  }
+
+  function itemMatchesSearch(item, query) {
+    if (!query) return true;
+
+    const haystack = [
+      item.id,
+      item.title,
+      item.shortTitle,
+      item.subject,
+      item.domain,
+      item.skillKey,
+      item.worksheetFamily,
+      item.templateId,
+      item.difficulty,
+      ...(item.grades || []),
+      ...(item.gradeLabels || []),
+      ...(item.activityTypes || []),
+      ...(item.tags || []),
+      ...(item.curriculumTags || []),
+      item.description
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+
+    return haystack.includes(query.toLowerCase());
+  }
+
+  function applyFilters() {
+    const query = el("q").value.trim();
+    const grade = el("grade").value;
+    const domain = el("domain").value;
+    const worksheetFamily = el("worksheetFamily").value;
+    const templateId = el("templateId").value;
+    const difficulty = el("difficulty").value;
+    const hasAnswerKey = el("hasAnswerKey").checked;
+
+    state.visibleItems = state.allItems.filter((item) => {
+      return (
+        item.status === "ready" &&
+        itemMatchesSearch(item, query) &&
+        (!grade || (item.grades || []).includes(grade)) &&
+        (!domain || item.domain === domain) &&
+        (!worksheetFamily || item.worksheetFamily === worksheetFamily) &&
+        (!templateId || item.templateId === templateId) &&
+        (!difficulty || item.difficulty === difficulty) &&
+        (!hasAnswerKey || Boolean(item.hasAnswerKey))
+      );
+    });
+
+    sortVisibleItems();
+    render();
+  }
+
+  function sortVisibleItems() {
+    const sortBy = el("sort").value;
+
+    state.visibleItems.sort((a, b) => {
+      if (sortBy === "grade") {
+        const gradeCompare = String(a.gradeLabels?.[0] || "").localeCompare(String(b.gradeLabels?.[0] || ""));
+        return gradeCompare || String(a.title || "").localeCompare(String(b.title || ""));
+      }
+
+      if (sortBy === "time") {
+        const timeCompare = Number(a.estimatedTimeMinutes || 0) - Number(b.estimatedTimeMinutes || 0);
+        return timeCompare || String(a.title || "").localeCompare(String(b.title || ""));
+      }
+
+      return String(a.title || "").localeCompare(String(b.title || ""));
+    });
+  }
+
+  function previewUrl(id) {
+    return `/catalog-preview.html?id=${encodeURIComponent(id)}`;
+  }
+
+  function pdfUrl(id) {
+    return `/api/catalog-pdf/${encodeURIComponent(id)}?disposition=inline`;
+  }
+
+  function detailUrl(id) {
+    return `/resource/worksheet/${encodeURIComponent(id)}`;
+  }
+
+  function renderCard(item) {
     const badges = [
-      resource.gradeLabel ? badge(resource.gradeLabel) : "",
-      resource.subject ? badge(resource.subject) : "",
-      resource.strand ? badge(resource.strand) : "",
-      resource.topic ? badge(resource.topic) : "",
-      resource.resourceType ? badge(resource.resourceType) : "",
-      ...(Array.isArray(resource.fileTypes) ? resource.fileTypes.map(badge) : []),
-      resource.prepTime ? badge(resource.prepTime) : "",
-      badge("Ontario Aligned"),
-      resource.hasAnswerKey ? badge("Answer Key") : "",
-      resource.isFree ? badge("Free") : badge("Premium")
+      ...(item.gradeLabels || []).map(badge),
+      badge(item.subject),
+      badge(item.domain),
+      badge(niceLabel(item.worksheetFamily)),
+      badge(niceLabel(item.templateId)),
+      item.estimatedTimeMinutes ? badge(`${item.estimatedTimeMinutes} min`) : "",
+      item.hasAnswerKey ? badge("Answer Key") : ""
     ].join("");
 
     return `
-      <div class="card resource-card">
+      <article class="card resource-card">
         <div class="resource-card-main">
           <div class="resource-meta">
-            <span>${resource.downloads || 0} downloads</span>
-            ${resource.rating ? `<span>•</span><span>${resource.rating.toFixed(1)}★</span>` : ""}
-            ${resource.createdAt ? `<span>•</span><span>${resource.createdAt}</span>` : ""}
+            <span>${escapeHtml(item.subject || "Math")}</span>
+            ${item.domain ? `<span>•</span><span>${escapeHtml(item.domain)}</span>` : ""}
+            ${item.difficulty ? `<span>•</span><span>${escapeHtml(niceLabel(item.difficulty))}</span>` : ""}
           </div>
 
-          <h3 class="resource-title">${resource.title || "Untitled"}</h3>
-          <div class="resource-desc">${resource.description || ""}</div>
+          <h3 class="resource-title">${escapeHtml(item.title || "Untitled worksheet")}</h3>
+          <div class="resource-desc">${escapeHtml(item.description || "")}</div>
           <div class="badges">${badges}</div>
         </div>
 
         <div class="resource-actions">
-          <a class="btn" href="/resource/${encodeURIComponent(resource.slug)}">Preview</a>
-          <a class="btn primary" href="${primaryAction.href}">${primaryAction.label}</a>
+          <a class="btn" href="${detailUrl(item.id)}">Details</a>
+          <a class="btn" href="${previewUrl(item.id)}" target="_blank" rel="noopener">Preview</a>
+          <a class="btn primary" href="${pdfUrl(item.id)}" target="_blank" rel="noopener">PDF</a>
         </div>
-      </div>
+      </article>
     `;
   }
 
-  async function load() {
-    const params = qsFromUI();
-    const url = "/api/library/resources?" + params.toString();
+  function render() {
+    const total = state.allItems.length;
+    const visible = state.visibleItems.length;
 
-    el("results").innerHTML = "";
+    el("summary").textContent =
+      visible === total
+        ? `${total} ready worksheet${total === 1 ? "" : "s"}`
+        : `${visible} of ${total} ready worksheet${total === 1 ? "" : "s"}`;
+
+    el("empty").style.display = visible ? "none" : "block";
+    el("results").innerHTML = visible ? state.visibleItems.map(renderCard).join("") : "";
+  }
+
+  async function loadCatalog() {
+    el("summary").textContent = "Loading ready worksheets...";
     el("empty").style.display = "none";
-    el("summary").textContent = "Loading...";
+    el("results").innerHTML = "";
 
     try {
-      const res = await fetch(url);
+      const res = await fetch("/api/worksheet-catalog?status=ready");
       const data = await res.json();
 
       if (!data.ok) {
-        el("summary").textContent = "Error loading library.";
+        el("summary").textContent = "Error loading worksheets.";
         return;
       }
 
-      el("summary").textContent = `${data.total} result${data.total === 1 ? "" : "s"}`;
+      state.allItems = Array.isArray(data.items)
+        ? data.items.filter((item) => item.status === "ready")
+        : [];
 
-      if (!data.total) {
-        el("empty").style.display = "block";
-        return;
-      }
-
-      el("results").innerHTML = data.resources.map(renderCard).join("");
-    } catch (err) {
-      el("summary").textContent = "Error loading library.";
+      populateFilters(state.allItems);
+      applyFilters();
+    } catch (error) {
+      el("summary").textContent = "Error loading worksheets.";
     }
   }
 
-  el("apply").addEventListener("click", load);
-
-  el("clear").addEventListener("click", () => {
+  function clearFilters() {
     el("q").value = "";
     el("grade").value = "";
-    el("subject").value = "";
-    el("strand").value = "";
-    el("resourceType").value = "";
-    el("format").value = "";
-    el("sort").value = "newest";
-    el("isFree").checked = false;
+    el("domain").value = "";
+    el("worksheetFamily").value = "";
+    el("templateId").value = "";
+    el("difficulty").value = "";
     el("hasAnswerKey").checked = false;
-    load();
+    el("sort").value = "title";
+    applyFilters();
+  }
+
+  ["grade", "domain", "worksheetFamily", "templateId", "difficulty", "hasAnswerKey", "sort"].forEach((id) => {
+    el(id).addEventListener("change", applyFilters);
   });
 
-  el("q").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") load();
+  el("apply").addEventListener("click", applyFilters);
+  el("clear").addEventListener("click", clearFilters);
+  el("q").addEventListener("input", applyFilters);
+  el("q").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") applyFilters();
   });
 
-  load();
+  loadCatalog();
 </script>
 </body>
 </html>
