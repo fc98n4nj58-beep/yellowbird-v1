@@ -26,40 +26,40 @@
 
     <div class="grid">
       <aside class="card">
-        <div class="label">Search</div>
+        <label class="label" for="q">Search</label>
         <input id="q" class="input" placeholder="Try: ten frame, addition, Grade 2..." />
 
         <div class="hr"></div>
 
-        <div class="label">Grade</div>
+        <label class="label" for="grade">Grade</label>
         <select id="grade" class="select">
           <option value="">All grades</option>
         </select>
 
         <div style="height:12px"></div>
 
-        <div class="label">Domain</div>
+        <label class="label" for="domain">Domain</label>
         <select id="domain" class="select">
           <option value="">All domains</option>
         </select>
 
         <div style="height:12px"></div>
 
-        <div class="label">Worksheet family</div>
+        <label class="label" for="worksheetFamily">Worksheet type</label>
         <select id="worksheetFamily" class="select">
-          <option value="">All families</option>
+          <option value="">All types</option>
         </select>
 
         <div style="height:12px"></div>
 
-        <div class="label">Template</div>
+        <label class="label" for="templateId">Format</label>
         <select id="templateId" class="select">
-          <option value="">All templates</option>
+          <option value="">All formats</option>
         </select>
 
         <div style="height:12px"></div>
 
-        <div class="label">Difficulty</div>
+        <label class="label" for="difficulty">Difficulty</label>
         <select id="difficulty" class="select">
           <option value="">All difficulty levels</option>
         </select>
@@ -73,7 +73,7 @@
 
         <div class="hr"></div>
 
-        <div class="label">Sort</div>
+        <label class="label" for="sort">Sort</label>
         <select id="sort" class="select">
           <option value="title">Title</option>
           <option value="grade">Grade</option>
@@ -93,7 +93,6 @@
         <div class="row">
           <a class="btn mini" href="/curriculum">Curriculum</a>
           <a class="btn mini" href="/worksheet">Worksheet</a>
-          <a class="btn mini" href="/worksheet-catalog.html">Catalog</a>
         </div>
       </aside>
 
@@ -127,10 +126,67 @@
       .replace(/'/g, "&#39;");
   }
 
-  function niceLabel(value = "") {
+  const friendlyLabels = {
+    addition_subtraction_facts: "Addition & subtraction facts",
+    addition_strategies: "Addition strategies",
+    subtraction_strategies: "Subtraction strategies",
+    multiplication_facts: "Multiplication facts",
+    division_facts: "Division facts",
+    skip_counting: "Skip counting",
+    place_value: "Place value",
+    base_ten_blocks: "Base ten blocks",
+    number_lines: "Number lines",
+    ten_frames: "Ten frames",
+    fractions: "Fractions",
+    data_graphing: "Data interpretation",
+    graphing: "Data interpretation",
+    word_problems: "Word problems",
+    fact_fluency: "Fact fluency",
+    problem_solving: "Word problems",
+    visual_models: "Visual models",
+    visual_model: "Visual model",
+    representation: "Representation",
+    fluency_grid: "Fluency practice",
+    equation_practice: "Equation practice",
+    matching: "Matching",
+    model_interpretation: "Model interpretation",
+    math_addition_basic: "Addition facts",
+    "math.addition.basic": "Addition facts",
+    math_subtraction_nonnegative: "Subtraction facts",
+    "math.subtraction.nonnegative": "Subtraction facts",
+    math_multiplication_basic: "Multiplication facts",
+    "math.multiplication.basic": "Multiplication facts",
+    math_division_integer: "Division facts",
+    "math.division.integer": "Division facts",
+    graph_reading: "Text-based graph questions",
+    "math.data.graph_reading": "Text-based graph questions"
+  };
+
+  function titleCase(value = "") {
     return String(value || "")
-      .replace(/_/g, " ")
+      .replace(/[_\.]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
       .replace(/\b\w/g, (letter) => letter.toUpperCase());
+  }
+
+  function niceLabel(value = "") {
+    const key = String(value || "").trim();
+    return friendlyLabels[key] || friendlyLabels[key.toLowerCase()] || titleCase(key);
+  }
+
+  function worksheetTypeLabel(item) {
+    return niceLabel(item.worksheetFamily || item.skillKey || "");
+  }
+
+  function worksheetFormatLabel(item) {
+    return niceLabel(item.templateId || "");
+  }
+
+  function domainLabel(item) {
+    const domain = String(item.domain || "");
+    if (/data|graph/i.test(domain)) return "Data interpretation";
+    return domain;
   }
 
   function badge(text) {
@@ -166,7 +222,9 @@
         return match?.gradeLabels?.[0] || niceLabel(grade);
       }
     );
-    fillSelect("domain", uniqueSorted(items.map((item) => item.domain)));
+    fillSelect("domain", uniqueSorted(items.map((item) => item.domain)), (value) => {
+      return /data|graph/i.test(value) ? "Data interpretation" : value;
+    });
     fillSelect("worksheetFamily", uniqueSorted(items.map((item) => item.worksheetFamily)), niceLabel);
     fillSelect("templateId", uniqueSorted(items.map((item) => item.templateId)), niceLabel);
     fillSelect("difficulty", uniqueSorted(items.map((item) => item.difficulty)), niceLabel);
@@ -258,10 +316,8 @@
   function renderCard(item) {
     const badges = [
       ...(item.gradeLabels || []).map(badge),
-      badge(item.subject),
-      badge(item.domain),
-      badge(niceLabel(item.worksheetFamily)),
-      badge(niceLabel(item.templateId)),
+      badge(worksheetTypeLabel(item)),
+      badge(worksheetFormatLabel(item)),
       item.estimatedTimeMinutes ? badge(`${item.estimatedTimeMinutes} min`) : "",
       item.hasAnswerKey ? badge("Answer Key") : ""
     ].join("");
@@ -270,8 +326,8 @@
       <article class="card resource-card">
         <div class="resource-card-main">
           <div class="resource-meta">
-            <span>${escapeHtml(item.subject || "Math")}</span>
-            ${item.domain ? `<span>•</span><span>${escapeHtml(item.domain)}</span>` : ""}
+            <span>${escapeHtml((item.gradeLabels || []).join(", ") || "All grades")}</span>
+            ${item.domain ? `<span>•</span><span>${escapeHtml(domainLabel(item))}</span>` : ""}
             ${item.difficulty ? `<span>•</span><span>${escapeHtml(niceLabel(item.difficulty))}</span>` : ""}
           </div>
 

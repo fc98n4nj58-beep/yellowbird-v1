@@ -22,6 +22,70 @@ function renderBadge(text) {
   return `<span class="badge">${escapeHtml(text)}</span>`;
 }
 
+const friendlyWorksheetLabels = {
+  addition_subtraction_facts: "Addition & subtraction facts",
+  addition_strategies: "Addition strategies",
+  subtraction_strategies: "Subtraction strategies",
+  multiplication_facts: "Multiplication facts",
+  division_facts: "Division facts",
+  skip_counting: "Skip counting",
+  place_value: "Place value",
+  base_ten_blocks: "Base ten blocks",
+  number_lines: "Number lines",
+  ten_frames: "Ten frames",
+  fractions: "Fractions",
+  data_graphing: "Data interpretation",
+  graphing: "Data interpretation",
+  word_problems: "Word problems",
+  fact_fluency: "Fact fluency",
+  problem_solving: "Word problems",
+  visual_models: "Visual models",
+  visual_model: "Visual model",
+  representation: "Representation",
+  fluency_grid: "Fluency practice",
+  equation_practice: "Equation practice",
+  matching: "Matching",
+  model_interpretation: "Model interpretation",
+  math_addition_basic: "Addition facts",
+  "math.addition.basic": "Addition facts",
+  math_subtraction_nonnegative: "Subtraction facts",
+  "math.subtraction.nonnegative": "Subtraction facts",
+  math_multiplication_basic: "Multiplication facts",
+  "math.multiplication.basic": "Multiplication facts",
+  math_division_integer: "Division facts",
+  "math.division.integer": "Division facts",
+  graph_reading: "Text-based graph questions",
+  "math.data.graph_reading": "Text-based graph questions"
+};
+
+function titleCaseLabel(value = "") {
+  return String(value || "")
+    .replace(/[_\.]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function friendlyWorksheetLabel(value = "") {
+  const key = String(value || "").trim();
+  return friendlyWorksheetLabels[key] || friendlyWorksheetLabels[key.toLowerCase()] || titleCaseLabel(key);
+}
+
+function worksheetDomainLabel(item) {
+  const domain = String(item.domain || "");
+  if (/data|graph/i.test(domain)) return "Data interpretation";
+  return domain;
+}
+
+function worksheetPracticeFocus(item) {
+  return friendlyWorksheetLabel(item.skillKey || item.worksheetFamily || "");
+}
+
+function worksheetQuestionStyle(item) {
+  const activityTypes = Array.isArray(item.activityTypes) ? item.activityTypes : [];
+  return activityTypes.map(friendlyWorksheetLabel).filter(Boolean).join(", ") || "—";
+}
+
 function getPrimaryAction(resource) {
   const type = String(resource.resourceType || "").toLowerCase();
   const url = resource.downloadUrl || "#";
@@ -253,13 +317,15 @@ function worksheetPdfUrl(id) {
 
 function renderWorksheetDetailPage(item) {
   const id = item.id;
+  const worksheetType = friendlyWorksheetLabel(item.worksheetFamily || "");
+  const worksheetFormat = friendlyWorksheetLabel(item.templateId || "");
+  const domain = worksheetDomainLabel(item);
   const badges = [
     ...(item.gradeLabels || []),
-    item.subject,
-    item.domain,
-    item.worksheetFamily ? item.worksheetFamily.replace(/_/g, " ") : "",
-    item.templateId ? item.templateId.replace(/_/g, " ") : "",
-    item.difficulty,
+    domain,
+    worksheetType,
+    worksheetFormat,
+    item.difficulty ? friendlyWorksheetLabel(item.difficulty) : "",
     item.estimatedTimeMinutes ? `${item.estimatedTimeMinutes} min` : "",
     item.hasAnswerKey ? "Answer Key Included" : "",
     ...(item.curriculumTags || [])
@@ -300,9 +366,8 @@ function renderWorksheetDetailPage(item) {
         <div class="resource-meta">
           <span>${escapeHtml((item.gradeLabels || []).join(", "))}</span>
           <span>•</span>
-          <span>${escapeHtml(item.subject || "Math")}</span>
-          <span>•</span>
-          <span>${escapeHtml(item.domain || "")}</span>
+          <span>${escapeHtml(domain || "Math")}</span>
+          ${item.difficulty ? `<span>•</span><span>${escapeHtml(friendlyWorksheetLabel(item.difficulty))}</span>` : ""}
         </div>
 
         <h1 class="h1" style="margin-bottom:12px;">${escapeHtml(item.title)}</h1>
@@ -321,13 +386,13 @@ function renderWorksheetDetailPage(item) {
         <div class="card">
           <div class="section-title">Worksheet details</div>
           <div class="resource-meta-stack">
-            <div><strong>Family:</strong> ${escapeHtml(item.worksheetFamily || "—")}</div>
-            <div><strong>Template:</strong> ${escapeHtml(item.templateId || "—")}</div>
-            <div><strong>Difficulty:</strong> ${escapeHtml(item.difficulty || "—")}</div>
+            <div><strong>Worksheet type:</strong> ${escapeHtml(worksheetType || "—")}</div>
+            <div><strong>Worksheet format:</strong> ${escapeHtml(worksheetFormat || "—")}</div>
+            <div><strong>Difficulty:</strong> ${escapeHtml(item.difficulty ? friendlyWorksheetLabel(item.difficulty) : "—")}</div>
             <div><strong>Estimated time:</strong> ${escapeHtml(item.estimatedTimeMinutes ? `${item.estimatedTimeMinutes} min` : "—")}</div>
             <div><strong>Answer key:</strong> ${item.hasAnswerKey ? "Included" : "Not included"}</div>
-            <div><strong>Skill:</strong> ${escapeHtml(item.skillKey || "—")}</div>
-            <div><strong>Activity:</strong> ${escapeHtml((item.activityTypes || []).join(", ") || "—")}</div>
+            <div><strong>Practice focus:</strong> ${escapeHtml(worksheetPracticeFocus(item) || "—")}</div>
+            <div><strong>Question style:</strong> ${escapeHtml(worksheetQuestionStyle(item))}</div>
           </div>
         </div>
 
@@ -336,7 +401,7 @@ function renderWorksheetDetailPage(item) {
           <div class="resource-meta-stack">
             <div><strong>Subject:</strong> ${escapeHtml(item.subject || "Math")}</div>
             <div><strong>Grade:</strong> ${escapeHtml((item.gradeLabels || []).join(", ") || "—")}</div>
-            <div><strong>Domain:</strong> ${escapeHtml(item.domain || "—")}</div>
+            <div><strong>Domain:</strong> ${escapeHtml(domain || "—")}</div>
             <div><strong>Tags:</strong> ${escapeHtml((item.curriculumTags || []).join(", ") || "—")}</div>
           </div>
         </div>

@@ -114,6 +114,12 @@ a:hover {
   text-decoration: none;
 }
 
+a:focus-visible {
+  outline: none;
+  box-shadow: var(--focusRing);
+  border-radius: 8px;
+}
+
 button,
 .btn,
 input,
@@ -290,6 +296,7 @@ aside.card .hr + * {
 
 /* ---------- Typography helpers ---------- */
 .label {
+  display: block;
   font-size: 13px;
   font-weight: 600;
   color: var(--yb-text-soft);
