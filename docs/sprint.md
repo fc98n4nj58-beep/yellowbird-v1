@@ -276,6 +276,49 @@ Known Partials / Existing Issues:
 
 [ ] Broader `patterning_and_algebra` catalog/recipe entries that use skill-like activity types may still be mapping concerns
 
+---
+
+## July 1, 2026
+
+[x] Stabilized public Browse -> Detail -> Preview/PDF launch flow at the code/service level
+- `/browse` now loads 46 ready worksheet catalog items from `/api/worksheet-catalog?status=ready`
+- Browse cards use simplified, teacher-facing worksheet metadata
+- Public Browse links to worksheet detail pages at `/resource/worksheet/:id`
+- Detail pages link to stable preview routes at `/catalog-preview.html?id={id}`
+- Detail pages link to stable PDF routes at `/api/catalog-pdf/{id}?disposition=inline`
+- Missing or non-ready worksheet IDs return 404 from the public worksheet detail route
+- Internal `/worksheet-catalog.html` remains available as an internal/debug page but is no longer promoted from public Browse
+- Browse filters now have proper label associations
+- Light focus-visible accessibility polish was added
+- No renderer changes
+- No catalog runtime changes
+- No PDF route changes
+- `node --check routes/libraryRoutes.js` passed
+- `npm run audit:worksheets` passed
+- Ready / launch-facing result remains 46 / 46 working, 0 failures
+- Missing skill definitions: 0
+- Generator failures for ready items: 0
+- Other failures: 0
+- Remaining raw failures are only planned/deferred `pattern_word_problems` entries and are not launch-facing
+- Launch-facing Browse -> Detail -> Preview/PDF path is stable pending final manual browser QA
+- Milestone 2 is effectively at closeout stage, with deferred worksheet types still explicitly out of scope
+
+Known Partials / Existing Issues:
+
+[ ] `g1_addition_on_number_line_to_20` still maps to `number_line_identify`
+- This is not true addition-on-number-line modeling
+- Leave partial until a real addition-jump number-line generator is created
+
+[ ] Data/graph worksheets remain text-only and need future structured `bar_graph` visual support
+
+[ ] Visual fraction work remains deferred until focused visual support is planned
+
+[ ] Planned/deferred `pattern_word_problems` entries remain out of launch-facing scope
+
+[ ] Stale `public/resource.html` remains a cleanup target
+
+[ ] `server.js` appears to contain duplicate `app.listen` startup calls and should be reviewed in a focused cleanup
+
 Next:
 
 [ ] Decide whether to defer visual fraction generators or create a focused visual-support plan

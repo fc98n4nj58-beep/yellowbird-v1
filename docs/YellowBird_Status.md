@@ -2,11 +2,27 @@
 
 ## Current Status
 
-Project Yellow Bird is in Milestone 2 — Publishing Engine.
+Project Yellow Bird is in Milestone 2 — Publishing Engine, now effectively at closeout stage.
 
 The current goal is to create one stable publishing engine where a worksheet is generated once, transformed into multiple outputs, and rendered consistently.
 
 The project has moved significantly away from duplicate worksheet creation paths. The catalog worksheet flow now uses a shared runtime, and preview/PDF parity has been established for the catalog workflow.
+
+The launch-facing discovery/publishing flow is stable at the code/service level pending final manual browser QA:
+
+Browse
+↓
+Worksheet Detail
+↓
+Preview / PDF
+
+Current public path:
+
+* `/browse`
+* `/api/worksheet-catalog?status=ready`
+* `/resource/worksheet/:id`
+* `/catalog-preview.html?id={id}`
+* `/api/catalog-pdf/{id}?disposition=inline`
 
 ## Current Architecture Direction
 
@@ -335,6 +351,42 @@ Completed:
 * Other failures: 0
 * Remaining raw failures are only planned/deferred `pattern_word_problems` entries and are not launch-facing
 
+### Public Browse and Worksheet Detail Launch Flow
+
+The public Browse -> Detail -> Preview/PDF path is stable at the code/service level, pending final manual browser QA.
+
+Completed:
+
+* `/browse` loads 46 ready worksheet catalog items from `/api/worksheet-catalog?status=ready`
+* Public Browse cards are catalog-backed and teacher-facing
+* Details action routes to `/resource/worksheet/:id`
+* Preview action routes to `/catalog-preview.html?id={id}`
+* PDF action routes to `/api/catalog-pdf/{id}?disposition=inline`
+* `/resource/worksheet/:id` renders public detail pages for ready worksheet items
+* Missing worksheet IDs return 404
+* Non-ready worksheet IDs return 404
+* Detail page labels now use public-facing language instead of raw catalog keys
+* Internal `/worksheet-catalog.html` remains available as an internal/debug surface but is no longer linked from public Browse
+* Browse filters have proper label associations
+* Light focus-visible accessibility polish was added
+* No renderer changes
+* No catalog runtime changes
+* No PDF route changes
+* `node --check routes/libraryRoutes.js` passed
+* `npm run audit:worksheets` passed
+* Ready / launch-facing result remains 46 / 46 working, 0 failures
+* Missing skill definitions: 0
+* Generator failures for ready items: 0
+* Other failures: 0
+* Remaining raw failures are only planned/deferred `pattern_word_problems` entries and are not launch-facing
+
+Status:
+
+* Milestone 2 is effectively at closeout stage
+* Generator Completion is stable
+* Launch-facing discovery and publishing routes are stable pending final manual browser QA
+* Deferred worksheet types are not complete and should not be described as complete
+
 Known partial:
 
 * `g1_addition_on_number_line_to_20` still maps to `number_line_identify`
@@ -347,6 +399,8 @@ Additional known partials / existing issues:
 * `shadeFractionModels.js` and `fractionNumberLine.js` still have the array-return issue and imply visual models that are not implemented yet
 * Planned/deferred `pattern_word_problems` entries remain out of launch-facing scope
 * Broader `patterning_and_algebra` catalog/recipe entries that use skill-like activity types may still be mapping concerns
+* Stale `public/resource.html` remains a cleanup target
+* `server.js` appears to contain duplicate `app.listen` startup calls and should be reviewed in a focused cleanup
 
 ---
 
@@ -521,23 +575,25 @@ Do not change `pdfRenderer` to compensate for incorrect generator or catalog out
 
 ## Current High Priority
 
-Generator Completion.
+Milestone 2 closeout.
 
 Known issues / next targets:
 
-1. Decide whether to defer visual fraction generators or create a focused visual-support plan.
-2. Decide whether to defer graph visual support or create a focused `bar_graph` implementation plan.
-3. Continue migrating renderer constants into design tokens.
-4. Document known partial mappings such as `g1_addition_on_number_line_to_20`.
-5. Continue worksheet quality improvements.
+1. Complete final manual browser QA for Browse -> Detail -> Preview/PDF.
+2. Keep graph visual support deferred until a focused `bar_graph` implementation plan is created.
+3. Keep true addition-jump number-line work deferred until a focused generator plan is created.
+4. Keep visual fraction work deferred until focused visual support is planned.
+5. Keep planned/deferred `pattern_word_problems` entries out of launch-facing scope.
+6. Clean up stale `public/resource.html` when safe.
+7. Review possible duplicate `app.listen` startup calls in `server.js` in a focused cleanup.
 
 ---
 
 ## Next Fix Targets
 
-1. Decide whether `shadeFractionModels.js` and `fractionNumberLine.js` should be deferred or handled with a focused visual-support plan.
-2. Decide whether graph worksheets should wait or move into a focused `bar_graph` implementation plan.
-3. Continue design-token migration for renderer constants.
+1. Final manual browser QA for `/browse`, `/resource/worksheet/:id`, preview, and PDF links.
+2. Focused cleanup of stale `public/resource.html` when safe.
+3. Focused cleanup review for possible duplicate `app.listen` calls in `server.js`.
 4. Continue documenting partial generator mappings and semantic mismatches.
 5. Verify future changes with syntax checks, deterministic runtime checks, and manual catalog preview tests.
 
