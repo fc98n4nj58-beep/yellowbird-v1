@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Generated Worksheets</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f7f5f2;
+    margin: 0;
+    color: #1f2937;
+  }
+
+  .container {
+    max-width: 1280px;
+    margin: auto;
+    padding: 30px;
+  }
+
+  .title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    color: #6b7280;
+    margin-bottom: 20px;
+    font-size: 15px;
+  }
+
+  .meta {
+    font-size: 14px;
+    color: #4b5563;
+    margin-bottom: 20px;
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .control {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .control label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .control input,
+  .control select {
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: white;
+    font-size: 14px;
+  }
+
+  .summary {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 22px;
+    padding: 16px 18px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: white;
+  }
+
+  .summary-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .summary-number {
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  .summary-label {
+    font-size: 13px;
+    color: #6b7280;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    min-height: 260px;
+  }
+
+  .card-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+
+  .badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .badge {
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 1px solid #d1d5db;
+    background: #fafafa;
+    color: #374151;
+  }
+
+  .badge.promotable {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #166534;
+  }
+
+  .badge.generated {
+    background: #f9fafb;
+    border-color: #d1d5db;
+    color: #4b5563;
+  }
+
+  .desc {
+    color: #4b5563;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    flex: 1;
+  }
+
+  .id {
+    color: #9ca3af;
+    font-size: 12px;
+    margin-bottom: 12px;
+    word-break: break-word;
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  .btn:hover {
+    background: #fafafa;
+  }
+
+  .btn.primary {
+    background: #1f2937;
+    color: white;
+    border-color: #1f2937;
+  }
+
+  .empty {
+    padding: 24px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 12px;
+    background: white;
+    color: #4b5563;
+  }
+
+  @media (max-width: 1100px) {
+    .controls {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 700px) {
+    .controls {
+      grid-template-columns: 1fr;
+    }
+
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .summary {
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title"> Master Worksheet Library</div>
+  <div class="subtitle">Curated and generated worksheet entries for full-library review</div>
+
+  <div class="summary">
+    <div class="summary-item">
+      <div class="summary-number" id="summaryTotal">0</div>
+      <div class="summary-label">Generated</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-number" id="summaryShown">0</div>
+      <div class="summary-label">Showing</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-number" id="summaryPromotable">0</div>
+      <div class="summary-label">Promotable</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="control">
+      <label for="search">Search</label>
+      <input id="search" type="text" placeholder="Search generated worksheets..." />
+    </div>
+
+    <div class="control">
+      <label for="grade">Grade</label>
+      <select id="grade">
+        <option value="">All grades</option>
+      </select>
+    </div>
+
+    <div class="control">
+      <label for="domain">Domain</label>
+      <select id="domain">
+        <option value="">All domains</option>
+      </select>
+    </div>
+
+    <div class="control">
+      <label for="mode">View</label>
+      <select id="mode">
+        <option value="all">All generated</option>
+        <option value="promotable">Promotable only</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="meta" id="count"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+let ALL_ITEMS = [];
+
+function isPromotable(item) {
+  const strongFamilies = new Set([
+    "fact_fluency",
+    "visual_models",
+    "relational_thinking",
+    "representation",
+    "problem_solving",
+    "data_graphing",
+    "daily_review"
+  ]);
+
+  const strongTemplates = new Set([
+    "fluency_grid",
+    "equation_practice",
+    "matching",
+    "visual_model",
+    "representation",
+    "model_interpretation"
+  ]);
+
+  const title = String(item.title || "").toLowerCase();
+  const desc = String(item.description || "").toLowerCase();
+
+  if (!strongFamilies.has(item.worksheetFamily)) return false;
+  if (!strongTemplates.has(item.templateId)) return false;
+  if (!item.gradeLabels?.length) return false;
+  if (!item.domain) return false;
+  if (!item.activityTypes?.length) return false;
+  if (title.includes("generated worksheet")) return false;
+  if (desc.includes("generated worksheet for")) return false;
+
+  return true;
+}
+
+function qualityScore(item) {
+  let score = 0;
+  if (isPromotable(item)) score += 100;
+  if (item.templateId === "fluency_grid") score += 8;
+  if (item.templateId === "visual_model") score += 8;
+  if (item.templateId === "equation_practice") score += 6;
+  if (item.worksheetFamily === "fact_fluency") score += 10;
+  if (item.worksheetFamily === "visual_models") score += 10;
+  if (item.worksheetFamily === "representation") score += 8;
+  if (item.worksheetFamily === "data_graphing") score += 8;
+  if (item.description && !item.description.toLowerCase().includes("generated worksheet")) score += 10;
+  if (item.shortTitle && item.shortTitle.length < 28) score += 4;
+  return score;
+}
+
+function populateFilters(items) {
+  const gradeSelect = document.getElementById("grade");
+  const domainSelect = document.getElementById("domain");
+
+  const grades = [...new Set(items.flatMap(i => i.gradeLabels || []))].sort();
+  const domains = [...new Set(items.map(i => i.domain).filter(Boolean))].sort();
+
+  gradeSelect.innerHTML = `<option value="">All grades</option>` +
+    grades.map(g => `<option value="${g}">${g}</option>`).join("");
+
+  domainSelect.innerHTML = `<option value="">All domains</option>` +
+    domains.map(d => `<option value="${d}">${d}</option>`).join("");
+}
+
+function filterItems() {
+  const q = document.getElementById("search").value.trim().toLowerCase();
+  const grade = document.getElementById("grade").value;
+  const domain = document.getElementById("domain").value;
+  const mode = document.getElementById("mode").value;
+
+  let items = [...ALL_ITEMS];
+
+  if (q) {
+    items = items.filter(i => {
+      const haystack = [
+        i.title,
+        i.shortTitle,
+        i.domain,
+        i.skillKey,
+        i.worksheetFamily,
+        i.templateId,
+        ...(i.gradeLabels || []),
+        ...(i.activityTypes || []),
+        i.description,
+        i.id
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      return haystack.includes(q);
+    });
+  }
+
+  if (grade) {
+    items = items.filter(i => (i.gradeLabels || []).includes(grade));
+  }
+
+  if (domain) {
+    items = items.filter(i => i.domain === domain);
+  }
+
+  if (mode === "promotable") {
+    items = items.filter(isPromotable);
+  }
+
+  items.sort((a, b) => {
+    const scoreDiff = qualityScore(b) - qualityScore(a);
+    if (scoreDiff !== 0) return scoreDiff;
+    return (a.title || "").localeCompare(b.title || "");
+  });
+
+  return items;
+}
+
+function updateSummary(shown) {
+  const promotable = ALL_ITEMS.filter(isPromotable).length;
+
+  document.getElementById("summaryTotal").textContent = ALL_ITEMS.length;
+  document.getElementById("summaryShown").textContent = shown.length;
+  document.getElementById("summaryPromotable").textContent = promotable;
+  document.getElementById("count").textContent = `${shown.length} generated worksheet candidates shown`;
+}
+
+function openPdf(id) {
+  window.open(`/api/catalog-pdf/${encodeURIComponent(id)}?disposition=inline`, "_blank");
+}
+
+function viewJson(id) {
+  const item = ALL_ITEMS.find(x => x.id === id);
+  if (!item) return;
+
+  const blob = new Blob([JSON.stringify(item, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  window.open(url, "_blank");
+}
+
+async function copyEntry(id) {
+  const item = ALL_ITEMS.find(x => x.id === id);
+  if (!item) return;
+
+  const entryText = JSON.stringify(item, null, 2);
+  await navigator.clipboard.writeText(entryText);
+  alert("Catalog entry copied to clipboard.");
+}
+
+function render(items) {
+  const grid = document.getElementById("grid");
+
+  if (!items.length) {
+    grid.innerHTML = `<div class="empty">No generated worksheets match these filters.</div>`;
+    updateSummary(items);
+    return;
+  }
+
+  grid.innerHTML = items.map(i => `
+    <div class="card">
+      <div class="card-title">${i.title}</div>
+
+      <div class="badges">
+        <span class="badge">${i.gradeLabels?.[0] || ""}</span>
+        <span class="badge">${i.domain || ""}</span>
+        <span class="badge">${i.worksheetFamily || ""}</span>
+        <span class="badge ${isPromotable(i) ? "promotable" : "generated"}">
+          ${isPromotable(i) ? "promotable" : "generated"}
+        </span>
+      </div>
+
+      <div class="desc">${i.description || ""}</div>
+
+      <div class="id">${i.id}</div>
+
+      <div class="actions">
+       <button class="btn primary" onclick="openPdf('${i.id}')">Open PDF</button>
+       <button class="btn" onclick="viewJson('${i.id}')">JSON</button>
+       <button class="btn" onclick="copyEntry('${i.id}')">Copy Entry</button>
+      </div>
+    </div>
+  `).join("");
+
+  updateSummary(items);
+}
+
+function wireEvents() {
+  document.getElementById("search").addEventListener("input", () => render(filterItems()));
+  document.getElementById("grade").addEventListener("change", () => render(filterItems()));
+  document.getElementById("domain").addEventListener("change", () => render(filterItems()));
+  document.getElementById("mode").addEventListener("change", () => render(filterItems()));
+}
+
+async function load() {
+  const res = await fetch("/data/worksheetCatalog.master.json");
+  const data = await res.json();
+  ALL_ITEMS = data.items || [];
+
+  populateFilters(ALL_ITEMS);
+  wireEvents();
+  render(filterItems());
+}
+
+load();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Worksheet Preview</title>
+  <style>
+    :root {
+      --bg: #f7f5f2;
+      --surface: #ffffff;
+      --border: #d6d3d1;
+      --text: #1f2937;
+      --muted: #6b7280;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .shell {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .topbar h1 {
+      margin: 0 0 4px;
+      font-size: 28px;
+      line-height: 1.15;
+    }
+
+    .topbar p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #fafaf9;
+    }
+
+    .btn.primary {
+      background: var(--text);
+      color: white;
+      border-color: var(--text);
+    }
+
+    .meta {
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .viewer-shell {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 900px;
+    }
+
+    .viewer {
+      width: 100%;
+      height: 1100px;
+      border: 0;
+      display: block;
+      background: white;
+    }
+
+    .fallback {
+      padding: 24px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .fallback a {
+      color: var(--text);
+    }
+
+    .error {
+      background: white;
+      border: 1px solid #ef4444;
+      color: #991b1b;
+      padding: 24px;
+      border-radius: 12px;
+    }
+
+    @media (max-width: 800px) {
+      .topbar {
+        flex-direction: column;
+      }
+
+      .viewer {
+        height: 80vh;
+      }
+    }
+
+    @media print {
+      .topbar {
+        display: none;
+      }
+
+      .shell {
+        padding: 0;
+        max-width: none;
+      }
+
+      .viewer-shell {
+        border: none;
+        border-radius: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="topbar">
+      <div>
+        <h1>Worksheet Preview</h1>
+        <p>Preview uses the exact same PDF that downloads.</p>
+      </div>
+
+      <div class="actions">
+        <a class="btn" href="/worksheet-catalog.html">Back to Catalog</a>
+        <button class="btn" id="jsonBtn" type="button">Open JSON</button>
+        <button class="btn primary" id="pdfBtn" type="button">Open PDF</button>
+      </div>
+    </div>
+
+    <div class="meta" id="meta"></div>
+    <div id="app"></div>
+  </main>
+
+  <script>
+    function getId() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id") || "";
+      return decodeURIComponent(id).trim();
+    }
+
+    function pdfInlineUrlFor(id) {
+      return `/api/catalog-pdf/${encodeURIComponent(id)}?disposition=inline`;
+    }
+
+    function pdfDownloadUrlFor(id) {
+      return `/api/catalog-pdf/${encodeURIComponent(id)}?disposition=attachment`;
+    }
+
+    function jsonUrlFor(id) {
+      return `/api/catalog-preview/${encodeURIComponent(id)}`;
+    }
+
+    async function loadMeta(id) {
+      try {
+        const res = await fetch(`/api/worksheet-catalog/${encodeURIComponent(id)}`);
+        const data = await res.json();
+
+        if (!data.ok || !data.item) return;
+
+        const item = data.item;
+        document.getElementById("meta").textContent = [
+          item.gradeLabels?.[0] || "",
+          item.subject || "",
+          item.domain || "",
+          item.skillKey || ""
+        ].filter(Boolean).join(" • ");
+
+        document.title = `${item.title || "Worksheet Preview"} — Yellow Bird`;
+      } catch {
+        // non-blocking
+      }
+    }
+
+    function renderPdfViewer(id) {
+      const pdfUrl = pdfInlineUrlFor(id);
+
+      return `
+        <section class="viewer-shell">
+          <object
+            class="viewer"
+            data="${pdfUrl}#toolbar=1&navpanes=0&view=FitH"
+            type="application/pdf"
+          >
+            <iframe
+              class="viewer"
+              src="${pdfUrl}#toolbar=1&navpanes=0&view=FitH"
+              title="Worksheet PDF Preview"
+            ></iframe>
+
+            <div class="fallback">
+              Your browser could not display the PDF inline.
+              <a href="${pdfUrl}" target="_blank" rel="noopener noreferrer">Open the PDF directly</a>.
+            </div>
+          </object>
+        </section>
+      `;
+    }
+
+    async function init() {
+      const id = getId();
+      const app = document.getElementById("app");
+      const jsonBtn = document.getElementById("jsonBtn");
+      const pdfBtn = document.getElementById("pdfBtn");
+
+      if (!id) {
+        app.innerHTML = `<div class="error">Missing worksheet catalog id in URL.</div>`;
+        return;
+      }
+
+      jsonBtn.addEventListener("click", () => {
+        window.open(jsonUrlFor(id), "_blank");
+      });
+
+      pdfBtn.addEventListener("click", () => {
+        window.open(pdfDownloadUrlFor(id), "_blank");
+      });
+
+      await loadMeta(id);
+      app.innerHTML = renderPdfViewer(id);
+    }
+
+    init();
+  </script>
+</body>
+</html>

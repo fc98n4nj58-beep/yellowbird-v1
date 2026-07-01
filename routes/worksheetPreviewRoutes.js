@@ -1,3 +1,5 @@
+const { buildCatalogWorksheetRuntime } = require("../services/catalogWorksheetRuntimeService");
+
 const express = require("express");
 const router = express.Router();
 
@@ -40,6 +42,30 @@ router.get("/api/worksheet-preview", (req, res) => {
     res.status(error.status || 500).json({
       ok: false,
       error: error.message || "Failed to generate worksheet preview.",
+    });
+  }
+});
+
+router.get("/api/catalog-preview/:id", (req, res) => {
+  try {
+    const { item, worksheet, layout, contentObject } =
+      buildCatalogWorksheetRuntime(req.params.id, req.query || {});
+
+    res.json({
+      ok: true,
+      preview: {
+        type: "catalog-layout-preview",
+        id: req.params.id,
+        item,
+        worksheet,
+        contentObject,
+        layout
+      }
+    });
+  } catch (error) {
+    res.status(error.status || 500).json({
+      ok: false,
+      error: error.message || "Failed to generate catalog preview."
     });
   }
 });

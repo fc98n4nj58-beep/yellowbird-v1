@@ -404,19 +404,6 @@
         gap: 8px;
       }
 
-      .meta-pill {
-        display: inline-flex;
-        align-items: center;
-        min-height: 30px;
-        padding: 0 10px;
-        border: 1px solid var(--yb-border);
-        border-radius: 999px;
-        background: #fafcff;
-        color: #4b5563;
-        font-size: 13px;
-        font-weight: 600;
-      }
-
       .student-line-row {
         display: grid;
         grid-template-columns: 1fr 180px;
@@ -456,78 +443,7 @@
       .problems-section.cols-4 {
         grid-template-columns: repeat(4, minmax(0, 1fr));
       }
-
-      .problem-block {
-        height: 100%;
-        padding: 18px 18px 20px;
-        border: 1px solid #e7edf3;
-        border-radius: 12px;
-        background: #fff;
-      }
-
-      .problem-top {
-        display: grid;
-        grid-template-columns: 34px 1fr;
-        gap: 12px;
-        align-items: start;
-      }
-
-      .problem-number {
-        width: 34px;
-        height: 34px;
-        border: 1px solid var(--yb-border);
-        border-radius: 999px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #fafcff;
-        color: var(--yb-text);
-        font-size: 15px;
-        font-weight: 700;
-      }
-
-      .problem-body {
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-      }
-
-      .problem-prompt {
-        font-size: 19px;
-        line-height: 1.4;
-        font-weight: 600;
-        color: var(--yb-text);
-      }
-
-      .problem-visual-wrap {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 8px 0 2px;
-      }
-
-      .problem-visual-wrap svg {
-        max-width: 100%;
-        height: auto;
-        display: block;
-      }
-
-      .answer-space {
-        margin-top: 2px;
-      }
-
-      .answer-line {
-        height: 28px;
-        border-bottom: 1.5px solid #9ca3af;
-      }
-
-      .answer-box {
-        min-height: 76px;
-        border: 1.5px solid #d1d5db;
-        border-radius: 8px;
-        background: #fff;
-      }
-
+      
       .empty-state {
         padding: 28px;
         border: 1px dashed #cbd5e1;
@@ -560,16 +476,7 @@
           grid-template-columns: 1fr;
         }
 
-        .problem-prompt {
-          font-size: 18px;
-        }
-
-        .problems-section,
-        .problems-section.cols-2,
-        .problems-section.cols-3,
-        .problems-section.cols-4 {
-          grid-template-columns: 1fr;
-        }
+        
       }
 
       @media (max-width: 640px) {
@@ -927,18 +834,43 @@
         mixedControls.style.display = isMixed ? "block" : "none";
       }
 
-      mode.addEventListener("change", setModeUI);
-      setModeUI();
+      function hydrateWorksheetFormFromQuery() {
+  const params = new URLSearchParams(window.location.search);
 
-      function buildWorksheetQueryString() {
-        const qs = new URLSearchParams({
-          mode: mode.value,
-          font: String(font.value || 11),
-          cols: String(cols.value || 2),
-          answers: answers.checked ? "1" : "0",
-          nonneg: nonneg.checked ? "1" : "0",
-          intdiv: intdiv.checked ? "1" : "0",
-        });
+  const selectedActivity =
+    params.get("preferredActivityType") ||
+    params.get("activityType") ||
+    params.get("mode");
+
+  if (selectedActivity) {
+    const optionExists = Array.from(mode.options).some(
+      (option) => option.value === selectedActivity
+    );
+
+    if (optionExists) {
+      mode.value = selectedActivity;
+    }
+  }
+}
+
+hydrateWorksheetFormFromQuery();
+
+mode.addEventListener("change", setModeUI);
+setModeUI();
+
+    function buildWorksheetQueryString() {
+  const selectedMode = mode.value;
+
+  const qs = new URLSearchParams({
+    mode: selectedMode,
+    preferredActivityType: selectedMode,
+    activityType: selectedMode,
+    font: String(font.value || 11),
+    cols: String(cols.value || 2),
+    answers: answers.checked ? "1" : "0",
+    nonneg: nonneg.checked ? "1" : "0",
+    intdiv: intdiv.checked ? "1" : "0",
+  });
 
         if (mode.value !== "mixed") {
           const A = clampRange(aMin.value, aMax.value, 1, 20);
@@ -988,34 +920,70 @@
             qs.set(`${o.p}Exclude`, exclV);
           }
         }
+const existingSeed = new URLSearchParams(window.location.search).get("worksheetSeed");
 
+if (existingSeed) {
+  qs.set("worksheetSeed", existingSeed);
+}
         return qs.toString();
       }
 
-      previewBtn.addEventListener("click", () => {
-        const queryString = buildWorksheetQueryString();
-        const nextParams = new URLSearchParams(window.location.search);
+      previewBtn.addEventListener("click", async () => {
+  const currentScrollY = window.scrollY;
+const queryString = buildWorksheetQueryString();
+const nextParams = new URLSearchParams(window.location.search);
 
-        for (const [key, value] of new URLSearchParams(queryString).entries()) {
-          nextParams.set(key, value);
-        }
+nextParams.set("worksheetSeed", String(Date.now()));
 
-        const previewUrl = `${window.location.pathname}?${nextParams.toString()}`;
-        window.location.href = previewUrl;
+  for (const [key, value] of new URLSearchParams(queryString).entries()) {
+    nextParams.set(key, value);
+  }
+
+  const previewUrl = `${window.location.pathname}?${nextParams.toString()}`;
+
+  history.replaceState({}, "", previewUrl);
+
+  location.reload();
+
+  window.addEventListener(
+    "load",
+    () => {
+      window.scrollTo({
+        top: currentScrollY,
+        behavior: "instant"
       });
+    },
+    { once: true }
+  );
+});
 
-      btn.addEventListener("click", () => {
-        btn.disabled = true;
-        btn.textContent = "Generating…";
+    btn.addEventListener("click", () => {
+  btn.disabled = true;
+  btn.textContent = "Downloading…";
 
-        const queryString = buildWorksheetQueryString();
-        window.location.href = `/api/worksheet.pdf?${queryString}`;
+  if (window.currentWorksheetPdfBlobUrl) {
+    const a = document.createElement("a");
+    a.href = window.currentWorksheetPdfBlobUrl;
+    const selectedMode = mode.value || "worksheet";
 
-        setTimeout(() => {
-          btn.disabled = false;
-          btn.textContent = "Generate Worksheet PDF";
-        }, 900);
-      });
+a.download = `${selectedMode
+  .replace(/^math\./, "")
+  .replace(/\./g, "-")
+  .replace(/[^a-zA-Z0-9-]+/g, "-")
+  .toLowerCase()}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  } else {
+    const queryString = buildWorksheetQueryString();
+    window.location.href = `/api/worksheet.pdf?${queryString}`;
+  }
+
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.textContent = "Generate Worksheet PDF";
+  }, 900);
+});
     </script>
 
     <script>
@@ -1164,72 +1132,6 @@
 
         insertContextCard();
 
-        function getAnswerSpaceMarkup(problem) {
-          const type = problem?.answerSpace?.type || "line";
-
-          if (type === "box") {
-            return `
-              <div class="answer-space">
-                <div class="answer-box"></div>
-              </div>
-            `;
-          }
-
-          if (type === "inline_blank") {
-            return "";
-          }
-
-          if (type === "matching_column") {
-            return `
-              <div class="answer-space">
-                <div class="answer-line" style="max-width:140px;"></div>
-              </div>
-            `;
-          }
-
-          if (type === "symbol_slot") {
-            return `
-              <div class="answer-space">
-                <div class="answer-line" style="max-width:90px;"></div>
-              </div>
-            `;
-          }
-
-          return `
-            <div class="answer-space">
-              <div class="answer-line"></div>
-            </div>
-          `;
-        }
-
-        function renderProblemBlock(problem, index) {
-          const promptText = escapeHtml(problem?.prompt || problem?.equation || "");
-          const visualMarkup = problem?.visual
-            ? `<div class="problem-visual-wrap">${problem.visual}</div>`
-            : "";
-
-          const inlineBlank =
-            problem?.answerSpace?.type === "inline_blank"
-              ? `<span style="display:inline-block;min-width:70px;border-bottom:2px solid #94a3b8;transform:translateY(-2px);margin-left:8px;"></span>`
-              : "";
-
-          return `
-            <section class="problem-block">
-              <div class="problem-top">
-                <div class="problem-number">${index + 1}</div>
-                <div class="problem-body">
-                  ${problem?.visualPlacement === "above_prompt" ? visualMarkup : ""}
-                  <div class="problem-prompt">
-                    ${promptText}
-                    ${inlineBlank}
-                  </div>
-                  ${problem?.visualPlacement !== "above_prompt" ? visualMarkup : ""}
-                  ${getAnswerSpaceMarkup(problem)}
-                </div>
-              </div>
-            </section>
-          `;
-        }
 
         async function autoLoadGeneratedWorksheet() {
           const resultsEl = document.querySelector("#generatedWorksheet");
@@ -1359,55 +1261,43 @@
               cols.title = "";
             }
 
-            const metaPills = [
-              renderLayout.header?.meta?.gradeLabel,
-              renderLayout.header?.meta?.subjectLabel,
-              renderLayout.header?.meta?.strandLabel ? `Strand: ${renderLayout.header.meta.strandLabel}` : null,
-              renderLayout.header?.meta?.skillLabel || null
-            ].filter(Boolean);
+const pdfParams = new URLSearchParams(params);
+pdfParams.set("disposition", "inline");
 
-            resultsEl.innerHTML = `
-              ${overviewHtml}
+const pdfResponse = await fetch(`/api/worksheet.pdf?${pdfParams.toString()}`);
 
-              <main class="preview-shell">
-                <article class="worksheet-sheet">
-                  <header class="worksheet-header">
-                    <div class="worksheet-kicker">Yellow Bird Worksheet</div>
-                    <h1 class="worksheet-title">${escapeHtml(renderLayout.header?.title || "Math Practice")}</h1>
-                    ${
-                      renderLayout.header?.subtitle
-                        ? `<div class="body-copy muted">${escapeHtml(renderLayout.header.subtitle)}</div>`
-                        : ""
-                    }
+if (!pdfResponse.ok) {
+  throw new Error("Failed to load PDF preview.");
+}
 
-                    <div class="worksheet-meta">
-                      ${metaPills.map((item) => `<span class="meta-pill">${escapeHtml(item)}</span>`).join("")}
-                    </div>
+const pdfBlob = await pdfResponse.blob();
+const pdfBlobUrl = URL.createObjectURL(pdfBlob);
 
-                    <div class="student-line-row">
-                      <div class="student-line">
-                        <span>Name</span>
-                        <div class="line"></div>
-                      </div>
-                      <div class="student-line">
-                        <span>Date</span>
-                        <div class="line"></div>
-                      </div>
-                    </div>
+window.currentWorksheetPdfBlobUrl = pdfBlobUrl;
 
-                    <div style="margin-top:12px;font-size:14px;color:#4b5563;">
-                      ${escapeHtml(renderLayout.instruction || "Solve each problem.")}
-                    </div>
-                  </header>
+resultsEl.innerHTML = `
+  ${overviewHtml}
 
-                  <section class="problems-section cols-${Number(
-                    renderLayout.template?.defaultColumns || renderLayout.template?.columns || 1
-                  )}">
-                    ${(renderLayout.problems || []).map((p, i) => renderProblemBlock(p, i)).join("")}
-                  </section>
-                </article>
-              </main>
-            `;
+  <main class="preview-shell">
+    <article
+      class="worksheet-sheet"
+      style="
+        padding:0;
+        overflow:hidden;
+        height:1100px;
+      "
+    >
+      <iframe
+        src="${pdfBlobUrl}"
+        style="
+          width:100%;
+          height:100%;
+          border:none;
+        "
+      ></iframe>
+    </article>
+  </main>
+`;
           } catch (error) {
             resultsEl.innerHTML = `
               <div class="status-box error">

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Worksheet Catalog — Project Yellow Bird</title>
+  <link rel="stylesheet" href="/styles/site.css" />
+  <style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f7f5f2;
+    color: #1f2937;
+  }
+
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  .header {
+    margin-bottom: 24px;
+  }
+
+  .title {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: #4b5563;
+    margin: 0;
+  }
+
+  .controls {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 12px;
+    margin: 24px 0;
+  }
+
+  .control {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .control label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .control input,
+  .control select {
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: white;
+    font-size: 14px;
+  }
+
+  .results-meta {
+    margin: 12px 0 18px;
+    font-size: 14px;
+    color: #4b5563;
+  }
+
+  .group {
+    margin-bottom: 32px;
+  }
+
+  .group-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #d1d5db;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  /* =========================
+     CARD SYSTEM
+     ========================= */
+
+  .card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    min-height: 320px;
+  }
+
+  .card-title {
+    margin: 0 0 10px;
+    font-size: 18px;
+    line-height: 1.25;
+  }
+
+  .card-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 999px;
+    font-size: 12px;
+    color: #374151;
+    background: #fafafa;
+  }
+
+  /* Status styles */
+
+  .badge.status-ready {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #166534;
+  }
+
+  .badge.status-partial {
+    background: #fffbeb;
+    border-color: #fde68a;
+    color: #92400e;
+  }
+
+  .badge.status-planned {
+    background: #f9fafb;
+    border-color: #d1d5db;
+    color: #4b5563;
+  }
+
+  .desc {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #374151;
+    margin-bottom: 12px;
+  }
+
+  .details {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #4b5563;
+  }
+
+  .details strong {
+    color: #1f2937;
+  }
+
+  .small-muted {
+    color: #6b7280;
+    font-size: 12px;
+    margin-top: 6px;
+  }
+
+  /* =========================
+     ACTION BUTTONS
+     ========================= */
+
+  .card-actions {
+    margin-top: 14px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  .action-btn:hover {
+    background: #fafafa;
+  }
+
+  .action-btn.primary {
+    background: #1f2937;
+    color: white;
+    border-color: #1f2937;
+  }
+
+  .empty {
+    padding: 24px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 12px;
+    background: white;
+    color: #4b5563;
+  }
+
+  /* =========================
+     RESPONSIVE
+     ========================= */
+
+  @media (max-width: 1100px) {
+    .controls {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .controls {
+      grid-template-columns: 1fr;
+    }
+
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .summary-bar {
+  display: flex;
+  gap: 30px;
+  padding: 18px 20px;
+  margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: white;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-number {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.summary-number.ready {
+  color: #166534;
+}
+
+.summary-number.partial {
+  color: #92400e;
+}
+
+.summary-number.planned {
+  color: #6b7280;
+}
+
+.summary-label {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+</style>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <h1 class="title">Worksheet Catalog</h1>
+      <p class="subtitle">Internal planning view for the Yellow Bird worksheet library.</p>
+    </header>
+
+    <div class="summary-bar" id="summaryBar">
+  <div class="summary-item">
+    <div class="summary-number" id="summaryTotal">0</div>
+    <div class="summary-label">Worksheets</div>
+  </div>
+
+  <div class="summary-item">
+    <div class="summary-number ready" id="summaryReady">0</div>
+    <div class="summary-label">Ready</div>
+  </div>
+
+  <div class="summary-item">
+    <div class="summary-number partial" id="summaryPartial">0</div>
+    <div class="summary-label">Partial</div>
+  </div>
+
+  <div class="summary-item">
+    <div class="summary-number planned" id="summaryPlanned">0</div>
+    <div class="summary-label">Planned</div>
+  </div>
+</div>
+
+    <section class="controls">
+      <div class="control">
+        <label for="search">Search</label>
+        <input id="search" type="text" placeholder="Search worksheets..." />
+      </div>
+
+      <div class="control">
+        <label for="grade">Grade</label>
+        <select id="grade">
+          <option value="">All grades</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <label for="domain">Domain</label>
+        <select id="domain">
+          <option value="">All domains</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <label for="status">Status</label>
+        <select id="status">
+          <option value="">All statuses</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <label for="sort">Sort by</label>
+        <select id="sort">
+          <option value="title">Title</option>
+          <option value="grade">Grade</option>
+          <option value="domain">Domain</option>
+          <option value="status">Status</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <label for="group">Group by</label>
+        <select id="group">
+          <option value="none">None</option>
+          <option value="grade">Grade</option>
+          <option value="domain">Domain</option>
+          <option value="status">Status</option>
+        </select>
+      </div>
+    </section>
+
+    <div class="results-meta" id="resultsMeta">Loading catalog...</div>
+    <section id="catalogContent"></section>
+  </main>
+
+  <script>
+    const searchInput = document.getElementById("search");
+    const gradeSelect = document.getElementById("grade");
+    const domainSelect = document.getElementById("domain");
+    const statusSelect = document.getElementById("status");
+    const sortSelect = document.getElementById("sort");
+    const groupSelect = document.getElementById("group");
+    const resultsMeta = document.getElementById("resultsMeta");
+    const catalogContent = document.getElementById("catalogContent");
+
+    async function loadFilters() {
+      const res = await fetch("/api/worksheet-catalog/filters");
+      const data = await res.json();
+      const filters = data.filters || {};
+
+      (filters.grades || []).forEach((grade) => {
+        const option = document.createElement("option");
+        option.value = grade;
+        option.textContent = grade;
+        gradeSelect.appendChild(option);
+      });
+
+      (filters.domains || []).forEach((domain) => {
+        const option = document.createElement("option");
+        option.value = domain;
+        option.textContent = domain;
+        domainSelect.appendChild(option);
+      });
+
+      (filters.statuses || []).forEach((status) => {
+        const option = document.createElement("option");
+        option.value = status;
+        option.textContent = status;
+        statusSelect.appendChild(option);
+      });
+    }
+
+    function buildQueryString() {
+      const params = new URLSearchParams();
+
+      if (searchInput.value.trim()) params.set("q", searchInput.value.trim());
+      if (gradeSelect.value) params.set("grade", gradeSelect.value);
+      if (domainSelect.value) params.set("domain", domainSelect.value);
+      if (statusSelect.value) params.set("status", statusSelect.value);
+
+      return params.toString();
+    }
+
+    function sortItems(items) {
+      const sortBy = sortSelect.value;
+
+      return [...items].sort((a, b) => {
+        if (sortBy === "grade") {
+          const aGrade = (a.gradeLabels?.[0] || "").toLowerCase();
+          const bGrade = (b.gradeLabels?.[0] || "").toLowerCase();
+          return aGrade.localeCompare(bGrade) || a.title.localeCompare(b.title);
+        }
+
+        if (sortBy === "domain") {
+          const aDomain = (a.domain || "").toLowerCase();
+          const bDomain = (b.domain || "").toLowerCase();
+          return aDomain.localeCompare(bDomain) || a.title.localeCompare(b.title);
+        }
+
+        if (sortBy === "status") {
+          const aStatus = (a.status || "").toLowerCase();
+          const bStatus = (b.status || "").toLowerCase();
+          return aStatus.localeCompare(bStatus) || a.title.localeCompare(b.title);
+        }
+
+        return a.title.localeCompare(b.title);
+      });
+    }
+
+   function renderCard(item) {
+  const statusClass = item.status ? `status-${item.status}` : "";
+
+  return `
+    <article class="card">
+      <div class="card-header">
+        <h3 class="card-title">${item.title}</h3>
+
+        <div class="card-badges">
+          <span class="badge">${item.gradeLabels?.join(", ") || ""}</span>
+          <span class="badge">${item.domain || ""}</span>
+          <span class="badge">${item.worksheetFamily || ""}</span>
+          <span class="badge">${item.templateId || ""}</span>
+          <span class="badge ${statusClass}">${item.status || ""}</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="desc">${item.description || ""}</div>
+
+        <div class="details">
+          <div><strong>Skill:</strong> ${item.skillKey || ""}</div>
+          <div><strong>Activity:</strong> ${(item.activityTypes || []).join(", ")}</div>
+          <div><strong>Time:</strong> ${item.estimatedTimeMinutes || ""} min</div>
+          <div><strong>Curriculum:</strong> ${(item.curriculumTags || []).join(", ")}</div>
+          <div class="small-muted" style="margin-top:8px;"><strong>ID:</strong> ${item.id}</div>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button class="action-btn primary" onclick="openPreview('${item.id}')">
+          Preview
+        </button>
+
+        <button class="action-btn" onclick="downloadPdf('${item.id}')">
+          Download PDF
+        </button>
+
+        <button class="action-btn" onclick="openPreviewJson('${item.id}')">
+          JSON
+        </button>
+      </div>
+    </article>
+  `;
+}
+
+    function groupItems(items) {
+      const groupBy = groupSelect.value;
+
+      if (groupBy === "none") {
+        return [{ title: "", items }];
+      }
+
+      const groups = {};
+
+      items.forEach((item) => {
+        let key = "Other";
+
+        if (groupBy === "grade") key = item.gradeLabels?.[0] || "Other";
+        if (groupBy === "domain") key = item.domain || "Other";
+        if (groupBy === "status") key = item.status || "Other";
+
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(item);
+      });
+
+      return Object.entries(groups)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([title, groupedItems]) => ({
+          title,
+          items: groupedItems
+        }));
+    }
+
+    function updateSummary(items) {
+
+  const total = items.length;
+
+  const ready = items.filter(i => i.status === "ready").length;
+  const partial = items.filter(i => i.status === "partial").length;
+  const planned = items.filter(i => i.status === "planned").length;
+
+  document.getElementById("summaryTotal").textContent = total;
+  document.getElementById("summaryReady").textContent = ready;
+  document.getElementById("summaryPartial").textContent = partial;
+  document.getElementById("summaryPlanned").textContent = planned;
+
+}
+
+    function renderItems(items) {
+      if (!items.length) {
+        catalogContent.innerHTML = `<div class="empty">No worksheet catalog items match these filters.</div>`;
+        return;
+      }
+
+      const sortedItems = sortItems(items);
+      const grouped = groupItems(sortedItems);
+
+      catalogContent.innerHTML = grouped.map((group) => `
+        <section class="group">
+          ${group.title ? `<h2 class="group-title">${group.title}</h2>` : ""}
+          <div class="grid">
+            ${group.items.map(renderCard).join("")}
+          </div>
+        </section>
+      `).join("");
+    }
+
+    async function loadCatalog() {
+      resultsMeta.textContent = "Loading catalog...";
+
+      const query = buildQueryString();
+      const res = await fetch(`/api/worksheet-catalog${query ? `?${query}` : ""}`);
+      const data = await res.json();
+
+      const items = data.items || [];
+      updateSummary(items);
+      resultsMeta.textContent = `${items.length} worksheet${items.length === 1 ? "" : "s"} found`;
+      renderItems(items);
+    }
+
+function openPreview(id) {
+  window.open(`/catalog-preview.html?id=${encodeURIComponent(id)}`, "_blank");
+}
+
+function openPreviewJson(id) {
+  window.open(`/api/catalog-preview/${encodeURIComponent(id)}`, "_blank");
+}
+
+function downloadPdf(id) {
+  window.open(`/api/catalog-pdf/${encodeURIComponent(id)}`, "_blank");
+}
+
+    function wireEvents() {
+      searchInput.addEventListener("input", loadCatalog);
+      gradeSelect.addEventListener("change", loadCatalog);
+      domainSelect.addEventListener("change", loadCatalog);
+      statusSelect.addEventListener("change", loadCatalog);
+      sortSelect.addEventListener("change", loadCatalog);
+      groupSelect.addEventListener("change", loadCatalog);
+    }
+
+    async function init() {
+      await loadFilters();
+      wireEvents();
+      await loadCatalog();
+    }
+
+    init();
+
+ function openPreview(id) {
+  window.open(`/catalog-preview.html?id=${encodeURIComponent(id)}`, "_blank");
+}
+
+function openPreviewJson(id) {
+  window.open(`/api/catalog-preview/${encodeURIComponent(id)}`, "_blank");
+}
+
+function downloadPdf(id) {
+  window.open(`/api/catalog-pdf/${encodeURIComponent(id)}`, "_blank");
+}
+
+  </script>
+</body>
+</html>
