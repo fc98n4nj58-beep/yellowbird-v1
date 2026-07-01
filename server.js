@@ -28,8 +28,8 @@ const worksheetPdfRoutes = require("./routes/worksheetPdfRoutes");
 const curriculumRoutes = require("./routes/curriculumRoutes");
 const expectationRoutes = require("./routes/expectationRoutes");
 const worksheetPreviewRoutes = require("./routes/worksheetPreviewRoutes");
-
 const libraryRoutes = require("./routes/libraryRoutes");
+const worksheetCatalogRoutes = require("./routes/worksheetCatalogRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -40,6 +40,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
+app.use("/data", express.static(path.join(__dirname, "data")));
 
 // Route mounting
 app.use(previewRoutes);
@@ -48,8 +49,12 @@ app.use(worksheetPdfRoutes);
 app.use(curriculumRoutes);
 app.use(expectationRoutes);
 app.use(worksheetPreviewRoutes);
-app.use(libraryRoutes);
+app.use("/", libraryRoutes);
+app.use(worksheetCatalogRoutes);
 
+app.listen(PORT, () => {
+  console.log(`YellowBird server running on port ${PORT}`);
+});
 
 /* =========================
    PAGES ROUTES
