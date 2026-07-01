@@ -1,15 +1,27 @@
 # Current Sprint
 
 Goal:
-Stabilize the worksheet publishing engine and complete the transition toward one production-ready workflow.
+Make the existing 46 ready worksheets feel trustworthy, findable, printable, and teacher-facing for September launch.
 
 Current Milestone:
-Milestone 2 — Publishing Engine — Closed
+Milestone 3 — Launch Catalog Experience
 
 Milestone Goal:
-Create one stable publishing engine where a worksheet is generated once, transformed into multiple outputs, and rendered consistently.
+Polish the launch-facing catalog experience without expanding the catalog, changing generator logic, or redesigning the homepage.
 
-Post-Close Follow-Ups:
+Active Tasks:
+
+[x] Polish public catalog labels and graph/data wording
+
+[ ] Audit representative preview/PDF print quality across ready worksheet families
+
+[ ] Polish only high-impact Browse/detail copy or metadata discovered by QA
+
+[ ] Review Grade 6 pattern naming/remapping if needed
+
+[ ] Configure git identity if needed
+
+Backlog / Deferred:
 
 [ ] Add graph visual support with a focused `bar_graph` plan
 
@@ -18,10 +30,6 @@ Post-Close Follow-Ups:
 [ ] Plan visual fraction support
 
 [ ] Implement planned/deferred `pattern_word_problems`
-
-[ ] Review Grade 6 pattern naming/remapping if needed
-
-[ ] Configure git identity if needed
 
 Rules:
 
@@ -347,3 +355,27 @@ Post-Close Follow-Ups:
 - Current active public flow remains `/browse` -> `/resource/worksheet/:id` -> `/catalog-preview.html?id={id}` -> `/api/catalog-pdf/{id}?disposition=inline`
 - Legacy static `/resource/:slug` still works
 - `/resource.html` now intentionally returns 404
+
+---
+
+## Milestone 3 — Launch Catalog Experience
+
+[x] Task 1: Public label and catalog wording polish
+- Launch catalog public labels were polished
+- Graph/data wording no longer overpromises visual graph worksheets
+- Internal/debug-style labels were replaced with teacher-facing labels
+- Public labels now avoid `Relational Thinking`
+- Public labels now avoid `Related Subtraction`
+- Public labels now avoid `Number Line Identify`
+- Public labels now avoid `Daily Review` for skip counting
+- Public labels now avoid repeated `Representation / Representation`
+- Graph/data worksheets are described as text-based/data interpretation until visual graph support is implemented
+- Ready / launch-facing worksheets remain 46 / 46 working, 0 failures
+- Manual browser QA passed for `/browse`
+- Manual browser QA passed for `/resource/worksheet/g3_read_a_graph`
+- Manual browser QA passed for `/resource/worksheet/g5_complete_graphs`
+- Manual browser QA passed for `/resource/worksheet/g1_subtraction_facts_within_20`
+- Manual browser QA passed for `/resource/worksheet/g2_skip_counting_by_2`
+- Manual browser QA passed for `/resource/worksheet/g2_expanded_form_to_100`
+- Manual browser QA passed for `/resource/worksheet/g3_fact_families_multiplication_division`
+- Commit: `50fa561 feat: polish launch catalog labels`

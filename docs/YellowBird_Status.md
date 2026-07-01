@@ -6,6 +6,12 @@ Project Yellow Bird has closed Milestone 2 — Publishing Engine.
 
 Milestone 2 created one stable publishing engine where a worksheet is generated once, transformed into multiple outputs, and rendered consistently.
 
+Milestone 3 — Launch Catalog Experience is now underway.
+
+Current Milestone 3 goal:
+
+Make the existing 46 ready worksheets feel trustworthy, findable, printable, and teacher-facing for September launch.
+
 The project has moved significantly away from duplicate worksheet creation paths. The catalog worksheet flow now uses a shared runtime, and preview/PDF parity has been established for the catalog workflow.
 
 The launch-facing discovery/publishing flow passed final manual browser QA:
@@ -423,6 +429,37 @@ Remaining follow-ups:
 * Grade 6 pattern rename/remap review if needed
 * Optional git identity configuration
 
+### Milestone 3 — Launch Catalog Experience
+
+Status:
+
+* Milestone 3 has started
+* Scope is the launch-facing catalog experience for the existing 46 ready worksheets
+* Do not expand the catalog in this milestone unless explicitly planned
+* Do not work on generator follow-ups inside catalog polish tasks
+* Do not redesign the homepage
+
+Task 1 completed:
+
+* Launch catalog public labels were polished
+* Graph/data wording no longer overpromises visual graph worksheets
+* Internal/debug-style labels were replaced with teacher-facing labels
+* Public labels now avoid `Relational Thinking`
+* Public labels now avoid `Related Subtraction`
+* Public labels now avoid `Number Line Identify`
+* Public labels now avoid `Daily Review` for skip counting
+* Public labels now avoid repeated `Representation / Representation`
+* Graph/data worksheets are described as text-based/data interpretation until visual graph support is implemented
+* Ready / launch-facing worksheets remain 46 / 46 working, 0 failures
+* Manual browser QA passed for `/browse`
+* Manual browser QA passed for `/resource/worksheet/g3_read_a_graph`
+* Manual browser QA passed for `/resource/worksheet/g5_complete_graphs`
+* Manual browser QA passed for `/resource/worksheet/g1_subtraction_facts_within_20`
+* Manual browser QA passed for `/resource/worksheet/g2_skip_counting_by_2`
+* Manual browser QA passed for `/resource/worksheet/g2_expanded_form_to_100`
+* Manual browser QA passed for `/resource/worksheet/g3_fact_families_multiplication_division`
+* Commit: `50fa561 feat: polish launch catalog labels`
+
 ---
 
 ## Files Reviewed
@@ -596,16 +633,18 @@ Do not change `pdfRenderer` to compensate for incorrect generator or catalog out
 
 ## Current High Priority
 
-Post-close cleanup and follow-up planning.
+Milestone 3 launch catalog experience.
 
 Known issues / next targets:
 
-1. Keep graph visual support deferred until a focused `bar_graph` implementation plan is created.
-2. Keep true addition-jump number-line work deferred until a focused generator plan is created.
-3. Keep visual fraction work deferred until focused visual support is planned.
-4. Keep planned/deferred `pattern_word_problems` entries out of launch-facing scope until implemented.
-5. Review Grade 6 pattern naming/remapping if needed.
-6. Configure git identity if needed.
+1. Audit representative preview/PDF print quality across ready worksheet families.
+2. Polish only high-impact Browse/detail copy or metadata discovered by QA.
+3. Keep graph visual support deferred until a focused `bar_graph` implementation plan is created.
+4. Keep true addition-jump number-line work deferred until a focused generator plan is created.
+5. Keep visual fraction work deferred until focused visual support is planned.
+6. Keep planned/deferred `pattern_word_problems` entries out of launch-facing scope until implemented.
+7. Review Grade 6 pattern naming/remapping if needed.
+8. Configure git identity if needed.
 
 ---
 
