@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
   <title>Unit Generator — Project Yellow Bird</title>
   <link rel="stylesheet" href="/styles/site.css"/>
   <style>
@@ -11,6 +12,7 @@
     .grid4 > div { min-width: 0; }
     .actions { display:flex; gap: 10px; flex-wrap: wrap; align-items: center; }
     .wsGrid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+    .internal-banner { border: 1px solid #f4d35e; background: #fff9db; color: #5f4b00; border-radius: 8px; padding: 12px 14px; margin-bottom: 18px; font-size: 14px; font-weight: 600; }
     @media (max-width: 900px){
       .grid4 { grid-template-columns: 1fr 1fr; }
       .wsGrid { grid-template-columns: 1fr; }
@@ -32,6 +34,9 @@
   </div>
 
   <div class="container">
+    <div class="internal-banner">
+      Beta/internal tool. This unit generator remains available by direct URL for testing and is not part of the primary public launch flow.
+    </div>
     <h1 class="h1">Unit Generator</h1>
     <p class="lede">Generate a unit, then download worksheets individually or as one pack.</p>
 
@@ -107,7 +112,6 @@
 
       <div class="actions">
         <button class="btn" id="openAllBtn">Open All (tabs)</button>
-        <a class="btn mini" href="/curriculum">Try Curriculum</a>
       </div>
     </div>
   </div>

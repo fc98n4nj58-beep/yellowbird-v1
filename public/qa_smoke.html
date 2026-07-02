@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="robots" content="noindex,nofollow"/>
   <title>QA Smoke — Project Yellow Bird</title>
   <link rel="stylesheet" href="/styles/site.css"/>
   <style>
@@ -18,6 +19,7 @@
     .bad { color: #d1242f; font-weight:700; }
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size: 12px; }
     .banner { display:none; padding: 10px 12px; border-radius: 12px; border:1px solid #ffd7d7; background:#fff1f1; color:#7a1f1f; margin-bottom: 12px; }
+    .internal-banner { border: 1px solid #f4d35e; background: #fff9db; color: #5f4b00; border-radius: 8px; padding: 12px 14px; margin-bottom: 18px; font-size: 14px; font-weight: 600; }
   </style>
 </head>
 <body>
@@ -26,14 +28,17 @@
       <a class="brand" href="/"><span class="dot"></span> Project Yellow Bird</a>
       <nav class="nav">
         <a href="/browse">Browse Library</a>
-        <a href="/curriculum">Curriculum</a>
-        <a href="/worksheet">Worksheet Generator</a>
-        <a href="/units">Unit Generator</a>
+        <a href="/faq">FAQ</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
       </nav>
     </div>
   </div>
 
   <div class="wrap">
+    <div class="internal-banner">
+      Internal QA surface. This smoke test page is direct-URL only and not part of the public launch flow.
+    </div>
     <h1 style="margin:0 0 6px 0;">QA Smoke</h1>
     <div style="opacity:.8;margin-bottom:14px;">Runs 3 smoke calls (worksheet, unit, curriculum expectation) and reports status, time, and size.</div>
 
