@@ -802,6 +802,7 @@ Status:
 
 * Milestone 4 has started
 * Task 1 public route/navigation launch polish is complete
+* Task 2 internal/debug surface audit and treatment is complete
 
 Task 1A completed:
 
@@ -833,6 +834,37 @@ Task 1C completed:
 * Remaining launch-nav concern:
   * `/units` still has an internal secondary "Try Curriculum" link, but it is not in primary nav
 * Commit: `a838a9a feat: simplify public launch navigation`
+
+Task 2 completed:
+
+* Internal/debug surface audit completed
+* Task 2A internal/beta/noindex treatment completed
+* Direct-only/internal pages now show internal/beta/QA treatment:
+  * `/worksheet-catalog.html`
+  * `/generated-worksheets.html`
+  * `/curriculum`
+  * `/worksheet`
+  * `/units`
+  * `/qa/smoke`
+  * `/expectation.html`
+* `noindex,nofollow` added to appropriate internal/beta static pages
+* `/qa/smoke` no longer links to `/curriculum`, `/worksheet`, or `/units`
+* `/units` no longer promotes the secondary "Try Curriculum" link
+* Empty `/expectation.html` was replaced with an intentional internal placeholder
+* Launch-facing pages were left untouched:
+  * `/`
+  * `/browse`
+  * `/faq`
+  * `/about`
+  * `/contact`
+  * Resource detail pages
+  * Catalog preview
+  * PDFs
+* Launch nav remains Browse Library, FAQ, About, Contact
+* Ready / launch-facing worksheets remain 46 / 46 working, 0 failures
+* Remaining future production decision:
+  * Decide later whether any direct-only internal/beta URLs should be guarded or 404'd in production
+* Commit: `68ec8f2 chore: mark internal surfaces as beta`
 
 ## Next Fix Targets
 
