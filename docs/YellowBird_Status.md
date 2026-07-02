@@ -529,6 +529,25 @@ Task 4 completed:
 * Graph/data duplicate prompts remain intentionally deferred with graph / `bar_graph` support because those generators have tiny fixed prompt pools
 * Commit: `a691316 fix: reduce duplicate skip counting and fact family prompts`
 
+Task 5 completed:
+
+* Full 46-item ready worksheet QA re-audit completed
+* All 46 ready worksheets generate successfully
+* All 46 PDFs render successfully
+* Prior seven semantic range/content blockers are resolved
+* Prior three answer-key overlap blockers are resolved
+* Remaining blockers: none
+* Milestone 3 is closeable from this QA pass
+* Ready / launch-facing worksheets remain 46 / 46 working, 0 failures
+* Safe deferrals:
+  * Graph/data duplicate prompt pools remain deferred until graph / `bar_graph` support
+  * Minor duplicate practice items in small-pool worksheets can be improved later
+  * Text-only Kindergarten compare sets can be improved later with true visual set support
+  * Graph/data worksheets remain intentionally text-based/data interpretation until visual graph support ships
+* Recommended next step: final manual browser spot QA, then formally close Milestone 3 if it passes
+* Commit: `3e7f320 fix: align catalog ranges for ready worksheets`
+* Commit: `57715f6 fix: prevent answer key overlap`
+
 ---
 
 ## Files Reviewed
