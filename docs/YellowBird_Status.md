@@ -803,6 +803,7 @@ Status:
 * Milestone 4 has started
 * Task 1 public route/navigation launch polish is complete
 * Task 2 internal/debug surface audit and treatment is complete
+* Task 3 mobile/responsive/accessibility spot QA and small polish is complete
 
 Task 1A completed:
 
@@ -865,6 +866,32 @@ Task 2 completed:
 * Remaining future production decision:
   * Decide later whether any direct-only internal/beta URLs should be guarded or 404'd in production
 * Commit: `68ec8f2 chore: mark internal surfaces as beta`
+
+Task 3 completed:
+
+* Mobile/responsive/accessibility spot QA completed
+* No mobile/accessibility launch blockers found
+* Launch-facing pages checked:
+  * `/`
+  * `/browse`
+  * `/resource/worksheet/g1_addition_facts_within_20`
+  * `/catalog-preview.html?id=g1_addition_facts_within_20`
+  * `/faq`
+  * `/about`
+  * `/contact`
+* Task 3A small accessibility polish complete:
+  * Semantic headings improved on FAQ/About/Contact
+  * Browse now has a keyboard skip link to results
+  * Browse results target is valid and keyboard reachable
+  * Catalog preview action buttons have explicit focus-visible styling
+* Launch nav remains Browse Library, FAQ, About, Contact
+* Ready / launch-facing worksheets remain 46 / 46 working, 0 failures
+* Safe deferrals:
+  * Compact mobile nav treatment later
+  * Deeper Browse keyboard ergonomics later
+  * Preview JSON button polish later if desired
+  * Contact copy polish later
+* Commit: `34f995f feat: improve launch accessibility basics`
 
 ## Next Fix Targets
 
