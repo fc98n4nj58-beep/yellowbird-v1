@@ -258,10 +258,9 @@ function renderResourceDetailPage(resource, relatedResources = []) {
       <a class="brand" href="/"><span class="dot"></span> Project Yellow Bird</a>
       <nav class="nav">
         <a href="/browse">Browse Library</a>
-        <a href="/curriculum">Curriculum</a>
-        <a href="/worksheet">Worksheet Generator</a>
-        <a href="/units">Unit Generator</a>
         <a href="/faq">FAQ</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
       </nav>
     </div>
   </div>
@@ -396,10 +395,9 @@ function renderWorksheetDetailPage(item) {
       <a class="brand" href="/"><span class="dot"></span> Project Yellow Bird</a>
       <nav class="nav">
         <a href="/browse">Browse Library</a>
-        <a href="/curriculum">Curriculum</a>
-        <a href="/worksheet">Worksheet Generator</a>
-        <a href="/units">Unit Generator</a>
         <a href="/faq">FAQ</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
       </nav>
     </div>
   </div>
