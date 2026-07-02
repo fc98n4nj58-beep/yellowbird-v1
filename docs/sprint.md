@@ -4,20 +4,16 @@ Goal:
 Make the existing 46 ready worksheets feel trustworthy, findable, printable, and teacher-facing for September launch.
 
 Current Milestone:
-Milestone 3 — Launch Catalog Experience is closed
+Milestone 4 — Launch Readiness / Final Public Site QA
 
 Milestone Goal:
-Polish the launch-facing catalog experience without expanding the catalog, changing generator logic, or redesigning the homepage.
+Finish final public site QA and launch-readiness polish without expanding the catalog, redesigning the homepage, or starting content excellence.
 
 Active Tasks:
 
-[x] Polish public catalog labels and graph/data wording
+[x] Public route/navigation launch polish
 
-[x] Audit representative preview/PDF print quality across ready worksheet families
-
-[x] Close Milestone 3 after final manual browser spot QA
-
-[ ] Polish only high-impact Browse/detail copy or metadata discovered by future QA
+[ ] Final public site route and browser spot QA
 
 [ ] Review Grade 6 pattern naming/remapping if needed
 
@@ -520,3 +516,34 @@ Future Phase:
   - Catalog/display improvements
   - Content voice and brand
   - Product differentiation
+
+---
+
+## Milestone 4 — Launch Readiness / Final Public Site QA
+
+[x] Task 1A: Public info route polish
+- `/faq` serves the real FAQ page
+- `/about` serves the About page
+- `/contact` serves the Contact page
+- Commit: `6e6551c feat: add public info routes`
+
+[x] Task 1B: Launch nav QA
+- Launch nav QA complete
+- `/browse` confirmed as the safest launch-facing primary destination
+- `/faq`, `/about`, and `/contact` confirmed route-safe after Task 1A
+- `/curriculum`, `/worksheet`, and `/units` identified as direct-URL surfaces that should not be primary launch nav yet
+
+[x] Task 1C: Public nav launch polish
+- Public nav launch polish complete
+- Primary launch nav now promotes:
+  - Browse Library
+  - FAQ
+  - About
+  - Contact
+- `/curriculum`, `/worksheet`, and `/units` remain reachable by direct URL but are no longer primary launch nav
+- Browse quick links to `/curriculum` and `/worksheet` were removed
+- Browse -> Detail -> Preview -> PDF remains stable
+- Ready / launch-facing worksheets remain 46 / 46 working, 0 failures
+- Remaining launch-nav concern:
+  - `/units` still has an internal secondary "Try Curriculum" link, but it is not in primary nav
+- Commit: `a838a9a feat: simplify public launch navigation`

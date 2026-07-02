@@ -8,6 +8,8 @@ Milestone 2 created one stable publishing engine where a worksheet is generated 
 
 Milestone 3 — Launch Catalog Experience is closed.
 
+Milestone 4 — Launch Readiness / Final Public Site QA is underway.
+
 Milestone 3 completed goal:
 
 Make the existing 46 ready worksheets feel trustworthy, findable, printable, and teacher-facing for September launch.
@@ -37,6 +39,13 @@ Current public path:
 * `/resource/worksheet/:id`
 * `/catalog-preview.html?id={id}`
 * `/api/catalog-pdf/{id}?disposition=inline`
+
+Current primary launch navigation:
+
+* Browse Library
+* FAQ
+* About
+* Contact
 
 ## Current Architecture Direction
 
@@ -767,24 +776,63 @@ Do not change `pdfRenderer` to compensate for incorrect generator or catalog out
 
 ## Current High Priority
 
-Post-Milestone 3 follow-ups and future content excellence.
+Milestone 4 launch readiness and final public site QA.
 
 Known issues / next targets:
 
-1. Keep graph visual support deferred until a focused `bar_graph` implementation plan is created.
-2. Improve duplicate prompt variation where it affects teacher trust.
-3. Keep true addition-jump number-line work deferred until a focused generator plan is created.
-4. Keep visual fraction work deferred until focused visual support is planned.
-5. Keep planned/deferred `pattern_word_problems` entries out of launch-facing scope until implemented.
-6. Run full 46-item print QA later after representative fixes.
-7. Review Grade 6 pattern naming/remapping if needed.
-8. Configure git identity if needed.
+1. Continue final public site QA around Home, Browse, Detail, Preview, PDF, FAQ, About, and Contact.
+2. Keep `/curriculum`, `/worksheet`, and `/units` reachable by direct URL but out of primary launch navigation.
+3. Resolve only launch-readiness blockers before moving into Content Excellence / Product Differentiation.
+4. Keep graph visual support deferred until a focused `bar_graph` implementation plan is created.
+5. Keep true addition-jump number-line work deferred until a focused generator plan is created.
+6. Keep visual fraction work deferred until focused visual support is planned.
+7. Keep planned/deferred `pattern_word_problems` entries out of launch-facing scope until implemented.
+8. Review Grade 6 pattern naming/remapping if needed.
+9. Configure git identity if needed.
 
 Future mode after launch readiness:
 
 Content Excellence / Product Differentiation Pass should focus on worksheet quality, pedagogy/scaffolding, differentiation, visual and print presentation, teacher-facing value, catalog/display improvements, content voice/brand, and product differentiation. This is a future direction, not a current blocker.
 
 ---
+
+## Milestone 4 — Launch Readiness / Final Public Site QA
+
+Status:
+
+* Milestone 4 has started
+* Task 1 public route/navigation launch polish is complete
+
+Task 1A completed:
+
+* Public info route polish complete
+* `/faq` serves the real FAQ page
+* `/about` serves the About page
+* `/contact` serves the Contact page
+* Commit: `6e6551c feat: add public info routes`
+
+Task 1B completed:
+
+* Launch nav QA complete
+* `/browse` confirmed as the safest launch-facing primary destination
+* `/faq`, `/about`, and `/contact` confirmed route-safe after Task 1A
+* `/curriculum`, `/worksheet`, and `/units` identified as direct-URL surfaces that should not be primary launch nav yet
+
+Task 1C completed:
+
+* Public nav launch polish complete
+* Primary launch nav now promotes:
+  * Browse Library
+  * FAQ
+  * About
+  * Contact
+* `/curriculum`, `/worksheet`, and `/units` remain reachable by direct URL but are no longer primary launch nav
+* Browse quick links to `/curriculum` and `/worksheet` were removed
+* Browse -> Detail -> Preview -> PDF remains stable
+* Ready / launch-facing worksheets remain 46 / 46 working, 0 failures
+* Remaining launch-nav concern:
+  * `/units` still has an internal secondary "Try Curriculum" link, but it is not in primary nav
+* Commit: `a838a9a feat: simplify public launch navigation`
 
 ## Next Fix Targets
 
