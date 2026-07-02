@@ -68,18 +68,9 @@ app.get("/curriculum", (req, res) => res.sendFile(__dirname + "/public/curriculu
 // QA smoke page (NEW)
 app.get("/qa/smoke", (req, res) => res.sendFile(__dirname + "/public/qa_smoke.html"));
 
-// FAQ placeholder (safe)
-app.get("/faq", (req, res) => {
-  res.status(200).send(`
-    <html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <title>FAQ — Project Yellow Bird</title></head>
-    <body style="font-family: system-ui,-apple-system,Segoe UI,Arial;padding:40px;max-width:900px;margin:0 auto;">
-      <h1>FAQ</h1>
-      <p>This page is a placeholder. Add <code>public/faq.html</code> when ready.</p>
-      <p><a href="/browse">Back to Browse</a></p>
-    </body></html>
-  `);
-});
+app.get("/faq", (req, res) => res.sendFile(__dirname + "/public/faq.html"));
+app.get("/about", (req, res) => res.sendFile(__dirname + "/public/about.html"));
+app.get("/contact", (req, res) => res.sendFile(__dirname + "/public/contact.html"));
 
 /* =========================
    LIBRARY API (Phase 1 scaffolding)
