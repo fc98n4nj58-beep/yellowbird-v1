@@ -6,6 +6,7 @@ function generateCompareNumbersProblem(options = {}) {
   const random = options.random || Math.random;
   const min = Number.isFinite(options.minA) ? options.minA : 0;
   const max = Number.isFinite(options.maxA) ? options.maxA : 999;
+  const promptType = String(options.promptType || "").toLowerCase();
 
   const a = randInt(min, max, random);
   const b = randInt(min, max, random);
@@ -15,7 +16,9 @@ function generateCompareNumbersProblem(options = {}) {
   if (a < b) answer = "<";
 
   return {
-    prompt: `Compare the numbers: ${a} __ ${b}`,
+    prompt: promptType === "sets"
+      ? `Compare the sets: ${a} __ ${b}`
+      : `Compare the numbers: ${a} __ ${b}`,
     answer
   };
 }

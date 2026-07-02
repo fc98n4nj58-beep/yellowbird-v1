@@ -368,7 +368,10 @@
         "B2"
       ],
       "description": "Students fill in the missing addend in basic equations.",
-      "sourceType": "curated"
+      "sourceType": "curated",
+      "generatorOptions": {
+        "maxTotal": 20
+      }
     },
     {
       "id": "grade1_addition_subtraction_facts_related_subtraction",
@@ -1175,7 +1178,11 @@
         "B1"
       ],
       "description": "Students compare numbers and insert the correct symbol.",
-      "sourceType": "curated"
+      "sourceType": "curated",
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 20
+      }
     },
     {
       "id": "grade1_place_value_representation_expanded_form",
@@ -1343,7 +1350,11 @@
         "B1"
       ],
       "description": "Students match numerals and number words.",
-      "sourceType": "curated"
+      "sourceType": "curated",
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 50
+      }
     },
     {
       "id": "grade1_place_value_representation_standard_form",
@@ -2901,7 +2912,11 @@
         "B1"
       ],
       "description": "Students compare two-digit numbers using symbols and reasoning.",
-      "sourceType": "curated"
+      "sourceType": "curated",
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 100
+      }
     },
     {
       "id": "grade2_place_value_representation_expanded_form",
@@ -3099,7 +3114,11 @@
         "B1"
       ],
       "description": "Students convert representations into standard form.",
-      "sourceType": "curated"
+      "sourceType": "curated",
+      "generatorOptions": {
+        "minA": 10,
+        "maxA": 100
+      }
     },
     {
       "id": "grade3_addition_subtraction_word_problems_addition_word_problem",
@@ -9449,7 +9468,12 @@
         "B1"
       ],
       "description": "Students compare quantities and identify which set has more, less, or the same.",
-      "sourceType": "curated"
+      "sourceType": "curated",
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 10,
+        "promptType": "sets"
+      }
     },
     {
       "id": "k_counting_collections_to_10",
@@ -9742,7 +9766,11 @@
         "B1"
       ],
       "description": "Students match numerals to number words.",
-      "sourceType": "curated"
+      "sourceType": "curated",
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 10
+      }
     },
     {
       "id": "k_numbers_on_number_line_to_10",
