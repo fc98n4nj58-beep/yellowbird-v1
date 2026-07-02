@@ -401,7 +401,7 @@ Post-Close Follow-Ups:
   - `k_ten_frame_counting_to_10`
 - Remaining follow-ups:
   - Graph visuals / `bar_graph` support remains deferred
-  - Duplicate fact-family variation can be improved later
+  - Duplicate prompt variation can be improved later
   - Full 46-item manual print QA can happen after representative fixes
 - Commit: `480dfb7 fix: prevent text-heavy worksheet prompt overlap`
 - Commit: `ba55d90 fix: align catalog worksheet semantics`
@@ -428,3 +428,20 @@ Post-Close Follow-Ups:
   - Graph visuals / `bar_graph` support remains deferred
   - Full 46-item print QA later
 - Commit: `e869f1b fix: point preview back link to browse`
+
+[x] Task 4: Duplicate prompt audit and first suppression pass
+- Duplicate prompt audit completed
+- Duplicate prompt issue was confirmed as a minor teacher-trust issue, not a Milestone 3 blocker
+- Skip counting duplicate suppression is complete
+- Fact family duplicate suppression is complete
+- Same-seed deterministic behavior was preserved
+- Generator output shape was preserved
+- Ready / launch-facing worksheets remain 46 / 46 working, 0 failures
+- Multi-seed checks passed for:
+  - `g2_skip_counting_by_2`
+  - `g2_skip_counting_by_5`
+  - `g2_skip_counting_by_10`
+  - `g1_fact_families_within_20`
+  - `g3_fact_families_multiplication_division`
+- Graph/data duplicate prompts remain intentionally deferred with graph / `bar_graph` support because those generators have tiny fixed prompt pools
+- Commit: `a691316 fix: reduce duplicate skip counting and fact family prompts`
