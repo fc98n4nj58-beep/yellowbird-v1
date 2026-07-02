@@ -13,7 +13,7 @@ Active Tasks:
 
 [x] Polish public catalog labels and graph/data wording
 
-[ ] Audit representative preview/PDF print quality across ready worksheet families
+[x] Audit representative preview/PDF print quality across ready worksheet families
 
 [ ] Polish only high-impact Browse/detail copy or metadata discovered by QA
 
@@ -379,3 +379,29 @@ Post-Close Follow-Ups:
 - Manual browser QA passed for `/resource/worksheet/g2_expanded_form_to_100`
 - Manual browser QA passed for `/resource/worksheet/g3_fact_families_multiplication_division`
 - Commit: `50fa561 feat: polish launch catalog labels`
+
+[x] Task 2: Representative preview/PDF print-trust QA and fixes
+- Representative worksheet print/preview QA found real print-trust blockers in text-heavy worksheets
+- Main print blockers were long all-text prompts overlapping in rendered PDFs
+- Text-heavy prompt overlap has been fixed
+- Long all-text prompt worksheets now use safer layout behavior
+- Visual-model worksheets remained healthy
+- `g2_expanded_form_to_100` now matches its "to 100" title/range
+- `g3_fact_families_multiplication_division` now generates multiplication/division fact families
+- Ready / launch-facing worksheets remain 46 / 46 working, 0 failures
+- Representative rendered PDF checks passed for:
+  - `g1_addition_word_problems`
+  - `g2_skip_counting_by_2`
+  - `g3_read_a_graph`
+  - `g5_interpret_graphs`
+  - `g6_graph_interpretation`
+  - `g3_fact_families_multiplication_division`
+  - `g2_expanded_form_to_100`
+  - `g3_multiplication_arrays`
+  - `k_ten_frame_counting_to_10`
+- Remaining follow-ups:
+  - Graph visuals / `bar_graph` support remains deferred
+  - Duplicate fact-family variation can be improved later
+  - Full 46-item manual print QA can happen after representative fixes
+- Commit: `480dfb7 fix: prevent text-heavy worksheet prompt overlap`
+- Commit: `ba55d90 fix: align catalog worksheet semantics`
