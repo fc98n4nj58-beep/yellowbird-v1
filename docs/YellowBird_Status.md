@@ -487,6 +487,30 @@ Task 2 completed:
 * Commit: `480dfb7 fix: prevent text-heavy worksheet prompt overlap`
 * Commit: `ba55d90 fix: align catalog worksheet semantics`
 
+Task 3 completed:
+
+* Post-fix Browse -> Detail -> Preview/PDF trust QA passed with minor issues
+* Checked representative flow:
+  * `/browse`
+  * `/resource/worksheet/g1_addition_word_problems`
+  * `/resource/worksheet/g2_skip_counting_by_2`
+  * `/resource/worksheet/g2_expanded_form_to_100`
+  * `/resource/worksheet/g3_read_a_graph`
+  * `/resource/worksheet/g3_fact_families_multiplication_division`
+  * `/resource/worksheet/g5_interpret_graphs`
+  * `/resource/worksheet/k_ten_frame_counting_to_10`
+  * `/resource/worksheet/g3_multiplication_arrays`
+* No prompt-overlap blockers remained in checked samples
+* Public labels feel teacher-facing
+* Graph/data wording remains honest/text-based until visual graph support ships
+* Preview page now links back to `/browse` with "Back to Browse" instead of internal catalog wording
+* Ready / launch-facing worksheets remain 46 / 46 working, 0 failures
+* Remaining minor polish:
+  * Duplicate prompt variation
+  * Graph visuals / `bar_graph` support remains deferred
+  * Full 46-item print QA later
+* Commit: `e869f1b fix: point preview back link to browse`
+
 ---
 
 ## Files Reviewed
@@ -664,13 +688,14 @@ Milestone 3 launch catalog experience.
 
 Known issues / next targets:
 
-1. Polish only high-impact Browse/detail copy or metadata discovered by QA.
-2. Keep graph visual support deferred until a focused `bar_graph` implementation plan is created.
+1. Keep graph visual support deferred until a focused `bar_graph` implementation plan is created.
+2. Improve duplicate prompt variation where it affects teacher trust.
 3. Keep true addition-jump number-line work deferred until a focused generator plan is created.
 4. Keep visual fraction work deferred until focused visual support is planned.
 5. Keep planned/deferred `pattern_word_problems` entries out of launch-facing scope until implemented.
-6. Review Grade 6 pattern naming/remapping if needed.
-7. Configure git identity if needed.
+6. Run full 46-item print QA later after representative fixes.
+7. Review Grade 6 pattern naming/remapping if needed.
+8. Configure git identity if needed.
 
 ---
 

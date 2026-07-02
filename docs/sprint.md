@@ -405,3 +405,26 @@ Post-Close Follow-Ups:
   - Full 46-item manual print QA can happen after representative fixes
 - Commit: `480dfb7 fix: prevent text-heavy worksheet prompt overlap`
 - Commit: `ba55d90 fix: align catalog worksheet semantics`
+
+[x] Task 3: Post-fix Browse -> Detail -> Preview/PDF trust QA
+- Post-fix Browse -> Detail -> Preview/PDF trust QA passed with minor issues
+- Checked representative flow:
+  - `/browse`
+  - `/resource/worksheet/g1_addition_word_problems`
+  - `/resource/worksheet/g2_skip_counting_by_2`
+  - `/resource/worksheet/g2_expanded_form_to_100`
+  - `/resource/worksheet/g3_read_a_graph`
+  - `/resource/worksheet/g3_fact_families_multiplication_division`
+  - `/resource/worksheet/g5_interpret_graphs`
+  - `/resource/worksheet/k_ten_frame_counting_to_10`
+  - `/resource/worksheet/g3_multiplication_arrays`
+- No prompt-overlap blockers remained in checked samples
+- Public labels feel teacher-facing
+- Graph/data wording remains honest/text-based until visual graph support ships
+- Preview page now links back to `/browse` with "Back to Browse" instead of internal catalog wording
+- Ready / launch-facing worksheets remain 46 / 46 working, 0 failures
+- Remaining minor polish:
+  - Duplicate prompt variation
+  - Graph visuals / `bar_graph` support remains deferred
+  - Full 46-item print QA later
+- Commit: `e869f1b fix: point preview back link to browse`
