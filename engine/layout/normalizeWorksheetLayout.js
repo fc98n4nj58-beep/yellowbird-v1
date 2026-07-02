@@ -29,6 +29,19 @@ function resolveModeMapping({ modeId, skillKey }) {
   };
 }
 
+function isLongPromptTextLayout(problems = [], template) {
+  if (!Array.isArray(problems) || !problems.length) return false;
+  if (template?.visualSupport === false && template?.id !== "matching") return false;
+
+  const textOnlyProblems = problems.filter((problem) => !problem.visual);
+  if (!textOnlyProblems.length || textOnlyProblems.length !== problems.length) return false;
+
+  return textOnlyProblems.some((problem) => {
+    const prompt = safeStr(problem.prompt || problem.question || problem.text || "");
+    return prompt.length >= 58 || prompt.split(/\s+/).length >= 10;
+  });
+}
+
 function normalizeProblem(problem, index, context) {
   const prompt = safeStr(problem.prompt || problem.question || problem.text || "");
   const interactionType = context.interactionType || "write_answer";
@@ -79,12 +92,24 @@ function normalizeWorksheetLayout({
 
   const mapping = resolveModeMapping({ modeId, skillKey });
   const template = layoutTemplates[mapping.templateId] || layoutTemplates.equation_practice;
+  const useLongPromptLayout = isLongPromptTextLayout(problems, template);
+  const normalizedTemplate = useLongPromptLayout
+    ? {
+        ...template,
+        columns: 1,
+        maxProblemsPerPage: Math.min(template.maxProblemsPerPage || 8, 6),
+        spacingDensity: "spacious"
+      }
+    : {
+        ...template,
+        columns: template.defaultColumns
+      };
 
   const normalizedProblems = problems.map((problem, index) =>
     normalizeProblem(problem, index, {
       interactionType: mapping.interactionType,
       templateId: mapping.templateId,
-      template,
+      template: normalizedTemplate,
       gradeBand,
       gradeSpacing,
       skillKey
@@ -105,10 +130,7 @@ function normalizeWorksheetLayout({
       nameDate: true
     },
     instruction: safeStr(instruction) || mapping.instruction,
-    template: {
-      ...template,
-      columns: template.defaultColumns
-    },
+    template: normalizedTemplate,
     styles: worksheetStyles,
     gradeBand,
     gradeSpacing,

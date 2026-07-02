@@ -631,7 +631,9 @@ if (!hasInlineAnswerBlank) {
     doc.restore();
   }
 
-  return height;
+  return visual?.kind
+    ? height
+    : Math.max(promptHeight, layout.typography.body?.lineHeight || 16);
 }
 
 function renderVisualByKind(doc, visual, placed, measured) {
@@ -944,7 +946,10 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
 
   const hasVisuals = allItems.some((item) => item.visual);
   const cols = hasVisuals ? 2 : clampCols(layoutObject?.template?.columns || options.cols);
-  const questionsPerColumn = hasVisuals ? 5 : MAX_PER_COLUMN;
+  const layoutMaxProblemsPerPage = Number(layoutObject?.template?.maxProblemsPerPage || 0);
+  const questionsPerColumn = hasVisuals
+    ? 5
+    : Math.max(1, Math.ceil((layoutMaxProblemsPerPage || MAX_PER_COLUMN) / cols));
   const itemGap = hasVisuals ? 0 : 18;
 
   const { colW, xForCol } = getColumns(cols);
@@ -964,7 +969,9 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
   setFont(doc, fonts.regular, bodyStyle.size);
   doc.fillColor(pdfDesignTokens.colors.text);
 
-  const maxPerPage = cols * questionsPerColumn;
+  const maxPerPage = hasVisuals
+    ? cols * questionsPerColumn
+    : Math.max(1, layoutMaxProblemsPerPage || cols * questionsPerColumn);
   const pages = paginateEven(allItems, maxPerPage);
 
   pages.forEach((pageItems, pageIndex) => {
