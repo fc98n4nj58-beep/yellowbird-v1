@@ -2957,6 +2957,10 @@
       "difficulty": "easy",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
+      "generatorOptions": {
+        "minA": 10,
+        "maxA": 100
+      },
       "tags": [
         "expanded form",
         "to 100",
@@ -4152,6 +4156,13 @@
       "difficulty": "medium",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
+      "generatorOptions": {
+        "operation": "multiplication_division",
+        "minA": 1,
+        "maxA": 10,
+        "minB": 1,
+        "maxB": 10
+      },
       "tags": [
         "fact families",
         "multiplication",

@@ -35,6 +35,7 @@ const grade2Catalog = [
     difficulty: "easy",
     estimatedTimeMinutes: 10,
     hasAnswerKey: true,
+    generatorOptions: { minA: 10, maxA: 100 },
     tags: ["expanded form", "to 100", "grade 2"],
     curriculumTags: ["B1"],
     description: "Students write numbers in expanded form."

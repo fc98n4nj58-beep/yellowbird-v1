@@ -95,6 +95,13 @@ const grade3Catalog = [
     difficulty: "medium",
     estimatedTimeMinutes: 10,
     hasAnswerKey: true,
+    generatorOptions: {
+      operation: "multiplication_division",
+      minA: 1,
+      maxA: 10,
+      minB: 1,
+      maxB: 10
+    },
     tags: ["fact families", "multiplication", "division", "grade 3"],
     curriculumTags: ["B2"],
     description: "Students connect related multiplication and division facts."
