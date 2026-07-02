@@ -105,6 +105,26 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.skip-link {
+  position: absolute;
+  left: var(--md);
+  top: var(--md);
+  z-index: 100;
+  transform: translateY(-160%);
+  background: var(--yb-text);
+  color: #fff;
+  border-radius: var(--r10);
+  padding: 10px 14px;
+  font-weight: 700;
+  box-shadow: var(--focusRing);
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  outline: none;
+  transform: translateY(0);
+}
+
 a {
   color: inherit;
   text-decoration: none;
