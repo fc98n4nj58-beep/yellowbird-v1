@@ -2,15 +2,23 @@
 
 ## Current Status
 
-Project Yellow Bird has closed Milestone 2 — Publishing Engine.
+Project Yellow Bird has closed Milestone 2 — Publishing Engine and Milestone 3 — Launch Catalog Experience.
 
 Milestone 2 created one stable publishing engine where a worksheet is generated once, transformed into multiple outputs, and rendered consistently.
 
-Milestone 3 — Launch Catalog Experience is now underway.
+Milestone 3 — Launch Catalog Experience is closed.
 
-Current Milestone 3 goal:
+Milestone 3 completed goal:
 
 Make the existing 46 ready worksheets feel trustworthy, findable, printable, and teacher-facing for September launch.
+
+Ready / launch-facing worksheets remain 46 / 46 working, 0 failures.
+
+Future phase after launch readiness:
+
+Content Excellence / Product Differentiation Pass.
+
+This phase begins only after core launch readiness reaches 100%, or if it is explicitly chosen. It should not distract from current launch-readiness work. Its purpose is to shift from stability/QA mode into a deeper quality and differentiation pass so Yellow Bird feels meaningfully better than a basic worksheet generator or generic resource catalog.
 
 The project has moved significantly away from duplicate worksheet creation paths. The catalog worksheet flow now uses a shared runtime, and preview/PDF parity has been established for the catalog workflow.
 
@@ -433,7 +441,7 @@ Remaining follow-ups:
 
 Status:
 
-* Milestone 3 has started
+* Milestone 3 is closed
 * Scope is the launch-facing catalog experience for the existing 46 ready worksheets
 * Do not expand the catalog in this milestone unless explicitly planned
 * Do not work on generator follow-ups inside catalog polish tasks
@@ -547,6 +555,44 @@ Task 5 completed:
 * Recommended next step: final manual browser spot QA, then formally close Milestone 3 if it passes
 * Commit: `3e7f320 fix: align catalog ranges for ready worksheets`
 * Commit: `57715f6 fix: prevent answer key overlap`
+
+Milestone 3 closeout:
+
+* Milestone 3 — Launch Catalog Experience is closed
+* Final manual browser spot QA passed
+* Checked:
+  * `/browse`
+  * `/resource/worksheet/g1_missing_addends_within_20`
+  * `/resource/worksheet/g2_standard_form_to_100`
+  * `/resource/worksheet/k_compare_sets`
+  * `/resource/worksheet/g3_multiplication_facts`
+  * `/resource/worksheet/g5_multiplication_fact_review`
+  * `/resource/worksheet/g3_read_a_graph`
+  * `/resource/worksheet/k_ten_frame_counting_to_10`
+* Pages work
+* Details load
+* Preview opens
+* PDF opens
+* No obvious overlap/clipping
+* Answer keys are readable
+* Labels feel teacher-facing
+* Graph/data wording does not overpromise visuals
+* Preview back link returns to Browse
+* Browse -> Detail -> Preview -> PDF flow remains stable
+* Ready / launch-facing worksheets remain 46 / 46 working, 0 failures
+* Task 1 label/catalog polish complete
+* Task 2 print-trust fixes complete
+* Task 3 post-fix trust QA complete
+* Task 4 duplicate prompt polish complete
+* Task 5 full ready worksheet QA complete
+* Remaining safe deferrals:
+  * Graph / `bar_graph` visual support
+  * Graph/data duplicate prompt pools
+  * Minor duplicate practice items in small-pool worksheets
+  * True visual Kindergarten compare sets
+  * Future content excellence review after launch readiness reaches 100%
+* Future direction: after core launch readiness reaches 100%, do a deeper content review / product excellence pass to push worksheet quality, pedagogy, display, and content presentation beyond basic launch stability
+* Future phase name: Content Excellence / Product Differentiation Pass
 
 ---
 
@@ -721,7 +767,7 @@ Do not change `pdfRenderer` to compensate for incorrect generator or catalog out
 
 ## Current High Priority
 
-Milestone 3 launch catalog experience.
+Post-Milestone 3 follow-ups and future content excellence.
 
 Known issues / next targets:
 
@@ -733,6 +779,10 @@ Known issues / next targets:
 6. Run full 46-item print QA later after representative fixes.
 7. Review Grade 6 pattern naming/remapping if needed.
 8. Configure git identity if needed.
+
+Future mode after launch readiness:
+
+Content Excellence / Product Differentiation Pass should focus on worksheet quality, pedagogy/scaffolding, differentiation, visual and print presentation, teacher-facing value, catalog/display improvements, content voice/brand, and product differentiation. This is a future direction, not a current blocker.
 
 ---
 

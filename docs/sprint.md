@@ -4,7 +4,7 @@ Goal:
 Make the existing 46 ready worksheets feel trustworthy, findable, printable, and teacher-facing for September launch.
 
 Current Milestone:
-Milestone 3 — Launch Catalog Experience
+Milestone 3 — Launch Catalog Experience is closed
 
 Milestone Goal:
 Polish the launch-facing catalog experience without expanding the catalog, changing generator logic, or redesigning the homepage.
@@ -15,7 +15,9 @@ Active Tasks:
 
 [x] Audit representative preview/PDF print quality across ready worksheet families
 
-[ ] Polish only high-impact Browse/detail copy or metadata discovered by QA
+[x] Close Milestone 3 after final manual browser spot QA
+
+[ ] Polish only high-impact Browse/detail copy or metadata discovered by future QA
 
 [ ] Review Grade 6 pattern naming/remapping if needed
 
@@ -30,6 +32,8 @@ Backlog / Deferred:
 [ ] Plan visual fraction support
 
 [ ] Implement planned/deferred `pattern_word_problems`
+
+[ ] Future phase: Content Excellence / Product Differentiation Pass after core launch readiness reaches 100%
 
 Rules:
 
@@ -463,3 +467,56 @@ Post-Close Follow-Ups:
 - Recommended next step: final manual browser spot QA, then formally close Milestone 3 if it passes
 - Commit: `3e7f320 fix: align catalog ranges for ready worksheets`
 - Commit: `57715f6 fix: prevent answer key overlap`
+
+[x] Close Milestone 3 — Launch Catalog Experience
+- Milestone 3 — Launch Catalog Experience is closed
+- Final manual browser spot QA passed
+- Checked:
+  - `/browse`
+  - `/resource/worksheet/g1_missing_addends_within_20`
+  - `/resource/worksheet/g2_standard_form_to_100`
+  - `/resource/worksheet/k_compare_sets`
+  - `/resource/worksheet/g3_multiplication_facts`
+  - `/resource/worksheet/g5_multiplication_fact_review`
+  - `/resource/worksheet/g3_read_a_graph`
+  - `/resource/worksheet/k_ten_frame_counting_to_10`
+- Pages work
+- Details load
+- Preview opens
+- PDF opens
+- No obvious overlap/clipping
+- Answer keys are readable
+- Labels feel teacher-facing
+- Graph/data wording does not overpromise visuals
+- Preview back link returns to Browse
+- Browse -> Detail -> Preview -> PDF flow remains stable
+- Ready / launch-facing worksheets remain 46 / 46 working, 0 failures
+- Task 1 label/catalog polish complete
+- Task 2 print-trust fixes complete
+- Task 3 post-fix trust QA complete
+- Task 4 duplicate prompt polish complete
+- Task 5 full ready worksheet QA complete
+- Remaining safe deferrals:
+  - Graph / `bar_graph` visual support
+  - Graph/data duplicate prompt pools
+  - Minor duplicate practice items in small-pool worksheets
+  - True visual Kindergarten compare sets
+  - Future content excellence review after launch readiness reaches 100%
+- Future direction: after core launch readiness reaches 100%, do a deeper content review / product excellence pass to push worksheet quality, pedagogy, display, and content presentation beyond basic launch stability
+
+Future Phase:
+
+[ ] Content Excellence / Product Differentiation Pass
+- Begins only after core launch readiness reaches 100%, or if explicitly chosen
+- Should not distract from current launch-readiness work
+- Purpose: shift from stability/QA mode into deeper quality and differentiation work
+- Goal: make Yellow Bird feel meaningfully better than a basic worksheet generator or generic resource catalog
+- Task areas:
+  - Worksheet quality review
+  - Pedagogy and scaffolding
+  - Differentiation
+  - Visual and print presentation
+  - Teacher-facing value
+  - Catalog/display improvements
+  - Content voice and brand
+  - Product differentiation
