@@ -1047,8 +1047,11 @@ function renderAnswerKey(doc, fonts, contentObject, options, pageState) {
   const answers = buildAnswerKeyItems(contentObject?.content?.items || []);
   if (!answers.length) return;
 
-  const cols = clampCols(options.cols);
   const bodyStyle = layout.typography.body;
+  const hasLongAnswerPrompts = answers.some((it) => promptWithoutEquals(it.prompt).length > 55);
+  const cols = hasLongAnswerPrompts
+    ? Math.min(2, clampCols(options.cols))
+    : clampCols(options.cols);
   const { colW, xForCol } = getColumns(cols);
 
   const footerRuleY = doc.page.height - layout.page.margins.bottom;
@@ -1075,22 +1078,15 @@ function renderAnswerKey(doc, fonts, contentObject, options, pageState) {
     }
 
     const columns = distributeBalanced(pageItems, cols);
-    const maxColCount = Math.max(1, ...columns.map((c) => c.length));
-    const step = computeFillStep(startY, bottomContentY, bodyStyle.lineHeight, maxColCount);
-
-    const usable = Math.max(0, (bottomContentY - startY) - bodyStyle.lineHeight);
-    const span = Math.max(0, step * (maxColCount - 1));
-    const topForCenter = startY + Math.max(0, (usable - span) / 2);
 
     renderPageColumns(
       doc,
       cols,
       columns,
-      topForCenter,
+      startY,
       bottomContentY,
       xForCol,
       colW,
-      step,
       (it, x, y, w) => {
         const id = it.id != null ? `${it.id})  ` : "";
         const left = promptWithoutEquals(it.prompt);
@@ -1103,13 +1099,20 @@ function renderAnswerKey(doc, fonts, contentObject, options, pageState) {
           if (it.op === "/") ans = it.b !== 0 ? it.a / it.b : "";
         }
 
-        doc.text(`${id}${left} = ${ans ?? ""}`, x, y, {
+        const answerText = `${id}${left} = ${ans ?? ""}`;
+        const answerHeight = doc.heightOfString(answerText, {
           width: w,
-          align: "left",
-          lineBreak: false
+          align: "left"
         });
+
+        doc.text(answerText, x, y, {
+          width: w,
+          align: "left"
+        });
+
+        return Math.max(bodyStyle.lineHeight, answerHeight);
       },
-      bodyStyle.lineHeight
+      12
     );
 
     drawFooter(doc, fonts, pageState.pageNum, meta);
