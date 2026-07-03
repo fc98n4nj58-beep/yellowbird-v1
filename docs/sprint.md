@@ -4,10 +4,10 @@ Goal:
 Make the existing 46 ready worksheets feel trustworthy, findable, printable, and teacher-facing for September launch.
 
 Current Milestone:
-Milestone 4 — Launch Readiness / Final Public Site QA
+Milestone 4 — Launch Readiness / Final Public Site QA is closed
 
 Milestone Goal:
-Finish final public site QA and launch-readiness polish without expanding the catalog, redesigning the homepage, or starting content excellence.
+Final public site QA and launch-readiness polish are complete without expanding the catalog, redesigning the homepage, or starting content excellence.
 
 Active Tasks:
 
@@ -17,11 +17,17 @@ Active Tasks:
 
 [x] Deployment/package readiness audit and deployment basics
 
-[ ] Final public site route and browser spot QA
+[x] Final launch-facing smoke QA
 
-[ ] Review Grade 6 pattern naming/remapping if needed
+[ ] Final launch packaging/checklist
 
-[ ] Configure git identity if needed
+[ ] Optional README/deployment notes
+
+[ ] Final backup branch
+
+[ ] Decide whether to push/private remote backup
+
+[ ] Final manual walkthrough
 
 Backlog / Deferred:
 
@@ -635,3 +641,59 @@ Future Phase:
 - Catalog PDF returned `application/pdf` and a valid 2-page PDF
 - Ready / launch-facing worksheets remain 46 / 46 working, 0 failures
 - Commit: `c488b47 chore: add launch deployment basics`
+
+[x] Task 5: Final launch-facing smoke QA
+- Final launch-facing smoke QA passed with no blockers
+- `git status --short` showed only expected untracked future/internal files:
+  - `engine/catalog/`
+  - `engine/visuals/index`
+  - `engine/visuals/renderVisual.js`
+  - `public/styles/images/`
+- `npm start` works with the explicit package script
+- `npm run audit:worksheets` passed
+- Ready / launch-facing worksheets remain 46 / 46 working, 0 failures
+- Launch-facing routes passed:
+  - `/`
+  - `/browse`
+  - `/faq`
+  - `/about`
+  - `/contact`
+  - `/health`
+  - `/qa/smoke`
+  - `/api/worksheet-catalog?status=ready`
+  - `/resource/worksheet/g1_addition_facts_within_20`
+  - `/catalog-preview.html?id=g1_addition_facts_within_20`
+  - `/api/catalog-pdf/g1_addition_facts_within_20?disposition=inline`
+- Catalog API returned 46 ready items
+- Catalog PDF returned valid `application/pdf`
+- Public launch nav remains:
+  - Browse Library
+  - FAQ
+  - About
+  - Contact
+- Direct-only internal/beta pages are marked `noindex,nofollow` and show internal/beta/QA messaging
+- `/qa/smoke` checks launch-facing routes only
+
+[x] Close Milestone 4 — Launch Readiness / Final Public Site QA
+- Milestone 4 — Launch Readiness / Final Public Site QA is closed
+- No launch blockers remain from final smoke QA
+- Project is now approximately 95% launch-ready
+- Completed Milestone 4 work:
+  - Task 1 public route/navigation launch polish
+  - Task 2 internal/debug surface treatment
+  - Task 3 mobile/accessibility QA and polish
+  - Task 4 deployment/package readiness
+  - Task 5 final launch-facing smoke QA
+- Safe deferrals:
+  - Future decision on guarding or 404'ing direct-only internal/beta URLs in production
+  - Graph visuals / `bar_graph` support
+  - Visual Kindergarten compare sets
+  - Graph/data prompt pools
+  - Minor duplicate practice polish
+  - Content Excellence / Product Differentiation Pass after core launch readiness reaches 100%
+- Recommended next phase before Content Excellence:
+  - Final launch packaging/checklist
+  - Optional README/deployment notes
+  - Final backup branch
+  - Decide whether to push/private remote backup
+  - Final manual walkthrough
