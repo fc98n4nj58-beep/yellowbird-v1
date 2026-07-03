@@ -40,7 +40,7 @@
       Internal QA surface. This smoke test page is direct-URL only and not part of the public launch flow.
     </div>
     <h1 style="margin:0 0 6px 0;">QA Smoke</h1>
-    <div style="opacity:.8;margin-bottom:14px;">Runs 3 smoke calls (worksheet, unit, curriculum expectation) and reports status, time, and size.</div>
+    <div style="opacity:.8;margin-bottom:14px;">Checks launch-facing pages, catalog data, resource detail, preview, and catalog PDF output.</div>
 
     <div id="banner" class="banner"><strong>Smoke test failed.</strong> One or more calls returned non-OK.</div>
 
@@ -118,20 +118,49 @@
 
     const tests = [
       {
-        name: "Worksheet PDF",
-        url: "/api/worksheet.pdf?mode=math.addition.basic&aMin=1&aMax=20&bMin=1&bMax=20&count=12&cols=2&font=11&answers=1&nonneg=1&intdiv=1",
-        binary: true
-      },
-      {
-        name: "Unit PDF",
-        // NEW: omit modeKey so server auto-selects default modeKey
-        url: "/api/unit.pdf?jurisdiction=ontario&grade=1&subject=math&numLessons=10&theme=",
-        binary: true
-      },
-      {
-        name: "Curriculum Expectation",
-        url: "/api/curriculum/expectation?id=ON-M3-N-MULT-100-DIV-100-B2.6",
+        name: "Home",
+        url: "/",
         binary: false
+      },
+      {
+        name: "Browse",
+        url: "/browse",
+        binary: false
+      },
+      {
+        name: "FAQ",
+        url: "/faq",
+        binary: false
+      },
+      {
+        name: "About",
+        url: "/about",
+        binary: false
+      },
+      {
+        name: "Contact",
+        url: "/contact",
+        binary: false
+      },
+      {
+        name: "Ready Worksheet Catalog API",
+        url: "/api/worksheet-catalog?status=ready",
+        binary: false
+      },
+      {
+        name: "Worksheet Detail",
+        url: "/resource/worksheet/g1_addition_facts_within_20",
+        binary: false
+      },
+      {
+        name: "Catalog Preview",
+        url: "/catalog-preview.html?id=g1_addition_facts_within_20",
+        binary: false
+      },
+      {
+        name: "Catalog PDF",
+        url: "/api/catalog-pdf/g1_addition_facts_within_20?disposition=inline",
+        binary: true
       }
     ];
 

@@ -52,6 +52,10 @@ app.use(worksheetPreviewRoutes);
 app.use("/", libraryRoutes);
 app.use(worksheetCatalogRoutes);
 
+app.get("/health", (req, res) => {
+  res.json({ ok: true, service: "yellowbird" });
+});
+
 /* =========================
    PAGES ROUTES
    ========================= */
