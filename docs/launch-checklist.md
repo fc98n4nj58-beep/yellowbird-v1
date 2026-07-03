@@ -9,7 +9,7 @@ Protect the work, make Yellow Bird easy to restart, prepare deployment / launch 
 - [ ] Docs reviewed
 - [x] README exists
 - [x] Launch checklist exists
-- [ ] Expected untracked files reviewed
+- [x] Expected untracked files reviewed
 - [x] Private remote backup / push strategy decided
 - [ ] Final smoke QA passed
 - [ ] Final manual walkthrough passed
@@ -65,6 +65,12 @@ These are known future/internal/placeholder materials:
 - [ ] `public/styles/images/`
 
 Leave them untracked unless explicitly choosing to promote, ignore, or remove them.
+
+Decision: leave visible as untracked for Milestone 5.
+
+Reason: these paths are known future/internal/placeholder material, not imported by active launch-facing code, and not needed for the stable public flow.
+
+Later cleanup may delete empty placeholders or decide whether to promote/delete the future visual helper files.
 
 ## Deferrals / Do Not Start
 
