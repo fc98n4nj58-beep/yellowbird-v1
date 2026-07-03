@@ -7,10 +7,10 @@ Protect the work, make Yellow Bird easy to restart, prepare deployment / launch 
 ## Final Launch Checklist
 
 - [ ] Docs reviewed
-- [ ] README exists
-- [ ] Launch checklist exists
+- [x] README exists
+- [x] Launch checklist exists
 - [ ] Expected untracked files reviewed
-- [ ] Private remote backup / push strategy decided
+- [x] Private remote backup / push strategy decided
 - [ ] Final smoke QA passed
 - [ ] Final manual walkthrough passed
 - [ ] Final backup branch created
@@ -89,3 +89,5 @@ Reviewer:
 Decision:
 
 Notes:
+
+Private GitHub remote backup completed. `main`, `backup/milestone-4-closed`, and `backup/milestone-5-task-1` have been pushed. Remote remains private.
