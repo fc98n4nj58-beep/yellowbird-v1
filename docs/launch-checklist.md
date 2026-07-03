@@ -11,8 +11,8 @@ Protect the work, make Yellow Bird easy to restart, prepare deployment / launch 
 - [x] Launch checklist exists
 - [x] Expected untracked files reviewed
 - [x] Private remote backup / push strategy decided
-- [ ] Final smoke QA passed
-- [ ] Final manual walkthrough passed
+- [x] Final smoke QA passed
+- [x] Final manual walkthrough passed
 - [ ] Final backup branch created
 - [ ] Go/no-go decision recorded
 
@@ -20,40 +20,40 @@ Protect the work, make Yellow Bird easy to restart, prepare deployment / launch 
 
 Run the app with `npm start`, then check:
 
-- [ ] `/`
-- [ ] `/browse`
-- [ ] `/faq`
-- [ ] `/about`
-- [ ] `/contact`
-- [ ] `/health`
-- [ ] `/qa/smoke`
-- [ ] `/api/worksheet-catalog?status=ready`
-- [ ] `/resource/worksheet/g1_addition_facts_within_20`
-- [ ] `/catalog-preview.html?id=g1_addition_facts_within_20`
-- [ ] `/api/catalog-pdf/g1_addition_facts_within_20?disposition=inline`
+- [x] `/`
+- [x] `/browse`
+- [x] `/faq`
+- [x] `/about`
+- [x] `/contact`
+- [x] `/health`
+- [x] `/qa/smoke`
+- [x] `/api/worksheet-catalog?status=ready`
+- [x] `/resource/worksheet/g1_addition_facts_within_20`
+- [x] `/catalog-preview.html?id=g1_addition_facts_within_20`
+- [x] `/api/catalog-pdf/g1_addition_facts_within_20?disposition=inline`
 
 Expected:
 
-- [ ] Ready worksheets remain 46 / 46 working
-- [ ] Ready failures remain 0
-- [ ] Catalog API returns 46 ready items
-- [ ] Catalog PDF returns `application/pdf`
-- [ ] Public nav remains Browse Library, FAQ, About, Contact
-- [ ] Direct-only internal/beta pages remain marked `noindex,nofollow` with internal/beta/QA messaging
+- [x] Ready worksheets remain 46 / 46 working
+- [x] Ready failures remain 0
+- [x] Catalog API returns 46 ready items
+- [x] Catalog PDF returns `application/pdf`
+- [x] Public nav remains Browse Library, FAQ, About, Contact
+- [x] Direct-only internal/beta pages remain marked `noindex,nofollow` with internal/beta/QA messaging
 
 ## Manual Walkthrough Checklist
 
-- [ ] Home loads
-- [ ] Browse loads
-- [ ] Search / filter / sort feel usable
-- [ ] Detail page loads for sample worksheet
-- [ ] Preview opens
-- [ ] PDF opens / downloads
-- [ ] FAQ loads
-- [ ] About loads
-- [ ] Contact loads
-- [ ] Mobile Browse sanity check
-- [ ] Mobile detail sanity check
+- [x] Home loads
+- [x] Browse loads
+- [x] Search / filter / sort feel usable
+- [x] Detail page loads for sample worksheet
+- [x] Preview opens
+- [x] PDF opens / downloads
+- [x] FAQ loads
+- [x] About loads
+- [x] Contact loads
+- [x] Mobile Browse sanity check
+- [x] Mobile detail sanity check
 
 ## Expected Untracked Files
 
@@ -97,3 +97,5 @@ Decision:
 Notes:
 
 Private GitHub remote backup completed. `main`, `backup/milestone-4-closed`, and `backup/milestone-5-task-1` have been pushed. Remote remains private.
+
+Final smoke QA and manual walkthrough passed. Ready launch-facing worksheets remain 46 / 46 working with 0 ready failures. Mobile browse/detail sanity passed at 390px. No blockers found.
