@@ -804,6 +804,7 @@ Status:
 * Task 1 public route/navigation launch polish is complete
 * Task 2 internal/debug surface audit and treatment is complete
 * Task 3 mobile/responsive/accessibility spot QA and small polish is complete
+* Task 4 deployment/package readiness audit and basics is complete
 
 Task 1A completed:
 
@@ -892,6 +893,36 @@ Task 3 completed:
   * Preview JSON button polish later if desired
   * Contact copy polish later
 * Commit: `34f995f feat: improve launch accessibility basics`
+
+Task 4 completed:
+
+* Deployment/package readiness audit completed
+* Task 4A deployment basics completed
+* `package.json` now has explicit:
+  * `"main": "server.js"`
+  * `"start": "node server.js"`
+* `.env` is ignored
+* `.env.example` exists with optional `PORT=3000` guidance and no secrets
+* `/health` endpoint added and returns 200 JSON
+* `/qa/smoke` now checks launch-facing routes only
+* Stale unit/curriculum smoke calls were removed
+* `npm start` verified using the explicit start script
+* Final smoke checks passed for:
+  * `/`
+  * `/browse`
+  * `/faq`
+  * `/about`
+  * `/contact`
+  * `/health`
+  * `/qa/smoke`
+  * `/api/worksheet-catalog?status=ready`
+  * `/resource/worksheet/g1_addition_facts_within_20`
+  * `/catalog-preview.html?id=g1_addition_facts_within_20`
+  * `/api/catalog-pdf/g1_addition_facts_within_20?disposition=inline`
+* Catalog API returned 46 ready items
+* Catalog PDF returned `application/pdf` and a valid 2-page PDF
+* Ready / launch-facing worksheets remain 46 / 46 working, 0 failures
+* Commit: `c488b47 chore: add launch deployment basics`
 
 ## Next Fix Targets
 
