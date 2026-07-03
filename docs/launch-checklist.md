@@ -13,7 +13,7 @@ Protect the work, make Yellow Bird easy to restart, prepare deployment / launch 
 - [x] Private remote backup / push strategy decided
 - [x] Final smoke QA passed
 - [x] Final manual walkthrough passed
-- [ ] Final backup branch created
+- [x] Final backup branch created
 - [x] Go/no-go decision recorded
 
 ## Final Smoke QA Checklist
@@ -99,5 +99,7 @@ Notes:
 Yellow Bird is launch-packaged at the local/private-backup level. Public launch-facing flow is verified. Remaining work is deployment-host selection and any final production environment setup, not core app readiness.
 
 Private GitHub remote backup completed. `main`, `backup/milestone-4-closed`, and `backup/milestone-5-task-1` have been pushed. Remote remains private.
+
+Final backup branch created: `backup/milestone-5-closed`.
 
 Final smoke QA and manual walkthrough passed. Ready launch-facing worksheets remain 46 / 46 working with 0 ready failures. Mobile browse/detail sanity passed at 390px. No blockers found.
