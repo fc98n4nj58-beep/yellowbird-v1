@@ -11,9 +11,10 @@ More fuel in the same airplane.
 ## Current Status
 
 * Milestone 6 — Content Expansion / Resource Depth is underway.
-* Ready worksheets: 64 / 64 working
+* Ready worksheets: 70 / 70 working
 * Ready failures: 0
-* Milestone 6 gain so far: +18 ready worksheets
+* Milestone 6 gain so far: +24 ready worksheets
+* Patterning & Algebra ready coverage: 6 worksheets
 * Target direction: grow toward roughly 100 ready worksheets in quality-controlled batches
 
 Expected untracked files remain visible and documented:
@@ -60,6 +61,34 @@ Expected untracked files remain visible and documented:
   * Equivalent-fraction prompts may be repetitive
 * Quality decision:
   * Did not promote the Grade 4 stretch candidates because quality bar matters more than batch size
+
+### Batch 4
+
+* Result: +6 ready worksheets
+* Backup branch: `backup/milestone-6-batch-4`
+* Ready launch-facing worksheets increased from 64 to 70
+* Ready result: 70 / 70 working, 0 failures
+* Patterning & Algebra ready count: 6
+* Promoted:
+  * `grade3_patterning_and_algebra_extend_pattern`
+  * `grade3_patterning_and_algebra_identify_pattern_rule`
+  * `grade3_patterning_and_algebra_missing_value_pattern`
+  * `grade4_patterning_and_algebra_extend_pattern`
+  * `grade4_patterning_and_algebra_identify_pattern_rule`
+  * `grade4_patterning_and_algebra_missing_value_pattern`
+* Not promoted:
+  * `grade3_patterning_and_algebra_function_table`
+  * `grade4_patterning_and_algebra_function_table`
+  * Grade 5/6 patterning candidates
+  * `pattern_word_problems`
+  * `g6_pattern_rules`
+  * `g6_input_output_tables`
+  * Grade 4 place-value stretch candidates
+* Accepted minor issue:
+  * Duplicate-style pattern prompts may appear
+* Quality decision:
+  * Promoted Grade 3-4 patterning only because it filled a true domain gap
+  * Did not promote Grade 5/6 or function-table patterning candidates because they were too weak or mismatched
 
 ## Quality Bar
 
@@ -121,6 +150,6 @@ Avoid Kindergarten unless the content is clearly age-appropriate.
 
 ## Next Recommended Task
 
-Run Batch 4 candidate search using the known blocker list and preferred candidate pools.
+Run Batch 5 candidate search using the known blocker list and preferred candidate pools.
 
-Target clean promotions if quality allows. Avoid weak filler even if that means a smaller batch.
+Target clean promotions if quality allows. Give special attention to quality because the easiest clean candidates are becoming thinner.

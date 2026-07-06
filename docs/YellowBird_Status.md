@@ -1078,3 +1078,30 @@ Batch 3 completed:
 * Quality decision: Did not promote the Grade 4 stretch candidates because quality bar matters more than batch size
 * Milestone 6 gain so far: +18 ready worksheets
 * Next recommended task: Batch 4 candidate search using `docs/content-expansion.md`, avoiding weak filler
+
+Batch 4 completed:
+
+* Promoted 6 generated Patterning & Algebra worksheets to ready:
+  * `grade3_patterning_and_algebra_extend_pattern`
+  * `grade3_patterning_and_algebra_identify_pattern_rule`
+  * `grade3_patterning_and_algebra_missing_value_pattern`
+  * `grade4_patterning_and_algebra_extend_pattern`
+  * `grade4_patterning_and_algebra_identify_pattern_rule`
+  * `grade4_patterning_and_algebra_missing_value_pattern`
+* Ready launch-facing worksheets increased from 64 to 70
+* Ready result: 70 / 70 working, 0 failures
+* Patterning & Algebra ready count: 6
+* Backup branch: `backup/milestone-6-batch-4`
+* Confirmed not promoted:
+  * `grade3_patterning_and_algebra_function_table`
+  * `grade4_patterning_and_algebra_function_table`
+  * Grade 5/6 patterning candidates
+  * `pattern_word_problems`
+  * `g6_pattern_rules`
+  * `g6_input_output_tables`
+  * Grade 4 place-value stretch candidates
+* Accepted minor issue:
+  * Duplicate-style pattern prompts may appear
+* Quality decision: Promoted Grade 3-4 patterning only because it filled a true domain gap; did not promote Grade 5/6 or function-table patterning candidates because they were too weak or mismatched
+* Milestone 6 gain so far: +24 ready worksheets
+* Next recommended task: Batch 5 candidate search using `docs/content-expansion.md`, with special attention to quality because the easiest clean candidates are becoming thinner
