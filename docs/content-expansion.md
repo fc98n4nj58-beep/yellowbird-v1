@@ -11,9 +11,9 @@ More fuel in the same airplane.
 ## Current Status
 
 * Milestone 6 — Content Expansion / Resource Depth is underway.
-* Ready worksheets: 60 / 60 working
+* Ready worksheets: 64 / 64 working
 * Ready failures: 0
-* Milestone 6 gain so far: +14 ready worksheets
+* Milestone 6 gain so far: +18 ready worksheets
 * Target direction: grow toward roughly 100 ready worksheets in quality-controlled batches
 
 Expected untracked files remain visible and documented:
@@ -41,6 +41,25 @@ Expected untracked files remain visible and documented:
 * Accepted minor issues:
   * Equivalent-fraction prompts may be repetitive
   * Grade 5/6 equal-groups sheets may read as review practice
+
+### Batch 3
+
+* Result: +4 ready worksheets
+* Backup branch: `backup/milestone-6-batch-3`
+* Ready launch-facing worksheets increased from 60 to 64
+* Ready result: 64 / 64 working, 0 failures
+* Promoted:
+  * `grade3_fraction_equivalence_match_equivalent_fractions`
+  * `grade3_place_value_representation_base_ten_blocks`
+  * `grade3_place_value_representation_expanded_form`
+  * `grade3_place_value_representation_standard_form`
+* Not promoted:
+  * `grade4_place_value_representation_expanded_form`
+  * `grade4_place_value_representation_standard_form`
+* Accepted minor issue:
+  * Equivalent-fraction prompts may be repetitive
+* Quality decision:
+  * Did not promote the Grade 4 stretch candidates because quality bar matters more than batch size
 
 ## Quality Bar
 
@@ -102,6 +121,6 @@ Avoid Kindergarten unless the content is clearly age-appropriate.
 
 ## Next Recommended Task
 
-Run Batch 3 candidate search using the known blocker list and preferred candidate pools.
+Run Batch 4 candidate search using the known blocker list and preferred candidate pools.
 
-Target 8–12 clean promotions if quality allows.
+Target clean promotions if quality allows. Avoid weak filler even if that means a smaller batch.

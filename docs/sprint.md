@@ -734,3 +734,17 @@ Milestone 6 is underway. Milestones 2–5 remain closed.
   - Grade 5/6 equal-groups sheets may read as review practice
 - Milestone 6 gain so far: +14 ready worksheets
 - Next recommended task: Run Batch 3 candidate search using `docs/content-expansion.md`
+
+[x] Batch 3: Promote third clean content-expansion worksheet batch
+- Promoted 4 generated worksheets to ready
+- Ready launch-facing worksheets increased from 60 to 64
+- Ready result: 64 / 64 working, 0 failures
+- Backup branch: `backup/milestone-6-batch-3`
+- Confirmed not promoted:
+  - `grade4_place_value_representation_expanded_form`
+  - `grade4_place_value_representation_standard_form`
+- Accepted minor issue:
+  - Equivalent-fraction prompts may be repetitive
+- Quality decision: Did not promote the Grade 4 stretch candidates because quality bar matters more than batch size
+- Milestone 6 gain so far: +18 ready worksheets
+- Next recommended task: Batch 4 candidate search using `docs/content-expansion.md`, avoiding weak filler
