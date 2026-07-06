@@ -3122,7 +3122,7 @@
         "extend_pattern"
       ],
       "templateId": "equation_practice",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -3184,7 +3184,7 @@
         "identify_pattern_rule"
       ],
       "templateId": "equation_practice",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -3215,7 +3215,7 @@
         "missing_value_pattern"
       ],
       "templateId": "equation_practice",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -4269,7 +4269,7 @@
         "extend_pattern"
       ],
       "templateId": "equation_practice",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -4331,7 +4331,7 @@
         "identify_pattern_rule"
       ],
       "templateId": "equation_practice",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -4362,7 +4362,7 @@
         "missing_value_pattern"
       ],
       "templateId": "equation_practice",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
