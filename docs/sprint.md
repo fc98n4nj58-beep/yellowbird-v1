@@ -697,3 +697,27 @@ Future Phase:
   - Final backup branch
   - Decide whether to push/private remote backup
   - Final manual walkthrough
+
+## Milestone 6 — Content Expansion / Resource Depth
+
+Guiding phrase: More fuel in the same airplane.
+
+Status:
+
+Milestone 6 is underway. Milestones 2–5 remain closed.
+
+[x] Batch 1: Promote first clean content-expansion worksheet batch
+- Promoted 6 generated worksheets to ready:
+  - `grade1_addition_subtraction_word_problems_subtraction_word_problem`
+  - `grade1_place_value_representation_base_ten_blocks`
+  - `grade2_addition_subtraction_word_problems_subtraction_word_problem`
+  - `grade4_fraction_equivalence_compare_fractions`
+  - `grade5_multiplication_facts_missing_factor`
+  - `grade6_multiplication_facts_missing_factor`
+- Ready launch-facing worksheets increased from 46 to 52
+- Ready result: 52 / 52 working, 0 failures
+- Backup branch: `backup/milestone-6-batch-1`
+- Accepted minor issues:
+  - Word-problem sheets are printable but somewhat repetitive
+  - Missing-factor sheets have minor duplicate-style practice
+- Next recommended task: QA another small candidate batch or replace deferred candidates with safer generated entries
