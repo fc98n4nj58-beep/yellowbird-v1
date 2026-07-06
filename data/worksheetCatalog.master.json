@@ -3912,7 +3912,7 @@
         "match_equivalent_fractions"
       ],
       "templateId": "equation_practice",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -4502,7 +4502,7 @@
         "base_ten_blocks"
       ],
       "templateId": "visual_model",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -4566,7 +4566,7 @@
         "expanded_form"
       ],
       "templateId": "representation",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -4662,7 +4662,7 @@
         "standard_form"
       ],
       "templateId": "representation",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
