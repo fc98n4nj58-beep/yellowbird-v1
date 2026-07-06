@@ -239,7 +239,7 @@
         "subtraction_word_problem"
       ],
       "templateId": "equation_practice",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -828,7 +828,7 @@
         "base_ten_blocks"
       ],
       "templateId": "visual_model",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -1386,7 +1386,7 @@
         "subtraction_word_problem"
       ],
       "templateId": "equation_practice",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -3959,7 +3959,7 @@
         "compare_fractions"
       ],
       "templateId": "equation_practice",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -5323,7 +5323,7 @@
         "missing_factor"
       ],
       "templateId": "fluency_grid",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -6470,7 +6470,7 @@
         "missing_factor"
       ],
       "templateId": "fluency_grid",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
