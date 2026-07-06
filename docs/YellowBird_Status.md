@@ -1025,6 +1025,8 @@ Guardrails:
 
 Milestone 6 is underway. Milestones 2–5 remain closed.
 
+Control document: `docs/content-expansion.md`
+
 Guiding phrase:
 
 More fuel in the same airplane.
@@ -1045,3 +1047,15 @@ Batch 1 completed:
   * Word-problem sheets are printable but somewhat repetitive
   * Missing-factor sheets have minor duplicate-style practice
 * Next recommended task: QA another small candidate batch or replace deferred candidates with safer generated entries
+
+Batch 2 completed:
+
+* Promoted 8 generated worksheets to ready
+* Ready launch-facing worksheets increased from 52 to 60
+* Ready result: 60 / 60 working, 0 failures
+* Backup branch: `backup/milestone-6-batch-2`
+* Accepted minor issues:
+  * Equivalent-fraction prompts may be repetitive
+  * Grade 5/6 equal-groups sheets may read as review practice
+* Milestone 6 gain so far: +14 ready worksheets
+* Next recommended task: Run Batch 3 candidate search using `docs/content-expansion.md`
