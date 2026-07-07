@@ -1340,3 +1340,20 @@ Final worksheet micro-scan completed:
 * Future/fix-needed lanes: Grade 2 equal groups with visuals/smaller factors, differentiated Grade 3 arrays, richer Grade 3-4 addition/subtraction word problems, upgraded or reframed Grade 5-6 multiplication word problems, `pattern_word_problems`, `fraction_word_problems`, data/graphing prompt pools/visuals, and title/content mismatch families
 * Strategic sequence: 84 ready worksheets -> pause worksheet promotion -> plan exit tickets / quick checks -> build 10-15 quick resources -> reach about 95-100 resources -> add review/mini-quiz resources if useful -> reach 100-115 ready resources -> test with teachers -> then decide on Morning Math, differentiation packs, small-group lessons, or unit plans
 * Next recommended task: Begin exit tickets / quick checks planning
+
+Exit Ticket / Quick Check feasibility decision:
+
+* Control doc: `docs/exit-tickets-quick-checks.md`
+* Read-only architecture/catalog review found the lane is feasible with a small new resource lane
+* Best framing: same catalog engine, new resource family
+* Do not treat Exit Tickets / Quick Checks as just more worksheets
+* Current generators/runtime can supply much of the content, but the product needs separate metadata and a compact PDF template
+* This can be done without destabilizing worksheet PDFs if existing worksheet renderer behavior remains untouched
+* Implementation should use a separate compact renderer or a narrow `resourceType` branch
+* Do not alter `renderWorksheetPDF` behavior globally
+* Start with Quick Check first, not two-per-page Exit Ticket
+* First implementation target: one compact single-page Quick Check proof of concept
+* Preferred first candidate: `g3_place_value_hundreds_tens_ones_quick_check`
+* Add two-per-page cut-apart Exit Ticket format later after the Quick Check path works
+* Guardrail: use formative check / review / warm-up / small-group language; do not call these assessments, tests, mastery checks, diagnostics, or summative resources
+* Next recommended task: Add minimal `resourceType` support, compact Quick Check renderer, and one proof-of-concept Quick Check, then verify Browse/detail/preview/PDF

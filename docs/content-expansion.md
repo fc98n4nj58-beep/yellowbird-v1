@@ -20,6 +20,7 @@ More fuel in the same airplane.
 * Worksheet promotion is paused at 84 ready worksheets after the final micro-scan found no worthy 85th candidate
 * Product decision: 84 strong worksheets is better than 85 with filler
 * Recommended target before external testing: keep 84 ready worksheets as the worksheet-depth checkpoint, add 10-15 exit tickets / quick checks, then add 5-10 review or mini-quiz resources
+* Exit Ticket / Quick Check control doc: `docs/exit-tickets-quick-checks.md`
 
 Expected untracked files remain visible and documented:
 
@@ -415,6 +416,10 @@ Avoid Kindergarten unless the content is clearly age-appropriate.
 
 Begin exit tickets / quick checks planning as the next content lane.
 
+Read-only feasibility decision: feasible with a small new lane. Best framing is same catalog engine, new resource family. Do not treat these as just more worksheets.
+
+First implementation target: build one compact single-page Quick Check proof of concept before two-per-page Exit Tickets. Preferred first candidate is `g3_place_value_hundreds_tens_ones_quick_check`.
+
 Preserve the strategic sequence: 84 ready worksheets -> pause worksheet promotion -> plan exit tickets / quick checks -> build 10-15 quick resources -> reach about 95-100 resources -> add review/mini-quiz resources if useful -> reach 100-115 ready resources -> test with teachers -> then decide on Morning Math, differentiation packs, small-group lessons, or unit plans.
 
-Quality remains more important than raw count. Keep using the stable catalog/runtime and do not start deployment, external testing, graph visuals, `pattern_word_problems`, Morning Math, unit planning, games, or broad Content Excellence yet.
+Quality remains more important than raw count. Keep using the stable catalog/runtime, preserve current worksheet PDFs, and do not start deployment, external testing, graph visuals, `pattern_word_problems`, Morning Math, unit planning, games, or broad Content Excellence yet.
