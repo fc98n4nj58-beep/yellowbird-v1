@@ -1318,7 +1318,25 @@ Batch 10 completed:
 * Quality decision: Grade 1 missing-addend story problems within 20 are ready as meaningful addition/subtraction relationship practice after concrete modelling with drawings, counters, ten frames, or number lines
 * Framing guardrail: Best framed as supported practice, review, small-group work, intervention, or homework with adult support; avoid claims of assessment, mastery, independent first exposure, independent equation solving, full expectation coverage, deep algebraic reasoning, or advanced problem-solving
 * Milestone 6 gain so far: +38 ready worksheets
-* Milestone 6 is around 65% complete
-* Recommended target before external testing: 85-90 ready worksheets, 10-15 exit tickets / quick checks, and 5-10 review or mini-quiz resources
-* Strategic sequence: 84 ready worksheets -> decide whether to hunt for one more strong worksheet to reach 85 -> pause worksheet promotion -> begin exit tickets / quick checks or continue carefully toward 90 -> reach 100+ ready resources -> test with teachers -> then decide on Morning Math, differentiation packs, small-group lessons, or unit plans
-* Next recommended task: Decision point: either one final micro-scan for a single strong worksheet to reach 85, or pause worksheet promotion and begin exit tickets / quick checks planning
+* Milestone 6 is around 66% complete
+* Recommended target before external testing: keep 84 ready worksheets as the worksheet-depth checkpoint, add 10-15 exit tickets / quick checks, then add 5-10 review or mini-quiz resources
+
+Final worksheet micro-scan completed:
+
+* Result: no worksheet promoted
+* Ready launch-facing worksheets remain 84 / 84 working, 0 failures
+* Audit passed:
+  * Ready worksheets were 84 / 84 working, 0 failures
+  * Generated worksheets were 214 / 214 working, 0 failures
+  * Partial worksheets were 5 / 5 working, 0 failures
+  * Planned worksheets were 2 / 9 working, with 7 known/deferred `pattern_word_problems` failures
+* Product decision: 84 strong worksheets is better than 85 with filler
+* Worksheet promotion is paused at 84 because the remaining generated pool is thinning and the best technical near-candidates felt like count-padding or needed fixes/reframing
+* Near-candidates reviewed but not promoted:
+  * `grade3_multiplication_facts_arrays`: valid PDF and visual problems, but too close to existing ready Grade 3 array/multiplication coverage
+  * `grade2_multiplication_facts_equal_groups`: valid PDF, but lacks visual support, includes products like 90/60, has one exact duplicate, and feels too abstract/advanced for broad Grade 2 public use without stronger framing or visual support
+  * `grade3_addition_subtraction_word_problems_subtraction_word_problem`: real problems, but within-20 subtraction is too shallow for Grade 3 public-facing depth
+  * `grade4_patterning_and_algebra_function_table`: generates, but function-table patterning remains weak/mismatched compared with the promoted Grade 3-4 patterning set
+* Future/fix-needed lanes: Grade 2 equal groups with visuals/smaller factors, differentiated Grade 3 arrays, richer Grade 3-4 addition/subtraction word problems, upgraded or reframed Grade 5-6 multiplication word problems, `pattern_word_problems`, `fraction_word_problems`, data/graphing prompt pools/visuals, and title/content mismatch families
+* Strategic sequence: 84 ready worksheets -> pause worksheet promotion -> plan exit tickets / quick checks -> build 10-15 quick resources -> reach about 95-100 resources -> add review/mini-quiz resources if useful -> reach 100-115 ready resources -> test with teachers -> then decide on Morning Math, differentiation packs, small-group lessons, or unit plans
+* Next recommended task: Begin exit tickets / quick checks planning

@@ -14,10 +14,12 @@ More fuel in the same airplane.
 * Ready worksheets: 84 / 84 working
 * Ready failures: 0
 * Milestone 6 gain so far: +38 ready worksheets
-* Milestone 6 completion estimate: around 65%
+* Milestone 6 completion estimate: around 66%
 * Patterning & Algebra ready coverage: 9 worksheets
 * Target direction: grow toward roughly 100 ready resources in quality-controlled batches
-* Recommended target before external testing: 85-90 ready worksheets, 10-15 exit tickets / quick checks, and 5-10 review or mini-quiz resources
+* Worksheet promotion is paused at 84 ready worksheets after the final micro-scan found no worthy 85th candidate
+* Product decision: 84 strong worksheets is better than 85 with filler
+* Recommended target before external testing: keep 84 ready worksheets as the worksheet-depth checkpoint, add 10-15 exit tickets / quick checks, then add 5-10 review or mini-quiz resources
 
 Expected untracked files remain visible and documented:
 
@@ -317,6 +319,39 @@ Expected untracked files remain visible and documented:
 * Framing:
   * Avoid claims of assessment, mastery, independent equation solving, full expectation coverage, deep algebraic reasoning, advanced problem-solving, or complete curriculum coverage
 
+### Final Worksheet Micro-Scan
+
+* Result: no worksheet promoted
+* Ready launch-facing worksheets remain 84 / 84 working, 0 failures
+* Audit passed:
+  * Ready worksheets were 84 / 84 working, 0 failures
+  * Generated worksheets were 214 / 214 working, 0 failures
+  * Partial worksheets were 5 / 5 working, 0 failures
+  * Planned worksheets were 2 / 9 working, with 7 known/deferred `pattern_word_problems` failures
+* Decision:
+  * Do not force an 85th worksheet
+  * Pause worksheet promotion at 84 ready worksheets because the remaining generated pool is thinning
+  * The best technical near-candidates felt like count-padding or needed fixes/reframing
+  * 84 strong worksheets is better than 85 with filler
+* Near-candidates reviewed but not promoted:
+  * `grade3_multiplication_facts_arrays`: valid 2-page PDF with 10 visual problems and answer key, but deferred because it duplicates existing ready Grade 3 array/multiplication coverage too closely
+  * `grade2_multiplication_facts_equal_groups`: valid 3-page PDF with 12 problems and 12 answers, but deferred because it lacks visual support, includes products like 90/60, has one exact duplicate, and feels too abstract/advanced for broad Grade 2 public use without stronger framing or visual support
+  * `grade3_addition_subtraction_word_problems_subtraction_word_problem`: generates real problems, but within-20 subtraction is too shallow for Grade 3 public-facing depth
+  * `grade4_patterning_and_algebra_function_table`: generates, but function-table patterning remains weak/mismatched compared with the promoted Grade 3-4 patterning set
+
+## Future / Fix-Needed Lanes
+
+These remain promising only after focused fixes, reframing, or richer content support:
+
+* Grade 2 equal groups: needs visual support or smaller friendlier factors
+* Grade 3 arrays: only useful if differentiated from existing array worksheet coverage
+* Grade 3-4 addition/subtraction word problems: need richer grade-level numbers or review/intervention framing
+* Grade 5-6 multiplication word problems: remain too basic unless reframed as review/intervention or upgraded
+* `pattern_word_problems`: still deferred until generator support exists
+* `fraction_word_problems`: remain fix-needed if still producing 0 problems
+* Data/graphing: needs larger prompt pools and/or stronger visual support
+* Title/content mismatch families should be fixed before promotion
+
 ## Quality Bar
 
 A worksheet can be promoted only if:
@@ -378,8 +413,8 @@ Avoid Kindergarten unless the content is clearly age-appropriate.
 
 ## Next Recommended Task
 
-Decision point: either run one final micro-scan for a single strong worksheet to reach 85 ready worksheets, or pause worksheet promotion and begin exit tickets / quick checks planning.
+Begin exit tickets / quick checks planning as the next content lane.
 
-Preserve the strategic sequence: 84 ready worksheets -> decide whether to hunt for one more strong worksheet to reach 85 -> pause worksheet promotion -> begin exit tickets / quick checks or continue carefully toward 90 -> reach 100+ ready resources -> test with teachers -> then decide on Morning Math, differentiation packs, small-group lessons, or unit plans.
+Preserve the strategic sequence: 84 ready worksheets -> pause worksheet promotion -> plan exit tickets / quick checks -> build 10-15 quick resources -> reach about 95-100 resources -> add review/mini-quiz resources if useful -> reach 100-115 ready resources -> test with teachers -> then decide on Morning Math, differentiation packs, small-group lessons, or unit plans.
 
 Quality remains more important than raw count. Keep using the stable catalog/runtime and do not start deployment, external testing, graph visuals, `pattern_word_problems`, Morning Math, unit planning, games, or broad Content Excellence yet.
