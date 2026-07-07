@@ -11,11 +11,11 @@ More fuel in the same airplane.
 ## Current Status
 
 * Milestone 6 — Content Expansion / Resource Depth is underway.
-* Ready worksheets: 72 / 72 working
+* Ready worksheets: 77 / 77 working
 * Ready failures: 0
-* Milestone 6 gain so far: +26 ready worksheets
-* Milestone 6 completion estimate: around 52%
-* Patterning & Algebra ready coverage: 6 worksheets
+* Milestone 6 gain so far: +31 ready worksheets
+* Milestone 6 completion estimate: around 58%
+* Patterning & Algebra ready coverage: 9 worksheets
 * Target direction: grow toward roughly 100 ready resources in quality-controlled batches
 * Recommended target before external testing: 85-90 ready worksheets, 10-15 exit tickets / quick checks, and 5-10 review or mini-quiz resources
 
@@ -124,6 +124,45 @@ Expected untracked files remain visible and documented:
   * Grade 4 is ready as multiplication word-problem review/practice
   * Grade 5-6 remain deferred/generated because the equal-groups problems are too basic for public-facing upper-grade depth unless later reframed as review/intervention or upgraded with richer complexity
 
+### Batch 6
+
+* Result: +5 ready worksheets
+* Commit: `5f1eb4c content: promote sixth milestone 6 worksheet batch`
+* Ready launch-facing worksheets increased from 72 to 77
+* Ready result: 77 / 77 working, 0 failures
+* Promoted:
+  * `grade2_patterning_and_algebra_missing_value_pattern`
+  * `grade2_patterning_and_algebra_extend_pattern`
+  * `grade2_patterning_and_algebra_identify_pattern_rule`
+  * `grade2_addition_subtraction_facts_missing_addend`
+  * `grade2_addition_subtraction_facts_related_subtraction`
+* Not promoted:
+  * `grade2_addition_subtraction_facts_fact_fluency`
+* Verification:
+  * JSON parse passed for both catalog files
+  * `npm run audit:worksheets` passed
+  * Ready worksheets were 77 / 77 working, 0 failures
+  * Generated worksheets were 221 / 221 working
+  * Partial worksheets were 5 / 5 working
+  * Planned failures remained known/deferred `pattern_word_problems`
+  * `/api/worksheet-catalog?status=ready` returned 77 items
+  * All five promoted detail routes returned 200
+  * All five promoted preview routes returned 200
+  * All five promoted PDF routes returned 200 `application/pdf`
+  * Each promoted PDF generated real content with 12 problems and 12 answers
+  * Answer keys were readable
+  * No clipping, overlap, empty sections, or unrelated catalog changes were observed
+* Accepted minor issues:
+  * Patterning sheets may contain minor duplicate-style prompts
+* Quality decision:
+  * Grade 2 Patterning & Algebra sheets are ready as practice/review resources with minor framing caution
+  * Grade 2 Addition/Subtraction relationship sheets are ready as clean fact relationship practice
+  * The Grade 2 fact fluency candidate remains backup-only because it may duplicate existing Grade 2 fluency-style resources and could feel like count-padding unless it fills a specific gap
+* Framing:
+  * Patterning resources should be described as pattern practice, not deep algebra or assessment
+  * Addition/subtraction resources should be described as fact relationship practice, not full fluency mastery or assessment
+  * All five should be framed as skill practice connected to curriculum, not full expectation coverage
+
 ## Quality Bar
 
 A worksheet can be promoted only if:
@@ -184,7 +223,7 @@ Avoid Kindergarten unless the content is clearly age-appropriate.
 
 ## Next Recommended Task
 
-Run Batch 6 candidate search using the known blocker list and preferred candidate pools.
+Run Batch 7 candidate search using the known blocker list and preferred candidate pools.
 
 Preserve the strategic sequence: 70 ready worksheets -> 85 stronger worksheets -> add exit tickets and quick checks -> reach 100+ ready resources -> test with teachers -> then decide on Morning Math, differentiation packs, small-group lessons, or unit plans.
 

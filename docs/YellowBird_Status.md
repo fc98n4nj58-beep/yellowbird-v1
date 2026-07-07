@@ -1138,3 +1138,40 @@ Batch 5 completed:
 * Recommended target before external testing: 85-90 ready worksheets, 10-15 exit tickets / quick checks, and 5-10 review or mini-quiz resources
 * Strategic sequence: 70 ready worksheets -> 85 stronger worksheets -> add exit tickets and quick checks -> reach 100+ ready resources -> test with teachers -> then decide on Morning Math, differentiation packs, small-group lessons, or unit plans
 * Next recommended task: Batch 6 candidate search using `docs/content-expansion.md`, preserving quality over raw count and the stable-platform guardrails
+
+Batch 6 completed:
+
+* Promoted 5 generated Grade 2 worksheets to ready:
+  * `grade2_patterning_and_algebra_missing_value_pattern`
+  * `grade2_patterning_and_algebra_extend_pattern`
+  * `grade2_patterning_and_algebra_identify_pattern_rule`
+  * `grade2_addition_subtraction_facts_missing_addend`
+  * `grade2_addition_subtraction_facts_related_subtraction`
+* Ready launch-facing worksheets increased from 72 to 77
+* Ready result: 77 / 77 working, 0 failures
+* Commit: `5f1eb4c content: promote sixth milestone 6 worksheet batch`
+* Verification passed:
+  * JSON parse passed for both catalog files
+  * `npm run audit:worksheets` passed
+  * Generated worksheets were 221 / 221 working
+  * Partial worksheets were 5 / 5 working
+  * Planned failures remained known/deferred `pattern_word_problems`
+  * `/api/worksheet-catalog?status=ready` returned 77 items
+  * All five promoted detail routes returned 200
+  * All five promoted preview routes returned 200
+  * All five promoted PDF routes returned 200 `application/pdf`
+  * Each promoted PDF generated real content with 12 problems and 12 answers
+  * Answer keys were readable
+  * No clipping, overlap, empty sections, or unrelated catalog changes were observed
+* Confirmed not promoted:
+  * `grade2_addition_subtraction_facts_fact_fluency`
+* Accepted minor issue:
+  * Patterning sheets may contain minor duplicate-style prompts
+* Quality decision: Grade 2 Patterning & Algebra sheets are ready as practice/review resources with minor framing caution; Grade 2 Addition/Subtraction relationship sheets are ready as clean fact relationship practice; the Grade 2 fact fluency candidate remains backup-only because it may duplicate existing Grade 2 fluency-style resources and could feel like count-padding unless it fills a specific gap
+* Framing guardrail: Patterning resources are pattern practice, not deep algebra or assessment; addition/subtraction resources are fact relationship practice, not full fluency mastery or assessment; all five are skill practice connected to curriculum, not full expectation coverage
+* Official Ontario wording was not verified, so plain-language alignment summaries remain the standard
+* Milestone 6 gain so far: +31 ready worksheets
+* Milestone 6 is around 58% complete
+* Recommended target before external testing: 85-90 ready worksheets, 10-15 exit tickets / quick checks, and 5-10 review or mini-quiz resources
+* Strategic sequence: 70 ready worksheets -> 85 stronger worksheets -> add exit tickets and quick checks -> reach 100+ ready resources -> test with teachers -> then decide on Morning Math, differentiation packs, small-group lessons, or unit plans
+* Next recommended task: Batch 7 candidate search using `docs/content-expansion.md`, preserving quality over raw count and the stable-platform guardrails
