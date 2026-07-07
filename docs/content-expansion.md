@@ -11,10 +11,10 @@ More fuel in the same airplane.
 ## Current Status
 
 * Milestone 6 — Content Expansion / Resource Depth is underway.
-* Ready worksheets: 77 / 77 working
+* Ready worksheets: 79 / 79 working
 * Ready failures: 0
-* Milestone 6 gain so far: +31 ready worksheets
-* Milestone 6 completion estimate: around 58%
+* Milestone 6 gain so far: +33 ready worksheets
+* Milestone 6 completion estimate: around 60%
 * Patterning & Algebra ready coverage: 9 worksheets
 * Target direction: grow toward roughly 100 ready resources in quality-controlled batches
 * Recommended target before external testing: 85-90 ready worksheets, 10-15 exit tickets / quick checks, and 5-10 review or mini-quiz resources
@@ -163,6 +163,53 @@ Expected untracked files remain visible and documented:
   * Addition/subtraction resources should be described as fact relationship practice, not full fluency mastery or assessment
   * All five should be framed as skill practice connected to curriculum, not full expectation coverage
 
+### Batch 7
+
+* Result: +2 ready worksheets
+* Commit: `bb866a9 content: promote seventh milestone 6 worksheet batch`
+* Ready launch-facing worksheets increased from 77 to 79
+* Ready result: 79 / 79 working, 0 failures
+* Promoted:
+  * `grade3_place_value_representation_number_word_match`
+  * `grade2_multiplication_facts_arrays`
+* Not promoted:
+  * `grade1_patterning_and_algebra_extend_pattern`
+  * `grade1_patterning_and_algebra_identify_pattern_rule`
+  * `grade1_patterning_and_algebra_missing_value_pattern`
+  * `grade2_place_value_representation_number_word_match`
+  * `grade1_addition_subtraction_facts_related_subtraction`
+  * `grade1_addition_subtraction_facts_fact_fluency`
+  * `grade2_addition_subtraction_facts_fact_fluency`
+  * `grade2_multiplication_facts_equal_groups`
+  * `grade2_multiplication_facts_skip_counting`
+  * `grade4_place_value_representation_expanded_form`
+* Verification:
+  * JSON parse passed for both catalog files
+  * `npm run audit:worksheets` passed
+  * Ready worksheets were 79 / 79 working, 0 failures
+  * Generated worksheets were 219 / 219 working
+  * Partial worksheets were 5 / 5 working
+  * Planned failures remained known/deferred `pattern_word_problems`
+  * `/api/worksheet-catalog?status=ready` returned 79 items
+  * Both promoted detail routes returned 200
+  * Both promoted preview routes returned 200
+  * Both promoted PDF routes returned 200 `application/pdf`
+  * Grade 3 number-word match rendered a valid 2-page PDF with 12 problems and 12 answers
+  * Grade 2 arrays rendered a valid 2-page PDF with 10 visual problems and 10 answers
+  * Answer keys were readable
+  * No clipping or overlap was observed
+* Accepted minor issues:
+  * Grade 3 number-word match has one duplicate number
+  * Grade 3 number-word wording omits "and" but remains readable
+  * Grade 2 arrays repeat prompt text, but visuals vary
+* Quality decision:
+  * Grade 3 number-word match is ready as number-word / standard-form matching review or independent practice
+  * Grade 2 arrays is ready as early visual multiplication thinking using arrays as equal groups
+  * Grade 1 patterning candidates remain deferred/revision-needed because Teacher QA found the number range and rule complexity may be too high for broad public-facing Grade 1 use
+* Framing:
+  * Avoid claims of assessment, mastery, full expectation coverage, deep problem-solving, or complete curriculum coverage
+  * Grade 2 arrays should not be framed as multiplication fact fluency, word problems, or full multiplication mastery
+
 ## Quality Bar
 
 A worksheet can be promoted only if:
@@ -184,6 +231,7 @@ A worksheet can be promoted only if:
 Avoid these unless explicitly doing a focused fix:
 
 * Kindergarten age/range mismatch
+* Grade 1 patterning candidates with number ranges or rule complexity that may be too high for broad public-facing Grade 1 use
 * `number_line_identify` title/content mismatch
 * `equation_match` title/content mismatch
 * Upper-grade multiplication word-problem sheets that are too basic unless framed as review/intervention or upgraded with richer complexity
@@ -223,8 +271,8 @@ Avoid Kindergarten unless the content is clearly age-appropriate.
 
 ## Next Recommended Task
 
-Run Batch 7 candidate search using the known blocker list and preferred candidate pools.
+Run Batch 8 candidate search using the known blocker list and preferred candidate pools.
 
-Preserve the strategic sequence: 70 ready worksheets -> 85 stronger worksheets -> add exit tickets and quick checks -> reach 100+ ready resources -> test with teachers -> then decide on Morning Math, differentiation packs, small-group lessons, or unit plans.
+Preserve the strategic sequence: 79 ready worksheets -> 85 stronger worksheets -> add exit tickets and quick checks -> reach 100+ ready resources -> test with teachers -> then decide on Morning Math, differentiation packs, small-group lessons, or unit plans.
 
 Target clean promotions if quality allows. Give special attention to quality because the easiest clean candidates are becoming thinner.

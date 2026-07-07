@@ -826,3 +826,44 @@ Milestone 6 is underway. Milestones 2–5 remain closed.
 - Milestone 6 gain so far: +31 ready worksheets
 - Milestone 6 is around 58% complete
 - Next recommended task: Batch 7 candidate search using `docs/content-expansion.md`, preserving quality over raw count and the stable-platform guardrails
+
+[x] Batch 7: Promote approved Grade 3 number-word and Grade 2 array worksheets
+- Promoted 2 generated worksheets to ready:
+  - `grade3_place_value_representation_number_word_match`
+  - `grade2_multiplication_facts_arrays`
+- Ready launch-facing worksheets increased from 77 to 79
+- Ready result: 79 / 79 working, 0 failures
+- Commit: `bb866a9 content: promote seventh milestone 6 worksheet batch`
+- Verification passed:
+  - JSON parse passed for both catalog files
+  - `npm run audit:worksheets` passed
+  - Generated worksheets were 219 / 219 working
+  - Partial worksheets were 5 / 5 working
+  - Planned failures remained known/deferred `pattern_word_problems`
+  - `/api/worksheet-catalog?status=ready` returned 79 items
+  - Both promoted detail, preview, and PDF routes returned 200
+  - Both PDF routes returned `application/pdf`
+  - Grade 3 number-word match rendered a valid 2-page PDF with 12 problems and 12 answers
+  - Grade 2 arrays rendered a valid 2-page PDF with 10 visual problems and 10 answers
+  - Answer keys were readable
+  - No clipping or overlap was observed
+- Confirmed not promoted:
+  - `grade1_patterning_and_algebra_extend_pattern`
+  - `grade1_patterning_and_algebra_identify_pattern_rule`
+  - `grade1_patterning_and_algebra_missing_value_pattern`
+  - `grade2_place_value_representation_number_word_match`
+  - `grade1_addition_subtraction_facts_related_subtraction`
+  - `grade1_addition_subtraction_facts_fact_fluency`
+  - `grade2_addition_subtraction_facts_fact_fluency`
+  - `grade2_multiplication_facts_equal_groups`
+  - `grade2_multiplication_facts_skip_counting`
+  - `grade4_place_value_representation_expanded_form`
+- Accepted minor issues:
+  - Grade 3 number-word match has one duplicate number
+  - Grade 3 number-word wording omits "and" but remains readable
+  - Grade 2 arrays repeat prompt text, but visuals vary
+- Quality decision: Grade 3 number-word match is ready as number-word / standard-form matching review or independent practice; Grade 2 arrays is ready as early visual multiplication thinking using arrays as equal groups; Grade 1 patterning candidates remain deferred/revision-needed because Teacher QA found the number range and rule complexity may be too high for broad public-facing Grade 1 use
+- Framing guardrail: Avoid claims of assessment, mastery, full expectation coverage, deep problem-solving, or complete curriculum coverage; Grade 2 arrays should not be framed as multiplication fact fluency, word problems, or full multiplication mastery
+- Milestone 6 gain so far: +33 ready worksheets
+- Milestone 6 is around 60% complete
+- Next recommended task: Batch 8 candidate search using `docs/content-expansion.md`, preserving quality over raw count and the stable-platform guardrails
