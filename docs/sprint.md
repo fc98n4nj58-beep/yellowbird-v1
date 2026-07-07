@@ -867,3 +867,29 @@ Milestone 6 is underway. Milestones 2–5 remain closed.
 - Milestone 6 gain so far: +33 ready worksheets
 - Milestone 6 is around 60% complete
 - Next recommended task: Batch 8 candidate search using `docs/content-expansion.md`, preserving quality over raw count and the stable-platform guardrails
+
+[x] Batch 8: Promote approved Grade 2 addition/subtraction practice worksheets
+- Promoted 2 generated Grade 2 worksheets to ready:
+  - `grade2_addition_subtraction_facts_fact_family`
+  - `grade2_addition_subtraction_word_problems_missing_addend_word_problem`
+- Ready launch-facing worksheets increased from 79 to 81
+- Ready result: 81 / 81 working, 0 failures
+- Commit: `c86a9d8 content: promote eighth milestone 6 worksheet batch`
+- Verification passed:
+  - JSON parse passed for both catalog files
+  - `npm run audit:worksheets` passed
+  - Generated worksheets were 217 / 217 working
+  - Partial worksheets were 5 / 5 working
+  - Planned failures remained known/deferred `pattern_word_problems`
+- Confirmed not promoted:
+  - `grade2_fraction_equivalence_compare_fractions`
+  - `grade2_fraction_equivalence_match_equivalent_fractions`
+- Accepted minor issue:
+  - Missing-addend word problems repeat a "cans" scenario and may feel somewhat generated, but remain useful as short practice
+- Quality decision: Grade 2 fact families are ready as addition/subtraction relationship practice; Grade 2 missing-addend word problems are ready as missing-addend story problem practice; Grade 2 fraction candidates remain deferred/revision-needed because Curriculum Alignment found weak Grade 2 alignment unless revised or reframed
+- Framing guardrail: Fact families are related addition/subtraction fact practice; missing-addend word problems are story problem practice after students have learned to represent unknowns; avoid claims of assessment, mastery, full expectation coverage, deep problem-solving, or complete curriculum coverage
+- Milestone 6 gain so far: +35 ready worksheets
+- Milestone 6 is around 62% complete
+- Recommended target before external testing: 85-90 ready worksheets, 10-15 exit tickets / quick checks, and 5-10 review or mini-quiz resources
+- Strategic sequence: 81 ready worksheets -> 85 stronger worksheets -> add exit tickets and quick checks -> reach 100+ ready resources -> test with teachers -> then decide on Morning Math, differentiation packs, small-group lessons, or unit plans
+- Next recommended task: Batch 9 candidate search using `docs/content-expansion.md`, preserving quality over raw count and the stable-platform guardrails
