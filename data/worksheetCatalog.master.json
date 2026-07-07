@@ -4677,6 +4677,50 @@
       "sourceType": "generated"
     },
     {
+      "id": "g3_place_value_hundreds_tens_ones_quick_check",
+      "title": "Hundreds, Tens, and Ones Quick Check",
+      "shortTitle": "Hundreds, Tens, and Ones",
+      "subject": "Math",
+      "grades": [
+        "grade3"
+      ],
+      "gradeLabels": [
+        "Grade 3"
+      ],
+      "domain": "Place Value",
+      "skillKey": "place_value_representation",
+      "worksheetFamily": "representation",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "teacherNote": "Use this quick check to see whether students can represent 3-digit numbers using hundreds, tens, and ones.",
+      "activityTypes": [
+        "expanded_form"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6,
+        "minA": 100,
+        "maxA": 999,
+        "answerStyle": "hundreds_tens_ones"
+      },
+      "tags": [
+        "grade 3",
+        "place value",
+        "hundreds tens ones",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students show 3-digit numbers as hundreds, tens, and ones.",
+      "sourceType": "curated"
+    },
+    {
       "id": "grade4_addition_subtraction_word_problems_addition_word_problem",
       "title": "Addition Word Problem — Grade 4",
       "shortTitle": "Addition Word Problem",

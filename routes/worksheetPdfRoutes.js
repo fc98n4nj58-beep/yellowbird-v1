@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 const { renderWorksheetPDF } = require("../renderers/pdfRenderer");
+const { renderQuickCheckPDF } = require("../renderers/quickCheckPdfRenderer");
 const { str, sanitizeFilenamePart, prettyTopicForFilename } = require("../utils/helpers");
 const { buildWorksheetRuntime } = require("../services/worksheetRuntimeService");
 
@@ -113,6 +114,23 @@ router.get("/api/catalog-pdf/:id", (req, res) => {
       req.params.id,
       req.query || {}
     );
+
+    if (item.resourceType === "quick_check") {
+      renderQuickCheckPDF({
+        res,
+        item,
+        contentObject: normalizedContentObject,
+        options: {
+          includeAnswerKey: String(req.query.answers ?? "1") !== "0",
+          filename: `${item.id}.pdf`,
+          disposition: String(
+            req.query.disposition || "attachment"
+          )
+        }
+      });
+
+      return;
+    }
 
     renderWorksheetPDF({
       res,

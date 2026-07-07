@@ -17,6 +17,9 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
     meta: {
       title: item.title,
       subheading: item.shortTitle || "",
+      resourceType: item.resourceType || "worksheet",
+      formatLabel: item.formatLabel || "",
+      teacherNote: item.teacherNote || "",
       curriculum: {
         footerText: [
           item.gradeLabels?.[0] || "",

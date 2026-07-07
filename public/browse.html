@@ -23,7 +23,7 @@
 
   <div class="container">
     <h1 class="h1">Browse Library</h1>
-    <p class="lede">Ready-to-print worksheets for Ontario K-6 math.</p>
+    <p class="lede">Ready-to-print math resources for Ontario K-6.</p>
 
     <div class="grid">
       <aside class="card">
@@ -149,6 +149,7 @@
     equation_practice: "Equation practice",
     matching: "Matching",
     model_interpretation: "Model interpretation",
+    quick_check: "Quick Check",
     related_subtraction: "Subtraction facts",
     missing_addend: "Missing addends",
     missing_factor: "Missing factors",
@@ -192,6 +193,10 @@
   }
 
   function worksheetTypeLabel(item) {
+    if (item.resourceType === "quick_check") {
+      return "Quick Check";
+    }
+
     const activityTypes = item.activityTypes || [];
     if (item.worksheetFamily === "relational_thinking") {
       if (activityTypes.includes("fact_family") || String(item.skillKey || "").includes("multiplication")) {
@@ -212,6 +217,10 @@
   }
 
   function worksheetFormatLabel(item) {
+    if (item.formatLabel) {
+      return item.formatLabel;
+    }
+
     if (item.templateId === "representation" && item.domain === "Place Value") {
       return "Place value practice";
     }
@@ -387,15 +396,15 @@
 
     el("summary").textContent =
       visible === total
-        ? `${total} ready worksheet${total === 1 ? "" : "s"}`
-        : `${visible} of ${total} ready worksheet${total === 1 ? "" : "s"}`;
+        ? `${total} ready resource${total === 1 ? "" : "s"}`
+        : `${visible} of ${total} ready resource${total === 1 ? "" : "s"}`;
 
     el("empty").style.display = visible ? "none" : "block";
     el("results").innerHTML = visible ? state.visibleItems.map(renderCard).join("") : "";
   }
 
   async function loadCatalog() {
-    el("summary").textContent = "Loading ready worksheets...";
+    el("summary").textContent = "Loading ready resources...";
     el("empty").style.display = "none";
     el("results").innerHTML = "";
 

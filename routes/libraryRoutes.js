@@ -49,6 +49,7 @@ const friendlyWorksheetLabels = {
   equation_practice: "Equation practice",
   matching: "Matching",
   model_interpretation: "Model interpretation",
+  quick_check: "Quick Check",
   related_subtraction: "Subtraction facts",
   missing_addend: "Missing addends",
   missing_factor: "Missing factors",
@@ -98,6 +99,10 @@ function worksheetDomainLabel(item) {
 }
 
 function worksheetPracticeFocus(item) {
+  if (item.resourceType === "quick_check") {
+    return item.teacherNote || item.description || "Short formative skill check";
+  }
+
   return friendlyWorksheetLabel(item.skillKey || item.worksheetFamily || "");
 }
 
@@ -107,6 +112,10 @@ function worksheetQuestionStyle(item) {
 }
 
 function worksheetTypeLabel(item) {
+  if (item.resourceType === "quick_check") {
+    return "Quick Check";
+  }
+
   const activityTypes = Array.isArray(item.activityTypes) ? item.activityTypes : [];
   if (item.worksheetFamily === "relational_thinking") {
     if (activityTypes.includes("fact_family") || String(item.skillKey || "").includes("multiplication")) {
@@ -127,6 +136,10 @@ function worksheetTypeLabel(item) {
 }
 
 function worksheetFormatLabel(item) {
+  if (item.formatLabel) {
+    return item.formatLabel;
+  }
+
   if (item.templateId === "representation" && item.domain === "Place Value") {
     return "Place value practice";
   }
@@ -367,6 +380,8 @@ function renderWorksheetDetailPage(item) {
   const worksheetType = worksheetTypeLabel(item);
   const worksheetFormat = worksheetFormatLabel(item);
   const domain = worksheetDomainLabel(item);
+  const resourceType = item.resourceType === "quick_check" ? "Quick Check" : "Worksheet";
+  const detailsTitle = item.resourceType === "quick_check" ? "Quick Check details" : "Worksheet details";
   const badges = [
     ...(item.gradeLabels || []),
     domain,
@@ -413,6 +428,8 @@ function renderWorksheetDetailPage(item) {
           <span>${escapeHtml((item.gradeLabels || []).join(", "))}</span>
           <span>•</span>
           <span>${escapeHtml(domain || "Math")}</span>
+          <span>•</span>
+          <span>${escapeHtml(resourceType)}</span>
           ${item.difficulty ? `<span>•</span><span>${escapeHtml(friendlyWorksheetLabel(item.difficulty))}</span>` : ""}
         </div>
 
@@ -430,10 +447,10 @@ function renderWorksheetDetailPage(item) {
 
       <aside class="resource-side-panel">
         <div class="card">
-          <div class="section-title">Worksheet details</div>
+          <div class="section-title">${escapeHtml(detailsTitle)}</div>
           <div class="resource-meta-stack">
-            <div><strong>Worksheet type:</strong> ${escapeHtml(worksheetType || "—")}</div>
-            <div><strong>Worksheet format:</strong> ${escapeHtml(worksheetFormat || "—")}</div>
+            <div><strong>Resource type:</strong> ${escapeHtml(resourceType)}</div>
+            <div><strong>Format:</strong> ${escapeHtml(worksheetFormat || "—")}</div>
             <div><strong>Difficulty:</strong> ${escapeHtml(item.difficulty ? friendlyWorksheetLabel(item.difficulty) : "—")}</div>
             <div><strong>Estimated time:</strong> ${escapeHtml(item.estimatedTimeMinutes ? `${item.estimatedTimeMinutes} min` : "—")}</div>
             <div><strong>Answer key:</strong> ${item.hasAnswerKey ? "Included" : "Not included"}</div>

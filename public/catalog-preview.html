@@ -154,7 +154,7 @@
   <main class="shell">
     <div class="topbar">
       <div>
-        <h1>Worksheet Preview</h1>
+        <h1 id="previewTitle">Worksheet Preview</h1>
         <p>Preview uses the exact same PDF that downloads.</p>
       </div>
 
@@ -196,14 +196,16 @@
         if (!data.ok || !data.item) return;
 
         const item = data.item;
+        const resourceLabel = item.resourceType === "quick_check" ? "Quick Check" : "Worksheet";
+        document.getElementById("previewTitle").textContent = `${resourceLabel} Preview`;
         document.getElementById("meta").textContent = [
           item.gradeLabels?.[0] || "",
           item.subject || "",
           item.domain || "",
-          item.skillKey || ""
+          item.formatLabel || item.skillKey || ""
         ].filter(Boolean).join(" • ");
 
-        document.title = `${item.title || "Worksheet Preview"} — Yellow Bird`;
+        document.title = `${item.title || `${resourceLabel} Preview`} — Yellow Bird`;
       } catch {
         // non-blocking
       }
