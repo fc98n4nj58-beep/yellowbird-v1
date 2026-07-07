@@ -146,7 +146,7 @@
         "missing_addend_word_problem"
       ],
       "templateId": "equation_practice",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
