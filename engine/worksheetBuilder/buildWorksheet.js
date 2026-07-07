@@ -21,6 +21,33 @@ function pickActivitiesFromRecipe(recipe, requestedCount = null, preferredActivi
     );
   }
 
+  function recipeContainsActivity(activityType) {
+    if (!activityType) return false;
+
+    const alias = aliasMap[activityType];
+    const matches = (value) => value === activityType || value === alias;
+
+    if (Array.isArray(recipe.activities) && recipe.activities.some(matches)) {
+      return true;
+    }
+
+    if (recipe.variants) {
+      const hasVariantActivity = Object.values(recipe.variants).some((variant) =>
+        Object.keys(variant.activityMix || {}).some(matches)
+      );
+
+      if (hasVariantActivity) return true;
+    }
+
+    if (recipe.difficulty) {
+      return Object.values(recipe.difficulty).some((level) =>
+        Array.isArray(level.activities) && level.activities.some(matches)
+      );
+    }
+
+    return false;
+  }
+
   if (Array.isArray(recipe.activities) && recipe.activities.length) {
     let baseActivities = recipe.activities;
     const matched = resolvePreferredMatch(recipe.activities);
@@ -65,6 +92,14 @@ function pickActivitiesFromRecipe(recipe, requestedCount = null, preferredActivi
   const variant = recipe.variants[mode];
 
   if (!variant || !variant.activityMix) {
+    if (
+      preferredActivity &&
+      recipeContainsActivity(preferredActivity) &&
+      getGenerator(preferredActivity)
+    ) {
+      return Array(requestedCount || 8).fill(preferredActivity);
+    }
+
     return selectedActivities;
   }
 
