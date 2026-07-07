@@ -1248,3 +1248,39 @@ Batch 8 completed:
 * Recommended target before external testing: 85-90 ready worksheets, 10-15 exit tickets / quick checks, and 5-10 review or mini-quiz resources
 * Strategic sequence: 81 ready worksheets -> 85 stronger worksheets -> add exit tickets and quick checks -> reach 100+ ready resources -> test with teachers -> then decide on Morning Math, differentiation packs, small-group lessons, or unit plans
 * Next recommended task: Batch 9 candidate search using `docs/content-expansion.md`, preserving quality over raw count and the stable-platform guardrails
+
+Batch 9 completed:
+
+* Promoted 2 generated multiplication/equal-groups worksheets to ready:
+  * `grade3_multiplication_facts_equal_groups`
+  * `grade4_multiplication_facts_equal_groups`
+* Ready launch-facing worksheets increased from 81 to 83
+* Ready result: 83 / 83 working, 0 failures
+* Commit: `1b52562 content: promote ninth milestone 6 worksheet batch`
+* Verification passed:
+  * JSON parse passed for both catalog files
+  * `npm run audit:worksheets` passed
+  * Generated worksheets were 215 / 215 working
+  * Partial worksheets were 5 / 5 working
+  * Planned failures remained known/deferred `pattern_word_problems`
+  * `/api/worksheet-catalog?status=ready` returned 83 items
+  * Both promoted detail routes returned 200
+  * Both promoted preview routes returned 200
+  * Both promoted PDF routes returned 200 `application/pdf` with `%PDF-` header
+  * Both rendered valid 3-page PDFs with 12 problems and 12 answers
+  * Answer keys were readable
+  * No clipping or overlap observed
+* Confirmed not promoted:
+  * Data/graphing candidates
+  * Grade 5/6 place-value candidates
+  * Title/content mismatch resources
+  * 0-problem resources
+* Accepted minor issue:
+  * One exact duplicate prompt appears in each equal-groups worksheet and remains non-blocking
+* Quality decision: Grade 3 equal groups is ready as multiplication practice or review after concrete modelling with drawings, arrays, counters, or manipulatives; Grade 4 equal groups is ready only as foundational multiplication review/support, intervention, warm-up, or conceptual reinforcement
+* Framing guardrail: Grade 4 equal groups must not be framed as core Grade 4 multiplication depth or Grade 4 multiplication mastery; avoid claims of assessment, mastery, full expectation coverage, deep problem-solving, multi-step multiplication, multi-digit multiplication, or complete curriculum coverage
+* Milestone 6 gain so far: +37 ready worksheets
+* Milestone 6 is around 64% complete
+* Recommended target before external testing: 85-90 ready worksheets, 10-15 exit tickets / quick checks, and 5-10 review or mini-quiz resources
+* Strategic sequence: 83 ready worksheets -> 85 stronger worksheets -> add exit tickets and quick checks -> reach 100+ ready resources -> test with teachers -> then decide on Morning Math, differentiation packs, small-group lessons, or unit plans
+* Next recommended task: Batch 10 candidate search using `docs/content-expansion.md`, preserving quality over raw count and the stable-platform guardrails
