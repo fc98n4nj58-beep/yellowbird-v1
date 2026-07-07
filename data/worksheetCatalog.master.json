@@ -4310,7 +4310,7 @@
         "word_problems"
       ],
       "templateId": "equation_practice",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -5661,7 +5661,7 @@
         "word_problems"
       ],
       "templateId": "equation_practice",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
