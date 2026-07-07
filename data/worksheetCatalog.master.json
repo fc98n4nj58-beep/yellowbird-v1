@@ -2373,7 +2373,7 @@
         "array"
       ],
       "templateId": "model_interpretation",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -4630,7 +4630,7 @@
         "number_word_match"
       ],
       "templateId": "matching",
-      "status": "generated",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
