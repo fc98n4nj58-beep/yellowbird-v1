@@ -1284,3 +1284,41 @@ Batch 9 completed:
 * Recommended target before external testing: 85-90 ready worksheets, 10-15 exit tickets / quick checks, and 5-10 review or mini-quiz resources
 * Strategic sequence: 83 ready worksheets -> 85 stronger worksheets -> add exit tickets and quick checks -> reach 100+ ready resources -> test with teachers -> then decide on Morning Math, differentiation packs, small-group lessons, or unit plans
 * Next recommended task: Batch 10 candidate search using `docs/content-expansion.md`, preserving quality over raw count and the stable-platform guardrails
+
+Batch 10 completed:
+
+* Promoted 1 generated Grade 1 worksheet to ready:
+  * `grade1_addition_subtraction_word_problems_missing_addend_word_problem`
+* Ready launch-facing worksheets increased from 83 to 84
+* Ready result: 84 / 84 working, 0 failures
+* Commit: `eabb16a content: promote tenth milestone 6 worksheet batch`
+* Verification passed:
+  * JSON parse passed for both catalog files
+  * `npm run audit:worksheets` passed
+  * Generated worksheets were 214 / 214 working
+  * Partial worksheets were 5 / 5 working
+  * Planned failures remained known/deferred `pattern_word_problems`
+  * `/api/worksheet-catalog?status=ready` returned 84 items
+  * Detail, preview, and PDF routes returned 200
+  * PDF route returned 200 `application/pdf`
+  * The worksheet rendered a valid 3-page PDF with 12 problems and 12 answers
+  * Answer key was readable
+  * No clipping or overlap observed
+* Confirmed not promoted:
+  * `grade1_addition_subtraction_facts_ten_frame`
+  * `grade1_addition_subtraction_facts_fact_family`
+  * `grade1_addition_subtraction_word_problems_addition_word_problem`
+  * `grade1_addition_subtraction_facts_related_subtraction`
+  * `grade2_addition_subtraction_word_problems_addition_word_problem`
+  * `grade3_multiplication_facts_missing_factor`
+  * `grade2_multiplication_facts_word_problems`
+* Accepted minor issues:
+  * Repeated food-drive/cans scenario
+  * Generic subtitle text
+* Quality decision: Grade 1 missing-addend story problems within 20 are ready as meaningful addition/subtraction relationship practice after concrete modelling with drawings, counters, ten frames, or number lines
+* Framing guardrail: Best framed as supported practice, review, small-group work, intervention, or homework with adult support; avoid claims of assessment, mastery, independent first exposure, independent equation solving, full expectation coverage, deep algebraic reasoning, or advanced problem-solving
+* Milestone 6 gain so far: +38 ready worksheets
+* Milestone 6 is around 65% complete
+* Recommended target before external testing: 85-90 ready worksheets, 10-15 exit tickets / quick checks, and 5-10 review or mini-quiz resources
+* Strategic sequence: 84 ready worksheets -> decide whether to hunt for one more strong worksheet to reach 85 -> pause worksheet promotion -> begin exit tickets / quick checks or continue carefully toward 90 -> reach 100+ ready resources -> test with teachers -> then decide on Morning Math, differentiation packs, small-group lessons, or unit plans
+* Next recommended task: Decision point: either one final micro-scan for a single strong worksheet to reach 85, or pause worksheet promotion and begin exit tickets / quick checks planning
