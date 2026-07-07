@@ -768,3 +768,29 @@ Milestone 6 is underway. Milestones 2–5 remain closed.
 - Quality decision: Promoted Grade 3-4 patterning only because it filled a true domain gap; did not promote Grade 5/6 or function-table patterning candidates because they were too weak or mismatched
 - Milestone 6 gain so far: +24 ready worksheets
 - Next recommended task: Batch 5 candidate search using `docs/content-expansion.md`, with special attention to quality because the easiest clean candidates are becoming thinner
+
+[x] Batch 5: Promote approved Grade 3-4 multiplication word-problem worksheets
+- Promoted 2 generated multiplication word-problem worksheets to ready:
+  - `grade3_multiplication_facts_word_problems`
+  - `grade4_multiplication_facts_word_problems`
+- Ready launch-facing worksheets increased from 70 to 72
+- Ready result: 72 / 72 working, 0 failures
+- Commit: `5e1b4f7 content: promote fifth milestone 6 worksheet batch`
+- Multiplication word-problem routing is fixed by `f2168f1 fix: route preferred word problem activities`
+- Verification passed:
+  - JSON parse passed for both catalog files
+  - `npm run audit:worksheets` passed
+  - `/api/worksheet-catalog?status=ready` returned 72 items
+  - Grade 3 and Grade 4 resource detail, preview, and PDF routes returned 200
+  - Both PDFs rendered valid 3-page PDFs with 12 problems and 12 answers
+  - Answer keys were readable
+  - No clipping or overlap observed
+- Confirmed not promoted:
+  - `grade5_multiplication_facts_word_problems`
+  - `grade6_multiplication_facts_word_problems`
+- Accepted minor issue:
+  - One duplicate prompt appeared but does not block public readiness
+- Quality decision: Grade 3 is ready as equal-groups multiplication word-problem practice; Grade 4 is ready as multiplication word-problem review/practice; Grade 5-6 remain deferred/generated because the equal-groups problems are too basic for public-facing upper-grade depth unless later reframed as review/intervention or upgraded with richer complexity
+- Milestone 6 gain so far: +26 ready worksheets
+- Milestone 6 is around 52% complete
+- Next recommended task: Batch 6 candidate search using `docs/content-expansion.md`, preserving quality over raw count and the stable-platform guardrails
