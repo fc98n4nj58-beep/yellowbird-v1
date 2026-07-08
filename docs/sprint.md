@@ -1097,3 +1097,44 @@ Milestone 6 is underway. Milestones 2–5 remain closed.
 - Lane-level caution: do not over-scale simple fact checks; future Quick Checks should gradually include representation, place value, word problems, and strategy-based skills where safe
 - Next recommended task: decide whether to build another controlled Quick Check batch of 3-5 or run a read-only feasibility check for the first cut-apart Exit Ticket layout
 - Continue deferring two-per-page Exit Tickets until compact Quick Checks prove stable through QA/alignment
+
+[x] Second controlled Quick Check batch
+- Commit: `db6bfa0 feat: add second quick check batch`
+- Backup branch: `backup/milestone-6-second-quick-check-batch`
+- New Quick Checks:
+  - `g4_compare_fractions_quick_check`
+  - `g2_missing_addends_within_20_quick_check`
+  - `g4_pattern_rule_quick_check`
+- Ready resources: 91 / 91 working, 0 failures
+- Ready worksheets: 84
+- Ready Quick Checks: 7
+- Product decision: worksheet promotion remains paused at 84; the resource count grew from 88 to 91 by adding 3 controlled Quick Checks, not by forcing worksheet filler
+- Implementation summary:
+  - Added exactly 3 new ready Quick Checks
+  - Added entries to both `data/worksheetCatalog.master.json` and `data/worksheetCatalog.generated.json`
+  - Normal worksheet PDF rendering was not changed
+  - No route changes were made
+  - No docs were changed during implementation
+  - No two-per-page Exit Tickets were started
+  - No visual Quick Checks were added
+  - No mixed-activity Quick Checks were added
+- Verification passed:
+  - Catalog JSON parse passed
+  - `npm run audit:worksheets` passed
+  - Ready result: 91 / 91 working, 0 failures
+  - Generated result: 214 / 214 working, 0 failures
+  - Partial result: 5 / 5 working, 0 failures
+  - Planned result: 2 / 9 working, with known `pattern_word_problems` failures only
+  - `/browse` route passed
+  - `/api/worksheet-catalog?status=ready` returned 91 ready items and 7 Quick Checks
+  - Detail routes for all 3 new Quick Checks passed
+  - Preview routes for all 3 new Quick Checks passed
+  - PDF routes for all 7 Quick Checks passed as 200 `application/pdf`
+  - All 7 Quick Checks rendered valid 2-page letter PDFs
+  - Existing worksheet PDF regression check passed using `g1_addition_facts_within_20`
+- Minor risk:
+  - `g4_compare_fractions_quick_check` may occasionally repeat an exact comparison with the current generator seed
+  - This does not block implementation, but Teacher QA should review it
+- Next recommended task: Teacher QA / Resource Review should review the 3 new Quick Checks as a batch, then Curriculum Alignment should review them for honest Ontario math alignment
+- Do not build the next Quick Check batch yet
+- Continue deferring two-per-page Exit Tickets until compact Quick Checks prove stable through QA/alignment

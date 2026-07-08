@@ -106,6 +106,27 @@ Review update:
 - Lane-level caution: do not over-scale simple fact checks; future Quick Checks should gradually include representation, place value, word problems, and strategy-based skills where safe.
 - Next decision: build another controlled Quick Check batch of 3-5 or run a read-only feasibility check for the first cut-apart Exit Ticket layout.
 
+July 2026
+
+Decision:
+The second controlled Quick Check batch is implemented and verified, then paused for Teacher QA and Curriculum Alignment before more scaling.
+
+Reason:
+The lane grew from 4 to 7 ready Quick Checks through another small controlled batch while keeping worksheet promotion paused at 84 and preserving normal worksheet PDF rendering.
+
+Rules:
+- Review `g4_compare_fractions_quick_check`, `g2_missing_addends_within_20_quick_check`, and `g4_pattern_rule_quick_check` with Teacher QA before adding more.
+- Then complete Curriculum Alignment review for honest Ontario math framing.
+- Do not build the next Quick Check batch until both reviews pass.
+- Continue deferring two-per-page cut-apart Exit Tickets until compact Quick Checks prove stable through QA/alignment.
+
+Implementation update:
+- Commit: `db6bfa0 feat: add second quick check batch`.
+- Backup branch: `backup/milestone-6-second-quick-check-batch`.
+- Ready resources are now 91 / 91 working, with 84 ready worksheets and 7 ready Quick Checks.
+- The implementation changed catalog data only and did not change routes, renderers, or worksheet behavior.
+- Minor risk: `g4_compare_fractions_quick_check` may occasionally repeat an exact comparison with the current generator seed; Teacher QA should review it.
+
 ## Decision: Worksheet Preview/PDF Parity
 
 Worksheet previews should use the same PDF rendering path as downloads.
