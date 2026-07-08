@@ -1445,6 +1445,17 @@ First controlled Quick Check batch completed:
   * Answer keys were readable
   * No clipping/overlap observed
   * Existing worksheet PDF regression check passed using `g1_addition_facts_within_20`
-* Next recommended task: Teacher QA / Resource Review Agent should review the 3 new Quick Checks as a batch, then Curriculum Alignment Agent should review them for honest Ontario math alignment
-* Do not build the next Quick Check batch yet; if both reviews pass, decide whether to build another small batch or introduce the first cut-apart Exit Ticket
+* Teacher QA result: all 3 new Quick Checks approved as public-ready
+* Teacher QA batch-level judgment: the batch strengthens the Quick Check lane because it adds focused, printable, teacher-obvious resources with clear student instructions, teacher notes, and answer keys
+* Curriculum Alignment result:
+  * `g2_subtraction_within_20_quick_check`: public-ready with minor wording/framing caution
+  * `g2_addition_within_20_quick_check`: public-ready with minor wording/framing caution
+  * `g3_compare_3_digit_numbers_quick_check`: public-ready
+* Wording update:
+  * Grade 2 fact-check teacher notes now say add/subtract facts within 20
+  * Grade 2 fact-check descriptions now say focused review after addition/subtraction practice
+  * Grade 3 comparison teacher note now names comparing 3-digit numbers using >, <, or =
+* Review outcome: the first controlled Quick Check batch has passed both review gates
+* Lane-level caution: do not over-scale simple fact checks; future Quick Checks should gradually include representation, place value, word problems, and strategy-based skills where safe
+* Next recommended task: decide whether to build another controlled Quick Check batch of 3-5 or run a read-only feasibility check for the first cut-apart Exit Ticket layout
 * Continue deferring two-per-page Exit Tickets until compact Quick Checks prove stable through QA/alignment

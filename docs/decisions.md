@@ -99,6 +99,13 @@ Rules:
 - Do not start another Quick Check batch until both reviews pass.
 - Continue deferring two-per-page cut-apart Exit Tickets until compact Quick Checks prove stable through QA/alignment.
 
+Review update:
+- Teacher QA approved all 3 new Quick Checks as public-ready.
+- Curriculum Alignment approved all 3 as public-ready, with minor wording/framing caution for the Grade 2 fact checks.
+- The first controlled Quick Check batch has passed both review gates.
+- Lane-level caution: do not over-scale simple fact checks; future Quick Checks should gradually include representation, place value, word problems, and strategy-based skills where safe.
+- Next decision: build another controlled Quick Check batch of 3-5 or run a read-only feasibility check for the first cut-apart Exit Ticket layout.
+
 ## Decision: Worksheet Preview/PDF Parity
 
 Worksheet previews should use the same PDF rendering path as downloads.

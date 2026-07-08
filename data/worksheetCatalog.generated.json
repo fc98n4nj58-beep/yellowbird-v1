@@ -3509,7 +3509,7 @@
       "prepLevel": "print-and-go",
       "formativeUse": true,
       "studentInstructions": "Subtract.",
-      "teacherNote": "Use this quick check after subtraction practice to see whether students can subtract within 20.",
+      "teacherNote": "Use this quick check after subtraction practice to see whether students can subtract facts within 20.",
       "activityTypes": [
         "fact_fluency"
       ],
@@ -3528,7 +3528,7 @@
         "quick check"
       ],
       "curriculumTags": [],
-      "description": "Students solve subtraction facts within 20. This short Quick Check is designed for focused subtraction review."
+      "description": "Students solve subtraction facts within 20. This short Quick Check is designed for focused review after subtraction practice."
     },
     {
       "id": "g2_addition_within_20_quick_check",
@@ -3550,7 +3550,7 @@
       "prepLevel": "print-and-go",
       "formativeUse": true,
       "studentInstructions": "Add.",
-      "teacherNote": "Use this quick check after addition practice to see whether students can add within 20.",
+      "teacherNote": "Use this quick check after addition practice to see whether students can add facts within 20.",
       "activityTypes": [
         "fact_fluency"
       ],
@@ -3569,7 +3569,7 @@
         "quick check"
       ],
       "curriculumTags": [],
-      "description": "Students solve addition facts within 20. This short Quick Check is designed for focused addition review."
+      "description": "Students solve addition facts within 20. This short Quick Check is designed for focused review after addition practice."
     },
     {
       "id": "g3_compare_3_digit_numbers_quick_check",
@@ -3591,7 +3591,7 @@
       "prepLevel": "print-and-go",
       "formativeUse": true,
       "studentInstructions": "Compare each pair of numbers using >, <, or =.",
-      "teacherNote": "Use this quick check after place-value comparison practice to see whether students can compare 3-digit numbers.",
+      "teacherNote": "Use this quick check after place-value comparison practice to see whether students can compare 3-digit numbers using >, <, or =.",
       "activityTypes": [
         "compare_numbers"
       ],

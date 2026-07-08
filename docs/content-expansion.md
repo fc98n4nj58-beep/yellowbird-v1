@@ -22,7 +22,7 @@ More fuel in the same airplane.
 * Worksheet promotion is paused at 84 ready worksheets after the final micro-scan found no worthy 85th worksheet candidate
 * Product decision: 84 strong worksheets is better than 85 with filler
 * Resource count grew from 85 to 88 by adding 3 controlled Quick Checks, not by forcing worksheet filler
-* Recommended target before external testing: keep 84 ready worksheets as the worksheet-depth checkpoint, review the 3 new Quick Checks, then scale only if the lane remains stable
+* Recommended target before external testing: keep 84 ready worksheets as the worksheet-depth checkpoint, use the reviewed Quick Check batch to decide whether the next move is another controlled Quick Check batch or a read-only cut-apart Exit Ticket feasibility check
 * Exit Ticket / Quick Check control doc: `docs/exit-tickets-quick-checks.md`
 
 Expected untracked files remain visible and documented:
@@ -417,7 +417,7 @@ Avoid Kindergarten unless the content is clearly age-appropriate.
 
 ## Next Recommended Task
 
-Complete Teacher QA and Curriculum Alignment review for the 3 new Quick Checks before building more.
+Decide whether to build another controlled Quick Check batch of 3-5 or run a read-only feasibility check for the first cut-apart Exit Ticket layout.
 
 Read-only feasibility decision: feasible with a small new lane. Best framing is same catalog engine, new resource family. Do not treat these as just more worksheets.
 
@@ -501,7 +501,15 @@ First controlled Quick Check batch implemented:
   * Answer keys were readable
   * No clipping/overlap observed
   * Existing worksheet PDF regression check passed using `g1_addition_facts_within_20`
+* Review:
+  * Teacher QA approved all 3 new Quick Checks as public-ready
+  * Teacher QA found the batch strengthens the lane because it adds focused, printable, teacher-obvious resources with clear student instructions, teacher notes, and answer keys
+  * Curriculum Alignment approved all 3 as public-ready
+  * Grade 2 fact checks were approved with minor wording/framing caution
+  * Grade 3 compare numbers was approved as public-ready
+  * Catalog wording was tightened for Grade 2 fact-check notes/descriptions and Grade 3 comparison symbols
+  * Lane-level caution: do not over-scale simple fact checks; future Quick Checks should gradually include representation, place value, word problems, and strategy-based skills where safe
 
-Preserve the strategic sequence: 84 ready worksheets -> pause worksheet promotion -> implement one Quick Check proof of concept -> Teacher QA review -> Curriculum Alignment review -> build a small first batch of 3 Quick Checks -> Teacher QA review for the new batch -> Curriculum Alignment review for the new batch -> then decide whether to build another small Quick Check batch or introduce the first cut-apart Exit Ticket.
+Preserve the strategic sequence: 84 ready worksheets -> pause worksheet promotion -> implement one Quick Check proof of concept -> Teacher QA review -> Curriculum Alignment review -> build a small first batch of 3 Quick Checks -> Teacher QA review for the new batch -> Curriculum Alignment review for the new batch -> decide whether to build another controlled Quick Check batch or run a read-only feasibility check for the first cut-apart Exit Ticket.
 
 Quality remains more important than raw count. Keep using the stable catalog/runtime, preserve current worksheet PDFs, and do not start deployment, external testing, graph visuals, `pattern_word_problems`, Morning Math, unit planning, games, or broad Content Excellence yet.

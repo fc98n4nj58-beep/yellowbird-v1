@@ -4,7 +4,7 @@
 
 This document records the planned Exit Ticket / Quick Check lane for Milestone 6.
 
-Worksheet promotion is intentionally paused at 84 ready worksheets. The first Quick Check proof of concept is implemented, verified, and reviewed. The first controlled Quick Check batch is also implemented and verified, bringing ready resources to 88 / 88 working while keeping ready worksheets at 84. The next content goal is Teacher QA and Curriculum Alignment review of the 3 new Quick Checks before more scaling.
+Worksheet promotion is intentionally paused at 84 ready worksheets. The first Quick Check proof of concept is implemented, verified, and reviewed. The first controlled Quick Check batch is also implemented, verified, and reviewed, bringing ready resources to 88 / 88 working while keeping ready worksheets at 84. The next content goal is deciding whether to build another controlled Quick Check batch or run a read-only feasibility check for the first cut-apart Exit Ticket layout.
 
 Guiding phrase:
 
@@ -169,12 +169,21 @@ Verification:
 * No clipping/overlap observed
 * Existing worksheet PDF regression check passed using `g1_addition_facts_within_20`
 
-Next review step:
+Review result:
 
-* Teacher QA / Resource Review Agent should review the 3 new Quick Checks as a batch
-* Curriculum Alignment Agent should review the 3 new Quick Checks for honest Ontario math alignment
-* Do not build the next Quick Check batch yet
-* If both reviews pass, decide whether to build another small batch or introduce the first cut-apart Exit Ticket
+* Teacher QA approved all 3 new Quick Checks as public-ready
+* Teacher QA found the batch strengthens the lane because it adds focused, printable, teacher-obvious resources with clear student instructions, teacher notes, and answer keys
+* Curriculum Alignment approved all 3 as public-ready
+* `g2_subtraction_within_20_quick_check`: public-ready with minor wording/framing caution
+* `g2_addition_within_20_quick_check`: public-ready with minor wording/framing caution
+* `g3_compare_3_digit_numbers_quick_check`: public-ready
+* Catalog wording was tightened for Grade 2 fact-check notes/descriptions and Grade 3 comparison symbols
+* The first controlled Quick Check batch has passed both review gates
+* Lane-level caution: do not over-scale simple fact checks; future Quick Checks should gradually include representation, place value, word problems, and strategy-based skills where safe
+
+Next decision:
+
+* Decide whether to build another controlled Quick Check batch of 3-5 or run a read-only feasibility check for the first cut-apart Exit Ticket layout
 * Continue deferring two-per-page Exit Tickets until compact Quick Checks prove stable through QA/alignment
 
 ## Recommended Implementation Sequence
@@ -188,7 +197,7 @@ Next review step:
 7. Curriculum Alignment review
 8. Build a controlled first batch of 3 Quick Checks
 9. Teacher QA and Curriculum Alignment review for the 3 new Quick Checks
-10. Then decide whether to build another small batch or introduce the first cut-apart Exit Ticket
+10. Decide whether to build another controlled Quick Check batch or run a read-only feasibility check for the first cut-apart Exit Ticket
 
 ## Guardrails
 
