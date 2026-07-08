@@ -85,6 +85,20 @@ Review update:
 - Final positioning: a Grade 3 quick formative check for representing 3-digit numbers using hundreds, tens, and ones, best used after place-value instruction as short review or a progress check.
 - Do not frame it as a test, diagnostic, mastery check, summative assessment, or full expectation assessment.
 
+July 2026
+
+Decision:
+The first controlled Quick Check batch is implemented and verified, then paused for QA/alignment before more scaling.
+
+Reason:
+The lane grew from 1 to 4 ready Quick Checks through a small controlled batch while keeping worksheet promotion paused at 84 and preserving normal worksheet PDF rendering.
+
+Rules:
+- Review `g2_subtraction_within_20_quick_check`, `g2_addition_within_20_quick_check`, and `g3_compare_3_digit_numbers_quick_check` with Teacher QA before adding more.
+- Then complete Curriculum Alignment review for honest Ontario math framing.
+- Do not start another Quick Check batch until both reviews pass.
+- Continue deferring two-per-page cut-apart Exit Tickets until compact Quick Checks prove stable through QA/alignment.
+
 ## Decision: Worksheet Preview/PDF Parity
 
 Worksheet previews should use the same PDF rendering path as downloads.

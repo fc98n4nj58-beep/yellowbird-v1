@@ -1403,3 +1403,48 @@ First Quick Check proof of concept completed:
 * Framing guardrail: This should be described as a quick formative check, review, small-group check, or homeschool check, not a test, diagnostic, mastery check, summative assessment, or full expectation assessment
 * Next recommended task: build a controlled first batch of 3-5 more Quick Checks, not the full 10-15 yet
 * Defer two-per-page Exit Tickets until the compact Quick Check lane proves stable
+
+First controlled Quick Check batch completed:
+
+* Commit: `527e3b3 feat: add first quick check batch`
+* Backup branch: `backup/milestone-6-first-quick-check-batch`
+* Existing approved Quick Check:
+  * `g3_place_value_hundreds_tens_ones_quick_check`
+* New Quick Checks:
+  * `g2_subtraction_within_20_quick_check`
+  * `g2_addition_within_20_quick_check`
+  * `g3_compare_3_digit_numbers_quick_check`
+* Ready resources: 88 / 88 working, 0 failures
+* Ready worksheets: 84
+* Ready Quick Checks: 4
+* Product decision: worksheet promotion remains paused at 84; the resource count grew from 85 to 88 by adding 3 controlled Quick Checks, not by forcing worksheet filler
+* Implementation summary:
+  * Added `studentInstructions` support to the Quick Check PDF renderer
+  * Fallback instruction is "Complete each question."
+  * Existing Quick Check now uses metadata-driven student instructions: "Show each number as hundreds, tens, and ones."
+  * Added exactly 3 new ready Quick Checks
+  * Normal worksheet PDF rendering was not changed
+  * No two-per-page Exit Tickets were started
+  * No visual Quick Checks were added
+  * No mixed-activity Quick Checks were added
+* Verification passed:
+  * Catalog JSON parse passed
+  * `node --check renderers/quickCheckPdfRenderer.js` passed
+  * `npm run audit:worksheets` passed
+  * Ready result: 88 / 88 working, 0 failures
+  * Generated result: 214 / 214 working, 0 failures
+  * Partial result: 5 / 5 working, 0 failures
+  * Planned result: 2 / 9 working, with 7 known/deferred `pattern_word_problems` failures
+  * `/browse` route passed
+  * `/api/worksheet-catalog?status=ready` returned 88 items and 4 Quick Checks
+  * Detail and preview routes for all 3 new Quick Checks passed
+  * PDF routes for all 4 Quick Checks passed as 200 `application/pdf`
+  * All 4 Quick Checks rendered valid 2-page letter PDFs
+  * Student instructions were correct and metadata-driven
+  * Six real prompts appeared on each
+  * Answer keys were readable
+  * No clipping/overlap observed
+  * Existing worksheet PDF regression check passed using `g1_addition_facts_within_20`
+* Next recommended task: Teacher QA / Resource Review Agent should review the 3 new Quick Checks as a batch, then Curriculum Alignment Agent should review them for honest Ontario math alignment
+* Do not build the next Quick Check batch yet; if both reviews pass, decide whether to build another small batch or introduce the first cut-apart Exit Ticket
+* Continue deferring two-per-page Exit Tickets until compact Quick Checks prove stable through QA/alignment

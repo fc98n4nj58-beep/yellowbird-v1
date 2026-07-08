@@ -4,7 +4,7 @@
 
 This document records the planned Exit Ticket / Quick Check lane for Milestone 6.
 
-Worksheet promotion is intentionally paused at 84 ready worksheets. The first Quick Check proof of concept is implemented, verified, and reviewed, bringing ready resources to 85 / 85 working while keeping ready worksheets at 84. The next content goal is to build a controlled batch of 3-5 more Quick Checks, not the full 10-15 yet.
+Worksheet promotion is intentionally paused at 84 ready worksheets. The first Quick Check proof of concept is implemented, verified, and reviewed. The first controlled Quick Check batch is also implemented and verified, bringing ready resources to 88 / 88 working while keeping ready worksheets at 84. The next content goal is Teacher QA and Curriculum Alignment review of the 3 new Quick Checks before more scaling.
 
 Guiding phrase:
 
@@ -122,6 +122,61 @@ Review result:
 
 Two-per-page cut-apart Exit Ticket format should come later after the Quick Check path works.
 
+## First Controlled Quick Check Batch
+
+Implemented batch:
+
+* Commit: `527e3b3 feat: add first quick check batch`
+* Backup branch: `backup/milestone-6-first-quick-check-batch`
+* Existing approved Quick Check:
+  * `g3_place_value_hundreds_tens_ones_quick_check`
+* New Quick Checks:
+  * `g2_subtraction_within_20_quick_check`
+  * `g2_addition_within_20_quick_check`
+  * `g3_compare_3_digit_numbers_quick_check`
+* Ready resources: 88 / 88 working, 0 failures
+* Ready worksheets: 84
+* Ready Quick Checks: 4
+
+Implementation notes:
+
+* Added `studentInstructions` support to the Quick Check PDF renderer
+* Fallback instruction is "Complete each question."
+* Existing Quick Check now uses metadata-driven student instructions: "Show each number as hundreds, tens, and ones."
+* Added exactly 3 new ready Quick Checks
+* Normal worksheet PDF rendering was not changed
+* No two-per-page Exit Tickets were started
+* No visual Quick Checks were added
+* No mixed-activity Quick Checks were added
+
+Verification:
+
+* Catalog JSON parse passed
+* `node --check renderers/quickCheckPdfRenderer.js` passed
+* `npm run audit:worksheets` passed
+* Ready result: 88 / 88 working, 0 failures
+* Generated result: 214 / 214 working, 0 failures
+* Partial result: 5 / 5 working, 0 failures
+* Planned result: 2 / 9 working, with 7 known/deferred `pattern_word_problems` failures
+* `/browse` route passed
+* `/api/worksheet-catalog?status=ready` returned 88 items and 4 Quick Checks
+* Detail and preview routes for all 3 new Quick Checks passed
+* PDF routes for all 4 Quick Checks passed as 200 `application/pdf`
+* All 4 Quick Checks rendered valid 2-page letter PDFs
+* Student instructions were correct and metadata-driven
+* Six real prompts appeared on each
+* Answer keys were readable
+* No clipping/overlap observed
+* Existing worksheet PDF regression check passed using `g1_addition_facts_within_20`
+
+Next review step:
+
+* Teacher QA / Resource Review Agent should review the 3 new Quick Checks as a batch
+* Curriculum Alignment Agent should review the 3 new Quick Checks for honest Ontario math alignment
+* Do not build the next Quick Check batch yet
+* If both reviews pass, decide whether to build another small batch or introduce the first cut-apart Exit Ticket
+* Continue deferring two-per-page Exit Tickets until compact Quick Checks prove stable through QA/alignment
+
 ## Recommended Implementation Sequence
 
 1. Document the lane
@@ -131,8 +186,9 @@ Two-per-page cut-apart Exit Ticket format should come later after the Quick Chec
 5. Verify Browse/detail/preview/PDF
 6. Teacher QA review
 7. Curriculum Alignment review
-8. Build a controlled first batch of 3-5 more Quick Checks
-9. Then scale cautiously toward 10-15 Exit Tickets / Quick Checks
+8. Build a controlled first batch of 3 Quick Checks
+9. Teacher QA and Curriculum Alignment review for the 3 new Quick Checks
+10. Then decide whether to build another small batch or introduce the first cut-apart Exit Ticket
 
 ## Guardrails
 
