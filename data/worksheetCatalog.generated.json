@@ -3616,6 +3616,134 @@
       "description": "Students compare 3-digit numbers using >, <, or =. This short Quick Check is designed for focused place-value review."
     },
     {
+      "id": "g4_compare_fractions_quick_check",
+      "title": "Compare Fractions Quick Check",
+      "shortTitle": "Compare Fractions",
+      "subject": "Math",
+      "grades": [
+        "grade4"
+      ],
+      "gradeLabels": [
+        "Grade 4"
+      ],
+      "domain": "Fractions",
+      "skillKey": "fraction_equivalence",
+      "worksheetFamily": "fractions",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Compare each pair of fractions.",
+      "teacherNote": "Use this quick check after fraction comparison practice to see whether students can compare simple fractions.",
+      "activityTypes": [
+        "compare_fractions"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6
+      },
+      "tags": [
+        "grade 4",
+        "fractions",
+        "compare fractions",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students compare simple fractions. This short Quick Check is designed for focused fraction comparison review.",
+      "sourceType": "curated"
+    },
+    {
+      "id": "g2_missing_addends_within_20_quick_check",
+      "title": "Missing Addends Within 20 Quick Check",
+      "shortTitle": "Missing Addends Within 20",
+      "subject": "Math",
+      "grades": [
+        "grade2"
+      ],
+      "gradeLabels": [
+        "Grade 2"
+      ],
+      "domain": "Addition and Subtraction Facts",
+      "skillKey": "addition_subtraction_facts",
+      "worksheetFamily": "facts",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Find the missing number.",
+      "teacherNote": "Use this quick check after missing-addend practice to see whether students can find missing parts within 20.",
+      "activityTypes": [
+        "missing_addend"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6,
+        "maxTotal": 20
+      },
+      "tags": [
+        "grade 2",
+        "addition",
+        "missing addends",
+        "within 20",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students find missing addends within 20. This short Quick Check is designed for focused part-whole review.",
+      "sourceType": "curated"
+    },
+    {
+      "id": "g4_pattern_rule_quick_check",
+      "title": "Pattern Rule Quick Check",
+      "shortTitle": "Pattern Rule",
+      "subject": "Math",
+      "grades": [
+        "grade4"
+      ],
+      "gradeLabels": [
+        "Grade 4"
+      ],
+      "domain": "Patterning and Algebra",
+      "skillKey": "patterning_and_algebra",
+      "worksheetFamily": "patterning",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Write or use the pattern rule.",
+      "teacherNote": "Use this quick check after pattern-rule practice to see whether students can identify or use a pattern rule.",
+      "activityTypes": [
+        "identify_pattern_rule"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6
+      },
+      "tags": [
+        "grade 4",
+        "patterning",
+        "pattern rules",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students work with pattern rules. This short Quick Check is designed for focused patterning review.",
+      "sourceType": "curated"
+    },
+    {
       "id": "grade4_addition_subtraction_word_problems_addition_word_problem",
       "title": "Addition Word Problem — Grade 4",
       "shortTitle": "Addition Word Problem",
