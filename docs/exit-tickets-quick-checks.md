@@ -4,7 +4,7 @@
 
 This document records the planned Exit Ticket / Quick Check lane for Milestone 6.
 
-Worksheet promotion is intentionally paused at 84 ready worksheets. The first Quick Check proof of concept is implemented, verified, and reviewed. The first controlled Quick Check batch is also implemented, verified, and reviewed. The second controlled Quick Check batch is implemented and verified, bringing ready resources to 91 / 91 working while keeping ready worksheets at 84. The next content goal is Teacher QA and Curriculum Alignment review for the second controlled Quick Check batch before more scaling.
+Worksheet promotion is intentionally paused at 84 ready worksheets. The first Quick Check proof of concept is implemented, verified, and reviewed. The first controlled Quick Check batch is also implemented, verified, and reviewed. The second controlled Quick Check batch is implemented, verified, and reviewed. The final small Quick Check batch is implemented and verified, bringing ready resources to 93 / 93 working while keeping ready worksheets at 84. The next content goal is Teacher QA and Curriculum Alignment review for the final small Quick Check batch before formally pausing Quick Check expansion and checking Exit Ticket layout feasibility.
 
 Guiding phrase:
 
@@ -251,6 +251,61 @@ Next decision:
 * Decide whether to build one final small Quick Check batch of 2-3 resources or run a feasibility check for the first cut-apart Exit Ticket layout
 * Continue deferring two-per-page Exit Tickets until compact Quick Checks prove stable through QA/alignment
 
+## Final Small Quick Check Batch
+
+Implemented batch:
+
+* Commit: `6b08ca2 feat: add final quick check batch`
+* Backup branch: `backup/milestone-6-final-quick-check-batch`
+* New Quick Checks:
+  * `g3_expanded_form_to_standard_form_quick_check`
+  * `g4_multiplication_word_problem_quick_check`
+* Ready resources: 93 / 93 working, 0 failures
+* Ready worksheets: 84
+* Ready Quick Checks: 9
+
+Implementation notes:
+
+* Added exactly 2 new ready Quick Checks
+* Added entries to both catalog files only:
+  * `data/worksheetCatalog.master.json`
+  * `data/worksheetCatalog.generated.json`
+* Normal worksheet PDF rendering was not changed
+* No route changes were made
+* No generator changes were made
+* No worksheet behavior changed
+* No docs were changed during implementation
+* No Exit Ticket work was started
+
+Verification:
+
+* Catalog JSON parse passed
+* `npm run audit:worksheets` passed
+* Ready result: 93 / 93 working, 0 failures
+* Generated result: 214 / 214 working, 0 failures
+* Partial result: 5 / 5 working, 0 failures
+* Planned result: known/deferred `pattern_word_problems` failures only
+* `/browse` route passed
+* `/api/worksheet-catalog?status=ready` returned 93 ready items and 9 Quick Checks
+* Detail and preview routes for both new Quick Checks passed
+* PDF routes for all 9 Quick Checks passed as 200 `application/pdf`
+* All 9 Quick Checks rendered valid 2-page letter PDFs
+* Existing worksheet PDF regression check passed using `g1_addition_facts_within_20`
+
+Minor limitation:
+
+* `g4_multiplication_word_problem_quick_check` is best framed as Grade 4 review/practice
+* Sampled prompts were real and distinct, though some answers repeated
+* Do not frame it as deep problem-solving, mastery, assessment, diagnostic, or full Grade 4 multiplication coverage
+
+Next decision:
+
+* Teacher QA / Resource Review should review the 2 new Quick Checks as a final batch
+* Curriculum Alignment should then review the 2 new Quick Checks
+* After both pass, formally pause Quick Check expansion at 9
+* Then run a read-only Exit Ticket layout feasibility check
+* Do not build more Quick Checks yet
+
 ## Recommended Implementation Sequence
 
 1. Document the lane
@@ -264,7 +319,10 @@ Next decision:
 9. Teacher QA and Curriculum Alignment review for the 3 new Quick Checks
 10. Build a second controlled batch of 3 Quick Checks
 11. Teacher QA and Curriculum Alignment review for the second controlled batch
-12. Decide whether to build one final Quick Check batch or run a read-only feasibility check for the first cut-apart Exit Ticket
+12. Build one final small Quick Check batch of 2 resources
+13. Teacher QA and Curriculum Alignment review for the final small Quick Check batch
+14. Pause Quick Check expansion at 9 if review passes
+15. Run a read-only feasibility check for the first cut-apart Exit Ticket
 
 ## Guardrails
 

@@ -1513,3 +1513,44 @@ Second controlled Quick Check batch completed:
 * Duplicate/repeated item caution for fraction comparisons remains a future cleanup risk
 * Next recommended task: decide whether to build one final small Quick Check batch of 2-3 resources or run a feasibility check for the first cut-apart Exit Ticket layout
 * Continue deferring two-per-page Exit Tickets until compact Quick Checks prove stable through QA/alignment
+
+Final small Quick Check batch completed:
+
+* Commit: `6b08ca2 feat: add final quick check batch`
+* Backup branch: `backup/milestone-6-final-quick-check-batch`
+* New Quick Checks:
+  * `g3_expanded_form_to_standard_form_quick_check`
+  * `g4_multiplication_word_problem_quick_check`
+* Ready resources: 93 / 93 working, 0 failures
+* Ready worksheets: 84
+* Ready Quick Checks: 9
+* Product decision: this was the final small Quick Check batch before pausing Quick Check expansion and moving to Exit Ticket layout feasibility after review gates
+* Implementation summary:
+  * Added exactly 2 new ready Quick Checks
+  * Added entries to both `data/worksheetCatalog.master.json` and `data/worksheetCatalog.generated.json`
+  * Normal worksheet PDF rendering was not changed
+  * No route changes were made
+  * No generator changes were made
+  * No worksheet behavior changed
+  * No docs were changed during implementation
+  * No Exit Ticket work was started
+* Verification passed:
+  * Catalog JSON parse passed
+  * `npm run audit:worksheets` passed
+  * Ready result: 93 / 93 working, 0 failures
+  * Generated result: 214 / 214 working, 0 failures
+  * Partial result: 5 / 5 working, 0 failures
+  * Planned result: known/deferred `pattern_word_problems` failures only
+  * `/browse` route passed
+  * `/api/worksheet-catalog?status=ready` returned 93 ready items and 9 Quick Checks
+  * Detail and preview routes for both new Quick Checks passed
+  * PDF routes for all 9 Quick Checks passed as 200 `application/pdf`
+  * All 9 Quick Checks rendered valid 2-page letter PDFs
+  * Existing worksheet PDF regression check passed using `g1_addition_facts_within_20`
+* Minor limitation:
+  * `g4_multiplication_word_problem_quick_check` is best framed as Grade 4 review/practice
+  * Sampled prompts were real and distinct, though some answers repeated
+  * Do not frame it as deep problem-solving, mastery, assessment, diagnostic, or full Grade 4 multiplication coverage
+* Next recommended task: Teacher QA / Resource Review should review the 2 new Quick Checks as a final batch, then Curriculum Alignment should review the same 2 resources
+* After both reviews pass, formally pause Quick Check expansion at 9 and run a read-only Exit Ticket layout feasibility check
+* Do not build more Quick Checks yet
