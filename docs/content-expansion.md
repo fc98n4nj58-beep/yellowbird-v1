@@ -23,7 +23,7 @@ More fuel in the same airplane.
 * Worksheet promotion is paused at 84 ready worksheets after the final micro-scan found no worthy 85th worksheet candidate
 * Product decision: 84 strong worksheets is better than 85 with filler
 * Resource count grew from 91 to 93 by adding 2 final Quick Checks, not by forcing worksheet filler
-* Recommended target before external testing: keep 84 ready worksheets as the worksheet-depth checkpoint; Quick Check expansion is now paused at 9, and the first Exit Ticket proof of concept should go through Teacher QA and Curriculum Alignment before any Exit Ticket batch work
+* Recommended target before external testing: keep 84 ready worksheets as the worksheet-depth checkpoint; Quick Check expansion is now paused at 9, and the Exit Ticket lane is approved for cautious continuation after the first proof-of-concept review
 * Exit Ticket / Quick Check control doc: `docs/exit-tickets-quick-checks.md`
 
 Expected untracked files remain visible and documented:
@@ -663,12 +663,30 @@ First Exit Ticket proof of concept implemented:
   * One shared answer key is used because the tickets are identical
   * Future Exit Tickets should go through Teacher QA and Curriculum Alignment before scaling
   * Exit Tickets should remain lesson-close formative checks, not assessments or mastery checks
-* Next recommended step:
-  * Teacher QA / Resource Review should review the first Exit Ticket proof of concept
-  * Curriculum Alignment should then review it
-  * After both pass, decide whether to build a tiny controlled Exit Ticket batch of 2-3 or pause for a broader Milestone 6 quality sweep
-  * Do not build more Exit Tickets before review gates
+* Review result:
+  * Teacher QA approved the first Exit Ticket proof of concept as public-ready with minor wording/framing caution
+  * Curriculum Alignment approved the first Exit Ticket proof of concept as public-ready
+  * Strong Grade 3 place-value / Number fit
+  * Skill focus is honest and specific
+  * Three prompts are enough for a lesson-close formative signal, not mastery
+  * Current title, student instructions, teacher note, description, estimated time, and answer key framing are safe
+  * No wording change is required
+  * Approved public framing: A Grade 3 cut-apart Exit Ticket for writing 3-digit numbers in standard form from expanded form. Best used as a 3-5 minute formative lesson-close check after place-value instruction, not as a test, diagnostic, mastery check, or full place-value assessment.
+* Lane decision:
+  * Exit Ticket lane is approved for cautious continuation
+  * Next recommended step is a tiny controlled Exit Ticket batch of 2-3 narrow, low-risk skills
+  * Do not build a broad Exit Ticket expansion yet
+  * Worksheet promotion remains paused at 84
+  * Quick Check expansion remains paused at 9
+* Scaling cautions:
+  * Exit Tickets should be lesson-close tools, not mini worksheets
+  * Keep teacher notes tied to instruction: "after a lesson on..." or "after practice with..."
+  * Avoid mastery, diagnostic, test, assessment, summative, and full-coverage language
+  * Use precise skill titles
+  * Be careful with word problems and explanations because they need more workspace
+  * Identical cut-apart tickets and shared answer keys are acceptable for now
+  * A/B versions can be considered later, but are not required
 
-Preserve the strategic sequence: 84 ready worksheets -> pause worksheet promotion -> implement one Quick Check proof of concept -> Teacher QA review -> Curriculum Alignment review -> build a small first batch of 3 Quick Checks -> Teacher QA review for the new batch -> Curriculum Alignment review for the new batch -> build a second controlled batch of 3 Quick Checks -> Teacher QA review for the second batch -> Curriculum Alignment review for the second batch -> build one final small Quick Check batch of 2 resources -> Teacher QA review for the final batch -> Curriculum Alignment review for the final batch -> pause Quick Check expansion at 9 -> run a read-only feasibility check for the first cut-apart Exit Ticket -> build exactly one Exit Ticket proof of concept -> Teacher QA review -> Curriculum Alignment review -> decide whether to build a tiny controlled Exit Ticket batch or pause for a broader quality sweep.
+Preserve the strategic sequence: 84 ready worksheets -> pause worksheet promotion -> implement one Quick Check proof of concept -> Teacher QA review -> Curriculum Alignment review -> build a small first batch of 3 Quick Checks -> Teacher QA review for the new batch -> Curriculum Alignment review for the new batch -> build a second controlled batch of 3 Quick Checks -> Teacher QA review for the second batch -> Curriculum Alignment review for the second batch -> build one final small Quick Check batch of 2 resources -> Teacher QA review for the final batch -> Curriculum Alignment review for the final batch -> pause Quick Check expansion at 9 -> run a read-only feasibility check for the first cut-apart Exit Ticket -> build exactly one Exit Ticket proof of concept -> Teacher QA review -> Curriculum Alignment review -> tiny controlled Exit Ticket batch decision.
 
 Quality remains more important than raw count. Keep using the stable catalog/runtime, preserve current worksheet PDFs, and do not start deployment, external testing, graph visuals, `pattern_word_problems`, Morning Math, unit planning, games, or broad Content Excellence yet.

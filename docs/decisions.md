@@ -186,10 +186,31 @@ Implementation update:
 - The PDF is letter portrait with two identical cut-apart tickets on page 1 and a readable answer key on page 2.
 - Minor limitation: the first Exit Ticket uses two identical tickets and one shared answer key because that is safest for proof of concept.
 
-Next review:
-- Teacher QA / Resource Review should review the first Exit Ticket proof of concept.
-- Curriculum Alignment should then review it.
-- After both pass, decide whether to build a tiny controlled Exit Ticket batch of 2-3 or pause for a broader Milestone 6 quality sweep.
+Review update:
+- Teacher QA approved the first Exit Ticket proof of concept as public-ready with minor wording/framing caution.
+- Curriculum Alignment approved the first Exit Ticket proof of concept as public-ready.
+- `g3_expanded_form_to_standard_form_exit_ticket` has strong Grade 3 place-value / Number fit.
+- The skill focus is honest and specific.
+- Three prompts are enough for a lesson-close formative signal, not mastery.
+- Current title, student instructions, teacher note, description, estimated time, and answer key framing are safe.
+- No wording change is required.
+- Approved public framing: a Grade 3 cut-apart Exit Ticket for writing 3-digit numbers in standard form from expanded form, best used as a 3-5 minute formative lesson-close check after place-value instruction.
+
+Lane decision:
+- Exit Ticket lane is approved for cautious continuation.
+- Next recommended step is a tiny controlled Exit Ticket batch of 2-3 narrow, low-risk skills.
+- Do not build a broad Exit Ticket expansion yet.
+- Worksheet promotion remains paused at 84.
+- Quick Check expansion remains paused at 9.
+
+Scaling cautions:
+- Exit Tickets should be lesson-close tools, not mini worksheets.
+- Keep teacher notes tied to instruction: "after a lesson on..." or "after practice with...".
+- Avoid mastery, diagnostic, test, assessment, summative, and full-coverage language.
+- Use precise skill titles.
+- Be careful with word problems and explanations because they need more workspace.
+- Identical cut-apart tickets and shared answer keys are acceptable for now.
+- A/B versions can be considered later, but are not required.
 
 ## Decision: Worksheet Preview/PDF Parity
 

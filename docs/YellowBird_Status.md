@@ -1618,6 +1618,23 @@ First Exit Ticket proof of concept completed:
   * One shared answer key is used because the tickets are identical
   * Future Exit Tickets should go through Teacher QA and Curriculum Alignment before scaling
   * Exit Tickets should remain lesson-close formative checks, not assessments or mastery checks
-* Next recommended task: Teacher QA / Resource Review should review the first Exit Ticket proof of concept, then Curriculum Alignment should review it
-* After both pass, decide whether to build a tiny controlled Exit Ticket batch of 2-3 or pause for a broader Milestone 6 quality sweep
-* Do not build more Exit Tickets before review gates
+* Teacher QA result: public-ready with minor wording/framing caution
+* Curriculum Alignment result: public-ready
+* Review notes:
+  * Strong Grade 3 place-value / Number fit
+  * Skill focus is honest and specific
+  * Three prompts are enough for a lesson-close formative signal, not mastery
+  * Current title, student instructions, teacher note, description, estimated time, and answer key framing are safe
+  * No wording change is required
+  * Approved public framing: A Grade 3 cut-apart Exit Ticket for writing 3-digit numbers in standard form from expanded form. Best used as a 3-5 minute formative lesson-close check after place-value instruction, not as a test, diagnostic, mastery check, or full place-value assessment.
+* Lane decision: Exit Ticket lane is approved for cautious continuation
+* Next recommended task: decide on a tiny controlled Exit Ticket batch of 2-3 narrow, low-risk skills
+* Do not build a broad Exit Ticket expansion yet
+* Scaling cautions:
+  * Exit Tickets should be lesson-close tools, not mini worksheets
+  * Keep teacher notes tied to instruction: "after a lesson on..." or "after practice with..."
+  * Avoid mastery, diagnostic, test, assessment, summative, and full-coverage language
+  * Use precise skill titles
+  * Be careful with word problems and explanations because they need more workspace
+  * Identical cut-apart tickets and shared answer keys are acceptable for now
+  * A/B versions can be considered later, but are not required
