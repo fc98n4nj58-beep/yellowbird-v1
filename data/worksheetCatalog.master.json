@@ -302,7 +302,7 @@
         "missing addend word problem"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for missing addend word problem.",
+      "description": "Students solve missing-addend word problems for focused addition and subtraction practice.",
       "sourceType": "generated"
     },
     {
@@ -468,7 +468,7 @@
         "subtraction word problem"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for subtraction word problem.",
+      "description": "Students solve subtraction word problems for focused Grade 1 practice.",
       "sourceType": "generated"
     },
     {
@@ -1773,7 +1773,7 @@
         "missing addend word problem"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for missing addend word problem.",
+      "description": "Students solve missing-addend word problems for focused part-whole practice.",
       "sourceType": "generated"
     },
     {
@@ -1936,7 +1936,7 @@
         "subtraction word problem"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for subtraction word problem.",
+      "description": "Students solve subtraction word problems for focused Grade 2 practice.",
       "sourceType": "generated"
     },
     {
@@ -2652,7 +2652,7 @@
         "extend pattern"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for extend pattern.",
+      "description": "Students extend number patterns for focused Grade 2 patterning practice.",
       "sourceType": "generated"
     },
     {
@@ -2716,7 +2716,7 @@
         "identify pattern rule"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for identify pattern rule.",
+      "description": "Students identify rules in number patterns for focused Grade 2 patterning practice.",
       "sourceType": "generated"
     },
     {
@@ -2748,7 +2748,7 @@
         "missing value pattern"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for missing value pattern.",
+      "description": "Students find missing values in number patterns for focused Grade 2 patterning practice.",
       "sourceType": "generated"
     },
     {
@@ -3442,8 +3442,8 @@
     },
     {
       "id": "g3_complete_a_graph",
-      "title": "Use Data to Answer Questions",
-      "shortTitle": "Data Questions",
+      "title": "Grade 3 Data Questions",
+      "shortTitle": "Grade 3 Data",
       "subject": "Math",
       "grades": [
         "grade3"
@@ -3463,14 +3463,14 @@
       "estimatedTimeMinutes": 12,
       "hasAnswerKey": true,
       "tags": [
-        "graph",
-        "complete graph",
+        "data questions",
+        "text data",
         "grade 3"
       ],
       "curriculumTags": [
         "D1"
       ],
-      "description": "Students read provided data and answer text-based graph questions.",
+      "description": "Students use information from a provided data set to answer text-based questions.",
       "sourceType": "curated"
     },
     {
@@ -3827,7 +3827,7 @@
         "compare fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for compare fractions.",
+      "description": "Students compare fractions as focused Grade 3 fraction practice.",
       "sourceType": "generated"
     },
     {
@@ -3923,7 +3923,7 @@
         "match equivalent fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for match equivalent fractions.",
+      "description": "Students match equivalent fractions as focused Grade 3 fraction practice.",
       "sourceType": "generated"
     },
     {
@@ -4090,8 +4090,8 @@
     },
     {
       "id": "g3_missing_factors",
-      "title": "Missing Factors",
-      "shortTitle": "Missing Factors",
+      "title": "Missing Factors Within Multiplication Facts",
+      "shortTitle": "G3 Missing Factors",
       "subject": "Math",
       "grades": [
         "grade3"
@@ -4118,7 +4118,7 @@
       "curriculumTags": [
         "B2"
       ],
-      "description": "Students solve multiplication equations with a missing factor.",
+      "description": "Students solve basic multiplication equations with a missing factor for focused fact practice.",
       "sourceType": "curated"
     },
     {
@@ -4353,7 +4353,7 @@
         "extend pattern"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for extend pattern.",
+      "description": "Students extend number patterns for focused Grade 3 patterning practice.",
       "sourceType": "generated"
     },
     {
@@ -4417,7 +4417,7 @@
         "identify pattern rule"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for identify pattern rule.",
+      "description": "Students identify rules in number patterns for focused Grade 3 patterning practice.",
       "sourceType": "generated"
     },
     {
@@ -4449,7 +4449,7 @@
         "missing value pattern"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for missing value pattern.",
+      "description": "Students find missing values in number patterns for focused Grade 3 patterning practice.",
       "sourceType": "generated"
     },
     {
@@ -5775,7 +5775,7 @@
         "compare fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for compare fractions.",
+      "description": "Students compare fractions as focused Grade 4 fraction practice.",
       "sourceType": "generated"
     },
     {
@@ -5871,7 +5871,7 @@
         "match equivalent fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for match equivalent fractions.",
+      "description": "Students match equivalent fractions as focused Grade 4 fraction practice.",
       "sourceType": "generated"
     },
     {
@@ -6038,8 +6038,8 @@
     },
     {
       "id": "g4_missing_factors",
-      "title": "Missing Factors",
-      "shortTitle": "Missing Factors",
+      "title": "Missing Factors Review",
+      "shortTitle": "G4 Missing Factors",
       "subject": "Math",
       "grades": [
         "grade4"
@@ -6066,7 +6066,7 @@
       "curriculumTags": [
         "B2"
       ],
-      "description": "Students solve multiplication equations with a missing factor.",
+      "description": "Students solve multiplication equations with a missing factor for focused review practice.",
       "sourceType": "curated"
     },
     {
@@ -6228,7 +6228,7 @@
         "extend pattern"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for extend pattern.",
+      "description": "Students extend number patterns for focused Grade 4 patterning practice.",
       "sourceType": "generated"
     },
     {
@@ -6292,7 +6292,7 @@
         "identify pattern rule"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for identify pattern rule.",
+      "description": "Students identify rules in number patterns for focused Grade 4 patterning practice.",
       "sourceType": "generated"
     },
     {
@@ -6324,7 +6324,7 @@
         "missing value pattern"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for missing value pattern.",
+      "description": "Students find missing values in number patterns for focused Grade 4 patterning practice.",
       "sourceType": "generated"
     },
     {
@@ -6971,8 +6971,8 @@
     },
     {
       "id": "g5_complete_graphs",
-      "title": "Use Data to Answer Questions",
-      "shortTitle": "Data Questions",
+      "title": "Grade 5 Data Questions",
+      "shortTitle": "Grade 5 Data",
       "subject": "Math",
       "grades": [
         "grade5"
@@ -6992,14 +6992,14 @@
       "estimatedTimeMinutes": 12,
       "hasAnswerKey": true,
       "tags": [
-        "graphs",
-        "complete graph",
+        "data questions",
+        "text data",
         "grade 5"
       ],
       "curriculumTags": [
         "D1"
       ],
-      "description": "Students read provided data and answer text-based graph questions.",
+      "description": "Students use information from a provided data set to answer text-based questions.",
       "sourceType": "curated"
     },
     {
@@ -7100,8 +7100,8 @@
     },
     {
       "id": "g5_interpret_graphs",
-      "title": "Data Interpretation Questions",
-      "shortTitle": "Interpret Data",
+      "title": "Grade 5 Data Interpretation",
+      "shortTitle": "G5 Interpret Data",
       "subject": "Math",
       "grades": [
         "grade5"
@@ -7122,14 +7122,14 @@
       "estimatedTimeMinutes": 12,
       "hasAnswerKey": true,
       "tags": [
-        "graphs",
-        "interpret",
+        "data",
+        "interpret data",
         "grade 5"
       ],
       "curriculumTags": [
         "D1"
       ],
-      "description": "Students interpret data and answer comparison questions.",
+      "description": "Students use information from a data set to answer comparison and interpretation questions.",
       "sourceType": "curated"
     },
     {
@@ -7225,7 +7225,7 @@
         "compare fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for compare fractions.",
+      "description": "Students compare fractions as focused Grade 5 fraction review.",
       "sourceType": "generated"
     },
     {
@@ -7387,7 +7387,7 @@
         "match equivalent fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for match equivalent fractions.",
+      "description": "Students match equivalent fractions as focused Grade 5 fraction review.",
       "sourceType": "generated"
     },
     {
@@ -7483,7 +7483,7 @@
         "equal groups"
       ],
       "curriculumTags": [],
-      "description": "Students use equal groups to model multiplication or division.",
+      "description": "Students use equal groups for foundational multiplication and division review.",
       "sourceType": "generated"
     },
     {
@@ -7515,7 +7515,7 @@
         "missing factor"
       ],
       "curriculumTags": [],
-      "description": "Students solve multiplication equations with a missing factor.",
+      "description": "Students solve multiplication equations with a missing factor for focused review practice.",
       "sourceType": "generated"
     },
     {
@@ -8321,8 +8321,8 @@
     },
     {
       "id": "g6_graph_interpretation",
-      "title": "Data Interpretation Questions",
-      "shortTitle": "Interpret Data",
+      "title": "Grade 6 Data Interpretation",
+      "shortTitle": "G6 Interpret Data",
       "subject": "Math",
       "grades": [
         "grade6"
@@ -8343,14 +8343,14 @@
       "estimatedTimeMinutes": 12,
       "hasAnswerKey": true,
       "tags": [
-        "graphs",
-        "interpretation",
+        "data",
+        "interpret data",
         "grade 6"
       ],
       "curriculumTags": [
         "D1"
       ],
-      "description": "Students interpret data and justify conclusions.",
+      "description": "Students use information from a data set to answer interpretation questions and justify conclusions.",
       "sourceType": "curated"
     },
     {
@@ -8542,7 +8542,7 @@
         "compare fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for compare fractions.",
+      "description": "Students compare fractions as focused Grade 6 fraction review.",
       "sourceType": "generated"
     },
     {
@@ -8671,7 +8671,7 @@
         "match equivalent fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for match equivalent fractions.",
+      "description": "Students match equivalent fractions as focused Grade 6 fraction review.",
       "sourceType": "generated"
     },
     {
@@ -8767,7 +8767,7 @@
         "equal groups"
       ],
       "curriculumTags": [],
-      "description": "Students use equal groups to model multiplication or division.",
+      "description": "Students use equal groups for foundational multiplication and division review.",
       "sourceType": "generated"
     },
     {
@@ -8799,7 +8799,7 @@
         "missing factor"
       ],
       "curriculumTags": [],
-      "description": "Students solve multiplication equations with a missing factor.",
+      "description": "Students solve multiplication equations with a missing factor for focused review practice.",
       "sourceType": "generated"
     },
     {

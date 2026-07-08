@@ -157,7 +157,7 @@
         "missing addend word problem"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for missing addend word problem."
+      "description": "Students solve missing-addend word problems for focused addition and subtraction practice."
     },
     {
       "id": "grade1_addition_subtraction_facts_missing_addend",
@@ -250,7 +250,7 @@
         "subtraction word problem"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for subtraction word problem."
+      "description": "Students solve subtraction word problems for focused Grade 1 practice."
     },
     {
       "id": "grade1_addition_subtraction_facts_ten_frame",
@@ -1304,7 +1304,7 @@
         "missing addend word problem"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for missing addend word problem."
+      "description": "Students solve missing-addend word problems for focused part-whole practice."
     },
     {
       "id": "grade2_addition_subtraction_facts_missing_addend",
@@ -1397,7 +1397,7 @@
         "subtraction word problem"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for subtraction word problem."
+      "description": "Students solve subtraction word problems for focused Grade 2 practice."
     },
     {
       "id": "grade2_addition_subtraction_facts_ten_frame",
@@ -1986,7 +1986,7 @@
         "extend pattern"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for extend pattern."
+      "description": "Students extend number patterns for focused Grade 2 patterning practice."
     },
     {
       "id": "grade2_patterning_and_algebra_function_table",
@@ -2048,7 +2048,7 @@
         "identify pattern rule"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for identify pattern rule."
+      "description": "Students identify rules in number patterns for focused Grade 2 patterning practice."
     },
     {
       "id": "grade2_patterning_and_algebra_missing_value_pattern",
@@ -2079,7 +2079,7 @@
         "missing value pattern"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for missing value pattern."
+      "description": "Students find missing values in number patterns for focused Grade 2 patterning practice."
     },
     {
       "id": "grade2_patterning_and_algebra_pattern_word_problems",
@@ -2823,7 +2823,7 @@
         "compare fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for compare fractions."
+      "description": "Students compare fractions as focused Grade 3 fraction practice."
     },
     {
       "id": "grade3_fraction_equivalence_fraction_number_line",
@@ -2916,7 +2916,7 @@
         "match equivalent fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for match equivalent fractions."
+      "description": "Students match equivalent fractions as focused Grade 3 fraction practice."
     },
     {
       "id": "grade3_fraction_equivalence_shade_fraction_models",
@@ -3133,7 +3133,7 @@
         "extend pattern"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for extend pattern."
+      "description": "Students extend number patterns for focused Grade 3 patterning practice."
     },
     {
       "id": "grade3_patterning_and_algebra_function_table",
@@ -3195,7 +3195,7 @@
         "identify pattern rule"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for identify pattern rule."
+      "description": "Students identify rules in number patterns for focused Grade 3 patterning practice."
     },
     {
       "id": "grade3_patterning_and_algebra_missing_value_pattern",
@@ -3226,7 +3226,7 @@
         "missing value pattern"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for missing value pattern."
+      "description": "Students find missing values in number patterns for focused Grade 3 patterning practice."
     },
     {
       "id": "grade3_patterning_and_algebra_pattern_word_problems",
@@ -4490,7 +4490,7 @@
         "compare fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for compare fractions."
+      "description": "Students compare fractions as focused Grade 4 fraction practice."
     },
     {
       "id": "grade4_fraction_equivalence_fraction_number_line",
@@ -4583,7 +4583,7 @@
         "match equivalent fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for match equivalent fractions."
+      "description": "Students match equivalent fractions as focused Grade 4 fraction practice."
     },
     {
       "id": "grade4_fraction_equivalence_shade_fraction_models",
@@ -4800,7 +4800,7 @@
         "extend pattern"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for extend pattern."
+      "description": "Students extend number patterns for focused Grade 4 patterning practice."
     },
     {
       "id": "grade4_patterning_and_algebra_function_table",
@@ -4862,7 +4862,7 @@
         "identify pattern rule"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for identify pattern rule."
+      "description": "Students identify rules in number patterns for focused Grade 4 patterning practice."
     },
     {
       "id": "grade4_patterning_and_algebra_missing_value_pattern",
@@ -4893,7 +4893,7 @@
         "missing value pattern"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for missing value pattern."
+      "description": "Students find missing values in number patterns for focused Grade 4 patterning practice."
     },
     {
       "id": "grade4_patterning_and_algebra_pattern_word_problems",
@@ -5637,7 +5637,7 @@
         "compare fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for compare fractions."
+      "description": "Students compare fractions as focused Grade 5 fraction review."
     },
     {
       "id": "grade5_fraction_equivalence_fraction_number_line",
@@ -5730,7 +5730,7 @@
         "match equivalent fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for match equivalent fractions."
+      "description": "Students match equivalent fractions as focused Grade 5 fraction review."
     },
     {
       "id": "grade5_fraction_equivalence_shade_fraction_models",
@@ -5823,7 +5823,7 @@
         "equal groups"
       ],
       "curriculumTags": [],
-      "description": "Students use equal groups to model multiplication or division."
+      "description": "Students use equal groups for foundational multiplication and division review."
     },
     {
       "id": "grade5_multiplication_facts_missing_factor",
@@ -5854,7 +5854,7 @@
         "missing factor"
       ],
       "curriculumTags": [],
-      "description": "Students solve multiplication equations with a missing factor."
+      "description": "Students solve multiplication equations with a missing factor for focused review practice."
     },
     {
       "id": "grade5_multiplication_facts_skip_counting",
@@ -6784,7 +6784,7 @@
         "compare fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for compare fractions."
+      "description": "Students compare fractions as focused Grade 6 fraction review."
     },
     {
       "id": "grade6_fraction_equivalence_fraction_number_line",
@@ -6877,7 +6877,7 @@
         "match equivalent fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for match equivalent fractions."
+      "description": "Students match equivalent fractions as focused Grade 6 fraction review."
     },
     {
       "id": "grade6_fraction_equivalence_shade_fraction_models",
@@ -6970,7 +6970,7 @@
         "equal groups"
       ],
       "curriculumTags": [],
-      "description": "Students use equal groups to model multiplication or division."
+      "description": "Students use equal groups for foundational multiplication and division review."
     },
     {
       "id": "grade6_multiplication_facts_missing_factor",
@@ -7001,7 +7001,7 @@
         "missing factor"
       ],
       "curriculumTags": [],
-      "description": "Students solve multiplication equations with a missing factor."
+      "description": "Students solve multiplication equations with a missing factor for focused review practice."
     },
     {
       "id": "grade6_multiplication_facts_skip_counting",

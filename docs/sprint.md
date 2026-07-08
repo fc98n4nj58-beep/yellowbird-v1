@@ -1324,6 +1324,11 @@ Milestone 6 is underway. Milestones 2–5 remain closed.
   - A/B versions can wait
   - Word problems, drawings, explanations, and multi-step tasks may need more space or fewer prompts
 - Do not build more Exit Tickets now
+- Metadata/copy cleanup pass completed after the Milestone 6 quality/resource-mix sweep:
+  - Duplicate ready-resource titles were clarified
+  - Text-based data/graphing wording was kept honest and does not imply visual graph generation
+  - Grade 5/6 descriptions now frame resources as focused review/foundational practice where appropriate
+  - Internal "Generated worksheet..." descriptions were replaced with teacher-facing descriptions
 - Scaling cautions:
   - Exit Tickets should be lesson-close tools, not mini worksheets
   - Keep teacher notes tied to instruction: "after a lesson on..." or "after practice with..."

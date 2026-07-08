@@ -24,6 +24,11 @@ More fuel in the same airplane.
 * Product decision: 84 strong worksheets is better than 85 with filler
 * Resource count grew from 91 to 93 by adding 2 final Quick Checks, not by forcing worksheet filler
 * Recommended target before external testing: keep 84 ready worksheets as the worksheet-depth checkpoint; Quick Check expansion is now paused at 9, and Exit Ticket expansion is now paused at 3 after the controlled batch passed Teacher QA and Curriculum Alignment
+* Metadata/copy cleanup pass completed after the quality/resource-mix sweep:
+  * Duplicate ready-resource titles were clarified
+  * Text-based data/graphing resource wording was kept honest and did not imply generated visual graphs
+  * Grade 5/6 resources were framed as focused review/foundational practice where appropriate
+  * Internal "Generated worksheet..." descriptions were replaced with teacher-facing descriptions
 * Exit Ticket / Quick Check control doc: `docs/exit-tickets-quick-checks.md`
 
 Expected untracked files remain visible and documented:
