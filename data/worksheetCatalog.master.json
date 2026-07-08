@@ -5024,6 +5024,51 @@
       "sourceType": "curated"
     },
     {
+      "id": "g3_expanded_form_to_standard_form_exit_ticket",
+      "title": "Expanded Form to Standard Form Exit Ticket",
+      "shortTitle": "Expanded to Standard Form",
+      "subject": "Math",
+      "grades": [
+        "grade3"
+      ],
+      "gradeLabels": [
+        "Grade 3"
+      ],
+      "domain": "Place Value: Expanded Form to Standard Form",
+      "skillKey": "number_representation",
+      "worksheetFamily": "representation",
+      "resourceType": "exit_ticket",
+      "formatLabel": "Exit Ticket",
+      "useCase": "lesson-close formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Write each number in standard form.",
+      "teacherNote": "Use this exit ticket after a place-value lesson to see whether students can write 3-digit numbers in standard form from expanded form.",
+      "activityTypes": [
+        "standard_form"
+      ],
+      "templateId": "exit_ticket",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": "3-5",
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 3,
+        "minA": 100,
+        "maxA": 999
+      },
+      "tags": [
+        "grade 3",
+        "place value",
+        "standard form",
+        "expanded form",
+        "exit ticket"
+      ],
+      "curriculumTags": [],
+      "description": "Students write 3-digit numbers in standard form from expanded form. This cut-apart Exit Ticket is designed as a short lesson-close check after place-value instruction.",
+      "sourceType": "curated"
+    },
+    {
       "id": "g4_multiplication_word_problem_quick_check",
       "title": "Equal-Groups Multiplication Quick Check",
       "shortTitle": "Equal-Groups Multiplication",

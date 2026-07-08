@@ -150,6 +150,7 @@
     matching: "Matching",
     model_interpretation: "Model interpretation",
     quick_check: "Quick Check",
+    exit_ticket: "Exit Ticket",
     related_subtraction: "Subtraction facts",
     missing_addend: "Missing addends",
     missing_factor: "Missing factors",
@@ -195,6 +196,10 @@
   function worksheetTypeLabel(item) {
     if (item.resourceType === "quick_check") {
       return "Quick Check";
+    }
+
+    if (item.resourceType === "exit_ticket") {
+      return "Exit Ticket";
     }
 
     const activityTypes = item.activityTypes || [];

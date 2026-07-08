@@ -196,7 +196,11 @@
         if (!data.ok || !data.item) return;
 
         const item = data.item;
-        const resourceLabel = item.resourceType === "quick_check" ? "Quick Check" : "Worksheet";
+        const resourceLabel = item.resourceType === "quick_check"
+          ? "Quick Check"
+          : item.resourceType === "exit_ticket"
+            ? "Exit Ticket"
+            : "Worksheet";
         document.getElementById("previewTitle").textContent = `${resourceLabel} Preview`;
         document.getElementById("meta").textContent = [
           item.gradeLabels?.[0] || "",

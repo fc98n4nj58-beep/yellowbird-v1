@@ -50,6 +50,7 @@ const friendlyWorksheetLabels = {
   matching: "Matching",
   model_interpretation: "Model interpretation",
   quick_check: "Quick Check",
+  exit_ticket: "Exit Ticket",
   related_subtraction: "Subtraction facts",
   missing_addend: "Missing addends",
   missing_factor: "Missing factors",
@@ -99,7 +100,7 @@ function worksheetDomainLabel(item) {
 }
 
 function worksheetPracticeFocus(item) {
-  if (item.resourceType === "quick_check") {
+  if (item.resourceType === "quick_check" || item.resourceType === "exit_ticket") {
     return item.teacherNote || item.description || "Short formative skill check";
   }
 
@@ -114,6 +115,10 @@ function worksheetQuestionStyle(item) {
 function worksheetTypeLabel(item) {
   if (item.resourceType === "quick_check") {
     return "Quick Check";
+  }
+
+  if (item.resourceType === "exit_ticket") {
+    return "Exit Ticket";
   }
 
   const activityTypes = Array.isArray(item.activityTypes) ? item.activityTypes : [];
@@ -380,8 +385,16 @@ function renderWorksheetDetailPage(item) {
   const worksheetType = worksheetTypeLabel(item);
   const worksheetFormat = worksheetFormatLabel(item);
   const domain = worksheetDomainLabel(item);
-  const resourceType = item.resourceType === "quick_check" ? "Quick Check" : "Worksheet";
-  const detailsTitle = item.resourceType === "quick_check" ? "Quick Check details" : "Worksheet details";
+  const resourceType = item.resourceType === "quick_check"
+    ? "Quick Check"
+    : item.resourceType === "exit_ticket"
+      ? "Exit Ticket"
+      : "Worksheet";
+  const detailsTitle = item.resourceType === "quick_check"
+    ? "Quick Check details"
+    : item.resourceType === "exit_ticket"
+      ? "Exit Ticket details"
+      : "Worksheet details";
   const badges = [
     ...(item.gradeLabels || []),
     domain,
