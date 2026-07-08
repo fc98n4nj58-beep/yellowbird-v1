@@ -4979,6 +4979,94 @@
       "sourceType": "curated"
     },
     {
+      "id": "g3_expanded_form_to_standard_form_quick_check",
+      "title": "Expanded Form to Standard Form Quick Check",
+      "shortTitle": "Expanded to Standard Form",
+      "subject": "Math",
+      "grades": [
+        "grade3"
+      ],
+      "gradeLabels": [
+        "Grade 3"
+      ],
+      "domain": "Place Value: Standard Form",
+      "skillKey": "number_representation",
+      "worksheetFamily": "representation",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Write each number in standard form.",
+      "teacherNote": "Use this quick check after place-value practice to see whether students can write 3-digit numbers in standard form from expanded form.",
+      "activityTypes": [
+        "standard_form"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6,
+        "minA": 100,
+        "maxA": 999
+      },
+      "tags": [
+        "grade 3",
+        "place value",
+        "standard form",
+        "expanded form",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students write 3-digit numbers in standard form from expanded form. This short Quick Check is designed for focused place-value review.",
+      "sourceType": "curated"
+    },
+    {
+      "id": "g4_multiplication_word_problem_quick_check",
+      "title": "Multiplication Word Problems Quick Check",
+      "shortTitle": "Multiplication Word Problems",
+      "subject": "Math",
+      "grades": [
+        "grade4"
+      ],
+      "gradeLabels": [
+        "Grade 4"
+      ],
+      "domain": "Multiplication: Equal Groups Review",
+      "skillKey": "multiplication_facts",
+      "worksheetFamily": "word_problems",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Solve each multiplication word problem.",
+      "teacherNote": "Use this quick check after multiplication practice to see whether students can solve short equal-groups word problems.",
+      "activityTypes": [
+        "word_problems"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6
+      },
+      "tags": [
+        "grade 4",
+        "multiplication",
+        "word problems",
+        "equal groups",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students solve short equal-groups multiplication word problems. This Quick Check is designed for focused multiplication review.",
+      "sourceType": "curated"
+    },
+    {
       "id": "grade4_addition_subtraction_word_problems_addition_word_problem",
       "title": "Addition Word Problem — Grade 4",
       "shortTitle": "Addition Word Problem",
