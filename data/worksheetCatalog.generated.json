@@ -3464,7 +3464,7 @@
       "useCase": "formative check",
       "prepLevel": "print-and-go",
       "formativeUse": true,
-      "teacherNote": "Use this quick check to see whether students can represent 3-digit numbers using hundreds, tens, and ones.",
+      "teacherNote": "Use this quick check after a place-value lesson to see whether students can represent 3-digit numbers using hundreds, tens, and ones.",
       "activityTypes": [
         "expanded_form"
       ],
@@ -3486,7 +3486,7 @@
         "quick check"
       ],
       "curriculumTags": [],
-      "description": "Students show 3-digit numbers as hundreds, tens, and ones."
+      "description": "Students represent 3-digit numbers by identifying the hundreds, tens, and ones. This short Quick Check is designed for focused place-value review."
     },
     {
       "id": "grade4_addition_subtraction_word_problems_addition_word_problem",

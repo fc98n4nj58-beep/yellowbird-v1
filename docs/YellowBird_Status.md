@@ -1394,6 +1394,12 @@ First Quick Check proof of concept completed:
   * Quick Check PDF route returned 200 `application/pdf` and a valid 2-page letter PDF
   * Existing worksheet PDF regression check passed using `g1_addition_facts_within_20`
   * Browse/detail/preview/PDF route checks passed
-* Next recommended task: Teacher QA / Resource Review Agent should review the first Quick Check, then Curriculum Alignment Agent should review honest Grade 3 Ontario math alignment
-* Do not build the next Quick Check batch yet; if both reviews pass, build a small first batch of 3-5 Quick Checks
+* Teacher QA result: public-ready as the first Quick Check
+* Curriculum Alignment result: approved with minor wording/framing caution
+* Wording update:
+  * Teacher note now frames the resource for use after a place-value lesson
+  * Description now frames it as focused place-value review
+* Final positioning: A Grade 3 quick formative check for representing 3-digit numbers using hundreds, tens, and ones. Best used after place-value instruction as a short review or progress check, not as a full assessment or mastery measure.
+* Framing guardrail: This should be described as a quick formative check, review, small-group check, or homeschool check, not a test, diagnostic, mastery check, summative assessment, or full expectation assessment
+* Next recommended task: build a controlled first batch of 3-5 more Quick Checks, not the full 10-15 yet
 * Defer two-per-page Exit Tickets until the compact Quick Check lane proves stable

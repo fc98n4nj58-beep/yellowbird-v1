@@ -22,7 +22,7 @@ More fuel in the same airplane.
 * Worksheet promotion is paused at 84 ready worksheets after the final micro-scan found no worthy 85th worksheet candidate
 * Product decision: 84 strong worksheets is better than 85 with filler
 * Resource count reached 85 by adding the first Quick Check, not by forcing a filler worksheet
-* Recommended target before external testing: keep 84 ready worksheets as the worksheet-depth checkpoint, review the first Quick Check, then add 10-15 exit tickets / quick checks if QA/alignment passes
+* Recommended target before external testing: keep 84 ready worksheets as the worksheet-depth checkpoint, build a controlled first batch of 3-5 more Quick Checks, then scale only if the lane remains stable
 * Exit Ticket / Quick Check control doc: `docs/exit-tickets-quick-checks.md`
 
 Expected untracked files remain visible and documented:
@@ -417,7 +417,7 @@ Avoid Kindergarten unless the content is clearly age-appropriate.
 
 ## Next Recommended Task
 
-Complete Teacher QA and Curriculum Alignment review for the first Quick Check before scaling the lane.
+Build a controlled first batch of 3-5 more Quick Checks, not the full 10-15 yet.
 
 Read-only feasibility decision: feasible with a small new lane. Best framing is same catalog engine, new resource family. Do not treat these as just more worksheets.
 
@@ -452,7 +452,14 @@ First Quick Check proof of concept implemented:
   * Quick Check PDF route returned 200 `application/pdf` and a valid 2-page letter PDF
   * Existing worksheet PDF regression check passed using `g1_addition_facts_within_20`
   * Browse/detail/preview/PDF route checks passed
+* Review:
+  * Teacher QA approved the first Quick Check as public-ready
+  * Curriculum Alignment approved it with minor wording/framing caution
+  * Teacher note now frames the resource for use after a place-value lesson
+  * Description now frames it as focused place-value review
+  * Final positioning: A Grade 3 quick formative check for representing 3-digit numbers using hundreds, tens, and ones. Best used after place-value instruction as a short review or progress check, not as a full assessment or mastery measure.
+  * Framing guardrail: do not describe it as a test, diagnostic, mastery check, summative assessment, or full expectation assessment
 
-Preserve the strategic sequence: 84 ready worksheets -> pause worksheet promotion -> implement one Quick Check proof of concept -> Teacher QA review -> Curriculum Alignment review -> if both pass, build a small first batch of 3-5 Quick Checks -> defer two-per-page Exit Tickets until compact Quick Check lane proves stable -> then decide on broader quick-resource scaling.
+Preserve the strategic sequence: 84 ready worksheets -> pause worksheet promotion -> implement one Quick Check proof of concept -> Teacher QA review -> Curriculum Alignment review -> build a small first batch of 3-5 Quick Checks -> defer two-per-page Exit Tickets until compact Quick Check lane proves stable -> then decide on broader quick-resource scaling.
 
 Quality remains more important than raw count. Keep using the stable catalog/runtime, preserve current worksheet PDFs, and do not start deployment, external testing, graph visuals, `pattern_word_problems`, Morning Math, unit planning, games, or broad Content Excellence yet.

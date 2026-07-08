@@ -79,6 +79,12 @@ Rules:
 - If both pass, build a small first batch of 3-5 Quick Checks.
 - Defer two-per-page Exit Tickets until compact Quick Check behavior is stable.
 
+Review update:
+- Teacher QA approved `g3_place_value_hundreds_tens_ones_quick_check` as public-ready.
+- Curriculum Alignment approved it with minor wording/framing caution.
+- Final positioning: a Grade 3 quick formative check for representing 3-digit numbers using hundreds, tens, and ones, best used after place-value instruction as short review or a progress check.
+- Do not frame it as a test, diagnostic, mastery check, summative assessment, or full expectation assessment.
+
 ## Decision: Worksheet Preview/PDF Parity
 
 Worksheet previews should use the same PDF rendering path as downloads.

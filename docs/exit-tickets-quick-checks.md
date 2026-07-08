@@ -4,7 +4,7 @@
 
 This document records the planned Exit Ticket / Quick Check lane for Milestone 6.
 
-Worksheet promotion is intentionally paused at 84 ready worksheets. The first Quick Check proof of concept is implemented and verified, bringing ready resources to 85 / 85 working while keeping ready worksheets at 84. The next content goal is to review the first Quick Check before scaling short formative resources.
+Worksheet promotion is intentionally paused at 84 ready worksheets. The first Quick Check proof of concept is implemented, verified, and reviewed, bringing ready resources to 85 / 85 working while keeping ready worksheets at 84. The next content goal is to build a controlled batch of 3-5 more Quick Checks, not the full 10-15 yet.
 
 Guiding phrase:
 
@@ -111,6 +111,15 @@ Verification:
 * Existing worksheet PDF regression check passed using `g1_addition_facts_within_20`
 * Browse/detail/preview/PDF route checks passed
 
+Review result:
+
+* Teacher QA approved the first Quick Check as public-ready
+* Curriculum Alignment approved it with minor wording/framing caution
+* Teacher note now frames the resource for use after a place-value lesson
+* Description now frames it as focused place-value review
+* Final positioning: A Grade 3 quick formative check for representing 3-digit numbers using hundreds, tens, and ones. Best used after place-value instruction as a short review or progress check, not as a full assessment or mastery measure.
+* Framing guardrail: do not describe it as a test, diagnostic, mastery check, summative assessment, or full expectation assessment
+
 Two-per-page cut-apart Exit Ticket format should come later after the Quick Check path works.
 
 ## Recommended Implementation Sequence
@@ -122,7 +131,7 @@ Two-per-page cut-apart Exit Ticket format should come later after the Quick Chec
 5. Verify Browse/detail/preview/PDF
 6. Teacher QA review
 7. Curriculum Alignment review
-8. If both pass, build a small first batch of 3-5 Quick Checks
+8. Build a controlled first batch of 3-5 more Quick Checks
 9. Then scale cautiously toward 10-15 Exit Tickets / Quick Checks
 
 ## Guardrails
