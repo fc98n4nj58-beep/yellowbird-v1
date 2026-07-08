@@ -1263,8 +1263,43 @@ Milestone 6 is underway. Milestones 2–5 remain closed.
   - No wording change is required
   - Approved public framing: A Grade 3 cut-apart Exit Ticket for writing 3-digit numbers in standard form from expanded form. Best used as a 3-5 minute formative lesson-close check after place-value instruction, not as a test, diagnostic, mastery check, or full place-value assessment.
 - Lane decision: Exit Ticket lane is approved for cautious continuation
-- Next recommended task: decide on a tiny controlled Exit Ticket batch of 2-3 narrow, low-risk skills
-- Do not build a broad Exit Ticket expansion yet
+- Controlled Exit Ticket batch completed:
+  - Commit: `9d8e5ea feat: add controlled exit ticket batch`
+  - Backup branch: `backup/milestone-6-controlled-exit-ticket-batch`
+  - Added exactly 2 ready Exit Tickets:
+    - `g2_missing_addends_within_20_exit_ticket`
+    - `g3_compare_3_digit_numbers_exit_ticket`
+  - Added to both catalog files only
+  - No renderer changes
+  - No route changes
+  - No public page changes
+  - No worksheet behavior changed
+  - No Quick Check behavior changed
+  - No broad Exit Ticket expansion started
+  - Ready resources: 96 / 96 working, 0 failures
+  - Ready worksheets: 84
+  - Ready Quick Checks: 9
+  - Ready Exit Tickets: 3
+  - Catalog JSON parse passed
+  - `npm run audit:worksheets` passed
+  - Generated result: 214 / 214 working, 0 failures
+  - Partial result: 5 / 5 working, 0 failures
+  - Planned result: known/deferred `pattern_word_problems` failures only
+  - `/browse` route passed
+  - `/api/worksheet-catalog?status=ready` returned 96 ready items, 3 Exit Tickets, and 9 Quick Checks
+  - Detail, preview, and PDF routes passed for both new Exit Tickets
+  - Both new PDFs are valid 2-page letter PDFs
+  - Existing Exit Ticket still renders
+  - Existing worksheet PDF regression passed using `g1_addition_facts_within_20`
+  - Existing Quick Check PDF regression passed using `g3_expanded_form_to_standard_form_quick_check`
+  - Visual PDF check passed: two cut-apart tickets visible, cut line visible, prompts readable, answer keys readable, and no clipping/overlap observed
+- Minor risks:
+  - `g2_missing_addends_within_20_exit_ticket` may occasionally produce a zero-addend style item
+  - `g3_compare_3_digit_numbers_exit_ticket` may repeat answer symbols, but prompts are distinct
+  - These are not implementation blockers, but Teacher QA should review them
+- Next recommended task: Teacher QA / Resource Review Agent should review the 2 new Exit Tickets as a controlled batch, followed by Curriculum Alignment review
+- After both review gates pass, decide whether to pause Exit Tickets at 3 and move to a broader Milestone 6 quality sweep, or add one final stretch Exit Ticket only if review feedback strongly supports it
+- Do not build more Exit Tickets before review gates
 - Scaling cautions:
   - Exit Tickets should be lesson-close tools, not mini worksheets
   - Keep teacher notes tied to instruction: "after a lesson on..." or "after practice with..."
