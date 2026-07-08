@@ -138,17 +138,16 @@ Review update:
 July 2026
 
 Decision:
-The final small Quick Check batch is implemented and verified, then paused for Teacher QA and Curriculum Alignment before formally pausing Quick Check expansion.
+The final small Quick Check batch is implemented, verified, reviewed, and Quick Check expansion is now paused intentionally at 9.
 
 Reason:
 The lane grew from 7 to 9 ready Quick Checks through a final small batch while keeping worksheet promotion paused at 84 and preserving normal worksheet PDF rendering.
 
 Rules:
-- Review `g3_expanded_form_to_standard_form_quick_check` and `g4_multiplication_word_problem_quick_check` with Teacher QA before any further Quick Check decisions.
-- Then complete Curriculum Alignment review for the same 2 resources.
 - Do not build more Quick Checks unless explicitly reopened after review.
-- If both pass, pause Quick Check expansion at 9 and run a read-only Exit Ticket layout feasibility check.
+- Run a read-only Exit Ticket layout feasibility check next.
 - Continue deferring two-per-page cut-apart Exit Tickets until layout feasibility is complete.
+- Future Quick Checks can resume later after Exit Ticket feasibility and/or teacher testing.
 
 Implementation update:
 - Commit: `6b08ca2 feat: add final quick check batch`.
@@ -156,6 +155,13 @@ Implementation update:
 - Ready resources are now 93 / 93 working, with 84 ready worksheets and 9 ready Quick Checks.
 - The implementation changed catalog data only and did not change routes, renderers, generators, or worksheet behavior.
 - Minor limitation: `g4_multiplication_word_problem_quick_check` is Grade 4 review/practice only; do not frame it as deep problem-solving, mastery, assessment, diagnostic, or full Grade 4 multiplication coverage.
+
+Review update:
+- Teacher QA approved both final Quick Checks.
+- Curriculum Alignment approved both final Quick Checks.
+- `g3_expanded_form_to_standard_form_quick_check` is public-ready.
+- `g4_multiplication_word_problem_quick_check` is public-ready as equal-groups review/practice with wording/framing caution.
+- Catalog wording for `g4_multiplication_word_problem_quick_check` now frames it as equal-groups multiplication review or warm-up practice.
 
 ## Decision: Worksheet Preview/PDF Parity
 

@@ -22,7 +22,7 @@ More fuel in the same airplane.
 * Worksheet promotion is paused at 84 ready worksheets after the final micro-scan found no worthy 85th worksheet candidate
 * Product decision: 84 strong worksheets is better than 85 with filler
 * Resource count grew from 91 to 93 by adding 2 final Quick Checks, not by forcing worksheet filler
-* Recommended target before external testing: keep 84 ready worksheets as the worksheet-depth checkpoint, review the final small Quick Check batch with Teacher QA and Curriculum Alignment before formally pausing Quick Check expansion and checking Exit Ticket layout feasibility
+* Recommended target before external testing: keep 84 ready worksheets as the worksheet-depth checkpoint; Quick Check expansion is now paused at 9 after review, and the next step is a read-only Exit Ticket layout feasibility scan
 * Exit Ticket / Quick Check control doc: `docs/exit-tickets-quick-checks.md`
 
 Expected untracked files remain visible and documented:
@@ -598,12 +598,18 @@ Final small Quick Check batch implemented:
   * `g4_multiplication_word_problem_quick_check` is best framed as Grade 4 review/practice
   * Sampled prompts were real and distinct, though some answers repeated
   * Do not frame it as deep problem-solving, mastery, assessment, diagnostic, or full Grade 4 multiplication coverage
-* Next recommended step:
-  * Teacher QA / Resource Review should review the 2 new Quick Checks as a final batch
-  * Curriculum Alignment should then review the 2 new Quick Checks
-  * After both pass, formally pause Quick Check expansion at 9
-  * Then run a read-only Exit Ticket layout feasibility check
+* Review result:
+  * Teacher QA approved the final small Quick Check batch
+  * Curriculum Alignment approved the final small Quick Check batch
+  * `g3_expanded_form_to_standard_form_quick_check` is public-ready
+  * `g4_multiplication_word_problem_quick_check` is public-ready as equal-groups review/practice with wording/framing caution
+  * Catalog wording for `g4_multiplication_word_problem_quick_check` now frames it as equal-groups multiplication review or warm-up practice
+* Current lane decision:
+  * Quick Check expansion is now paused intentionally at 9
+  * Next step is a read-only Exit Ticket layout feasibility scan
+  * Do not build more Quick Checks right now
+  * Future Quick Checks can resume later after Exit Ticket feasibility and/or teacher testing
 
-Preserve the strategic sequence: 84 ready worksheets -> pause worksheet promotion -> implement one Quick Check proof of concept -> Teacher QA review -> Curriculum Alignment review -> build a small first batch of 3 Quick Checks -> Teacher QA review for the new batch -> Curriculum Alignment review for the new batch -> build a second controlled batch of 3 Quick Checks -> Teacher QA review for the second batch -> Curriculum Alignment review for the second batch -> build one final small Quick Check batch of 2 resources -> Teacher QA review for the final batch -> Curriculum Alignment review for the final batch -> pause Quick Check expansion at 9 if review passes -> run a read-only feasibility check for the first cut-apart Exit Ticket.
+Preserve the strategic sequence: 84 ready worksheets -> pause worksheet promotion -> implement one Quick Check proof of concept -> Teacher QA review -> Curriculum Alignment review -> build a small first batch of 3 Quick Checks -> Teacher QA review for the new batch -> Curriculum Alignment review for the new batch -> build a second controlled batch of 3 Quick Checks -> Teacher QA review for the second batch -> Curriculum Alignment review for the second batch -> build one final small Quick Check batch of 2 resources -> Teacher QA review for the final batch -> Curriculum Alignment review for the final batch -> pause Quick Check expansion at 9 -> run a read-only feasibility check for the first cut-apart Exit Ticket.
 
 Quality remains more important than raw count. Keep using the stable catalog/runtime, preserve current worksheet PDFs, and do not start deployment, external testing, graph visuals, `pattern_word_problems`, Morning Math, unit planning, games, or broad Content Excellence yet.

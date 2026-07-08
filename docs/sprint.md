@@ -1187,6 +1187,13 @@ Milestone 6 is underway. Milestones 2–5 remain closed.
   - `g4_multiplication_word_problem_quick_check` is best framed as Grade 4 review/practice
   - Sampled prompts were real and distinct, though some answers repeated
   - Do not frame it as deep problem-solving, mastery, assessment, diagnostic, or full Grade 4 multiplication coverage
-- Next recommended task: Teacher QA / Resource Review should review the 2 new Quick Checks as a final batch, then Curriculum Alignment should review the same 2 resources
-- After both reviews pass, formally pause Quick Check expansion at 9 and run a read-only Exit Ticket layout feasibility check
-- Do not build more Quick Checks yet
+- Teacher QA result: approved the final small Quick Check batch
+- Curriculum Alignment result: approved the final small Quick Check batch
+- Review notes:
+  - `g3_expanded_form_to_standard_form_quick_check`: public-ready
+  - `g4_multiplication_word_problem_quick_check`: public-ready as equal-groups review/practice with wording/framing caution
+  - Catalog wording for `g4_multiplication_word_problem_quick_check` now frames it as equal-groups multiplication review or warm-up practice
+- Quick Check expansion is now paused intentionally at 9
+- Next recommended task: run a read-only Exit Ticket layout feasibility scan
+- Do not build more Quick Checks right now
+- Future Quick Checks can resume later after Exit Ticket feasibility and/or teacher testing

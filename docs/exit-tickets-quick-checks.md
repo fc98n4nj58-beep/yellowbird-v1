@@ -4,7 +4,7 @@
 
 This document records the planned Exit Ticket / Quick Check lane for Milestone 6.
 
-Worksheet promotion is intentionally paused at 84 ready worksheets. The first Quick Check proof of concept is implemented, verified, and reviewed. The first controlled Quick Check batch is also implemented, verified, and reviewed. The second controlled Quick Check batch is implemented, verified, and reviewed. The final small Quick Check batch is implemented and verified, bringing ready resources to 93 / 93 working while keeping ready worksheets at 84. The next content goal is Teacher QA and Curriculum Alignment review for the final small Quick Check batch before formally pausing Quick Check expansion and checking Exit Ticket layout feasibility.
+Worksheet promotion is intentionally paused at 84 ready worksheets. The first Quick Check proof of concept is implemented, verified, and reviewed. The first controlled Quick Check batch is also implemented, verified, and reviewed. The second controlled Quick Check batch is implemented, verified, and reviewed. The final small Quick Check batch is implemented, verified, and reviewed, bringing ready resources to 93 / 93 working while keeping ready worksheets at 84. Quick Check expansion is now paused intentionally at 9. The next content goal is a read-only Exit Ticket layout feasibility scan.
 
 Guiding phrase:
 
@@ -298,13 +298,20 @@ Minor limitation:
 * Sampled prompts were real and distinct, though some answers repeated
 * Do not frame it as deep problem-solving, mastery, assessment, diagnostic, or full Grade 4 multiplication coverage
 
+Review result:
+
+* Teacher QA approved the final small Quick Check batch
+* Curriculum Alignment approved the final small Quick Check batch
+* `g3_expanded_form_to_standard_form_quick_check` is public-ready
+* `g4_multiplication_word_problem_quick_check` is public-ready as equal-groups review/practice with wording/framing caution
+* Catalog wording for `g4_multiplication_word_problem_quick_check` now frames it as equal-groups multiplication review or warm-up practice
+* Quick Check expansion is now paused intentionally at 9
+
 Next decision:
 
-* Teacher QA / Resource Review should review the 2 new Quick Checks as a final batch
-* Curriculum Alignment should then review the 2 new Quick Checks
-* After both pass, formally pause Quick Check expansion at 9
-* Then run a read-only Exit Ticket layout feasibility check
-* Do not build more Quick Checks yet
+* Run a read-only Exit Ticket layout feasibility scan
+* Do not build more Quick Checks right now
+* Future Quick Checks can resume later after Exit Ticket feasibility and/or teacher testing
 
 ## Recommended Implementation Sequence
 
@@ -321,7 +328,7 @@ Next decision:
 11. Teacher QA and Curriculum Alignment review for the second controlled batch
 12. Build one final small Quick Check batch of 2 resources
 13. Teacher QA and Curriculum Alignment review for the final small Quick Check batch
-14. Pause Quick Check expansion at 9 if review passes
+14. Pause Quick Check expansion at 9
 15. Run a read-only feasibility check for the first cut-apart Exit Ticket
 
 ## Guardrails

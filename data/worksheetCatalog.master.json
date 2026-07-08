@@ -5025,8 +5025,8 @@
     },
     {
       "id": "g4_multiplication_word_problem_quick_check",
-      "title": "Multiplication Word Problems Quick Check",
-      "shortTitle": "Multiplication Word Problems",
+      "title": "Equal-Groups Multiplication Quick Check",
+      "shortTitle": "Equal-Groups Multiplication",
       "subject": "Math",
       "grades": [
         "grade4"
@@ -5034,7 +5034,7 @@
       "gradeLabels": [
         "Grade 4"
       ],
-      "domain": "Multiplication: Equal Groups Review",
+      "domain": "Operations: Equal-Groups Multiplication Word Problems",
       "skillKey": "multiplication_facts",
       "worksheetFamily": "word_problems",
       "resourceType": "quick_check",
@@ -5042,8 +5042,8 @@
       "useCase": "formative check",
       "prepLevel": "print-and-go",
       "formativeUse": true,
-      "studentInstructions": "Solve each multiplication word problem.",
-      "teacherNote": "Use this quick check after multiplication practice to see whether students can solve short equal-groups word problems.",
+      "studentInstructions": "Solve each short equal-groups multiplication problem.",
+      "teacherNote": "Use this quick check after multiplication practice to see whether students can solve short equal-groups multiplication word problems.",
       "activityTypes": [
         "word_problems"
       ],
@@ -5063,7 +5063,7 @@
         "quick check"
       ],
       "curriculumTags": [],
-      "description": "Students solve short equal-groups multiplication word problems. This Quick Check is designed for focused multiplication review.",
+      "description": "Students solve short equal-groups multiplication word problems. This short Quick Check is designed for focused multiplication review or warm-up practice.",
       "sourceType": "curated"
     },
     {
