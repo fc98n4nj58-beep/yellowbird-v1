@@ -1658,13 +1658,37 @@ First Exit Ticket proof of concept completed:
   * Existing worksheet PDF regression passed using `g1_addition_facts_within_20`
   * Existing Quick Check PDF regression passed using `g3_expanded_form_to_standard_form_quick_check`
   * Visual PDF check passed: two cut-apart tickets visible, cut line visible, prompts readable, answer keys readable, and no clipping/overlap observed
-* Minor risks:
+* Review result:
+  * Teacher QA approved both controlled-batch Exit Tickets for Curriculum Alignment
+  * `g2_missing_addends_within_20_exit_ticket`: public-ready with minor caution
+  * `g3_compare_3_digit_numbers_exit_ticket`: public-ready
+  * Teacher QA batch-level judgment: the controlled 2-resource Exit Ticket batch passes Teacher QA and strengthens the Exit Ticket lane
+  * Curriculum Alignment approved both controlled-batch Exit Tickets as public-ready
+  * `g2_missing_addends_within_20_exit_ticket`: alignment approved with minor wording/framing caution
+  * `g3_compare_3_digit_numbers_exit_ticket`: alignment approved as public-ready
+  * Curriculum Alignment batch-level judgment: the controlled 2-resource batch strengthens the Exit Ticket lane from an alignment perspective
+* Lane decision:
+  * Exit Ticket lane is validated at 3 public-ready resources
+  * Exit Ticket expansion is now intentionally paused at 3
+  * Worksheet promotion remains paused at 84
+  * Quick Check expansion remains paused at 9
+  * Next step is a broader Milestone 6 quality/resource-mix sweep, not more resource implementation
+* Approved public framing:
+  * Exit Tickets are 3-5 minute, cut-apart, lesson-close formative checks after instruction or practice
+  * Exit Tickets are not tests, diagnostics, summative assessments, mastery checks, full expectation coverage, or mini worksheets
+* Resource-specific notes:
+  * `g2_missing_addends_within_20_exit_ticket`: supports Grade 2 operations practice with finding unknown parts in addition facts within 20; best used as a short formative lesson-close check after students have practised missing addends and part-whole relationships
+  * `g3_compare_3_digit_numbers_exit_ticket`: supports Grade 3 Number Sense practice with comparing 3-digit numbers using >, <, or =; best used as a short formative lesson-close check after place-value comparison instruction
+* Cautions:
   * `g2_missing_addends_within_20_exit_ticket` may occasionally produce a zero-addend style item
   * `g3_compare_3_digit_numbers_exit_ticket` may repeat answer symbols, but prompts are distinct
-  * These are not implementation blockers, but Teacher QA should review them
-* Next recommended task: Teacher QA / Resource Review Agent should review the 2 new Exit Tickets as a controlled batch, followed by Curriculum Alignment review
-* After both review gates pass, decide whether to pause Exit Tickets at 3 and move to a broader Milestone 6 quality sweep, or add one final stretch Exit Ticket only if review feedback strongly supports it
-* Do not build more Exit Tickets before review gates
+  * These are not public-readiness blockers
+  * Future missing-addend Exit Tickets should prefer non-zero unknown parts unless the skill explicitly includes zero
+  * Future comparison Exit Tickets should try to vary comparison symbols when possible
+  * Shared answer keys are fine for identical cut-apart tickets
+  * A/B versions can wait
+  * Word problems, drawings, explanations, and multi-step tasks may need more space or fewer prompts
+* Do not build more Exit Tickets now
 * Scaling cautions:
   * Exit Tickets should be lesson-close tools, not mini worksheets
   * Keep teacher notes tied to instruction: "after a lesson on..." or "after practice with..."
