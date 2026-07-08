@@ -11,18 +11,19 @@ More fuel in the same airplane.
 ## Current Status
 
 * Milestone 6 — Content Expansion / Resource Depth is underway.
-* Ready resources: 93 / 93 working
+* Ready resources: 94 / 94 working
 * Ready worksheets: 84
 * Ready Quick Checks: 9
+* Ready Exit Tickets: 1
 * Ready failures: 0
-* Milestone 6 gain so far: +38 ready resources
+* Milestone 6 gain so far: +39 ready resources
 * Milestone 6 completion estimate: around 66%
 * Patterning & Algebra ready coverage: 9 worksheets
 * Target direction: grow toward roughly 100 ready resources in quality-controlled batches
 * Worksheet promotion is paused at 84 ready worksheets after the final micro-scan found no worthy 85th worksheet candidate
 * Product decision: 84 strong worksheets is better than 85 with filler
 * Resource count grew from 91 to 93 by adding 2 final Quick Checks, not by forcing worksheet filler
-* Recommended target before external testing: keep 84 ready worksheets as the worksheet-depth checkpoint; Quick Check expansion is now paused at 9 after review, and the next step is a read-only Exit Ticket layout feasibility scan
+* Recommended target before external testing: keep 84 ready worksheets as the worksheet-depth checkpoint; Quick Check expansion is now paused at 9, and the first Exit Ticket proof of concept should go through Teacher QA and Curriculum Alignment before any Exit Ticket batch work
 * Exit Ticket / Quick Check control doc: `docs/exit-tickets-quick-checks.md`
 
 Expected untracked files remain visible and documented:
@@ -610,6 +611,64 @@ Final small Quick Check batch implemented:
   * Do not build more Quick Checks right now
   * Future Quick Checks can resume later after Exit Ticket feasibility and/or teacher testing
 
-Preserve the strategic sequence: 84 ready worksheets -> pause worksheet promotion -> implement one Quick Check proof of concept -> Teacher QA review -> Curriculum Alignment review -> build a small first batch of 3 Quick Checks -> Teacher QA review for the new batch -> Curriculum Alignment review for the new batch -> build a second controlled batch of 3 Quick Checks -> Teacher QA review for the second batch -> Curriculum Alignment review for the second batch -> build one final small Quick Check batch of 2 resources -> Teacher QA review for the final batch -> Curriculum Alignment review for the final batch -> pause Quick Check expansion at 9 -> run a read-only feasibility check for the first cut-apart Exit Ticket.
+First Exit Ticket proof of concept implemented:
+
+* Commit: `7b568be feat: add first exit ticket resource`
+* Backup branch: `backup/milestone-6-first-exit-ticket`
+* New resource: `g3_expanded_form_to_standard_form_exit_ticket`
+* Ready resources: 94 / 94 working, 0 failures
+* Ready worksheets: 84
+* Ready Quick Checks: 9
+* Ready Exit Tickets: 1
+* Product decision:
+  * Worksheet promotion remains paused at 84
+  * Quick Check expansion remains paused at 9
+  * Exit Tickets have started with exactly one proof of concept
+  * Do not build more Exit Tickets until this proof of concept passes Teacher QA and Curriculum Alignment
+* Implementation:
+  * Added exactly one ready Exit Ticket to both catalog files
+  * Added separate renderer: `renderers/exitTicketPdfRenderer.js`
+  * Added a narrow `resourceType === "exit_ticket"` route branch
+  * Reused existing catalog generation/runtime
+  * Added small `exit_ticket` label handling in Browse, detail, and preview
+  * Normal worksheet rendering was not changed
+  * Quick Check rendering was not changed
+  * No batch of Exit Tickets was started
+* Architecture note:
+  * Exit Tickets use a separate renderer rather than extending the worksheet renderer or folding into the Quick Check renderer
+  * This protects the stable worksheet/Quick Check flow and keeps the implementation reversible
+* Layout:
+  * Letter portrait PDF
+  * Page 1 has two identical cut-apart tickets stacked vertically
+  * Visible cut line between tickets
+  * Each ticket includes label, title, name/date line, directions, and 3 prompts
+  * Page 2 has a readable answer key
+  * Layout is black-and-white friendly and print-ready
+* Verification:
+  * JS syntax checks passed for the new renderer and touched routes
+  * Catalog JSON parse passed
+  * `npm run audit:worksheets` passed
+  * Ready result: 94 / 94 working, 0 failures
+  * Generated result: 214 / 214 working, 0 failures
+  * Partial result: 5 / 5 working, 0 failures
+  * Planned result: known/deferred `pattern_word_problems` failures only
+  * `/browse` route passed
+  * `/api/worksheet-catalog?status=ready` returned 94 ready items, 1 Exit Ticket, and 9 Quick Checks
+  * Detail, preview, and PDF routes passed for the new Exit Ticket
+  * New Exit Ticket PDF is valid, 2 pages, and letter size
+  * Existing worksheet PDF regression passed using `g1_addition_facts_within_20`
+  * Existing Quick Check PDF regression passed using `g3_expanded_form_to_standard_form_quick_check`
+* Minor limitations:
+  * First Exit Ticket uses two identical tickets, which is safest for proof of concept
+  * One shared answer key is used because the tickets are identical
+  * Future Exit Tickets should go through Teacher QA and Curriculum Alignment before scaling
+  * Exit Tickets should remain lesson-close formative checks, not assessments or mastery checks
+* Next recommended step:
+  * Teacher QA / Resource Review should review the first Exit Ticket proof of concept
+  * Curriculum Alignment should then review it
+  * After both pass, decide whether to build a tiny controlled Exit Ticket batch of 2-3 or pause for a broader Milestone 6 quality sweep
+  * Do not build more Exit Tickets before review gates
+
+Preserve the strategic sequence: 84 ready worksheets -> pause worksheet promotion -> implement one Quick Check proof of concept -> Teacher QA review -> Curriculum Alignment review -> build a small first batch of 3 Quick Checks -> Teacher QA review for the new batch -> Curriculum Alignment review for the new batch -> build a second controlled batch of 3 Quick Checks -> Teacher QA review for the second batch -> Curriculum Alignment review for the second batch -> build one final small Quick Check batch of 2 resources -> Teacher QA review for the final batch -> Curriculum Alignment review for the final batch -> pause Quick Check expansion at 9 -> run a read-only feasibility check for the first cut-apart Exit Ticket -> build exactly one Exit Ticket proof of concept -> Teacher QA review -> Curriculum Alignment review -> decide whether to build a tiny controlled Exit Ticket batch or pause for a broader quality sweep.
 
 Quality remains more important than raw count. Keep using the stable catalog/runtime, preserve current worksheet PDFs, and do not start deployment, external testing, graph visuals, `pattern_word_problems`, Morning Math, unit planning, games, or broad Content Excellence yet.

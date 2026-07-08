@@ -163,6 +163,34 @@ Review update:
 - `g4_multiplication_word_problem_quick_check` is public-ready as equal-groups review/practice with wording/framing caution.
 - Catalog wording for `g4_multiplication_word_problem_quick_check` now frames it as equal-groups multiplication review or warm-up practice.
 
+July 2026
+
+Decision:
+The first Exit Ticket proof of concept is implemented and verified before scaling the Exit Ticket lane.
+
+Reason:
+`g3_expanded_form_to_standard_form_exit_ticket` proves the cut-apart Exit Ticket format while keeping worksheet promotion paused at 84, Quick Check expansion paused at 9, and normal worksheet/Quick Check rendering protected.
+
+Rules:
+- Build exactly one Exit Ticket proof of concept before any batch work.
+- Use a separate Exit Ticket renderer rather than extending the worksheet renderer or folding Exit Tickets into the Quick Check renderer.
+- Keep Exit Tickets framed as lesson-close formative checks, not assessments, diagnostics, mastery checks, summative resources, or full expectation coverage.
+- Do not build more Exit Tickets until Teacher QA and Curriculum Alignment review this proof of concept.
+
+Implementation update:
+- Commit: `7b568be feat: add first exit ticket resource`.
+- Backup branch: `backup/milestone-6-first-exit-ticket`.
+- Ready resources are now 94 / 94 working, with 84 ready worksheets, 9 ready Quick Checks, and 1 ready Exit Ticket.
+- The implementation added one catalog item, a separate Exit Ticket renderer, a narrow `resourceType === "exit_ticket"` route branch, and small Browse/detail/preview label handling.
+- Normal worksheet rendering and Quick Check rendering were not changed.
+- The PDF is letter portrait with two identical cut-apart tickets on page 1 and a readable answer key on page 2.
+- Minor limitation: the first Exit Ticket uses two identical tickets and one shared answer key because that is safest for proof of concept.
+
+Next review:
+- Teacher QA / Resource Review should review the first Exit Ticket proof of concept.
+- Curriculum Alignment should then review it.
+- After both pass, decide whether to build a tiny controlled Exit Ticket batch of 2-3 or pause for a broader Milestone 6 quality sweep.
+
 ## Decision: Worksheet Preview/PDF Parity
 
 Worksheet previews should use the same PDF rendering path as downloads.

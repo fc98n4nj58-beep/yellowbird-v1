@@ -1197,3 +1197,62 @@ Milestone 6 is underway. Milestones 2–5 remain closed.
 - Next recommended task: run a read-only Exit Ticket layout feasibility scan
 - Do not build more Quick Checks right now
 - Future Quick Checks can resume later after Exit Ticket feasibility and/or teacher testing
+
+[x] First Exit Ticket proof of concept
+- Commit: `7b568be feat: add first exit ticket resource`
+- Backup branch: `backup/milestone-6-first-exit-ticket`
+- New resource:
+  - `g3_expanded_form_to_standard_form_exit_ticket`
+- Ready resources: 94 / 94 working, 0 failures
+- Ready worksheets: 84
+- Ready Quick Checks: 9
+- Ready Exit Tickets: 1
+- Product decisions:
+  - Worksheet promotion remains paused at 84
+  - Quick Check expansion remains paused at 9
+  - Exit Tickets have started with exactly one proof of concept
+  - Do not build more Exit Tickets until this proof of concept passes Teacher QA and Curriculum Alignment
+- Implementation summary:
+  - Added exactly one ready Exit Ticket
+  - Added entries to both `data/worksheetCatalog.master.json` and `data/worksheetCatalog.generated.json`
+  - Added separate renderer: `renderers/exitTicketPdfRenderer.js`
+  - Added a narrow `resourceType === "exit_ticket"` route branch
+  - Reused existing catalog generation/runtime
+  - Added small label handling for `exit_ticket` in Browse, detail, and preview
+  - Normal worksheet rendering was not changed
+  - Quick Check rendering was not changed
+  - No batch of Exit Tickets was started
+- Architecture note: Exit Tickets use a separate renderer rather than extending the worksheet renderer or folding into the Quick Check renderer, protecting the stable worksheet/Quick Check flow and keeping the implementation reversible
+- Layout:
+  - Letter portrait PDF
+  - Page 1 has two identical cut-apart tickets stacked vertically
+  - Visible cut line between tickets
+  - Each ticket includes label, title, name/date line, directions, and 3 prompts
+  - Page 2 has a readable answer key
+  - Layout is black-and-white friendly and print-ready
+- Verification passed:
+  - `node --check renderers/exitTicketPdfRenderer.js` passed
+  - `node --check routes/worksheetPdfRoutes.js` passed
+  - `node --check routes/libraryRoutes.js` passed
+  - Catalog JSON parse passed
+  - `npm run audit:worksheets` passed
+  - Ready result: 94 / 94 working, 0 failures
+  - Generated result: 214 / 214 working, 0 failures
+  - Partial result: 5 / 5 working, 0 failures
+  - Planned result: known/deferred `pattern_word_problems` failures only
+  - `/browse` route passed
+  - `/api/worksheet-catalog?status=ready` returned 94 ready items, 1 Exit Ticket, and 9 Quick Checks
+  - Detail, preview, and PDF routes passed for `g3_expanded_form_to_standard_form_exit_ticket`
+  - New Exit Ticket PDF is valid, 2 pages, and letter size
+  - Page 1 has two readable cut-apart tickets and visible cut line
+  - Page 2 has readable answer key
+  - Existing worksheet PDF regression passed using `g1_addition_facts_within_20`
+  - Existing Quick Check PDF regression passed using `g3_expanded_form_to_standard_form_quick_check`
+- Minor limitations:
+  - First Exit Ticket uses two identical tickets, which is safest for proof of concept
+  - One shared answer key is used because the tickets are identical
+  - Future Exit Tickets should go through Teacher QA and Curriculum Alignment before scaling
+  - Exit Tickets should remain lesson-close formative checks, not assessments or mastery checks
+- Next recommended task: Teacher QA / Resource Review should review the first Exit Ticket proof of concept, then Curriculum Alignment should review it
+- After both pass, decide whether to build a tiny controlled Exit Ticket batch of 2-3 or pause for a broader Milestone 6 quality sweep
+- Do not build more Exit Tickets before review gates

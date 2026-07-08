@@ -4,7 +4,7 @@
 
 This document records the planned Exit Ticket / Quick Check lane for Milestone 6.
 
-Worksheet promotion is intentionally paused at 84 ready worksheets. The first Quick Check proof of concept is implemented, verified, and reviewed. The first controlled Quick Check batch is also implemented, verified, and reviewed. The second controlled Quick Check batch is implemented, verified, and reviewed. The final small Quick Check batch is implemented, verified, and reviewed, bringing ready resources to 93 / 93 working while keeping ready worksheets at 84. Quick Check expansion is now paused intentionally at 9. The next content goal is a read-only Exit Ticket layout feasibility scan.
+Worksheet promotion is intentionally paused at 84 ready worksheets. The first Quick Check proof of concept is implemented, verified, and reviewed. The first controlled Quick Check batch is also implemented, verified, and reviewed. The second controlled Quick Check batch is implemented, verified, and reviewed. The final small Quick Check batch is implemented, verified, and reviewed, bringing ready Quick Checks to 9 while keeping ready worksheets at 84. Quick Check expansion is now paused intentionally at 9. The first cut-apart Exit Ticket proof of concept is implemented and verified, bringing ready resources to 94 / 94 working. The next content goal is Teacher QA and Curriculum Alignment review for the first Exit Ticket before any Exit Ticket batch work.
 
 Guiding phrase:
 
@@ -330,6 +330,93 @@ Next decision:
 13. Teacher QA and Curriculum Alignment review for the final small Quick Check batch
 14. Pause Quick Check expansion at 9
 15. Run a read-only feasibility check for the first cut-apart Exit Ticket
+16. Build exactly one Exit Ticket proof of concept
+17. Teacher QA and Curriculum Alignment review for the Exit Ticket proof of concept
+18. Decide whether to build a tiny controlled Exit Ticket batch of 2-3 or pause for a broader Milestone 6 quality sweep
+
+## First Exit Ticket Proof Of Concept
+
+Implemented resource:
+
+* Commit: `7b568be feat: add first exit ticket resource`
+* Backup branch: `backup/milestone-6-first-exit-ticket`
+* ID: `g3_expanded_form_to_standard_form_exit_ticket`
+* Title: Expanded Form to Standard Form Exit Ticket
+* Ready resources: 94 / 94 working, 0 failures
+* Ready worksheets: 84
+* Ready Quick Checks: 9
+* Ready Exit Tickets: 1
+
+Product decisions:
+
+* Worksheet promotion remains paused at 84
+* Quick Check expansion remains paused at 9
+* Exit Tickets have started with exactly one proof of concept
+* Do not build more Exit Tickets until this proof of concept passes Teacher QA and Curriculum Alignment
+
+Implementation notes:
+
+* Added exactly one ready Exit Ticket
+* Added entries to both catalog files:
+  * `data/worksheetCatalog.master.json`
+  * `data/worksheetCatalog.generated.json`
+* Added separate renderer: `renderers/exitTicketPdfRenderer.js`
+* Added a narrow `resourceType === "exit_ticket"` route branch
+* Reused existing catalog generation/runtime
+* Added small label handling for `exit_ticket` in Browse, detail, and preview
+* Normal worksheet rendering was not changed
+* Quick Check rendering was not changed
+* No batch of Exit Tickets was started
+
+Architecture note:
+
+* Exit Tickets use a separate renderer rather than extending the worksheet renderer or folding into the Quick Check renderer
+* This protects the stable worksheet/Quick Check flow and keeps the implementation reversible
+
+Layout:
+
+* Letter portrait PDF
+* Page 1 has two identical cut-apart tickets stacked vertically
+* Visible cut line between tickets
+* Each ticket includes label, title, name/date line, directions, and 3 prompts
+* Page 2 has a readable answer key
+* Layout is black-and-white friendly and print-ready
+
+Verification:
+
+* `node --check renderers/exitTicketPdfRenderer.js` passed
+* `node --check routes/worksheetPdfRoutes.js` passed
+* `node --check routes/libraryRoutes.js` passed
+* Catalog JSON parse passed
+* `npm run audit:worksheets` passed
+* Ready result: 94 / 94 working, 0 failures
+* Generated result: 214 / 214 working, 0 failures
+* Partial result: 5 / 5 working, 0 failures
+* Planned result: known/deferred `pattern_word_problems` failures only
+* `/browse` route passed
+* `/api/worksheet-catalog?status=ready` returned 94 ready items, 1 Exit Ticket, and 9 Quick Checks
+* Detail route passed for `g3_expanded_form_to_standard_form_exit_ticket`
+* Preview route passed for `g3_expanded_form_to_standard_form_exit_ticket`
+* PDF route passed for `g3_expanded_form_to_standard_form_exit_ticket`
+* New Exit Ticket PDF is valid, 2 pages, and letter size
+* Page 1 has two readable cut-apart tickets and a visible cut line
+* Page 2 has a readable answer key
+* Existing worksheet PDF regression passed using `g1_addition_facts_within_20`
+* Existing Quick Check PDF regression passed using `g3_expanded_form_to_standard_form_quick_check`
+
+Minor limitations:
+
+* First Exit Ticket uses two identical tickets, which is safest for proof of concept
+* One shared answer key is used because the tickets are identical
+* Future Exit Tickets should go through Teacher QA and Curriculum Alignment before scaling
+* Exit Tickets should remain lesson-close formative checks, not assessments or mastery checks
+
+Next decision:
+
+* Teacher QA / Resource Review should review the first Exit Ticket proof of concept
+* Curriculum Alignment should then review it
+* After both pass, decide whether to build a tiny controlled Exit Ticket batch of 2-3 or pause for a broader Milestone 6 quality sweep
+* Do not build more Exit Tickets before review gates
 
 ## Guardrails
 
