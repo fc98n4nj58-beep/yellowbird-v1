@@ -4,7 +4,7 @@
 
 This document records the planned Exit Ticket / Quick Check lane for Milestone 6.
 
-Worksheet promotion is intentionally paused at 84 ready worksheets. The next content goal is to add short formative resources without turning them into tiny worksheets or destabilizing the stable worksheet catalog/runtime.
+Worksheet promotion is intentionally paused at 84 ready worksheets. The first Quick Check proof of concept is implemented and verified, bringing ready resources to 85 / 85 working while keeping ready worksheets at 84. The next content goal is to review the first Quick Check before scaling short formative resources.
 
 Guiding phrase:
 
@@ -72,15 +72,44 @@ Minimal future fields:
 
 Start with Quick Check first, not a two-per-page Exit Ticket.
 
-First preferred proof-of-concept:
+First proof-of-concept implemented:
 
 * `g3_place_value_hundreds_tens_ones_quick_check`
+* Title: Hundreds, Tens, and Ones Quick Check
+* Grade: 3
+* Resource type: `quick_check`
+* Format label: Quick Check
+* Skill: represent 3-digit numbers using hundreds, tens, and ones
+* Use case: short formative skill check, review, small-group check, or homeschool check
+* Commit: `5442440 feat: add first quick check resource`
+* Backup branch: `backup/milestone-6-first-quick-check`
 
 Reason:
 
 * Compact single-page Quick Check is lower risk than cut-apart layout
 * Place-value content is a stable existing generator area when ranges are controlled
 * It can prove the metadata, compact renderer, detail/preview/PDF flow, and answer key path before scaling
+
+Implementation notes:
+
+* Added one ready Quick Check catalog item
+* Added compact Quick Check PDF rendering through `renderers/quickCheckPdfRenderer.js`
+* Existing `renderWorksheetPDF` behavior remains untouched for normal worksheets
+* Added narrow route/runtime support for `resourceType: quick_check`
+* Added minimal metadata support for `resourceType`, `formatLabel`, `teacherNote`, `useCase`, `prepLevel`, and `formativeUse`
+* Lightly updated Browse, detail, and preview labels so the item presents as a Quick Check
+* Added opt-in `expandedForm` answer style for hundreds/tens/ones prompts
+
+Verification:
+
+* JS syntax checks passed for changed JS files
+* Catalog JSON parse passed
+* `npm run audit:worksheets` passed
+* Ready result: 85 / 85 working, 0 failures
+* Quick Check runtime generates 6 real prompts
+* Quick Check PDF route returned 200 `application/pdf` and a valid 2-page letter PDF
+* Existing worksheet PDF regression check passed using `g1_addition_facts_within_20`
+* Browse/detail/preview/PDF route checks passed
 
 Two-per-page cut-apart Exit Ticket format should come later after the Quick Check path works.
 
@@ -91,8 +120,10 @@ Two-per-page cut-apart Exit Ticket format should come later after the Quick Chec
 3. Add compact Quick Check renderer
 4. Build one proof-of-concept Quick Check
 5. Verify Browse/detail/preview/PDF
-6. QA/alignment review
-7. Then scale toward 10-15 Exit Tickets / Quick Checks
+6. Teacher QA review
+7. Curriculum Alignment review
+8. If both pass, build a small first batch of 3-5 Quick Checks
+9. Then scale cautiously toward 10-15 Exit Tickets / Quick Checks
 
 ## Guardrails
 

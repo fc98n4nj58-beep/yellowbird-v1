@@ -64,6 +64,21 @@ Rules:
 - Start with one compact single-page Quick Check proof of concept.
 - Use formative check / review / warm-up / small-group language.
 - Do not call these assessments, tests, mastery checks, diagnostics, or summative resources.
+
+July 2026
+
+Decision:
+The first Quick Check proof of concept is implemented and verified before scaling the lane.
+
+Reason:
+`g3_place_value_hundreds_tens_ones_quick_check` proves compact Quick Check metadata, routing, preview/PDF flow, and separate rendering while preserving normal worksheet PDFs. Worksheet promotion remains paused at 84; ready resources reached 85 through the first Quick Check rather than a filler worksheet.
+
+Rules:
+- Review the first Quick Check with Teacher QA / Resource Review before building more.
+- Then review honest Grade 3 Ontario math alignment.
+- If both pass, build a small first batch of 3-5 Quick Checks.
+- Defer two-per-page Exit Tickets until compact Quick Check behavior is stable.
+
 ## Decision: Worksheet Preview/PDF Parity
 
 Worksheet previews should use the same PDF rendering path as downloads.

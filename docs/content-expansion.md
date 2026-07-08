@@ -11,15 +11,18 @@ More fuel in the same airplane.
 ## Current Status
 
 * Milestone 6 — Content Expansion / Resource Depth is underway.
-* Ready worksheets: 84 / 84 working
+* Ready resources: 85 / 85 working
+* Ready worksheets: 84
+* Ready Quick Checks: 1
 * Ready failures: 0
 * Milestone 6 gain so far: +38 ready worksheets
 * Milestone 6 completion estimate: around 66%
 * Patterning & Algebra ready coverage: 9 worksheets
 * Target direction: grow toward roughly 100 ready resources in quality-controlled batches
-* Worksheet promotion is paused at 84 ready worksheets after the final micro-scan found no worthy 85th candidate
+* Worksheet promotion is paused at 84 ready worksheets after the final micro-scan found no worthy 85th worksheet candidate
 * Product decision: 84 strong worksheets is better than 85 with filler
-* Recommended target before external testing: keep 84 ready worksheets as the worksheet-depth checkpoint, add 10-15 exit tickets / quick checks, then add 5-10 review or mini-quiz resources
+* Resource count reached 85 by adding the first Quick Check, not by forcing a filler worksheet
+* Recommended target before external testing: keep 84 ready worksheets as the worksheet-depth checkpoint, review the first Quick Check, then add 10-15 exit tickets / quick checks if QA/alignment passes
 * Exit Ticket / Quick Check control doc: `docs/exit-tickets-quick-checks.md`
 
 Expected untracked files remain visible and documented:
@@ -414,12 +417,42 @@ Avoid Kindergarten unless the content is clearly age-appropriate.
 
 ## Next Recommended Task
 
-Begin exit tickets / quick checks planning as the next content lane.
+Complete Teacher QA and Curriculum Alignment review for the first Quick Check before scaling the lane.
 
 Read-only feasibility decision: feasible with a small new lane. Best framing is same catalog engine, new resource family. Do not treat these as just more worksheets.
 
-First implementation target: build one compact single-page Quick Check proof of concept before two-per-page Exit Tickets. Preferred first candidate is `g3_place_value_hundreds_tens_ones_quick_check`.
+First Quick Check proof of concept implemented:
 
-Preserve the strategic sequence: 84 ready worksheets -> pause worksheet promotion -> plan exit tickets / quick checks -> build 10-15 quick resources -> reach about 95-100 resources -> add review/mini-quiz resources if useful -> reach 100-115 ready resources -> test with teachers -> then decide on Morning Math, differentiation packs, small-group lessons, or unit plans.
+* Commit: `5442440 feat: add first quick check resource`
+* Backup branch: `backup/milestone-6-first-quick-check`
+* ID: `g3_place_value_hundreds_tens_ones_quick_check`
+* Title: Hundreds, Tens, and Ones Quick Check
+* Grade: 3
+* Resource type: `quick_check`
+* Format label: Quick Check
+* Skill: represent 3-digit numbers using hundreds, tens, and ones
+* Use case: short formative skill check, review, small-group check, or homeschool check
+* Implementation:
+  * Added one ready Quick Check catalog item
+  * Added compact Quick Check PDF rendering through `renderers/quickCheckPdfRenderer.js`
+  * Kept existing `renderWorksheetPDF` behavior untouched for normal worksheets
+  * Added narrow route/runtime support for `resourceType: quick_check`
+  * Added minimal metadata support for `resourceType`, `formatLabel`, `teacherNote`, `useCase`, `prepLevel`, and `formativeUse`
+  * Lightly updated Browse, detail, and preview labels so the item presents as a Quick Check
+  * Added opt-in `expandedForm` answer style for hundreds/tens/ones prompts
+* Verification:
+  * JS syntax checks passed for changed JS files
+  * Catalog JSON parse passed
+  * `npm run audit:worksheets` passed
+  * Ready result: 85 / 85 working, 0 failures
+  * Generated result: 214 / 214 working, 0 failures
+  * Partial result: 5 / 5 working, 0 failures
+  * Planned result: 2 / 9 working, with 7 known/deferred `pattern_word_problems` failures
+  * Quick Check runtime generates 6 real prompts
+  * Quick Check PDF route returned 200 `application/pdf` and a valid 2-page letter PDF
+  * Existing worksheet PDF regression check passed using `g1_addition_facts_within_20`
+  * Browse/detail/preview/PDF route checks passed
+
+Preserve the strategic sequence: 84 ready worksheets -> pause worksheet promotion -> implement one Quick Check proof of concept -> Teacher QA review -> Curriculum Alignment review -> if both pass, build a small first batch of 3-5 Quick Checks -> defer two-per-page Exit Tickets until compact Quick Check lane proves stable -> then decide on broader quick-resource scaling.
 
 Quality remains more important than raw count. Keep using the stable catalog/runtime, preserve current worksheet PDFs, and do not start deployment, external testing, graph visuals, `pattern_word_problems`, Morning Math, unit planning, games, or broad Content Excellence yet.

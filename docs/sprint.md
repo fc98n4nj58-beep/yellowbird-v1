@@ -997,3 +997,42 @@ Milestone 6 is underway. Milestones 2–5 remain closed.
 - Add two-per-page cut-apart Exit Ticket format later after the Quick Check path works
 - Guardrail: use formative check / review / warm-up / small-group language; do not call these assessments, tests, mastery checks, diagnostics, or summative resources
 - Next recommended task: Add minimal `resourceType` support, compact Quick Check renderer, and one proof-of-concept Quick Check, then verify Browse/detail/preview/PDF
+
+[x] First Quick Check proof of concept
+- Commit: `5442440 feat: add first quick check resource`
+- Backup branch: `backup/milestone-6-first-quick-check`
+- Implemented Quick Check:
+  - `g3_place_value_hundreds_tens_ones_quick_check`
+  - Title: Hundreds, Tens, and Ones Quick Check
+  - Grade: 3
+  - Resource type: `quick_check`
+  - Format label: Quick Check
+  - Skill: represent 3-digit numbers using hundreds, tens, and ones
+  - Use case: short formative skill check, review, small-group check, or homeschool check
+- Ready resources: 85 / 85 working, 0 failures
+- Ready worksheets: 84
+- Ready Quick Checks: 1
+- Product decision: worksheet promotion remains paused at 84; the resource count reached 85 by adding the first Quick Check, not by forcing a filler worksheet
+- Implementation summary:
+  - Added one ready Quick Check catalog item
+  - Added compact Quick Check PDF rendering through `renderers/quickCheckPdfRenderer.js`
+  - Existing `renderWorksheetPDF` behavior remains untouched for normal worksheets
+  - Added narrow route/runtime support for `resourceType: quick_check`
+  - Added minimal metadata support for `resourceType`, `formatLabel`, `teacherNote`, `useCase`, `prepLevel`, and `formativeUse`
+  - Lightly updated Browse, detail, and preview labels so the item presents as a Quick Check
+  - Added opt-in `expandedForm` answer style for hundreds/tens/ones prompts
+- Verification passed:
+  - JS syntax checks passed for changed JS files
+  - Catalog JSON parse passed
+  - `npm run audit:worksheets` passed
+  - Ready result: 85 / 85 working, 0 failures
+  - Generated result: 214 / 214 working, 0 failures
+  - Partial result: 5 / 5 working, 0 failures
+  - Planned result: 2 / 9 working, with 7 known/deferred `pattern_word_problems` failures
+  - Quick Check runtime generates 6 real prompts
+  - Quick Check PDF route returned 200 `application/pdf` and a valid 2-page letter PDF
+  - Existing worksheet PDF regression check passed using `g1_addition_facts_within_20`
+  - Browse/detail/preview/PDF route checks passed
+- Next recommended task: Teacher QA / Resource Review Agent should review the first Quick Check, then Curriculum Alignment Agent should review honest Grade 3 Ontario math alignment
+- Do not build the next Quick Check batch yet; if both reviews pass, build a small first batch of 3-5 Quick Checks
+- Defer two-per-page Exit Tickets until the compact Quick Check lane proves stable
