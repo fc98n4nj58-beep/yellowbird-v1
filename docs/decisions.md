@@ -127,6 +127,14 @@ Implementation update:
 - The implementation changed catalog data only and did not change routes, renderers, or worksheet behavior.
 - Minor risk: `g4_compare_fractions_quick_check` may occasionally repeat an exact comparison with the current generator seed; Teacher QA should review it.
 
+Review update:
+- Teacher QA approved the second controlled Quick Check batch with caution.
+- Curriculum Alignment approved all 3 as public-ready, with wording/framing cautions for Grade 4 fractions and Grade 4 pattern rules.
+- The second controlled Quick Check batch has passed both review gates.
+- Lane-level caution: upper-grade Quick Checks need sharper topic labels and clear student instructions.
+- Duplicate/repeated item caution for fraction comparisons remains a future cleanup risk.
+- Next decision: build one final small Quick Check batch of 2-3 resources or run a feasibility check for the first cut-apart Exit Ticket layout.
+
 ## Decision: Worksheet Preview/PDF Parity
 
 Worksheet previews should use the same PDF rendering path as downloads.

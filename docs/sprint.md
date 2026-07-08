@@ -1135,6 +1135,18 @@ Milestone 6 is underway. Milestones 2–5 remain closed.
 - Minor risk:
   - `g4_compare_fractions_quick_check` may occasionally repeat an exact comparison with the current generator seed
   - This does not block implementation, but Teacher QA should review it
-- Next recommended task: Teacher QA / Resource Review should review the 3 new Quick Checks as a batch, then Curriculum Alignment should review them for honest Ontario math alignment
-- Do not build the next Quick Check batch yet
+- Teacher QA result: approved the second controlled Quick Check batch with caution
+- Teacher QA resource notes:
+  - `g2_missing_addends_within_20_quick_check`: public-ready
+  - `g4_compare_fractions_quick_check`: public-ready with minor caution
+  - `g4_pattern_rule_quick_check`: public-ready with minor wording/framing caution
+- Curriculum Alignment result: approved all 3 as public-ready, with wording/framing cautions for Grade 4 fractions and Grade 4 pattern rules
+- Wording update:
+  - Grade 4 fraction title, short title, domain, instructions, teacher note, and description now name comparing simple fractions using >, <, or =
+  - Grade 2 missing-addend domain and teacher note now frame unknown parts in addition facts within 20
+  - Grade 4 pattern-rule title, short title, domain, instructions, teacher note, and description now clarify identifying or using rules to continue or complete patterns
+- Review outcome: the second controlled Quick Check batch has passed both review gates
+- Lane-level caution: upper-grade Quick Checks need sharper topic labels and clear student instructions
+- Duplicate/repeated item caution for fraction comparisons remains a future cleanup risk
+- Next recommended task: decide whether to build one final small Quick Check batch of 2-3 resources or run a feasibility check for the first cut-apart Exit Ticket layout
 - Continue deferring two-per-page Exit Tickets until compact Quick Checks prove stable through QA/alignment

@@ -3617,8 +3617,8 @@
     },
     {
       "id": "g4_compare_fractions_quick_check",
-      "title": "Compare Fractions Quick Check",
-      "shortTitle": "Compare Fractions",
+      "title": "Compare Simple Fractions Quick Check",
+      "shortTitle": "Compare Simple Fractions",
       "subject": "Math",
       "grades": [
         "grade4"
@@ -3626,7 +3626,7 @@
       "gradeLabels": [
         "Grade 4"
       ],
-      "domain": "Fractions",
+      "domain": "Fractions: Compare Simple Fractions",
       "skillKey": "fraction_equivalence",
       "worksheetFamily": "fractions",
       "resourceType": "quick_check",
@@ -3634,8 +3634,8 @@
       "useCase": "formative check",
       "prepLevel": "print-and-go",
       "formativeUse": true,
-      "studentInstructions": "Compare each pair of fractions.",
-      "teacherNote": "Use this quick check after fraction comparison practice to see whether students can compare simple fractions.",
+      "studentInstructions": "Compare each pair of fractions using >, <, or =.",
+      "teacherNote": "Use this quick check after fraction comparison practice to see whether students can compare simple fractions using >, <, or =.",
       "activityTypes": [
         "compare_fractions"
       ],
@@ -3654,7 +3654,7 @@
         "quick check"
       ],
       "curriculumTags": [],
-      "description": "Students compare simple fractions. This short Quick Check is designed for focused fraction comparison review.",
+      "description": "Students compare simple fractions using >, <, or =. This short Quick Check is designed for focused fraction comparison review.",
       "sourceType": "curated"
     },
     {
@@ -3668,7 +3668,7 @@
       "gradeLabels": [
         "Grade 2"
       ],
-      "domain": "Addition and Subtraction Facts",
+      "domain": "Operations: Missing Addends Within 20",
       "skillKey": "addition_subtraction_facts",
       "worksheetFamily": "facts",
       "resourceType": "quick_check",
@@ -3676,8 +3676,8 @@
       "useCase": "formative check",
       "prepLevel": "print-and-go",
       "formativeUse": true,
-      "studentInstructions": "Find the missing number.",
-      "teacherNote": "Use this quick check after missing-addend practice to see whether students can find missing parts within 20.",
+      "studentInstructions": "Find the missing number in each addition fact.",
+      "teacherNote": "Use this quick check after missing-addend practice to see whether students can find the unknown part in addition facts within 20.",
       "activityTypes": [
         "missing_addend"
       ],
@@ -3703,8 +3703,8 @@
     },
     {
       "id": "g4_pattern_rule_quick_check",
-      "title": "Pattern Rule Quick Check",
-      "shortTitle": "Pattern Rule",
+      "title": "Identify and Use Pattern Rules Quick Check",
+      "shortTitle": "Pattern Rules",
       "subject": "Math",
       "grades": [
         "grade4"
@@ -3712,7 +3712,7 @@
       "gradeLabels": [
         "Grade 4"
       ],
-      "domain": "Patterning and Algebra",
+      "domain": "Patterns: Identify and Use Rules",
       "skillKey": "patterning_and_algebra",
       "worksheetFamily": "patterning",
       "resourceType": "quick_check",
@@ -3720,8 +3720,8 @@
       "useCase": "formative check",
       "prepLevel": "print-and-go",
       "formativeUse": true,
-      "studentInstructions": "Write or use the pattern rule.",
-      "teacherNote": "Use this quick check after pattern-rule practice to see whether students can identify or use a pattern rule.",
+      "studentInstructions": "Read each pattern. Write or use the rule to answer each question.",
+      "teacherNote": "Use this quick check after pattern-rule practice to see whether students can describe a rule and use it to continue or complete a pattern.",
       "activityTypes": [
         "identify_pattern_rule"
       ],
@@ -3740,7 +3740,7 @@
         "quick check"
       ],
       "curriculumTags": [],
-      "description": "Students work with pattern rules. This short Quick Check is designed for focused patterning review.",
+      "description": "Students identify or use pattern rules to continue or complete patterns. This short Quick Check is designed for focused patterning review.",
       "sourceType": "curated"
     },
     {

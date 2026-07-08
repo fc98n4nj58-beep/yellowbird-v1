@@ -547,11 +547,20 @@ Second controlled Quick Check batch implemented:
 * Minor risk:
   * `g4_compare_fractions_quick_check` may occasionally repeat an exact comparison with the current generator seed
   * This does not block implementation, but Teacher QA should review it
+* Review:
+  * Teacher QA approved the second controlled Quick Check batch with caution
+  * `g2_missing_addends_within_20_quick_check`: public-ready
+  * `g4_compare_fractions_quick_check`: public-ready with minor caution
+  * `g4_pattern_rule_quick_check`: public-ready with minor wording/framing caution
+  * Curriculum Alignment approved all 3 as public-ready
+  * Curriculum Alignment noted wording/framing cautions for Grade 4 fractions and Grade 4 pattern rules
+  * Catalog wording was tightened for Grade 4 fraction labels/instructions, Grade 2 missing-addend unknown-part framing, and Grade 4 pattern-rule labels/instructions
+  * The second controlled Quick Check batch has passed both review gates
+  * Lane-level caution: upper-grade Quick Checks need sharper topic labels and clear student instructions
+  * The duplicate/repeated item caution for fraction comparisons remains a future cleanup risk
 * Next recommended step:
-  * Teacher QA / Resource Review should review the 3 new Quick Checks as a batch
-  * Curriculum Alignment should then review the 3 new Quick Checks for honest Ontario math alignment
-  * Do not build the next Quick Check batch yet
+  * Decide whether to build one final small Quick Check batch of 2-3 resources or run a feasibility check for the first cut-apart Exit Ticket layout
 
-Preserve the strategic sequence: 84 ready worksheets -> pause worksheet promotion -> implement one Quick Check proof of concept -> Teacher QA review -> Curriculum Alignment review -> build a small first batch of 3 Quick Checks -> Teacher QA review for the new batch -> Curriculum Alignment review for the new batch -> build a second controlled batch of 3 Quick Checks -> Teacher QA review for the second batch -> Curriculum Alignment review for the second batch -> decide whether to build one final Quick Check batch or run a read-only feasibility check for the first cut-apart Exit Ticket.
+Preserve the strategic sequence: 84 ready worksheets -> pause worksheet promotion -> implement one Quick Check proof of concept -> Teacher QA review -> Curriculum Alignment review -> build a small first batch of 3 Quick Checks -> Teacher QA review for the new batch -> Curriculum Alignment review for the new batch -> build a second controlled batch of 3 Quick Checks -> Teacher QA review for the second batch -> Curriculum Alignment review for the second batch -> decide whether to build one final small Quick Check batch of 2-3 resources or run a read-only feasibility check for the first cut-apart Exit Ticket.
 
 Quality remains more important than raw count. Keep using the stable catalog/runtime, preserve current worksheet PDFs, and do not start deployment, external testing, graph visuals, `pattern_word_problems`, Morning Math, unit planning, games, or broad Content Excellence yet.
