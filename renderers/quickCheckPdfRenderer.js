@@ -198,10 +198,13 @@ function renderQuickCheckPDF({ res, item, contentObject, options = {} }) {
     : [];
 
   let y = drawHeader(doc, fonts, item);
+  const studentInstructions = safeStr(
+    item.studentInstructions || "Complete each question."
+  );
 
   setFont(doc, fonts.regular, 11);
   doc.fillColor("#1f2937").text(
-    "Show each number as hundreds, tens, and ones.",
+    studentInstructions,
     54,
     y,
     { width: 504 }

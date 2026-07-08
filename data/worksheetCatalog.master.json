@@ -4695,6 +4695,7 @@
       "useCase": "formative check",
       "prepLevel": "print-and-go",
       "formativeUse": true,
+      "studentInstructions": "Show each number as hundreds, tens, and ones.",
       "teacherNote": "Use this quick check after a place-value lesson to see whether students can represent 3-digit numbers using hundreds, tens, and ones.",
       "activityTypes": [
         "expanded_form"
@@ -4718,6 +4719,135 @@
       ],
       "curriculumTags": [],
       "description": "Students represent 3-digit numbers by identifying the hundreds, tens, and ones. This short Quick Check is designed for focused place-value review.",
+      "sourceType": "curated"
+    },
+    {
+      "id": "g2_subtraction_within_20_quick_check",
+      "title": "Subtraction Within 20 Quick Check",
+      "shortTitle": "Subtraction Within 20",
+      "subject": "Math",
+      "grades": [
+        "grade2"
+      ],
+      "gradeLabels": [
+        "Grade 2"
+      ],
+      "domain": "Addition and Subtraction Facts",
+      "skillKey": "addition_subtraction_facts",
+      "worksheetFamily": "facts",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Subtract.",
+      "teacherNote": "Use this quick check after subtraction practice to see whether students can subtract within 20.",
+      "activityTypes": [
+        "fact_fluency"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6
+      },
+      "tags": [
+        "grade 2",
+        "subtraction",
+        "within 20",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students solve subtraction facts within 20. This short Quick Check is designed for focused subtraction review.",
+      "sourceType": "curated"
+    },
+    {
+      "id": "g2_addition_within_20_quick_check",
+      "title": "Addition Within 20 Quick Check",
+      "shortTitle": "Addition Within 20",
+      "subject": "Math",
+      "grades": [
+        "grade2"
+      ],
+      "gradeLabels": [
+        "Grade 2"
+      ],
+      "domain": "Addition and Subtraction Facts",
+      "skillKey": "addition_subtraction_facts",
+      "worksheetFamily": "facts",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Add.",
+      "teacherNote": "Use this quick check after addition practice to see whether students can add within 20.",
+      "activityTypes": [
+        "fact_fluency"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6
+      },
+      "tags": [
+        "grade 2",
+        "addition",
+        "within 20",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students solve addition facts within 20. This short Quick Check is designed for focused addition review.",
+      "sourceType": "curated"
+    },
+    {
+      "id": "g3_compare_3_digit_numbers_quick_check",
+      "title": "Compare 3-Digit Numbers Quick Check",
+      "shortTitle": "Compare 3-Digit Numbers",
+      "subject": "Math",
+      "grades": [
+        "grade3"
+      ],
+      "gradeLabels": [
+        "Grade 3"
+      ],
+      "domain": "Place Value",
+      "skillKey": "number_magnitude",
+      "worksheetFamily": "representation",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Compare each pair of numbers using >, <, or =.",
+      "teacherNote": "Use this quick check after place-value comparison practice to see whether students can compare 3-digit numbers.",
+      "activityTypes": [
+        "compare_numbers"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6,
+        "minA": 100,
+        "maxA": 999
+      },
+      "tags": [
+        "grade 3",
+        "place value",
+        "compare numbers",
+        "3-digit numbers",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students compare 3-digit numbers using >, <, or =. This short Quick Check is designed for focused place-value review.",
       "sourceType": "curated"
     },
     {
