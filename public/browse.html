@@ -23,7 +23,7 @@
 
   <div class="container">
     <h1 class="h1">Browse Library</h1>
-    <p class="lede">Ready-to-print math resources for Ontario K-6.</p>
+    <p class="lede">A growing print-first Ontario math library with worksheets, Quick Checks, and Exit Tickets.</p>
 
     <div class="grid">
       <aside class="card">
@@ -39,6 +39,13 @@
 
         <div style="height:12px"></div>
 
+        <label class="label" for="resourceType">Resource kind</label>
+        <select id="resourceType" class="select">
+          <option value="">All resource kinds</option>
+        </select>
+
+        <div style="height:12px"></div>
+
         <label class="label" for="domain">Domain</label>
         <select id="domain" class="select">
           <option value="">All domains</option>
@@ -46,9 +53,9 @@
 
         <div style="height:12px"></div>
 
-        <label class="label" for="worksheetFamily">Worksheet type</label>
+        <label class="label" for="worksheetFamily">Practice focus</label>
         <select id="worksheetFamily" class="select">
-          <option value="">All types</option>
+          <option value="">All practice focuses</option>
         </select>
 
         <div style="height:12px"></div>
@@ -92,12 +99,12 @@
 
       </aside>
 
-      <main id="results-region" tabindex="-1" aria-label="Worksheet results">
+      <main id="results-region" tabindex="-1" aria-label="Resource results">
         <div id="summary" class="resource-meta"></div>
         <div id="results" class="results"></div>
 
         <div id="empty" class="card" style="display:none; margin-top:18px;">
-          <h3 class="resource-title" style="margin:0 0 6px 0;">No worksheets found</h3>
+          <h3 class="resource-title" style="margin:0 0 6px 0;">No resources found</h3>
           <div class="resource-meta">Try widening filters or searching a different keyword.</div>
         </div>
       </main>
@@ -221,6 +228,16 @@
     return niceLabel(item.worksheetFamily || item.skillKey || "");
   }
 
+  function normalizedResourceType(item) {
+    return item.resourceType || "worksheet";
+  }
+
+  function resourceKindLabel(value = "") {
+    if (value === "quick_check") return "Quick Check";
+    if (value === "exit_ticket") return "Exit Ticket";
+    return "Worksheet";
+  }
+
   function worksheetFormatLabel(item) {
     if (item.formatLabel) {
       return item.formatLabel;
@@ -272,6 +289,7 @@
         return match?.gradeLabels?.[0] || niceLabel(grade);
       }
     );
+    fillSelect("resourceType", uniqueSorted(items.map(normalizedResourceType)), resourceKindLabel);
     fillSelect("domain", uniqueSorted(items.map((item) => item.domain)), (value) => {
       return /data|graph/i.test(value) ? "Data interpretation" : value;
     });
@@ -310,6 +328,7 @@
   function applyFilters() {
     const query = el("q").value.trim();
     const grade = el("grade").value;
+    const resourceType = el("resourceType").value;
     const domain = el("domain").value;
     const worksheetFamily = el("worksheetFamily").value;
     const templateId = el("templateId").value;
@@ -321,6 +340,7 @@
         item.status === "ready" &&
         itemMatchesSearch(item, query) &&
         (!grade || (item.grades || []).includes(grade)) &&
+        (!resourceType || normalizedResourceType(item) === resourceType) &&
         (!domain || item.domain === domain) &&
         (!worksheetFamily || item.worksheetFamily === worksheetFamily) &&
         (!templateId || item.templateId === templateId) &&
@@ -418,7 +438,7 @@
       const data = await res.json();
 
       if (!data.ok) {
-        el("summary").textContent = "Error loading worksheets.";
+        el("summary").textContent = "Error loading resources.";
         return;
       }
 
@@ -429,13 +449,14 @@
       populateFilters(state.allItems);
       applyFilters();
     } catch (error) {
-      el("summary").textContent = "Error loading worksheets.";
+      el("summary").textContent = "Error loading resources.";
     }
   }
 
   function clearFilters() {
     el("q").value = "";
     el("grade").value = "";
+    el("resourceType").value = "";
     el("domain").value = "";
     el("worksheetFamily").value = "";
     el("templateId").value = "";
@@ -445,7 +466,7 @@
     applyFilters();
   }
 
-  ["grade", "domain", "worksheetFamily", "templateId", "difficulty", "hasAnswerKey", "sort"].forEach((id) => {
+  ["grade", "resourceType", "domain", "worksheetFamily", "templateId", "difficulty", "hasAnswerKey", "sort"].forEach((id) => {
     el(id).addEventListener("change", applyFilters);
   });
 

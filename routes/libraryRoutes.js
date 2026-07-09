@@ -140,6 +140,18 @@ function worksheetTypeLabel(item) {
   return friendlyWorksheetLabel(item.worksheetFamily || "");
 }
 
+function worksheetResourceTypeNote(item) {
+  if (item.resourceType === "quick_check") {
+    return "Short focused check for review, warm-up, small-group, or homeschool use.";
+  }
+
+  if (item.resourceType === "exit_ticket") {
+    return "Cut-apart lesson-close formative check for a quick instructional signal.";
+  }
+
+  return "Printable worksheet for focused classroom practice.";
+}
+
 function worksheetFormatLabel(item) {
   if (item.formatLabel) {
     return item.formatLabel;
@@ -449,6 +461,7 @@ function renderWorksheetDetailPage(item) {
         <h1 class="h1" style="margin-bottom:12px;">${escapeHtml(item.title)}</h1>
         <div class="badges" style="margin-bottom:18px;">${badges}</div>
 
+        <p class="resource-desc">${escapeHtml(worksheetResourceTypeNote(item))}</p>
         <p class="lede">${escapeHtml(item.description || "")}</p>
 
         <div class="resource-actions" style="margin-top:18px;">
