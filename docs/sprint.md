@@ -1444,3 +1444,37 @@ Milestone 6 is underway. Milestones 2–5 remain closed.
   - Production environment checks
   - Final route/smoke tests
 - Milestone 7 does not start accounts, payments, memberships, AI features, lesson slides, Morning Math, unit plans, games, or broad Content Excellence by default
+
+## Milestone 7 — Deployment / Controlled Teacher Testing Preparation
+
+Milestone 7 has started. Guiding phrase: prove the airplane is ready for passengers.
+
+### Task 1 — Public Trust / Contact / Privacy Copy Polish
+
+- Deployment / controlled teacher testing readiness scan completed
+- No technical blocker found in the core Browse → Detail → Preview → PDF flow
+- Practical controlled-testing blocker identified:
+  - public trust/contact/privacy basics were not ready enough
+  - Contact page was placeholder-like
+  - FAQ/About/Home had some future-facing copy around accounts, formats, generators, and units
+- Public copy polish completed:
+  - Contact page now gives controlled-testing feedback guidance
+  - Contact page includes privacy reminder not to send student names, photos, or private student information
+  - Contact page uses placeholder email `yellowbirdproject@example.com`, which must be replaced before deployment
+  - FAQ now explains Yellow Bird as a growing print-first math resource library
+  - FAQ clarifies current resources: worksheets, Quick Checks, and Exit Tickets
+  - FAQ clarifies Yellow Bird is not complete K-6 curriculum coverage
+  - FAQ clarifies no account or student information is required to browse, preview, download, or print
+  - About page now emphasizes printable resource library, teacher-speed browsing, preview/download/print flow, Ontario-first starting point, and careful growth from feedback
+  - Home copy now emphasizes find, preview, download, and print rather than generate
+- Current resource status remains:
+  - Ready resources: 96 / 96 working, 0 failures
+  - Ready worksheets: 84
+  - Ready Quick Checks: 9
+  - Ready Exit Tickets: 3
+- Remaining Milestone 7 launch-readiness items:
+  - replace placeholder contact email with the real controlled-testing contact path
+  - create/confirm teacher testing plan and feedback questions
+  - run final route/smoke tests before deployment
+  - decide whether direct-only internal/beta URLs need production guarding or can remain direct-only/noindexed
+- Do not start more content, accounts, payments, memberships, AI features, lesson slides, Morning Math, unit plans, games, or broad Content Excellence by default
