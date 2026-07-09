@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Worksheet Preview</title>
+  <title>Resource Preview</title>
   <style>
     :root {
       --bg: #f7f5f2;
@@ -154,14 +154,14 @@
   <main class="shell">
     <div class="topbar">
       <div>
-        <h1 id="previewTitle">Worksheet Preview</h1>
+        <h1 id="previewTitle">Resource Preview</h1>
         <p>Preview uses the exact same PDF that downloads.</p>
       </div>
 
       <div class="actions">
         <a class="btn" href="/browse">Back to Browse</a>
         <button class="btn" id="jsonBtn" type="button">Open JSON</button>
-        <button class="btn primary" id="pdfBtn" type="button">Open PDF</button>
+        <button class="btn primary" id="pdfBtn" type="button">Download PDF</button>
       </div>
     </div>
 
@@ -228,7 +228,7 @@
             <iframe
               class="viewer"
               src="${pdfUrl}#toolbar=1&navpanes=0&view=FitH"
-              title="Worksheet PDF Preview"
+              title="Resource PDF Preview"
             ></iframe>
 
             <div class="fallback">

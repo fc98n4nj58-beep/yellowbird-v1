@@ -465,8 +465,8 @@ function renderWorksheetDetailPage(item) {
         <p class="lede">${escapeHtml(item.description || "")}</p>
 
         <div class="resource-actions" style="margin-top:18px;">
-          <a class="btn" href="${worksheetPreviewUrl(id)}">Preview</a>
-          <a class="btn primary" href="${worksheetPdfUrl(id)}">PDF</a>
+          <a class="btn" href="${worksheetPreviewUrl(id)}">Preview PDF</a>
+          <a class="btn primary" href="${worksheetPdfUrl(id)}">Download PDF</a>
           <a class="btn" href="/browse">Browse More</a>
         </div>
       </section>

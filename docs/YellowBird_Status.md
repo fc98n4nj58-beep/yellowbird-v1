@@ -1846,3 +1846,29 @@ Task 1 public trust / contact / privacy copy polish:
   * run final route/smoke tests before deployment
   * decide whether direct-only internal/beta URLs need production guarding or can remain direct-only/noindexed
 * Do not start more content, accounts, payments, memberships, AI features, lesson slides, Morning Math, unit plans, games, or broad Content Excellence by default
+
+Task 2 tester-agent copy / flow polish:
+
+* Classroom Teacher Tester Agent report returned launch-ready with fixes
+* Skeptical Launch Risk Tester Agent report returned launch-ready with fixes
+* No launch-stopping blocker was found by tester agents
+* Public wording polish completed:
+  * Home now describes Yellow Bird as a focused Ontario math starting library
+  * Home and Browse clarify the current library includes worksheets, Quick Checks, and lesson-close Exit Tickets
+  * About clarifies the library is strongest in worksheets, with a smaller starter set of Quick Checks and Exit Tickets
+  * FAQ now plainly defines resource types:
+    * Worksheet: focused printable practice
+    * Quick Check: short formative check for review, warm-up, small-group, or homeschool use
+    * Exit Ticket: lesson-close task that gives a quick signal after instruction
+  * Contact feedback prompt now explicitly mentions worksheets, Quick Checks, and Exit Tickets
+  * Preview/download actions now use teacher-obvious PDF wording where launch-facing
+* Current resource status remains:
+  * Ready resources: 96 / 96 working, 0 failures
+  * Ready worksheets: 84
+  * Ready Quick Checks: 9
+  * Ready Exit Tickets: 3
+* Remaining pre-launch focus:
+  * final smoke testing
+  * replace placeholder contact email with the real controlled-testing contact path
+  * teacher feedback setup
+  * deployment checks
