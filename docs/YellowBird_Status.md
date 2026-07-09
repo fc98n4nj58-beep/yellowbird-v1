@@ -1753,3 +1753,62 @@ Milestone 6 final QA / polish progress:
   * Verification passed: `node --check routes/libraryRoutes.js`, Browse inline script syntax check, `npm run audit:worksheets`, `/browse` 200, `/api/worksheet-catalog?status=ready` returned 96 items, sample detail pages 200, and sample Quick Check / Exit Ticket PDFs 200 `application/pdf`
 * Current product decision: Yellow Bird should not add more resources by default right now
 * Next recommended task: Milestone 6 near-closeout checklist
+
+Milestone 6 closeout:
+
+* Milestone 6 — Content Expansion / Resource Depth is closed
+* Closeout checkpoint: `f5e51c1 docs: record milestone 6 final polish`
+* Near-closeout checklist result: passed
+* No final small blocker found
+* Final Milestone 6 state:
+  * Ready resources: 96 / 96 working, 0 failures
+  * Ready worksheets: 84
+  * Ready Quick Checks: 9
+  * Ready Exit Tickets: 3
+  * Ready resources missing answer keys: 0
+  * Duplicate ready titles: 0
+* Completed Milestone 6 arc:
+  * Ready worksheets expanded from 46 to 84
+  * Quick Check lane added, reviewed, and paused at 9
+  * Exit Ticket lane added, reviewed, validated, and paused at 3
+  * Total ready resource library reached 96 resources
+  * Metadata/copy cleanup completed
+  * Visual PDF spot-check QA passed
+  * Browse/detail resource-type polish completed
+  * Near-closeout checklist passed
+* Closeout verification:
+  * `main` matched `origin/main` at `f5e51c1`
+  * `backup/milestone-6-final-polish-docs` existed locally/remotely
+  * `node --check routes/libraryRoutes.js` passed
+  * `npm run audit:worksheets` passed
+  * Ready: 96 / 96 working, 0 failures
+  * Generated: 214 / 214 working
+  * Partial: 5 / 5 working
+  * Planned: 2 / 9 working, with only known deferred `pattern_word_problems` failures
+  * `/browse` returned 200
+  * Browse named worksheets, Quick Checks, and Exit Tickets
+  * Resource kind filter present
+  * Practice focus label present
+  * `/api/worksheet-catalog?status=ready` returned 96 items
+  * Sample worksheet, Quick Check, and Exit Ticket detail pages returned 200
+  * Sample worksheet, Quick Check, and Exit Ticket PDFs returned 200 `application/pdf`
+  * No launch-facing overclaim blocker found
+* Known deferred items remain future work, not blockers:
+  * `pattern_word_problems` planned failures
+  * Geometry, measurement, and financial literacy absent
+  * Data/graphing resources are text-based
+  * Grade 5/6 coverage is thin/focused review, not deep upper-grade enrichment
+  * Richer graph visuals
+  * Expected untracked future/internal files: `engine/catalog/`, `engine/visuals/index`, `engine/visuals/renderVisual.js`, `public/styles/images/`
+* Guiding closeout decision: 96 strong launch resources is better than forcing 100
+* Content expansion is paused, not failed
+* Next phase: Milestone 7 — Deployment / Controlled Teacher Testing Preparation
+* Milestone 7 focus:
+  * Deployment readiness checklist
+  * Public copy/final polish
+  * Teacher testing plan
+  * Feedback form/questions
+  * Privacy/contact basics
+  * Production environment checks
+  * Final route/smoke tests
+* Milestone 7 does not start accounts, payments, memberships, AI features, lesson slides, Morning Math, unit plans, games, or broad Content Excellence by default

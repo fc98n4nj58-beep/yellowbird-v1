@@ -10,18 +10,19 @@ More fuel in the same airplane.
 
 ## Current Status
 
-* Milestone 6 — Content Expansion / Resource Depth is underway.
+* Milestone 6 — Content Expansion / Resource Depth is closed.
 * Ready resources: 96 / 96 working
 * Ready worksheets: 84
 * Ready Quick Checks: 9
 * Ready Exit Tickets: 3
 * Ready failures: 0
 * Milestone 6 gain so far: +41 ready resources
-* Milestone 6 completion estimate: around 66%
+* Milestone 6 completion status: closed from near-closeout QA
 * Patterning & Algebra ready coverage: 9 worksheets
-* Target direction: pause content expansion at 96 ready resources and move into Milestone 6 near-closeout QA/checklist work
+* Target direction: move into Milestone 7 — Deployment / Controlled Teacher Testing Preparation
 * Worksheet promotion is paused at 84 ready worksheets after the final micro-scan found no worthy 85th worksheet candidate
 * Product decision: 84 strong worksheets is better than 85 with filler
+* Closeout decision: 96 strong launch resources is better than forcing 100
 * Resource count grew from 91 to 93 by adding 2 final Quick Checks, not by forcing worksheet filler
 * Recommended target before external testing: keep 84 ready worksheets as the worksheet-depth checkpoint; Quick Check expansion is now paused at 9, and Exit Ticket expansion is now paused at 3 after the controlled batch passed Teacher QA and Curriculum Alignment
 * Metadata/copy cleanup pass completed after the quality/resource-mix sweep:
@@ -35,7 +36,7 @@ More fuel in the same airplane.
   * Resource kind filter added for Worksheet / Quick Check / Exit Ticket
   * Worksheet type filter renamed to Practice focus
   * Detail pages show type-specific notes for Worksheet, Quick Check, and Exit Ticket resources
-* Important current product decision: do not add more resources by default right now; next step is a Milestone 6 near-closeout checklist
+* Important current product decision: do not add more resources by default right now; next phase is deployment/testing preparation, not more content
 * Exit Ticket / Quick Check control doc: `docs/exit-tickets-quick-checks.md`
 
 Expected untracked files remain visible and documented:
@@ -102,9 +103,46 @@ Expected untracked files remain visible and documented:
   * Sample detail pages returned 200
   * Sample Quick Check and Exit Ticket PDFs returned 200 `application/pdf`
 
-### Current Product Decision
+### Milestone 6 Closeout
 
-Yellow Bird should not add more resources by default right now. The next recommended step is a Milestone 6 near-closeout checklist.
+Milestone 6 is closed.
+
+Closeout verification passed:
+
+* `main` matched `origin/main` at `f5e51c1`
+* `backup/milestone-6-final-polish-docs` existed locally and remotely
+* `node --check routes/libraryRoutes.js` passed
+* `npm run audit:worksheets` passed
+* Ready result: 96 / 96 working, 0 failures
+* Generated result: 214 / 214 working
+* Partial result: 5 / 5 working
+* Planned result: 2 / 9 working, with only known deferred `pattern_word_problems` failures
+* `/browse` returned 200
+* Browse named worksheets, Quick Checks, and Exit Tickets
+* Resource kind filter present
+* Practice focus label present
+* `/api/worksheet-catalog?status=ready` returned 96 items
+* Sample worksheet, Quick Check, and Exit Ticket detail pages returned 200
+* Sample worksheet, Quick Check, and Exit Ticket PDFs returned 200 `application/pdf`
+* Ready resources missing answer keys: 0
+* Duplicate ready titles: 0
+* No launch-facing overclaim blocker found
+
+Content expansion is paused, not failed. Worksheet promotion remains paused at 84, Quick Check expansion remains paused at 9, and Exit Ticket expansion remains paused at 3. The guiding decision is: 96 strong launch resources is better than forcing 100.
+
+Next phase: Milestone 7 — Deployment / Controlled Teacher Testing Preparation.
+
+Milestone 7 focus:
+
+* Deployment readiness checklist
+* Public copy/final polish
+* Teacher testing plan
+* Feedback form/questions
+* Privacy/contact basics
+* Production environment checks
+* Final route/smoke tests
+
+Milestone 7 does not start accounts, payments, memberships, AI features, lesson slides, Morning Math, unit plans, games, or broad Content Excellence by default.
 
 ## Batch History
 

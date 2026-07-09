@@ -203,6 +203,23 @@ Lane decision:
 - Worksheet promotion remains paused at 84.
 - Quick Check expansion remains paused at 9.
 
+July 2026
+
+Decision:
+Milestone 6 — Content Expansion / Resource Depth closes at 96 ready resources rather than forcing 100.
+
+Reason:
+The near-closeout checklist passed with 96 / 96 ready resources working, 0 ready failures, no missing ready answer keys, no duplicate ready titles, and no launch-facing overclaim blocker. The remaining content opportunities are future improvements rather than closeout blockers.
+
+Rules:
+- Content expansion is paused, not failed.
+- Worksheet promotion remains paused at 84.
+- Quick Check expansion remains paused at 9.
+- Exit Ticket expansion remains paused at 3.
+- Preserve the guiding decision: 96 strong launch resources is better than forcing 100.
+- Move next into Milestone 7 — Deployment / Controlled Teacher Testing Preparation.
+- Do not start accounts, payments, memberships, AI features, lesson slides, Morning Math, unit plans, games, or broad Content Excellence by default.
+
 Scaling cautions:
 - Exit Tickets should be lesson-close tools, not mini worksheets.
 - Keep teacher notes tied to instruction: "after a lesson on..." or "after practice with...".
