@@ -19,7 +19,7 @@ More fuel in the same airplane.
 * Milestone 6 gain so far: +41 ready resources
 * Milestone 6 completion estimate: around 66%
 * Patterning & Algebra ready coverage: 9 worksheets
-* Target direction: grow toward roughly 100 ready resources in quality-controlled batches
+* Target direction: pause content expansion at 96 ready resources and move into Milestone 6 near-closeout QA/checklist work
 * Worksheet promotion is paused at 84 ready worksheets after the final micro-scan found no worthy 85th worksheet candidate
 * Product decision: 84 strong worksheets is better than 85 with filler
 * Resource count grew from 91 to 93 by adding 2 final Quick Checks, not by forcing worksheet filler
@@ -29,6 +29,13 @@ More fuel in the same airplane.
   * Text-based data/graphing resource wording was kept honest and did not imply generated visual graphs
   * Grade 5/6 resources were framed as focused review/foundational practice where appropriate
   * Internal "Generated worksheet..." descriptions were replaced with teacher-facing descriptions
+* Visual PDF spot-check QA completed across 15 representative ready resources with no teacher-testing blockers
+* Browse/detail resource-type polish completed:
+  * Browse now names worksheets, Quick Checks, and Exit Tickets
+  * Resource kind filter added for Worksheet / Quick Check / Exit Ticket
+  * Worksheet type filter renamed to Practice focus
+  * Detail pages show type-specific notes for Worksheet, Quick Check, and Exit Ticket resources
+* Important current product decision: do not add more resources by default right now; next step is a Milestone 6 near-closeout checklist
 * Exit Ticket / Quick Check control doc: `docs/exit-tickets-quick-checks.md`
 
 Expected untracked files remain visible and documented:
@@ -37,6 +44,67 @@ Expected untracked files remain visible and documented:
 * `engine/visuals/index`
 * `engine/visuals/renderVisual.js`
 * `public/styles/images/`
+
+## Final QA / Polish Progress
+
+### Quality and Resource-Mix Sweep
+
+* Result: library is ready for final polish/testing after small metadata fixes
+* Content expansion should pause
+* Grade 2-4 are strongest
+* Kindergarten and Grade 1 are acceptable for testing
+* Grade 5/6 are thin but not embarrassing
+* Number/operations, place value, patterning, and fractions are strongest
+* Data/graphing is text-based and should be framed honestly
+* Geometry, measurement, and financial literacy are absent and should not be overclaimed
+
+### Metadata / Copy Cleanup
+
+* Commit: `dbd8940 content: polish ready resource metadata`
+* Duplicate/confusing ready titles clarified
+* Data/graphing wording cleaned so it does not imply visual graph generation
+* Internal/generated public wording replaced with teacher-facing wording
+* Grade 5/6 resources framed as focused review/foundational practice
+* No IDs, statuses, resource types, activityTypes, skillKeys, generatorOptions, routes, renderers, or behavior changed
+* Audit passed: 96 / 96 ready resources working, 0 failures
+
+### Visual PDF Spot-Check QA
+
+* 15 representative PDFs checked
+* No visual PDF blockers found for teacher testing
+* Worksheets, Quick Checks, and Exit Tickets rendered valid PDFs
+* Answer keys were readable
+* No clipping/overlap blockers found
+* Quick Checks and Exit Tickets are visually distinct enough for testing
+* Non-blocking cautions:
+  * Some data/graphing prompts are repetitive and text-only
+  * Some word-problem answer space is limited
+  * One multiplication Quick Check can produce duplicate-style prompts
+  * Upper-grade resources are focused review rather than deep enrichment
+
+### Browse / Detail Resource-Type Polish
+
+* Commit: `e5ecbd8 feat: clarify resource types in library`
+* Browse lede now names worksheets, Quick Checks, and Exit Tickets
+* Resource kind filter added for Worksheet / Quick Check / Exit Ticket
+* Worksheet type filter renamed to Practice focus
+* Empty/error/result labels now use "resource" instead of "worksheet"
+* Detail pages show type-specific notes:
+  * Worksheet: focused classroom practice
+  * Quick Check: short focused check
+  * Exit Ticket: cut-apart lesson-close formative check
+* Verification passed:
+  * `node --check routes/libraryRoutes.js`
+  * Browse inline script syntax check
+  * `npm run audit:worksheets`
+  * `/browse` returned 200
+  * `/api/worksheet-catalog?status=ready` returned 96 items: 84 worksheets, 9 Quick Checks, 3 Exit Tickets
+  * Sample detail pages returned 200
+  * Sample Quick Check and Exit Ticket PDFs returned 200 `application/pdf`
+
+### Current Product Decision
+
+Yellow Bird should not add more resources by default right now. The next recommended step is a Milestone 6 near-closeout checklist.
 
 ## Batch History
 

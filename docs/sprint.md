@@ -1337,3 +1337,51 @@ Milestone 6 is underway. Milestones 2–5 remain closed.
   - Be careful with word problems and explanations because they need more workspace
   - Identical cut-apart tickets and shared answer keys are acceptable for now
   - A/B versions can be considered later, but are not required
+
+### Milestone 6 Final QA / Polish Progress
+
+- Current checkpoint: `e5ecbd8 feat: clarify resource types in library`
+- Ready resources: 96 / 96 working, 0 failures
+- Ready worksheets: 84
+- Ready Quick Checks: 9
+- Ready Exit Tickets: 3
+- Paused lanes:
+  - Worksheet promotion paused at 84
+  - Quick Check expansion paused at 9
+  - Exit Ticket expansion paused at 3
+  - Content expansion is paused
+- Quality/resource-mix sweep completed:
+  - Library judged ready for final polish/testing after small metadata fixes
+  - Content expansion should pause
+  - Grade 2-4 are strongest
+  - Kindergarten and Grade 1 are acceptable for testing
+  - Grade 5/6 are thin but not embarrassing
+  - Number/operations, place value, patterning, and fractions are strongest
+  - Data/graphing is text-based and should be framed honestly
+  - Geometry, measurement, and financial literacy are absent and should not be overclaimed
+- Metadata/copy cleanup completed:
+  - Commit: `dbd8940 content: polish ready resource metadata`
+  - Duplicate/confusing ready titles clarified
+  - Data/graphing wording cleaned so it does not imply visual graph generation
+  - Internal/generated public wording replaced with teacher-facing wording
+  - Grade 5/6 resources framed as focused review/foundational practice
+  - No IDs, statuses, resource types, activityTypes, skillKeys, generatorOptions, routes, renderers, or behavior changed
+  - Audit passed: 96 / 96 ready resources working, 0 failures
+- Visual PDF spot-check QA completed:
+  - 15 representative PDFs checked
+  - No visual PDF blockers found for teacher testing
+  - Worksheets, Quick Checks, and Exit Tickets rendered valid PDFs
+  - Answer keys readable
+  - No clipping/overlap blockers
+  - Quick Checks and Exit Tickets visually distinct enough
+  - Non-blocking cautions: some data/graphing prompts are repetitive and text-only, some word-problem answer space is limited, one multiplication Quick Check can produce duplicate-style prompts, and upper-grade resources are focused review rather than deep enrichment
+- Browse/detail resource-type polish completed:
+  - Commit: `e5ecbd8 feat: clarify resource types in library`
+  - Browse lede now names worksheets, Quick Checks, and Exit Tickets
+  - Resource kind filter added for Worksheet / Quick Check / Exit Ticket
+  - Worksheet type filter renamed to Practice focus
+  - Empty/error/result labels now use "resource" instead of "worksheet"
+  - Detail pages show type-specific notes for Worksheet, Quick Check, and Exit Ticket resources
+  - Verification passed: `node --check routes/libraryRoutes.js`, Browse inline script syntax check, `npm run audit:worksheets`, `/browse` 200, ready API returned 96 items, sample detail pages 200, and sample Quick Check / Exit Ticket PDFs 200 `application/pdf`
+- Current product decision: Yellow Bird should not add more resources by default right now
+- Next recommended task: Milestone 6 near-closeout checklist
