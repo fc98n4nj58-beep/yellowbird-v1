@@ -2145,8 +2145,8 @@
     },
     {
       "id": "grade2_place_value_representation_compare_numbers",
-      "title": "Compare Numbers — Grade 2",
-      "shortTitle": "Compare Numbers",
+      "title": "Compare 3-Digit Numbers — Grade 2 Extension",
+      "shortTitle": "Compare 3-Digit Numbers",
       "subject": "Math",
       "grades": [
         "grade2"
@@ -2154,14 +2154,15 @@
       "gradeLabels": [
         "Grade 2"
       ],
-      "domain": "Place Value",
+      "domain": "Place Value: Compare 3-Digit Numbers",
       "skillKey": "place_value_representation",
       "worksheetFamily": "relational_thinking",
       "activityTypes": [
         "compare_numbers"
       ],
       "templateId": "equation_practice",
-      "status": "generated",
+      "formatLabel": "Compare 3-digit numbers",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -2169,10 +2170,14 @@
         "grade 2",
         "place value",
         "place value representation",
-        "compare numbers"
+        "compare numbers",
+        "compare 3-digit numbers",
+        "upper grade 2 extension",
+        "grade 3 readiness"
       ],
       "curriculumTags": [],
-      "description": "Students compare numbers using relational symbols."
+      "description": "Students compare 3-digit numbers. Best used as upper Grade 2 extension or Grade 3 readiness practice after instruction with hundreds, tens, and ones.",
+      "teacherNote": "Supports focused place-value comparison practice with 3-digit numbers. Best used for upper Grade 2 extension or Grade 3 readiness, not as standard Grade 2 number coverage."
     },
     {
       "id": "grade2_place_value_representation_expanded_form",

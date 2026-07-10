@@ -1923,3 +1923,26 @@ Batch 1B Exit Ticket coverage patch:
 * Review gate before commit:
   * Teacher QA should review the 4 new Exit Tickets for classroom usefulness, prompt clarity, and Exit Ticket feel.
   * Curriculum Alignment should review the 4 new Exit Tickets for honest grade/topic alignment and modest formative framing.
+
+Grade 2 extension worksheet promotion:
+
+* Result: promoted exactly 1 worksheet after the compare-number builder mapping fix and Teacher QA / Curriculum Alignment review.
+* Promoted:
+  * `grade2_place_value_representation_compare_numbers`
+* Public framing:
+  * Title: `Compare 3-Digit Numbers — Grade 2 Extension`
+  * Topic: `Place Value: Compare 3-Digit Numbers`
+  * Skill focus: compare 3-digit numbers
+  * Use case: upper Grade 2 extension or Grade 3 readiness after instruction with hundreds, tens, and ones
+  * Not framed as standard Grade 2 number coverage, mastery, assessment, diagnostic, full unit coverage, or official curriculum endorsement
+* Ready resources increased from 102 to 103.
+* Ready resources remain 0 failures.
+* Ready worksheets increased from 84 to 85.
+* Ready Quick Checks remain 11.
+* Ready Exit Tickets remain 7.
+* Held resources and reasons:
+  * `grade3_place_value_representation_compare_numbers` remains held because it overlaps closely with existing Grade 3 compare-number Quick Check and Exit Ticket coverage.
+  * `grade4_place_value_representation_compare_numbers` remains held because the current generated range is too light for Grade 4 public promotion.
+* Implementation stayed inside catalog metadata and documentation:
+  * no route, renderer, generator, builder, public UI, or readiness-status changes beyond the one promoted worksheet
+  * no promotion of Grade 3 or Grade 4 compare-number worksheets

@@ -229,6 +229,22 @@ Scaling cautions:
 - Identical cut-apart tickets and shared answer keys are acceptable for now.
 - A/B versions can be considered later, but are not required.
 
+## Decision: Grade 2 Compare 3-Digit Numbers Extension
+
+Decision:
+Promote `grade2_place_value_representation_compare_numbers` only with explicit extension/readiness framing.
+
+Reason:
+Teacher QA and Curriculum Alignment approved the resource after the builder mapping fix, but only when the 3-digit range is made public-facing and honest. The resource adds a focused upper Grade 2 extension / Grade 3 readiness use case beyond the existing Grade 2 compare-to-100 worksheet.
+
+Rules:
+- Title: `Compare 3-Digit Numbers — Grade 2 Extension`.
+- Topic: `Place Value: Compare 3-Digit Numbers`.
+- Frame as selected printable practice after instruction with hundreds, tens, and ones.
+- Do not frame as standard Grade 2 number coverage, mastery, assessment, diagnostic, full place-value unit, or official curriculum coverage.
+- Keep `grade3_place_value_representation_compare_numbers` held because it overlaps closely with existing Grade 3 compare-number Quick Check and Exit Ticket coverage.
+- Keep `grade4_place_value_representation_compare_numbers` held because its current generated range is too light for Grade 4.
+
 ## Decision: Worksheet Preview/PDF Parity
 
 Worksheet previews should use the same PDF rendering path as downloads.

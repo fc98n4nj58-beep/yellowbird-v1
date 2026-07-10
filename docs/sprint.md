@@ -1542,3 +1542,20 @@ Guiding phrase: build the flight network before inviting passengers.
   - `g6_compare_large_whole_numbers_exit_ticket` remains held because it may feel like lower-grade review/filler for Grade 6 unless framed carefully later.
 - Teacher QA and Curriculum Alignment should review the 4 new Exit Tickets before commit.
 - No worksheets, Quick Checks, Grade 6 Exit Tickets, visual support, decimal support, routes, renderers, generators, or public UI were added in this batch.
+
+### Grade 2 Extension Worksheet Promotion
+
+- Promoted exactly 1 worksheet after the compare-number builder mapping fix and Teacher QA / Curriculum Alignment review:
+  - `grade2_place_value_representation_compare_numbers`
+- Ready resources increased from 102 to 103.
+- Ready worksheets increased from 84 to 85.
+- Ready Quick Checks remain 11.
+- Ready Exit Tickets remain 7.
+- Public framing:
+  - Title: `Compare 3-Digit Numbers — Grade 2 Extension`
+  - Topic: `Place Value: Compare 3-Digit Numbers`
+  - Use case: upper Grade 2 extension or Grade 3 readiness after instruction with hundreds, tens, and ones
+  - Not standard Grade 2 number coverage, assessment, diagnostic, mastery, full place-value unit, or official curriculum coverage
+- Held resources:
+  - `grade3_place_value_representation_compare_numbers` remains held because it overlaps closely with existing Grade 3 compare-number Quick Check and Exit Ticket coverage.
+  - `grade4_place_value_representation_compare_numbers` remains held because its current generated range is too light for Grade 4.

@@ -911,3 +911,21 @@ Guiding phrase: build the flight network before inviting passengers.
 * Review gate before commit:
   * Teacher QA review for the 4 new Exit Tickets.
   * Curriculum Alignment review for the 4 new Exit Tickets.
+
+### Grade 2 Extension Worksheet Promotion
+
+* Result: +1 ready worksheet.
+* Ready resources increased from 102 to 103.
+* Ready worksheets increased from 84 to 85.
+* Ready Quick Checks remain 11.
+* Ready Exit Tickets remain 7.
+* Promoted:
+  * `grade2_place_value_representation_compare_numbers`
+* Framing decision:
+  * Public title is `Compare 3-Digit Numbers — Grade 2 Extension`.
+  * Topic is `Place Value: Compare 3-Digit Numbers`.
+  * Description and teacher note frame the resource as upper Grade 2 extension or Grade 3 readiness after instruction with hundreds, tens, and ones.
+  * The resource is not presented as standard Grade 2 number coverage, a mastery check, an assessment, a diagnostic, a full place-value unit, or official curriculum coverage.
+* Held:
+  * `grade3_place_value_representation_compare_numbers` remains held because it overlaps closely with existing Grade 3 compare-number Quick Check and Exit Ticket coverage.
+  * `grade4_place_value_representation_compare_numbers` remains held because its current generated range is too light for Grade 4.
