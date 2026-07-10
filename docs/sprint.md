@@ -1504,3 +1504,24 @@ Milestone 7 has started. Guiding phrase: prove the airplane is ready for passeng
   - replace placeholder contact email with the real controlled-testing contact path
   - teacher feedback setup
   - deployment checks
+
+## Milestone 8 — Building the Full Library
+
+Guiding phrase: build the flight network before inviting passengers.
+
+### Batch 1A — Text-Safe Quick Check Expansion
+
+- Milestone 8 Batch 1A completed as a tiny text-safe Quick Check batch.
+- Added exactly 2 ready Quick Checks using the existing Quick Check renderer and existing text-safe generators:
+  - `g5_place_value_to_100000_quick_check`
+  - `g5_equivalent_fractions_quick_check`
+- Ready resources increased from 96 to 98.
+- Ready Quick Checks increased from 9 to 11.
+- Ready worksheets remain 84.
+- Ready Exit Tickets remain 3.
+- Held candidates:
+  - Kindergarten visual Quick Checks remain deferred until Quick Check visual support exists.
+  - Grade 1 Addition Within 10 Quick Check remains deferred until within-10 constraints can be enforced cleanly.
+  - Decimal Quick Checks remain deferred until decimal generator support exists.
+  - Grade 6 Pattern Rules Quick Check remains deferred because the current simple pattern-rule generator is too light for credible Grade 6 depth.
+- No worksheets, Exit Tickets, visual Quick Checks, decimal generators, routes, renderers, or public UI were added in this batch.

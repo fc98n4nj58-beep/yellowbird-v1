@@ -1872,3 +1872,31 @@ Task 2 tester-agent copy / flow polish:
   * replace placeholder contact email with the real controlled-testing contact path
   * teacher feedback setup
   * deployment checks
+
+Milestone 8 — Building the Full Library has started.
+
+Guiding phrase: build the flight network before inviting passengers.
+
+Batch 1A text-safe Quick Check expansion:
+
+* Result: completed as a tiny text-safe Quick Check batch.
+* Added exactly 2 ready Quick Checks:
+  * `g5_place_value_to_100000_quick_check`
+  * `g5_equivalent_fractions_quick_check`
+* Ready resources increased from 96 to 98.
+* Ready resources remain 0 failures.
+* Ready worksheets remain 84.
+* Ready Quick Checks increased from 9 to 11.
+* Ready Exit Tickets remain 3.
+* Implementation stayed inside the stable catalog/runtime:
+  * existing Quick Check renderer
+  * existing text-safe generators
+  * no visual Quick Check support
+  * no decimal generator support
+  * no route, renderer, or public UI changes
+* Held candidates and reasons:
+  * Kindergarten counting / same-more-fewer Quick Checks need visual Quick Check support before they are safe.
+  * Grade 1 Addition Within 10 Quick Check needs reliable within-10 generation before its title is honest.
+  * Decimal Quick Checks need decimal generator support.
+  * Grade 6 Pattern Rules Quick Check is held because the current simple additive-pattern generator is too light for credible Grade 6 public depth.
+* Next recommended step: Teacher QA and Curriculum Alignment review the 2 new Grade 5 Quick Checks before broadening the next Milestone 8 batch.

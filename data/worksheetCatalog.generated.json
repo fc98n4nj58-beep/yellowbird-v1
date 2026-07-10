@@ -3966,6 +3966,93 @@
       "sourceType": "curated"
     },
     {
+      "id": "g5_place_value_to_100000_quick_check",
+      "title": "Compare Numbers to 100,000 Quick Check",
+      "shortTitle": "Compare to 100,000",
+      "subject": "Math",
+      "grades": [
+        "grade5"
+      ],
+      "gradeLabels": [
+        "Grade 5"
+      ],
+      "domain": "Place Value: Compare Whole Numbers",
+      "skillKey": "number_magnitude",
+      "worksheetFamily": "relational_thinking",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Compare each pair of numbers using >, <, or =.",
+      "teacherNote": "Use this quick check after place-value comparison practice to see whether students can compare larger whole numbers.",
+      "activityTypes": [
+        "compare_numbers"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6,
+        "minA": 10000,
+        "maxA": 99999
+      },
+      "tags": [
+        "grade 5",
+        "place value",
+        "compare numbers",
+        "whole numbers",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students compare whole numbers to 100,000 using >, <, or =. This short Quick Check is designed for focused place-value review.",
+      "sourceType": "curated"
+    },
+    {
+      "id": "g5_equivalent_fractions_quick_check",
+      "title": "Equivalent Fractions Quick Check",
+      "shortTitle": "Equivalent Fractions",
+      "subject": "Math",
+      "grades": [
+        "grade5"
+      ],
+      "gradeLabels": [
+        "Grade 5"
+      ],
+      "domain": "Fractions: Equivalent Fractions",
+      "skillKey": "fraction_equivalence",
+      "worksheetFamily": "fractions",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Write an equivalent fraction for each fraction.",
+      "teacherNote": "Use this quick check after equivalent-fraction practice to see whether students can identify simple equivalent fractions.",
+      "activityTypes": [
+        "match_equivalent_fractions"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6
+      },
+      "tags": [
+        "grade 5",
+        "fractions",
+        "equivalent fractions",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students identify simple equivalent fractions. This short Quick Check is designed for focused fraction review.",
+      "sourceType": "curated"
+    },
+    {
       "id": "grade4_addition_subtraction_word_problems_addition_word_problem",
       "title": "Addition Word Problem — Grade 4",
       "shortTitle": "Addition Word Problem",

@@ -861,3 +861,33 @@ Controlled Exit Ticket batch implemented:
 Preserve the strategic sequence: 84 ready worksheets -> pause worksheet promotion -> implement one Quick Check proof of concept -> Teacher QA review -> Curriculum Alignment review -> build a small first batch of 3 Quick Checks -> Teacher QA review for the new batch -> Curriculum Alignment review for the new batch -> build a second controlled batch of 3 Quick Checks -> Teacher QA review for the second batch -> Curriculum Alignment review for the second batch -> build one final small Quick Check batch of 2 resources -> Teacher QA review for the final batch -> Curriculum Alignment review for the final batch -> pause Quick Check expansion at 9 -> run a read-only feasibility check for the first cut-apart Exit Ticket -> build exactly one Exit Ticket proof of concept -> Teacher QA review -> Curriculum Alignment review -> build a tiny controlled Exit Ticket batch of 2 resources -> Teacher QA review -> Curriculum Alignment review -> pause Exit Ticket expansion at 3 -> run a broader Milestone 6 quality/resource-mix sweep.
 
 Quality remains more important than raw count. Keep using the stable catalog/runtime, preserve current worksheet PDFs, and do not start deployment, external testing, graph visuals, `pattern_word_problems`, Morning Math, unit planning, games, or broad Content Excellence yet.
+
+## Milestone 8 Content Expansion
+
+Milestone 8 — Building the Full Library has started after Milestone 7 copy/trust polish.
+
+Guiding phrase: build the flight network before inviting passengers.
+
+### Batch 1A — Text-Safe Quick Check Breadth Patch
+
+* Result: +2 ready Quick Checks.
+* Ready resources increased from 96 to 98.
+* Ready worksheets remain 84.
+* Ready Quick Checks increased from 9 to 11.
+* Ready Exit Tickets remain 3.
+* Added:
+  * `g5_place_value_to_100000_quick_check`
+  * `g5_equivalent_fractions_quick_check`
+* Quality decision:
+  * Use only text-safe candidates supported by the current Quick Check renderer.
+  * Do not add visual Quick Check support in this batch.
+  * Do not add decimal generator support in this batch.
+  * Do not force Grade 1 or Grade 6 stretch candidates if the current generators make the title or grade fit weak.
+* Held:
+  * Kindergarten visual Quick Checks until Quick Check visual rendering exists.
+  * Grade 1 Addition Within 10 until within-10 constraints can be enforced.
+  * Decimal Quick Checks until decimal generator support exists.
+  * Grade 6 Pattern Rules until the pattern generator can support stronger Grade 6 review.
+* Next review gate:
+  * Teacher QA review for the 2 new Grade 5 Quick Checks.
+  * Curriculum Alignment review for the 2 new Grade 5 Quick Checks.
