@@ -86,6 +86,11 @@ function pickActivitiesFromRecipe(recipe, requestedCount = null, preferredActivi
       mode = "exit_ticket";
     } else if (preferred.includes("review") || preferred.includes("mixed")) {
       mode = "review_mixed";
+    } else if (
+      preferred === "compare_numbers" &&
+      recipe.variants.compare_and_order
+    ) {
+      mode = "compare_and_order";
     }
   }
 
