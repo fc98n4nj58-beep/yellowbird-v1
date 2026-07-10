@@ -1559,3 +1559,61 @@ Guiding phrase: build the flight network before inviting passengers.
 - Held resources:
   - `grade3_place_value_representation_compare_numbers` remains held because it overlaps closely with existing Grade 3 compare-number Quick Check and Exit Ticket coverage.
   - `grade4_place_value_representation_compare_numbers` remains held because its current generated range is too light for Grade 4.
+
+### Founder Review Pause
+
+- Current Milestone 8 status:
+  - Ready resources: 103 / 103 working, 0 failures
+  - Ready worksheets: 85
+  - Ready Quick Checks: 11
+  - Ready Exit Tickets: 7
+- Milestone 8 started at 96 ready resources: 84 worksheets, 9 Quick Checks, and 3 Exit Tickets.
+- Milestone 8 gain so far:
+  - +7 total ready resources
+  - +1 worksheet
+  - +2 Quick Checks
+  - +4 Exit Tickets
+- Milestone 8 target remains:
+  - 250 total ready resources
+  - 180 worksheets
+  - 45 Quick Checks
+  - 25 Exit Tickets
+- Remaining to target:
+  - +147 total ready resources
+  - +95 worksheets
+  - +34 Quick Checks
+  - +18 Exit Tickets
+- Recent technical/content work:
+  - Batch 1A added 2 text-safe Quick Checks.
+  - Batch 1B added 4 Exit Tickets.
+  - `e626f9e fix: map compare number worksheets to compare variant` fixed compare-number worksheet generation for recipes with a `compare_and_order` variant.
+  - `710c1ec content: promote grade 2 compare numbers extension worksheet` promoted one honestly framed Grade 2 extension worksheet.
+- Temporary strategic decision:
+  - Worksheet promotions are paused while the founder reviews the current 85 ready worksheet PDFs.
+  - The review is intended to identify title/content mismatch, weak teacher-use cases, repetitive prompts, grade-fit issues, layout/spacing issues, answer-key issues, thin upper-grade resources, and resources that should be reframed, revised, held, or rejected.
+  - The pause does not stop Milestone 8; it pauses broad worksheet promotion and mass promotion until founder review patterns are clearer.
+- Founder review packet:
+  - Local packet: `review/worksheet-founder-review/`
+  - Intentionally untracked for now; do not treat it as production source.
+  - Verified contents: 85 worksheet PDFs, 85 index rows, current ready worksheets only, no Quick Checks, no Exit Tickets, no generated/partial/planned resources, no missing ready worksheet IDs, and no duplicate resource IDs.
+  - Grade PDF counts: Kindergarten 5, Grade 1 12, Grade 2 21, Grade 3 21, Grade 4 14, Grade 5 7, Grade 6 5.
+- Founder review order:
+  - Grade 5
+  - Grade 6
+  - Grade 4
+  - Grade 3
+  - Grade 2
+  - Grade 1
+  - Kindergarten
+- Promotion rule during and after the pause:
+  - PDF-safe does not equal teacher-useful.
+  - Future worksheet promotion should require title/content match, a clear teacher-use case, grade fit, honest framing, and clean PDF output.
+- Current held/deferred cautions:
+  - `grade3_place_value_representation_compare_numbers` remains held because it overlaps closely with existing Grade 3 compare-number Quick Check and Exit Ticket coverage.
+  - `grade4_place_value_representation_compare_numbers` remains held because its current generated range is too light for Grade 4.
+  - Grade 5/6 resources need careful review/foundational framing where appropriate.
+  - Equivalent-fractions generation has a prompt-variety caution.
+  - Visual Quick Checks and decimal resources remain deferred.
+  - `pattern_word_problems` remains a known planned failure outside ready resources.
+- Codex may still support the pause with audits, docs cleanup, review-packet support, generator diagnostics, tiny safe fixes, route/runtime verification, and issue backlog organization.
+- Codex should not promote broad worksheet batches, mass-promote generated resources, add new content lanes, expand visual Quick Checks, add decimals/geometry/measurement/financial literacy implementation, or change public claims based on future content during this pause.

@@ -929,3 +929,53 @@ Guiding phrase: build the flight network before inviting passengers.
 * Held:
   * `grade3_place_value_representation_compare_numbers` remains held because it overlaps closely with existing Grade 3 compare-number Quick Check and Exit Ticket coverage.
   * `grade4_place_value_representation_compare_numbers` remains held because its current generated range is too light for Grade 4.
+
+### Founder Review Pause
+
+* Current ready library:
+  * Ready resources: 103 / 103 working, 0 failures
+  * Ready worksheets: 85
+  * Ready Quick Checks: 11
+  * Ready Exit Tickets: 7
+* Milestone 8 gain so far:
+  * +7 total resources from the 96-resource starting point
+  * +1 worksheet
+  * +2 Quick Checks
+  * +4 Exit Tickets
+* Milestone 8 target:
+  * 250 total ready resources
+  * 180 worksheets
+  * 45 Quick Checks
+  * 25 Exit Tickets
+* Remaining to target:
+  * +147 total ready resources
+  * +95 worksheets
+  * +34 Quick Checks
+  * +18 Exit Tickets
+* Current decision:
+  * Worksheet promotions are paused while the founder reviews the current 85 ready worksheet PDFs.
+  * The review will inform future worksheet batches before any broad promotion or mass promotion.
+  * Milestone 8 is still active; support work may continue through audits, docs cleanup, review-packet support, generator diagnostics, tiny safe fixes, route/runtime verification, and issue backlog organization.
+* Local founder review packet:
+  * `review/worksheet-founder-review/`
+  * Intentionally untracked for now
+  * Includes 85 ready worksheet PDFs and 85 index rows
+  * Excludes Quick Checks, Exit Tickets, and generated/partial/planned resources
+  * Grade PDF counts: Kindergarten 5, Grade 1 12, Grade 2 21, Grade 3 21, Grade 4 14, Grade 5 7, Grade 6 5
+* Review order:
+  * Grade 5
+  * Grade 6
+  * Grade 4
+  * Grade 3
+  * Grade 2
+  * Grade 1
+  * Kindergarten
+* Promotion rule:
+  * PDF-safe does not equal teacher-useful.
+  * Future worksheet promotion should require title/content match, a clear teacher-use case, grade fit, honest framing, and clean PDF output.
+* Continue holding/defer:
+  * Grade 3 compare-number worksheet due to overlap with existing Grade 3 Quick Check and Exit Ticket.
+  * Grade 4 compare-number worksheet because the current range is too light.
+  * Visual Quick Checks and decimal resources.
+  * Known planned `pattern_word_problems` failures outside ready resources.
+* Do not use the pause to add new content lanes, expand visual Quick Checks, implement decimals/geometry/measurement/financial literacy, mass-promote generated resources, or change public claims based on future content.

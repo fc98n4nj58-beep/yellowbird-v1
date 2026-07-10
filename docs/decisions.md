@@ -245,6 +245,33 @@ Rules:
 - Keep `grade3_place_value_representation_compare_numbers` held because it overlaps closely with existing Grade 3 compare-number Quick Check and Exit Ticket coverage.
 - Keep `grade4_place_value_representation_compare_numbers` held because its current generated range is too light for Grade 4.
 
+## Decision: Milestone 8 Founder Review Pause
+
+Decision:
+Pause broad worksheet promotions while the founder reviews the current 85 ready worksheet PDFs.
+
+Reason:
+The founder review will identify patterns that should shape future worksheet batches: title/content mismatch, weak teacher-use cases, repetitive prompts, too-easy or too-hard resources, thin upper-grade resources, layout/spacing issues, answer-key issues, and resources that should be reframed as review/extension, revised, held, or rejected.
+
+Current state:
+- Ready resources: 103 / 103 working, 0 failures.
+- Ready worksheets: 85.
+- Ready Quick Checks: 11.
+- Ready Exit Tickets: 7.
+- Milestone 8 target remains 250 total ready resources: 180 worksheets, 45 Quick Checks, and 25 Exit Tickets.
+- Remaining to target: +147 total resources, +95 worksheets, +34 Quick Checks, and +18 Exit Tickets.
+- Local founder review packet exists at `review/worksheet-founder-review/`, is intentionally untracked for now, and should not be treated as production source.
+- The packet contains 85 ready worksheet PDFs and excludes Quick Checks, Exit Tickets, and generated/partial/planned resources.
+
+Rules:
+- PDF-safe does not equal teacher-useful.
+- Future worksheet promotion should require title/content match, clear teacher-use case, grade fit, honest framing, and clean PDF output.
+- Codex may continue audits, docs cleanup, review-packet support, generator diagnostics, tiny safe fixes, route/runtime verification, and issue backlog organization.
+- Do not promote broad worksheet batches, mass-promote generated resources, add new content lanes, expand visual Quick Checks, implement decimals/geometry/measurement/financial literacy, or change public claims based on future content during the pause.
+- Keep Grade 3 compare-number worksheet held due to overlap with existing Grade 3 Quick Check and Exit Ticket.
+- Keep Grade 4 compare-number worksheet held because the current range is too light.
+- Continue treating equivalent-fractions prompt variety, Grade 5/6 foundational framing, visual Quick Checks, decimal resources, and planned `pattern_word_problems` failures as active cautions/deferred work.
+
 ## Decision: Worksheet Preview/PDF Parity
 
 Worksheet previews should use the same PDF rendering path as downloads.
