@@ -337,6 +337,24 @@ Next decision:
 20. Pause Exit Ticket expansion at 3
 21. Run a broader Milestone 6 quality/resource-mix sweep
 
+## Milestone 8 Exit Ticket Coverage Patch
+
+Batch 1B implementation:
+
+* Added exactly 4 ready Exit Tickets:
+  * `g1_compare_numbers_to_20_exit_ticket`
+  * `g4_compare_fractions_exit_ticket`
+  * `g5_compare_numbers_to_100000_exit_ticket`
+  * `g5_equivalent_fractions_exit_ticket`
+* Ready resources increased from 98 to 102.
+* Ready Exit Tickets increased from 3 to 7.
+* Ready worksheets remain 84.
+* Ready Quick Checks remain 11.
+* The patch used the existing Exit Ticket renderer and existing text-safe generators.
+* No routes, renderers, generators, worksheets, Quick Checks, visual support, or decimal support changed.
+* `g6_compare_large_whole_numbers_exit_ticket` remains held because it may feel like lower-grade review/filler for Grade 6 unless framed carefully later.
+* Teacher QA and Curriculum Alignment should review the 4 new Exit Tickets before commit.
+
 ## First Exit Ticket Proof Of Concept
 
 Implemented resource:

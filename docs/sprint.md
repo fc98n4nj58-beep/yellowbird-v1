@@ -1525,3 +1525,20 @@ Guiding phrase: build the flight network before inviting passengers.
   - Decimal Quick Checks remain deferred until decimal generator support exists.
   - Grade 6 Pattern Rules Quick Check remains deferred because the current simple pattern-rule generator is too light for credible Grade 6 depth.
 - No worksheets, Exit Tickets, visual Quick Checks, decimal generators, routes, renderers, or public UI were added in this batch.
+
+### Batch 1B — Exit Ticket Coverage Patch
+
+- Milestone 8 Batch 1B implemented as a tiny text-safe Exit Ticket coverage patch.
+- Added exactly 4 ready Exit Tickets using the existing Exit Ticket renderer and existing text-safe generators:
+  - `g1_compare_numbers_to_20_exit_ticket`
+  - `g4_compare_fractions_exit_ticket`
+  - `g5_compare_numbers_to_100000_exit_ticket`
+  - `g5_equivalent_fractions_exit_ticket`
+- Ready resources increased from 98 to 102.
+- Ready Exit Tickets increased from 3 to 7.
+- Ready worksheets remain 84.
+- Ready Quick Checks remain 11.
+- Held candidate:
+  - `g6_compare_large_whole_numbers_exit_ticket` remains held because it may feel like lower-grade review/filler for Grade 6 unless framed carefully later.
+- Teacher QA and Curriculum Alignment should review the 4 new Exit Tickets before commit.
+- No worksheets, Quick Checks, Grade 6 Exit Tickets, visual support, decimal support, routes, renderers, generators, or public UI were added in this batch.

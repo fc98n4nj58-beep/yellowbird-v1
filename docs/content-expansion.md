@@ -891,3 +891,23 @@ Guiding phrase: build the flight network before inviting passengers.
 * Next review gate:
   * Teacher QA review for the 2 new Grade 5 Quick Checks.
   * Curriculum Alignment review for the 2 new Grade 5 Quick Checks.
+
+### Batch 1B — Exit Ticket Coverage Patch
+
+* Result: +4 ready Exit Tickets.
+* Ready resources increased from 98 to 102.
+* Ready worksheets remain 84.
+* Ready Quick Checks remain 11.
+* Ready Exit Tickets increased from 3 to 7.
+* Added:
+  * `g1_compare_numbers_to_20_exit_ticket`
+  * `g4_compare_fractions_exit_ticket`
+  * `g5_compare_numbers_to_100000_exit_ticket`
+  * `g5_equivalent_fractions_exit_ticket`
+* Quality decision:
+  * Use only text-safe candidates supported by the existing Exit Ticket renderer and current generators.
+  * Keep each resource as a 3-5 minute lesson-close formative check, not a test, quiz, diagnostic, summative task, or mastery check.
+  * Do not add the Grade 6 comparison Exit Ticket in this batch because it may read as lower-grade review/filler unless framed carefully later.
+* Review gate before commit:
+  * Teacher QA review for the 4 new Exit Tickets.
+  * Curriculum Alignment review for the 4 new Exit Tickets.

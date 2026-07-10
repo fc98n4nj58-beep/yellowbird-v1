@@ -3923,6 +3923,181 @@
       "sourceType": "curated"
     },
     {
+      "id": "g1_compare_numbers_to_20_exit_ticket",
+      "title": "Compare Numbers to 20 Exit Ticket",
+      "shortTitle": "Compare to 20",
+      "subject": "Math",
+      "grades": [
+        "grade1"
+      ],
+      "gradeLabels": [
+        "Grade 1"
+      ],
+      "domain": "Number Sense: Compare Numbers to 20",
+      "skillKey": "number_magnitude",
+      "worksheetFamily": "representation",
+      "resourceType": "exit_ticket",
+      "formatLabel": "Exit Ticket",
+      "useCase": "lesson-close formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Compare each pair using >, <, or =.",
+      "teacherNote": "Use this exit ticket after practice comparing numbers to 20 to see whether students can compare two numbers using >, <, or =.",
+      "activityTypes": [
+        "compare_numbers"
+      ],
+      "templateId": "exit_ticket",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": "3-5",
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 3,
+        "minA": 0,
+        "maxA": 20
+      },
+      "tags": [
+        "grade 1",
+        "number sense",
+        "compare numbers",
+        "within 20",
+        "exit ticket"
+      ],
+      "curriculumTags": [],
+      "description": "Students compare numbers to 20 using >, <, or =. This cut-apart Exit Ticket is designed as a short lesson-close check after number comparison practice.",
+      "sourceType": "curated"
+    },
+    {
+      "id": "g4_compare_fractions_exit_ticket",
+      "title": "Compare Simple Fractions Exit Ticket",
+      "shortTitle": "Compare Fractions",
+      "subject": "Math",
+      "grades": [
+        "grade4"
+      ],
+      "gradeLabels": [
+        "Grade 4"
+      ],
+      "domain": "Fractions: Compare Simple Fractions",
+      "skillKey": "fraction_equivalence",
+      "worksheetFamily": "fractions",
+      "resourceType": "exit_ticket",
+      "formatLabel": "Exit Ticket",
+      "useCase": "lesson-close formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Compare each pair of fractions using >, <, or =.",
+      "teacherNote": "Use this exit ticket after fraction comparison practice to see whether students can compare simple fractions.",
+      "activityTypes": [
+        "compare_fractions"
+      ],
+      "templateId": "exit_ticket",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": "3-5",
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 3
+      },
+      "tags": [
+        "grade 4",
+        "fractions",
+        "compare fractions",
+        "exit ticket"
+      ],
+      "curriculumTags": [],
+      "description": "Students compare simple fractions using >, <, or =. This cut-apart Exit Ticket is designed as a short lesson-close check after fraction comparison practice.",
+      "sourceType": "curated"
+    },
+    {
+      "id": "g5_compare_numbers_to_100000_exit_ticket",
+      "title": "Compare Numbers to 100,000 Exit Ticket",
+      "shortTitle": "Compare to 100,000",
+      "subject": "Math",
+      "grades": [
+        "grade5"
+      ],
+      "gradeLabels": [
+        "Grade 5"
+      ],
+      "domain": "Place Value: Compare Whole Numbers",
+      "skillKey": "number_magnitude",
+      "worksheetFamily": "relational_thinking",
+      "resourceType": "exit_ticket",
+      "formatLabel": "Exit Ticket",
+      "useCase": "lesson-close formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Compare each pair of numbers using >, <, or =.",
+      "teacherNote": "Use this exit ticket after place-value comparison practice to see whether students can compare whole numbers to 100,000.",
+      "activityTypes": [
+        "compare_numbers"
+      ],
+      "templateId": "exit_ticket",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": "3-5",
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 3,
+        "minA": 10000,
+        "maxA": 99999
+      },
+      "tags": [
+        "grade 5",
+        "place value",
+        "compare numbers",
+        "whole numbers",
+        "exit ticket"
+      ],
+      "curriculumTags": [],
+      "description": "Students compare whole numbers to 100,000 using >, <, or =. This cut-apart Exit Ticket is designed as a short lesson-close review after place-value comparison practice.",
+      "sourceType": "curated"
+    },
+    {
+      "id": "g5_equivalent_fractions_exit_ticket",
+      "title": "Equivalent Fractions Exit Ticket",
+      "shortTitle": "Equivalent Fractions",
+      "subject": "Math",
+      "grades": [
+        "grade5"
+      ],
+      "gradeLabels": [
+        "Grade 5"
+      ],
+      "domain": "Fractions: Equivalent Fractions",
+      "skillKey": "fraction_equivalence",
+      "worksheetFamily": "fractions",
+      "resourceType": "exit_ticket",
+      "formatLabel": "Exit Ticket",
+      "useCase": "lesson-close formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Write an equivalent fraction for each fraction.",
+      "teacherNote": "Use this exit ticket after equivalent-fraction practice to see whether students can identify simple equivalent fractions.",
+      "activityTypes": [
+        "match_equivalent_fractions"
+      ],
+      "templateId": "exit_ticket",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": "3-5",
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 3,
+        "worksheetSeed": "batch1b-g5-equivalent"
+      },
+      "tags": [
+        "grade 5",
+        "fractions",
+        "equivalent fractions",
+        "exit ticket"
+      ],
+      "curriculumTags": [],
+      "description": "Students identify simple equivalent fractions. This cut-apart Exit Ticket is designed as a short lesson-close review after equivalent-fraction practice.",
+      "sourceType": "curated"
+    },
+    {
       "id": "g4_multiplication_word_problem_quick_check",
       "title": "Equal-Groups Multiplication Quick Check",
       "shortTitle": "Equal-Groups Multiplication",

@@ -1900,3 +1900,26 @@ Batch 1A text-safe Quick Check expansion:
   * Decimal Quick Checks need decimal generator support.
   * Grade 6 Pattern Rules Quick Check is held because the current simple additive-pattern generator is too light for credible Grade 6 public depth.
 * Next recommended step: Teacher QA and Curriculum Alignment review the 2 new Grade 5 Quick Checks before broadening the next Milestone 8 batch.
+
+Batch 1B Exit Ticket coverage patch:
+
+* Result: implemented as a tiny text-safe Exit Ticket coverage patch.
+* Added exactly 4 ready Exit Tickets:
+  * `g1_compare_numbers_to_20_exit_ticket`
+  * `g4_compare_fractions_exit_ticket`
+  * `g5_compare_numbers_to_100000_exit_ticket`
+  * `g5_equivalent_fractions_exit_ticket`
+* Ready resources increased from 98 to 102.
+* Ready resources remain 0 failures.
+* Ready worksheets remain 84.
+* Ready Quick Checks remain 11.
+* Ready Exit Tickets increased from 3 to 7.
+* Implementation stayed inside the stable catalog/runtime:
+  * existing Exit Ticket renderer
+  * existing text-safe generators
+  * no route, renderer, generator, worksheet, Quick Check, visual, or decimal support changes
+* Held candidate and reason:
+  * `g6_compare_large_whole_numbers_exit_ticket` is technically clean but held because it may feel like lower-grade review/filler for Grade 6 unless framed carefully later.
+* Review gate before commit:
+  * Teacher QA should review the 4 new Exit Tickets for classroom usefulness, prompt clarity, and Exit Ticket feel.
+  * Curriculum Alignment should review the 4 new Exit Tickets for honest grade/topic alignment and modest formative framing.
