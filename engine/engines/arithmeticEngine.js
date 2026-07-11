@@ -23,7 +23,8 @@ function generateArithmeticProblem(options = {}) {
   missingPosition = null,
 
   onlyNumbers = "",
-  excludeNumbers = ""
+  excludeNumbers = "",
+  maxTotal = null
 } = options;
 
   let a = randInt(minA, maxA, random);
@@ -53,6 +54,26 @@ if (excludeNumbers) {
 
   while (banned.includes(b)) {
     b = randInt(minB, maxB, random);
+  }
+}
+
+const maxAllowedTotal = Number(maxTotal);
+if (operation === "addition" && Number.isFinite(maxAllowedTotal)) {
+  for (let attempt = 0; attempt < 50 && a + b > maxAllowedTotal; attempt += 1) {
+    a = randInt(minA, maxA, random);
+    b = randInt(minB, maxB, random);
+
+    if (onlyNumbers) {
+      const allowed = onlyNumbers
+        .split(",")
+        .map(n => Number(n.trim()))
+        .filter(n => !isNaN(n));
+
+      if (allowed.length > 0) {
+        a = allowed[Math.floor(random() * allowed.length)];
+        b = allowed[Math.floor(random() * allowed.length)];
+      }
+    }
   }
 }
 

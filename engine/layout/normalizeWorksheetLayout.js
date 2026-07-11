@@ -105,6 +105,10 @@ function normalizeWorksheetLayout({
         columns: template.defaultColumns
       };
 
+  if (mapping.template && typeof mapping.template === "object") {
+    Object.assign(normalizedTemplate, mapping.template);
+  }
+
   const normalizedProblems = problems.map((problem, index) =>
     normalizeProblem(problem, index, {
       interactionType: mapping.interactionType,
@@ -135,6 +139,9 @@ function normalizeWorksheetLayout({
     gradeBand,
     gradeSpacing,
     worksheetType: mapping.worksheetType,
+    display: mapping.display && typeof mapping.display === "object"
+      ? { ...mapping.display }
+      : {},
     skillKey,
     modeId,
     problems: normalizedProblems,

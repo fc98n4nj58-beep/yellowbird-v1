@@ -6,6 +6,7 @@ function generateFactFamilyProblem(options = {}) {
   const random = options.random || Math.random;
   const usedProblemKeys = options.usedProblemKeys || new Set();
   const operation = options.operation || options.factFamilyOperation || "addition_subtraction";
+  const factFamilyMode = String(options.factFamilyMode || options.mode || "all").toLowerCase();
   const {
     minA = 0,
     maxA = 10,
@@ -26,7 +27,7 @@ function generateFactFamilyProblem(options = {}) {
       const high = Math.max(a, b);
       const key = `${operation}:${low}:${high}`;
       const problem = {
-        prompt: `Fact family: ${a} x ${b} = __, ${b} x ${a} = __, ${product} / ${a} = __, ${product} / ${b} = __`,
+        prompt: `${a} x ${b} = __\n${b} x ${a} = __\n${product} / ${a} = __\n${product} / ${b} = __`,
         answer: `${product}, ${product}, ${b}, ${a}`
       };
 
@@ -43,11 +44,25 @@ function generateFactFamilyProblem(options = {}) {
     const sum = a + b;
     const low = Math.min(a, b);
     const high = Math.max(a, b);
-    const key = `${operation}:${low}:${high}`;
-    const problem = {
-      prompt: `Fact family: ${a} + ${b} = __, ${b} + ${a} = __, ${sum} - ${a} = __, ${sum} - ${b} = __`,
-      answer: `${sum}, ${sum}, ${b}, ${a}`
-    };
+    const key = `${operation}:${factFamilyMode}:${low}:${high}`;
+    let problem;
+
+    if (factFamilyMode === "addition_only" || factFamilyMode === "addition-only") {
+      problem = {
+        prompt: `${a} + ${b} = __\n${b} + ${a} = __`,
+        answer: `${sum}, ${sum}`
+      };
+    } else if (factFamilyMode === "subtraction_only" || factFamilyMode === "subtraction-only") {
+      problem = {
+        prompt: `${sum} - ${a} = __\n${sum} - ${b} = __`,
+        answer: `${b}, ${a}`
+      };
+    } else {
+      problem = {
+        prompt: `${a} + ${b} = __\n${b} + ${a} = __\n${sum} - ${a} = __\n${sum} - ${b} = __`,
+        answer: `${sum}, ${sum}, ${b}, ${a}`
+      };
+    }
 
     fallbackProblem = problem;
 

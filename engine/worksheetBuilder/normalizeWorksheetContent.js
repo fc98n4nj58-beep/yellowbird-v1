@@ -16,7 +16,8 @@ function normalizeVisual(visual = {}) {
       data: {
         min: Number(data.min ?? data.start ?? 0),
         max: Number(data.max ?? data.end ?? 10),
-        value: Number(data.value ?? data.highlight ?? data.min ?? data.start ?? 0)
+        value: Number(data.value ?? data.highlight ?? data.min ?? data.start ?? 0),
+        hideValueLabel: Boolean(data.hideValueLabel)
       }
     };
   }
@@ -64,6 +65,7 @@ function normalizeItem(item = {}, index = 0, meta = {}) {
     a: item.a,
     b: item.b,
     op: item.op,
+    isExample: Boolean(item.isExample),
     visual: normalizeVisual(item.visual),
     meta: {
       grade: meta.grade ?? item.grade ?? null,

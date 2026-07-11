@@ -979,3 +979,28 @@ Guiding phrase: build the flight network before inviting passengers.
   * Visual Quick Checks and decimal resources.
   * Known planned `pattern_word_problems` failures outside ready resources.
 * Do not use the pause to add new content lanes, expand visual Quick Checks, implement decimals/geometry/measurement/financial literacy, mass-promote generated resources, or change public claims based on future content.
+
+### Grade 1 Cleanup Pass B
+
+* Cleaned Teacher QA / print-layout issues across the 12 existing ready Grade 1 worksheets without changing readiness counts.
+* Kept the title/task alignment fixes for ten-frame counting, writing number words to 50, and base-ten blocks to 50.
+* Added direct student-facing directions, visible item numbers, cleaner answer keys, number-line readability improvements, word-problem work space, fact-family grouped layout, and modest word-problem prompt variety.
+* Exported updated review PDFs to `review/grade1-cleanup-pass-b/`.
+* Counts remain 103 ready resources, 85 worksheets, 11 Quick Checks, and 7 Exit Tickets.
+
+### Grade 1 Founder Review Closeout
+
+* Grade 1 founder review is complete for the 12 existing ready Grade 1 worksheets.
+* Approved reusable improvements now support:
+  * task-family defaults for arithmetic, missing addends, comparison, fact families, number lines, ten frames, base-ten blocks, number words, Write the Numeral, and word problems
+  * teacher-variable runtime options for safe ranges, question counts, selected numbers, ten-frame counts, TENS/ONES boxes, and completed examples
+  * curriculum-default/custom-range notices for Grade 1 when runtime choices exceed the default lane
+  * answer-key alignment for supported answer targets
+  * answer-only bold styling on answer keys and completed examples
+* No resources were added or promoted during the Grade 1 closeout.
+* Deferred for later:
+  * font-size variable controls
+  * public teacher-control UI
+  * broader number-line label-mode options
+* Counts remain 103 / 103 ready resources working, 0 ready failures, 85 worksheets, 11 Quick Checks, and 7 Exit Tickets.
+* Do not resume broad content expansion until the Grade 1 commit is reviewed and the next 103-resource inheritance scan is complete.

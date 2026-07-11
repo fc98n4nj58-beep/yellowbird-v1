@@ -11,12 +11,14 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
   }
 
   const worksheet = worksheetCatalogService.generateWorksheetFromCatalogId(id, query);
-  const layout = worksheetCatalogService.buildLayoutFromWorksheet(item, worksheet);
+  const layout = worksheetCatalogService.buildLayoutFromWorksheet(item, worksheet, query);
+  const subheading = layout.header?.subtitle || "";
+  const title = layout.header?.title || item.title;
 
   const contentObject = {
     meta: {
-      title: item.title,
-      subheading: item.shortTitle || "",
+      title,
+      subheading,
       resourceType: item.resourceType || "worksheet",
       formatLabel: item.formatLabel || "",
       teacherNote: item.teacherNote || "",
@@ -35,7 +37,8 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         type: p.type || "equation",
         prompt: p.prompt || "",
         answer: p.answer,
-        visual: p.visual || null
+        visual: p.visual || null,
+        isExample: Boolean(p.isExample)
       }))
     }
   };

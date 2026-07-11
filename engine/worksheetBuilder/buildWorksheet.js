@@ -220,6 +220,7 @@ function buildWorksheet(grade, expectationCode, skillContext = null, options = {
   );
 
   const usedProblemKeys = new Set();
+  const generatorState = {};
   const random = createSeededRandom(options.worksheetSeed || "yellowbird-default");
 
   const problems = activityList.map((activityType) => {
@@ -235,6 +236,7 @@ function buildWorksheet(grade, expectationCode, skillContext = null, options = {
       ...options,
       activityType,
       usedProblemKeys,
+      generatorState,
       random
     });
   });

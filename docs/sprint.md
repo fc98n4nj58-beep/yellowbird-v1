@@ -1617,3 +1617,24 @@ Guiding phrase: build the flight network before inviting passengers.
   - `pattern_word_problems` remains a known planned failure outside ready resources.
 - Codex may still support the pause with audits, docs cleanup, review-packet support, generator diagnostics, tiny safe fixes, route/runtime verification, and issue backlog organization.
 - Codex should not promote broad worksheet batches, mass-promote generated resources, add new content lanes, expand visual Quick Checks, add decimals/geometry/measurement/financial literacy implementation, or change public claims based on future content during this pause.
+
+### Grade 1 Cleanup Pass B
+
+- Fixed Teacher QA / print-layout issues across the 12 existing ready Grade 1 worksheets; no promotions, no new resources, and no readiness-count changes.
+- Kept the title/task alignment fixes for `g1_ten_frame_addition_within_10`, `g1_number_word_match_to_50`, and `grade1_place_value_representation_base_ten_blocks`.
+- Added direct student-facing directions, item numbers, cleaner answer keys, number-line readability improvements, word-problem work space, fact-family grouped layout, and modest word-problem prompt variety.
+- Exported updated review PDFs to `review/grade1-cleanup-pass-b/`.
+- Counts remain 103 ready resources, 85 worksheets, 11 Quick Checks, and 7 Exit Tickets.
+
+### Grade 1 Founder Review Closeout
+
+- Grade 1 founder review implementation is complete for the 12 existing ready Grade 1 worksheets.
+- The closeout includes final founder defaults, reusable task-family layout/display rules, teacher-variable runtime support, completed-example handling, curriculum-default/custom-range notices, answer-key alignment, and answer-only bold boundaries.
+- No resources were added, removed, promoted, or demoted.
+- Review packets remain local QA artifacts under `review/` and should not be part of the production commit.
+- Deferred:
+  - font-size variable controls
+  - public teacher-control UI
+  - broader number-line label-mode controls
+- Counts remain 103 / 103 ready resources working, 0 ready failures, 85 worksheets, 11 Quick Checks, and 7 Exit Tickets.
+- Next recommended move after commit: run a 103-resource inheritance scan before touching more content.

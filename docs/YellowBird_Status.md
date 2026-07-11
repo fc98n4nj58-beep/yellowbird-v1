@@ -2007,3 +2007,27 @@ Founder review pause:
   * Equivalent-fractions generation has a prompt-variety caution.
   * Visual Quick Checks and decimal resources remain deferred.
   * `pattern_word_problems` remains a known planned failure outside ready resources.
+
+### Grade 1 Cleanup Pass B
+
+* Controlled Teacher QA / print-layout cleanup for the 12 existing ready Grade 1 worksheets; no resources promoted or added.
+* Kept the Pass A title/task fixes for ten-frame counting, writing number words to 50, and base-ten blocks to 50.
+* Added student-facing worksheet directions, visible item numbers, cleaner answer-key formatting, number-line readability improvements, word-problem work space, fact-family grouped layout, and modest word-problem prompt variety.
+* Exported updated review PDFs to `review/grade1-cleanup-pass-b/`.
+* Ready counts remain: 103 ready resources, 85 worksheets, 11 Quick Checks, 7 Exit Tickets.
+
+### Grade 1 Founder Review Closeout
+
+* Grade 1 founder review implementation is complete and commit-ready pending Project Lead staged-file review.
+* All 12 existing ready Grade 1 worksheets are approved after founder correction passes; no resources were added, removed, or promoted.
+* Reusable task-family rules are now established for Grade 1 arithmetic facts, missing addends, comparison symbols, fact families, number-line identification, ten frames, base-ten blocks, number-word writing, Write the Numeral mode, and word-problem work boxes.
+* Teacher-variable runtime capabilities now support controlled custom ranges, question counts, selected-number lists, ten-frame counts, TENS/ONES response boxes, Write the Numeral mode, and completed examples where supported.
+* Curriculum-default/custom-range handling now keeps Grade 1 defaults honest and adds teacher-facing range notices when a runtime choice exceeds the Grade 1 default lane.
+* Answer-key geometry and alignment rules are established: short numeral/symbol answers center on answer targets, written number words stay left-aligned on handwriting lines, TENS/ONES digits center independently, and word-problem work-box behavior is preserved.
+* Answer-only bold boundary is established: inserted answers are bold, while surrounding prompt text, operands, operators, labels, suffix text, and word-problem prompts remain regular.
+* Deferred items remain explicit:
+  * font-size variable belongs to a later task-family-aware UI/runtime pass
+  * public teacher-control UI is still deferred
+  * number-line label-mode options are still partially deferred
+  * review PDFs/PNGs under `review/` remain local QA artifacts, not production source
+* Counts remain: 103 / 103 ready resources working, 0 ready failures, 85 worksheets, 11 Quick Checks, 7 Exit Tickets.

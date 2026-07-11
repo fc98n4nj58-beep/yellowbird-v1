@@ -290,3 +290,36 @@ Rules:
 - Random worksheet generation must accept an injected `random` function.
 - Routes stay thin.
 - Renderer only renders.
+
+## Decision: Grade 1 Cleanup Pass B
+
+The 12 existing ready Grade 1 worksheets received controlled Teacher QA / print-layout cleanup during the founder review pause.
+
+Rules:
+- No resources were promoted, added, or removed.
+- Student worksheet directions should be direct to the student, not teacher/catalogue copy.
+- Item numbers should be visible on Grade 1 worksheets.
+- Number-line and word-problem pages may use fewer prompts per page when readability requires it.
+- `g1_ten_frame_addition_within_10`, `g1_number_word_match_to_50`, and `grade1_place_value_representation_base_ten_blocks` keep their title/task alignment fixes from Pass A.
+- Updated review PDFs live in `review/grade1-cleanup-pass-b/`.
+- Ready counts remain 103 total resources, 85 worksheets, 11 Quick Checks, and 7 Exit Tickets.
+
+## Decision: Grade 1 Founder Review System Closeout
+
+Decision:
+Close the approved Grade 1 founder-review implementation as one controlled production/docs commit after staged-file review.
+
+Reason:
+The Grade 1 founder review produced reusable improvements that belong in the shared worksheet system before more content is added. The 12 existing ready Grade 1 worksheets are approved, and the shared renderer/runtime now supports the accepted Grade 1 defaults, task-family layouts, answer-key alignment, answer-only bold styling, completed examples, and teacher-variable generation controls.
+
+Rules:
+- Do not add, remove, or promote resources as part of the Grade 1 closeout.
+- Keep review PDFs, rendered PNGs, CSVs, and QA packets under `review/` out of the production commit.
+- Commit only approved production code/config/catalog/docs; do not include older untracked SVG visual experiments or empty preview folders without a separate decision.
+- Grade 1 curriculum defaults remain conservative: facts/comparisons/number lines to 20, ten frames within 10 by default, number words/base-ten to 50 where explicitly framed.
+- Runtime custom-range options may exceed defaults only with honest teacher-facing range notices.
+- Completed examples use the same geometry and answer-style rules as answer keys.
+- Answer keys bold only inserted answers; surrounding text remains regular.
+- Short numeral/symbol answers center on supported answer targets; written number words remain left-aligned; word-problem work boxes keep their approved behavior.
+- Font-size variable controls, public teacher-control UI, and broader number-line label-mode controls remain deferred to later task-family-aware work.
+- Ready counts remain 103 total resources, 85 worksheets, 11 Quick Checks, and 7 Exit Tickets.

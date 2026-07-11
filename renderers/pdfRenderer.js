@@ -40,14 +40,46 @@ function buildAnswerKeyItems(items) {
     id: it.id,
     prompt: safeStr(it.prompt),
     answer: it.answer,
+    visual: it.visual || null,
+    type: it.type || "equation",
     a: it.a,
     b: it.b,
     op: it.op,
+    isExample: Boolean(it.isExample),
   }));
 }
 
 function promptWithoutEquals(prompt) {
   return safeStr(prompt).replace(/\s*=\s*$/, "").trim();
+}
+
+function formatAnswerValue(answer) {
+  if (Array.isArray(answer)) return answer.join(", ");
+  return answer ?? "";
+}
+
+function filledAnswerText(prompt, answer) {
+  const rawPrompt = promptWithoutEquals(prompt);
+  const answerText = formatAnswerValue(answer);
+
+  if (!rawPrompt.match(/_{2,}/)) {
+    return `${rawPrompt} = ${answerText}`;
+  }
+
+  const parts = String(answerText).split(",").map((part) => part.trim());
+  let fillIndex = 0;
+  const filled = rawPrompt.replace(/_{2,}/g, () => {
+    const value = parts[fillIndex] ?? answerText;
+    fillIndex += 1;
+    return value;
+  });
+
+  return filled;
+}
+
+function standardizeShortBlanks(prompt, display = {}) {
+  if (!display.standardShortAnswerTarget) return prompt;
+  return safeStr(prompt).replace(/_{2,}/g, "___");
 }
 
 function clampCols(n) {
@@ -93,6 +125,8 @@ function drawTenFramePrimitive(doc, x, y, opts = {}) {
   const cols = 5;
   const rows = 2;
   const frameWidth = cols * cellSize + (cols - 1) * cellGap;
+  const frameHeight = rows * cellSize + (rows - 1) * cellGap;
+  const framesPerRow = Math.max(1, Math.ceil(frames / 2));
 
   doc.save();
   doc.lineWidth(1);
@@ -102,14 +136,17 @@ function drawTenFramePrimitive(doc, x, y, opts = {}) {
   let remaining = filled;
 
   for (let f = 0; f < frames; f++) {
-    const frameX = x + f * (frameWidth + frameGap);
+    const frameRow = Math.floor(f / framesPerRow);
+    const frameCol = f % framesPerRow;
+    const frameX = x + frameCol * (frameWidth + frameGap);
+    const frameY = y + frameRow * (frameHeight + frameGap);
 
     for (let i = 0; i < 10; i++) {
       const row = Math.floor(i / cols);
       const col = i % cols;
 
       const cellX = frameX + col * (cellSize + cellGap);
-      const cellY = y + row * (cellSize + cellGap);
+      const cellY = frameY + row * (cellSize + cellGap);
 
       doc.rect(cellX, cellY, cellSize, cellSize).stroke();
 
@@ -130,7 +167,8 @@ function drawTenFramePrimitive(doc, x, y, opts = {}) {
 
   doc.restore();
 
-  return rows * cellSize + (rows - 1) * cellGap;
+  return Math.ceil(frames / framesPerRow) * frameHeight +
+    Math.max(0, Math.ceil(frames / framesPerRow) - 1) * frameGap;
 }
 
 function drawNumberLinePrimitive(doc, x, y, opts = {}) {
@@ -158,6 +196,9 @@ doc.lineWidth(1);
   doc.lineTo(endX, lineY);
   doc.stroke();
 
+  const labelEvery = steps > 20 ? 5 : steps > 10 ? 2 : 1;
+  const hideValueLabel = Boolean(opts.hideValueLabel);
+
   for (let i = 0; i <= steps; i++) {
     const tickX = startX + i * stepWidth;
     const tickValue = min + i;
@@ -166,11 +207,16 @@ doc.lineWidth(1);
     doc.lineTo(tickX, lineY + 5);
     doc.stroke();
 
-    doc.fontSize(9);
-    doc.text(String(tickValue), tickX - 8, lineY + 8, {
-      width: 16,
-      align: "center"
-    });
+    const isTargetValue = tickValue === value;
+    const shouldLabel = i === 0 || i === steps || i % labelEvery === 0 || isTargetValue;
+
+    if (shouldLabel && !(hideValueLabel && isTargetValue)) {
+      doc.fontSize(8);
+      doc.text(String(tickValue), tickX - 9, lineY + 8, {
+        width: 18,
+        align: "center"
+      });
+    }
   }
 
   const clamped = Math.max(min, Math.min(max, value));
@@ -186,6 +232,11 @@ doc.strokeColor("#111111");
 doc.circle(dotX, lineY, 3.2).fillAndStroke();
 
   doc.restore();
+
+  return {
+    dotX,
+    lineY
+  };
 }
 
 function drawBaseTenBlocksPrimitive(doc, x, y, opts = {}) {
@@ -335,19 +386,17 @@ function measureTenFrameVisual(data = {}, maxWidth, targetHeight) {
 
   const singleFrameWidth = cellSizeBase * 5 + cellGapBase * 4;
   const singleFrameHeight = cellSizeBase * 2 + cellGapBase;
-  const widthBase = frameCount * singleFrameWidth + (frameCount - 1) * frameGapBase;
-  const heightBase = singleFrameHeight;
-
-  const widthScale = maxWidth > 0 ? Math.min(1, maxWidth / widthBase) : 1;
-  const heightScale = targetHeight > 0 ? Math.min(1, targetHeight / heightBase) : 1;
-  const scale = Math.min(widthScale, heightScale, 1);
+  const framesPerRow = Math.max(1, Math.ceil(frameCount / 2));
+  const frameRows = Math.ceil(frameCount / framesPerRow);
+  const widthBase = framesPerRow * singleFrameWidth + (framesPerRow - 1) * frameGapBase;
+  const heightBase = frameRows * singleFrameHeight + (frameRows - 1) * frameGapBase;
 
   return {
-    width: widthBase * scale,
-    height: heightBase * scale,
-    cellSize: cellSizeBase * scale,
-    cellGap: cellGapBase * scale,
-    frameGap: frameGapBase * scale
+    width: widthBase,
+    height: heightBase,
+    cellSize: cellSizeBase,
+    cellGap: cellGapBase,
+    frameGap: frameGapBase
   };
 }
 
@@ -484,7 +533,8 @@ function getVisualRegion({
   promptBottomY,
   cellX,
   cellWidth,
-  visualKind
+  visualKind,
+  fullWidth = false
 }) {
   const kindConfig = getVisualKindConfig(visualKind);
 
@@ -500,11 +550,11 @@ function getVisualRegion({
 
   const height = Math.max(0, bottomY - topY);
 
-  const answerZoneWidth = cellWidth * VISUAL_LAYOUT.answerZoneRatio;
+  const answerZoneWidth = fullWidth ? 0 : cellWidth * VISUAL_LAYOUT.answerZoneRatio;
   const visualZoneWidth =
     cellWidth -
     answerZoneWidth -
-    VISUAL_LAYOUT.visualAnswerGap -
+    (fullWidth ? 0 : VISUAL_LAYOUT.visualAnswerGap) -
     VISUAL_LAYOUT.leftInset;
 
   const visualX = cellX + VISUAL_LAYOUT.leftInset;
@@ -539,12 +589,33 @@ function placeVisualInRegion(region, measured) {
   return { x, y };
 }
 
-function drawAnswerLine(doc, region) {
-  if (!region || region.answerWidth <= 20) return;
+function placeVisualInRegionWithDisplay(region, measured, display = {}) {
+  if (!region || !measured) return null;
+
+  const x = region.x;
+  let y =
+    region.topY +
+    (region.height - measured.height) / 2 +
+    VISUAL_LAYOUT.centerOffsetY;
+
+  if (display.visualVerticalAlign === "topThird") {
+    y = region.topY + Math.max(4, region.height * 0.18);
+  }
+
+  if (display.numberLineRowGeometry) {
+    y = region.topY + Math.max(4, region.height * 0.34 - measured.height * 0.55);
+  }
+
+  return { x, y };
+}
+
+function drawAnswerLine(doc, region, options = {}) {
+  if (!region || region.answerWidth <= 20) return null;
 
   const lineY = region.topY + region.height * 0.95;
   const lineStartX = region.answerX;
-  const lineEndX = region.answerX + region.answerWidth;
+  const lineWidth = options.short ? region.answerWidth * 0.5 : region.answerWidth;
+  const lineEndX = region.answerX + lineWidth;
 
   doc.save();
   doc.strokeColor(pdfDesignTokens.colors.answerRule);
@@ -553,9 +624,161 @@ function drawAnswerLine(doc, region) {
   doc.lineTo(lineEndX, lineY);
   doc.stroke();
   doc.restore();
+
+  return {
+    x: lineStartX,
+    y: lineY,
+    width: lineWidth
+  };
 }
 
-function renderQuestionItem(doc, question, layoutBox, fonts = {}) {
+function drawShortAnswerLine(doc, x, y, width = 42) {
+  doc.save();
+  doc.strokeColor(pdfDesignTokens.colors.answerRule);
+  doc.lineWidth(0.8);
+  doc.moveTo(x, y).lineTo(x + width, y).stroke();
+  doc.restore();
+}
+
+function drawTextOnLine(doc, text, x, y, width, fonts = {}, options = {}) {
+  doc.save();
+  setFont(doc, fonts.bold || fonts.regular || "Helvetica", 12);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  const align = options.align || "center";
+  const inset = align === "left" ? 4 : 0;
+  doc.text(formatAnswerValue(text), x + inset, y - 14, {
+    width: Math.max(20, width - inset * 2),
+    align,
+    lineBreak: false
+  });
+  doc.restore();
+}
+
+function restoreAnswerSurroundingTextStyle(doc, fonts = {}, size = 12) {
+  setFont(doc, fonts.regular || "Helvetica", size);
+  doc.fillColor(pdfDesignTokens.colors.text);
+}
+
+function splitAnswerParts(answer) {
+  return String(formatAnswerValue(answer))
+    .split(",")
+    .map((part) => part.trim());
+}
+
+function drawInlineAnswerPrompt(doc, promptText, answers, x, y, width, fonts = {}) {
+  const parts = String(promptText || "").split(/_{2,}/);
+  const answerParts = Array.isArray(answers) ? answers : splitAnswerParts(answers);
+  const blankWidth = Math.max(24, doc.widthOfString("___") + 8);
+  let cursorX = x;
+
+  setFont(doc, fonts.regular || "Helvetica", 12);
+  doc.fillColor(pdfDesignTokens.colors.text);
+
+  parts.forEach((part, index) => {
+    if (part) {
+      const remainingWidth = Math.max(12, x + width - cursorX);
+      doc.text(part, cursorX, y, {
+        width: remainingWidth,
+        align: "left",
+        lineBreak: false
+      });
+      cursorX += doc.widthOfString(part);
+    }
+
+    if (index < parts.length - 1) {
+      const answerText = answerParts[index] ?? answerParts[0] ?? "";
+      const lineY = y + (layout.typography.body?.lineHeight || 14);
+
+      drawShortAnswerLine(doc, cursorX, lineY, blankWidth);
+      drawTextOnLine(doc, answerText, cursorX, lineY, blankWidth, fonts);
+      restoreAnswerSurroundingTextStyle(doc, fonts, 12);
+      cursorX += blankWidth;
+    }
+  });
+}
+
+function drawWorkSpace(doc, x, y, width, lineCount = 2) {
+  const lines = Math.max(0, Number(lineCount) || 0);
+  if (!lines) return 0;
+
+  const gap = 22;
+  doc.save();
+  doc.strokeColor(pdfDesignTokens.colors.answerRule);
+  doc.lineWidth(0.8);
+  for (let i = 0; i < lines; i += 1) {
+    const lineY = y + i * gap;
+    doc.moveTo(x, lineY).lineTo(x + width, lineY).stroke();
+  }
+  doc.restore();
+
+  return lines * gap;
+}
+
+function drawWorkBox(doc, x, y, width, height) {
+  const boxHeight = Math.max(36, height);
+
+  doc.save();
+  doc.strokeColor(pdfDesignTokens.colors.answerRule);
+  doc.lineWidth(0.8);
+  doc.rect(x, y, width, boxHeight).stroke();
+  doc.restore();
+
+  return boxHeight;
+}
+
+function renderFactFamilyGrid(doc, promptText, x, y, width, fonts = {}, options = {}) {
+  const lines = safeStr(promptText)
+    .split(/\n+/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const answerParts = splitAnswerParts(options.answer);
+
+  if (lines.length < 2) return 0;
+
+  const isSubtractionOnly = lines.length === 2 && lines.every((line) => line.includes(" - "));
+  const isStackedAnswerKey = Boolean(options.answerKey);
+  const rowHeight = isSubtractionOnly || isStackedAnswerKey ? 22 : 30;
+  const gridTop = y;
+  const colWidth = width / 2;
+  const rowCount = isStackedAnswerKey
+    ? lines.length
+    : lines.length >= 4 || isSubtractionOnly
+      ? 2
+      : 1;
+  const gridHeight = rowHeight * rowCount;
+
+  setFont(doc, fonts.regular || "Helvetica", lines.length < 4 ? 11 : 10.5);
+  doc.fillColor(pdfDesignTokens.colors.text);
+
+  lines.slice(0, 4).forEach((line, index) => {
+    const col = isSubtractionOnly || isStackedAnswerKey ? 0 : index % 2;
+    const row = isSubtractionOnly || isStackedAnswerKey ? index : Math.floor(index / 2);
+    const lineX = x + col * colWidth + 2;
+    const lineWidth = isSubtractionOnly || isStackedAnswerKey ? width - 4 : colWidth - 4;
+
+    if (options.answerKey && line.match(/_{2,}/)) {
+      drawInlineAnswerPrompt(
+        doc,
+        standardizeShortBlanks(line, { standardShortAnswerTarget: true }),
+        [answerParts[index] ?? answerParts[0] ?? ""],
+        lineX,
+        gridTop + row * rowHeight + 5,
+        lineWidth,
+        fonts
+      );
+    } else {
+      doc.text(line, lineX, gridTop + row * rowHeight + 5, {
+        width: lineWidth,
+        align: "left",
+        lineBreak: false
+      });
+    }
+  });
+
+  return gridHeight;
+}
+
+function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) {
   if (doc._ended) return 0;
 
   const {
@@ -566,8 +789,21 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}) {
     dividerY
   } = layoutBox;
 
-const promptText = question.prompt || question.text || "";
-const hasInlineAnswerBlank = promptText.includes("__");
+  const isExample = Boolean(display.includeExample && question.isExample && !display.answerKey);
+  const rawPromptBase = isExample &&
+    question.answer != null &&
+    !question.visual &&
+    !display.workSpaceBox &&
+    !display.writingLine &&
+    !display.standardShortAnswerTarget &&
+    !display.factFamilyGrid
+    ? filledAnswerText(question.prompt || question.text || "", question.answer)
+    : question.prompt || question.text || "";
+  const rawPrompt = standardizeShortBlanks(rawPromptBase, display);
+  const numberPrefix = question.id != null ? `${question.id})  ` : "";
+  const hidePrompt = Boolean(display.hideItemPrompts && question.visual);
+  const promptText = `${numberPrefix}${hidePrompt ? "" : rawPrompt}`.trim();
+  const hasInlineAnswerBlank = Boolean(promptText.match(/_{2,}/));
   const visual = question.visual || null;
 
   const promptX = x;
@@ -578,26 +814,150 @@ const hasInlineAnswerBlank = promptText.includes("__");
   doc.font(fonts.regular || "Helvetica");
   doc.fontSize(12);
 
+  if (isExample) {
+    setFont(doc, fonts.lightItalic || fonts.regular || "Helvetica", 9);
+    doc.fillColor(pdfDesignTokens.colors.muted);
+    doc.text(display.workSpaceBox ? "Worked Example" : "Example", x, y - 11, {
+      width,
+      align: "left",
+      lineBreak: false
+    });
+    setFont(doc, fonts.regular || "Helvetica", 12);
+    doc.fillColor("#111827");
+  }
+
   const promptHeight = doc.heightOfString(promptText, {
     width: promptWidth,
     align: "left"
   });
 
-  doc.text(promptText, promptX, promptY, {
-    width: promptWidth,
-    align: "left"
-  });
+  if (display.factFamilyGrid && !visual?.kind) {
+    doc.text(numberPrefix.trim(), promptX, promptY, {
+      width: 34,
+      align: "left",
+      lineBreak: false
+    });
+
+    const gridHeight = renderFactFamilyGrid(
+      doc,
+      rawPrompt,
+      promptX + 34,
+      promptY,
+      promptWidth - 34,
+      fonts,
+      {
+        answerKey: Boolean(display.answerKey || isExample),
+        answer: question.answer
+      }
+    );
+
+    return Math.max(gridHeight, layout.typography.body?.lineHeight || 16);
+  }
+
+  if (!visual?.kind && display.writingLine) {
+    const lineY = promptY + (layout.typography.body?.lineHeight || 16);
+    const lineWidth = display.shortWritingLine
+      ? Number(display.reverseNumberWordLineWidth || 46)
+      : null;
+    const numberWidth = display.reverseNumberWordWriting ? 24 : 44;
+    const promptZoneWidth = display.reverseNumberWordWriting
+      ? Math.min(
+        Math.max(48, Number(display.reverseNumberWordPromptZoneWidth || 56)),
+        Math.max(48, width - numberWidth - lineWidth - 10)
+      )
+      : null;
+    const lineStartX = display.reverseNumberWordWriting
+      ? x + numberWidth + promptZoneWidth + 6
+      : display.shortWritingLine
+        ? x + width - lineWidth
+        : x + Math.min(88, width * 0.18);
+    const lineEndX = display.shortWritingLine
+      ? lineStartX + lineWidth
+      : x + width;
+
+    if (display.reverseNumberWordWriting) {
+      const wordX = x + numberWidth;
+      const wordWidth = Math.max(24, promptZoneWidth);
+
+      doc.text(numberPrefix.trim(), x, promptY, {
+        width: numberWidth - 2,
+        align: "left",
+        lineBreak: false
+      });
+      doc.text(rawPrompt, wordX, promptY, {
+        width: wordWidth,
+        align: "left",
+        lineBreak: false,
+        ellipsis: false
+      });
+    } else {
+      const numberWidth = 44;
+      doc.text(numberPrefix.trim(), x, promptY, {
+        width: numberWidth - 4,
+        align: "left",
+        lineBreak: false
+      });
+      doc.text(rawPrompt, x + numberWidth, promptY, {
+        width: Math.max(20, width - numberWidth),
+        align: "left",
+        lineBreak: false
+      });
+    }
+
+    doc.save();
+    doc.strokeColor(pdfDesignTokens.colors.answerRule);
+    doc.lineWidth(0.8);
+    doc.moveTo(lineStartX, lineY).lineTo(lineEndX, lineY).stroke();
+
+    if ((display.answerKey || isExample) && question.answer != null) {
+      drawTextOnLine(
+        doc,
+        question.answer,
+        lineStartX,
+        lineY,
+        lineEndX - lineStartX,
+        fonts,
+        {
+          align: display.reverseNumberWordWriting ? "center" : "left"
+        }
+      );
+    }
+    doc.restore();
+
+    return Math.max(promptHeight, layout.typography.body?.lineHeight || 16);
+  }
+
+  if ((display.answerKey || isExample) && question.answer != null && hasInlineAnswerBlank) {
+    drawInlineAnswerPrompt(
+      doc,
+      promptText,
+      question.answer,
+      promptX,
+      promptY,
+      promptWidth,
+      fonts
+    );
+  } else {
+    doc.text(promptText, promptX, promptY, {
+      width: promptWidth,
+      align: "left"
+    });
+  }
 
   const promptBottomY = promptY + promptHeight;
   const cellBottomY = y + height;
 
   if (visual?.kind && !doc._ended) {
+    const visualCellX = hidePrompt ? x + 34 : x;
+    const visualCellWidth = hidePrompt ? Math.max(40, width - 34) : width;
+    const fullWidthVisual = Boolean(display.numberLineAnswerUnderTarget && visual.kind === "number_line");
     const region = getVisualRegion({
       cellBottomY,
       promptBottomY,
-      cellX: x,
-      cellWidth: width,
-      visualKind: visual.kind
+      cellX: visualCellX,
+      cellWidth: visualCellWidth,
+      visualKind: visual.kind,
+      fullWidth: fullWidthVisual
     });
 
     const measured = measureVisual(
@@ -606,22 +966,149 @@ const hasInlineAnswerBlank = promptText.includes("__");
       region.targetHeight
     );
 
-    const placed = placeVisualInRegion(region, measured);
+    const placed = placeVisualInRegionWithDisplay(region, measured, display);
 
     if (measured && placed) {
       try {
-        renderVisualByKind(doc, visual, placed, measured);
+        const renderMeta = renderVisualByKind(doc, visual, placed, measured);
 
-if (!hasInlineAnswerBlank) {
-  drawAnswerLine(doc, region);
-}
+        if (visual.kind === "number_line" && display.numberLineAnswerUnderTarget && renderMeta?.dotX) {
+          const answerWidth = 42;
+          const pageBox = layout.page.contentBox;
+          const minX = pageBox.x + 4;
+          const maxX = pageBox.x + pageBox.width - answerWidth - 4;
+          const lineX = Math.max(minX, Math.min(maxX, renderMeta.dotX - answerWidth / 2));
+          const lineY = Math.min(
+            cellBottomY - 22,
+            renderMeta.lineY + Math.max(42, measured.height * 1.05)
+          );
+
+          if ((display.answerKey || isExample) && question.answer != null) {
+            drawShortAnswerLine(doc, lineX, lineY, answerWidth);
+            drawTextOnLine(doc, question.answer, lineX, lineY, answerWidth, fonts);
+          } else {
+            drawShortAnswerLine(doc, lineX, lineY, answerWidth);
+          }
+
+          return height;
+        }
+
+        if (visual.kind === "base_ten_blocks" && display.baseTenAlignedResponse) {
+          const modelBottomY = placed.y + (measured.rodLength || measured.height);
+
+          if (display.baseTenTensOnesBoxes) {
+          const totalWidth = 52;
+          const boxW = totalWidth / 2;
+          const boxH = totalWidth;
+          const startX = x + Math.max(0, width - totalWidth - 6);
+          const boxY = modelBottomY - boxH;
+          const tensValue = visual.data?.tens ?? Math.floor(Number(question.answer || 0) / 10);
+          const onesValue = visual.data?.ones ?? Number(question.answer || 0) % 10;
+
+          doc.save();
+          setFont(doc, fonts.light || fonts.regular || "Helvetica", 8);
+          doc.fillColor(pdfDesignTokens.colors.muted);
+          doc.text("TENS", startX, boxY - 12, { width: boxW, align: "center", lineBreak: false });
+          doc.text("ONES", startX + boxW, boxY - 12, { width: boxW, align: "center", lineBreak: false });
+          doc.strokeColor(pdfDesignTokens.colors.answerRule);
+          doc.lineWidth(0.8);
+          doc.rect(startX, boxY, totalWidth, boxH).stroke();
+          doc.moveTo(startX + boxW, boxY).lineTo(startX + boxW, boxY + boxH).stroke();
+          if ((display.answerKey || isExample) && question.answer != null) {
+            setFont(doc, fonts.bold || fonts.regular || "Helvetica", 12);
+            doc.fillColor(pdfDesignTokens.colors.text);
+            const digitY = boxY + boxH / 2 - 7;
+            doc.text(formatAnswerValue(tensValue), startX, digitY, { width: boxW, align: "center", lineBreak: false });
+            doc.text(formatAnswerValue(onesValue), startX + boxW, digitY, { width: boxW, align: "center", lineBreak: false });
+            restoreAnswerSurroundingTextStyle(doc, fonts, 12);
+          }
+          doc.restore();
+
+          return height;
+        }
+
+          const lineWidth = Math.max(42, Math.min(region.answerWidth * 0.5, 70));
+          const lineX = region.answerX;
+          const lineY = modelBottomY;
+
+          if ((display.answerKey || isExample) && question.answer != null) {
+            drawShortAnswerLine(doc, lineX, lineY, lineWidth);
+            drawTextOnLine(doc, question.answer, lineX, lineY, lineWidth, fonts);
+          } else {
+            drawShortAnswerLine(doc, lineX, lineY, lineWidth);
+          }
+
+          return height;
+        }
+
+        if ((display.answerKey || isExample) && question.answer != null && !hasInlineAnswerBlank) {
+          const line = drawAnswerLine(doc, region, {
+            short: Boolean(display.shortVisualAnswerLine)
+          });
+          if (line) {
+            drawTextOnLine(doc, question.answer, line.x, line.y, line.width, fonts);
+          }
+        } else if (!hasInlineAnswerBlank) {
+          drawAnswerLine(doc, region, {
+            short: Boolean(display.shortVisualAnswerLine)
+          });
+        }
       } catch (err) {
         console.error("VISUAL RENDER FAIL:", err);
       }
     }
   }
 
-  if (dividerY) {
+  if (!visual?.kind && display.workSpaceBox) {
+    const boxTop = promptBottomY + 8;
+    const bottomBreathing = Number(display.workBoxBottomBreathing || 24);
+    const availableHeight = Math.max(42, cellBottomY - boxTop - bottomBreathing);
+    const boxHeight = drawWorkBox(doc, x, boxTop, width, availableHeight);
+
+    if ((display.answerKey || isExample) && question.answer != null) {
+      doc.save();
+      restoreAnswerSurroundingTextStyle(doc, fonts, 12);
+      doc.fillColor(pdfDesignTokens.colors.text);
+      const label = "Answer: ";
+      const answerText = formatAnswerValue(question.answer);
+      const answerX = x + 10 + doc.widthOfString(label);
+      doc.text(label, x + 10, boxTop + 10, {
+        width: width - 20,
+        align: "left",
+        lineBreak: false
+      });
+      setFont(doc, fonts.bold || fonts.regular || "Helvetica", 12);
+      doc.text(answerText, answerX, boxTop + 10, {
+        width: Math.max(20, width - 20 - doc.widthOfString(label)),
+        align: "left"
+      });
+      restoreAnswerSurroundingTextStyle(doc, fonts, 12);
+      doc.restore();
+    }
+
+    return Math.max(
+      promptHeight + boxHeight + 20,
+      layout.typography.body?.lineHeight || 16
+    );
+  }
+
+  if (!visual?.kind && display.workSpaceLines) {
+    const workTop = promptBottomY + 14;
+    const workHeight = drawWorkSpace(
+      doc,
+      x,
+      workTop,
+      width,
+      display.workSpaceLines
+    );
+
+    return Math.max(
+      promptHeight + workHeight + 18,
+      layout.typography.body?.lineHeight || 16
+    );
+  }
+
+  if (dividerY && !display.hideItemSeparators) {
     doc.save();
     doc.strokeColor("#d1d5db");
     doc.lineWidth(1);
@@ -805,6 +1292,16 @@ function distributeBalanced(items, cols) {
   return buckets;
 }
 
+function distributeSequential(items, cols) {
+  const buckets = Array.from({ length: cols }, () => []);
+  const perColumn = Math.ceil(items.length / Math.max(1, cols));
+  items.forEach((it, idx) => {
+    const bucketIndex = Math.min(cols - 1, Math.floor(idx / perColumn));
+    buckets[bucketIndex].push(it);
+  });
+  return buckets;
+}
+
 function paginateEven(items, maxPerPage) {
   const n = items.length;
   if (n <= maxPerPage) return [items];
@@ -821,6 +1318,17 @@ function paginateEven(items, maxPerPage) {
     i += take;
     remaining -= take;
   }
+  return pages;
+}
+
+function paginateSequential(items, maxPerPage) {
+  const pageSize = Math.max(1, maxPerPage);
+  const pages = [];
+
+  for (let i = 0; i < items.length; i += pageSize) {
+    pages.push(items.slice(i, i + pageSize));
+  }
+
   return pages;
 }
 
@@ -847,7 +1355,8 @@ function renderPageColumns(
   colW,
   arg8,
   arg9,
-  arg10
+  arg10,
+  arg11
 ) {
   const usingOldStyle = typeof arg8 === "number" && typeof arg9 === "function";
 
@@ -872,11 +1381,14 @@ function renderPageColumns(
 
   const renderLineFn = arg8;
   const itemGap = arg9 ?? 18;
+  const display = arg11 || {};
 
   const isVisualLayout = itemGap === 0;
-  const rowCount = isVisualLayout ? 5 : null;
-  const visualCellHeight = isVisualLayout
-    ? (bottomContentY - startY) / rowCount
+  const rowCount = isVisualLayout ? (arg10 || 5) : null;
+  const denseGridRows = Number(display.denseGridRows || 0);
+  const fixedRowCount = isVisualLayout ? rowCount : denseGridRows || null;
+  const visualCellHeight = fixedRowCount
+    ? (bottomContentY - startY) / fixedRowCount
     : 0;
 
   for (let c = 0; c < cols; c++) {
@@ -893,7 +1405,7 @@ function renderPageColumns(
 
         const separatorY = currentY + visualCellHeight - 8;
 
-        if (i < rowCount - 1 && separatorY < bottomContentY - 4) {
+        if (!display.hideItemSeparators && i < rowCount - 1 && separatorY < bottomContentY - 4) {
           doc.save();
           doc.strokeColor(pdfDesignTokens.colors.lightRule);
           doc.lineWidth(pdfDesignTokens.rules.thin);
@@ -904,12 +1416,19 @@ function renderPageColumns(
         }
 
         currentY += visualCellHeight;
+      } else if (display.equalHeightItems || denseGridRows) {
+        const equalCellHeight = Math.max(
+          layout.typography.body?.lineHeight || 16,
+          (bottomContentY - startY) / Math.max(1, denseGridRows || colItems.length)
+        );
+        renderLineFn(item, xForCol(c), currentY, colW, equalCellHeight);
+        currentY += equalCellHeight;
       } else {
         const usedHeight = renderLineFn(item, xForCol(c), currentY, colW);
 
         const separatorY = currentY + usedHeight + Math.max(8, itemGap / 2);
 
-        if (separatorY < bottomContentY - 4) {
+        if (!display.hideItemSeparators && separatorY < bottomContentY - 4) {
           doc.save();
           doc.strokeColor(pdfDesignTokens.colors.lightRule);
           doc.lineWidth(pdfDesignTokens.rules.thin);
@@ -938,6 +1457,7 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
   );
 
   const instruction = layoutObject?.instruction || "";
+  const display = layoutObject?.display || {};
   const bodyStyle = layout.typography.body;
 
   const footerRuleY = doc.page.height - layout.page.margins.bottom;
@@ -945,11 +1465,16 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
   const bottomContentY = footerRuleY - footerBufferH;
 
   const hasVisuals = allItems.some((item) => item.visual);
-  const cols = hasVisuals ? 2 : clampCols(layoutObject?.template?.columns || options.cols);
+  const isReverseNumberWordLayout = Boolean(display.reverseNumberWordWriting);
+  const cols = hasVisuals
+    ? clampCols(display.visualColumns || 2)
+    : clampCols(layoutObject?.template?.columns || options.cols);
   const layoutMaxProblemsPerPage = Number(layoutObject?.template?.maxProblemsPerPage || 0);
   const questionsPerColumn = hasVisuals
-    ? 5
-    : Math.max(1, Math.ceil((layoutMaxProblemsPerPage || MAX_PER_COLUMN) / cols));
+    ? Math.max(1, Math.ceil((layoutMaxProblemsPerPage || cols * 5) / cols))
+    : isReverseNumberWordLayout
+      ? Number(display.reverseNumberWordRowsPerColumn || 10)
+      : Math.max(1, Math.ceil((layoutMaxProblemsPerPage || MAX_PER_COLUMN) / cols));
   const itemGap = hasVisuals ? 0 : 18;
 
   const { colW, xForCol } = getColumns(cols);
@@ -969,10 +1494,14 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
   setFont(doc, fonts.regular, bodyStyle.size);
   doc.fillColor(pdfDesignTokens.colors.text);
 
-  const maxPerPage = hasVisuals
+  const maxPerPage = isReverseNumberWordLayout
+    ? 30
+    : hasVisuals
     ? cols * questionsPerColumn
     : Math.max(1, layoutMaxProblemsPerPage || cols * questionsPerColumn);
-  const pages = paginateEven(allItems, maxPerPage);
+  const pages = isReverseNumberWordLayout
+    ? paginateSequential(allItems, maxPerPage)
+    : paginateEven(allItems, maxPerPage);
 
   pages.forEach((pageItems, pageIndex) => {
     if (pageIndex > 0) {
@@ -994,9 +1523,20 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
       doc.fillColor(pdfDesignTokens.colors.text);
     }
 
-    const columns = distributeBalanced(pageItems, cols);
+    const pageCols = isReverseNumberWordLayout
+      ? clampCols(pageItems.length > 20 ? 3 : pageItems.length > 10 ? 2 : 1)
+      : cols;
+    const pageQuestionsPerColumn = isReverseNumberWordLayout
+      ? Number(display.reverseNumberWordRowsPerColumn || 10)
+      : questionsPerColumn;
+    const { colW: pageColW, xForCol: pageXForCol } = pageCols === cols
+      ? { colW, xForCol }
+      : getColumns(pageCols);
+    const columns = display.sequentialColumnFill
+      ? distributeSequential(pageItems, pageCols)
+      : distributeBalanced(pageItems, pageCols);
 
-    if (hasVisuals && cols === 2) {
+    if (hasVisuals && pageCols === 2) {
       const cb = layout.page.contentBox;
       const centerX = cb.x + cb.width / 2;
       const topLineY = startY - 6;
@@ -1012,15 +1552,17 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     }
 
     renderPageColumns(
-  doc,
-  cols,
-  columns,
-  startY,
-  bottomContentY,
-  xForCol,
-  colW,
-  (item, x, y, w) => {
-    const cellHeight = hasVisuals ? (bottomContentY - startY) / 5 : 0;
+	  doc,
+	  pageCols,
+	  columns,
+	  startY,
+	  bottomContentY,
+	  pageXForCol,
+	  pageColW,
+  (item, x, y, w, itemHeight = 0) => {
+    const cellHeight = hasVisuals
+      ? (bottomContentY - startY) / questionsPerColumn
+      : itemHeight;
 
     return renderQuestionItem(
       doc,
@@ -1032,91 +1574,73 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
         height: cellHeight,
         dividerY: null
       },
-      fonts
+      fonts,
+      display
     );
   },
-  itemGap
-);
+	  itemGap,
+	  pageQuestionsPerColumn,
+	  display
+	);
 
     drawFooter(doc, fonts, pageState.pageNum, meta);
   });
 }
 
-function renderAnswerKey(doc, fonts, contentObject, options, pageState) {
+function renderAnswerKey(doc, fonts, contentObject, options, pageState, layoutObject = null) {
   const meta = contentObject?.meta || {};
   const answers = buildAnswerKeyItems(contentObject?.content?.items || []);
   if (!answers.length) return;
-
-  const bodyStyle = layout.typography.body;
-  const hasLongAnswerPrompts = answers.some((it) => promptWithoutEquals(it.prompt).length > 55);
-  const cols = hasLongAnswerPrompts
-    ? Math.min(2, clampCols(options.cols))
-    : clampCols(options.cols);
-  const { colW, xForCol } = getColumns(cols);
-
-  const footerRuleY = doc.page.height - layout.page.margins.bottom;
-  const footerBufferH = layout.zones?.footerBuffer?.height ?? 24;
-  const bottomContentY = footerRuleY - footerBufferH;
-
-  const maxPerPage = cols * MAX_PER_COLUMN;
-  const pages = paginateEven(answers, maxPerPage);
+  const worksheetType = layoutObject?.worksheetType || "";
 
   doc.addPage();
   pageState.pageNum += 1;
 
-  let startY = renderHeader(doc, fonts, { ...meta, title: "ANSWER KEY", subheading: "" });
-  setFont(doc, fonts.regular, bodyStyle.size);
-  doc.fillColor(pdfDesignTokens.colors.text);
-
-  pages.forEach((pageItems, pageIndex) => {
-    if (pageIndex > 0) {
-      doc.addPage();
-      pageState.pageNum += 1;
-      startY = renderHeader(doc, fonts, { ...meta, title: "ANSWER KEY", subheading: "" });
-      setFont(doc, fonts.regular, bodyStyle.size);
-      doc.fillColor(pdfDesignTokens.colors.text);
+  const answerItems = answers.map((it) => {
+    let ans = it.answer;
+    if (ans == null && typeof it.a === "number" && typeof it.b === "number" && it.op) {
+      if (it.op === "+") ans = it.a + it.b;
+      if (it.op === "-") ans = it.a - it.b;
+      if (it.op === "*") ans = it.a * it.b;
+      if (it.op === "/") ans = it.b !== 0 ? it.a / it.b : "";
     }
 
-    const columns = distributeBalanced(pageItems, cols);
-
-    renderPageColumns(
-      doc,
-      cols,
-      columns,
-      startY,
-      bottomContentY,
-      xForCol,
-      colW,
-      (it, x, y, w) => {
-        const id = it.id != null ? `${it.id})  ` : "";
-        const left = promptWithoutEquals(it.prompt);
-
-        let ans = it.answer;
-        if (ans == null && typeof it.a === "number" && typeof it.b === "number" && it.op) {
-          if (it.op === "+") ans = it.a + it.b;
-          if (it.op === "-") ans = it.a - it.b;
-          if (it.op === "*") ans = it.a * it.b;
-          if (it.op === "/") ans = it.b !== 0 ? it.a / it.b : "";
-        }
-
-        const answerText = `${id}${left} = ${ans ?? ""}`;
-        const answerHeight = doc.heightOfString(answerText, {
-          width: w,
-          align: "left"
-        });
-
-        doc.text(answerText, x, y, {
-          width: w,
-          align: "left"
-        });
-
-        return Math.max(bodyStyle.lineHeight, answerHeight);
-      },
-      12
-    );
-
-    drawFooter(doc, fonts, pageState.pageNum, meta);
+    return {
+      ...it,
+      answer: ans,
+      prompt: it.visual ||
+        worksheetType === "word_problem" ||
+        layoutObject?.display?.writingLine ||
+        layoutObject?.display?.standardShortAnswerTarget ||
+        layoutObject?.display?.factFamilyGrid
+        ? it.prompt
+        : filledAnswerText(it.prompt, ans)
+    };
   });
+
+  renderQuestionsPages(
+    doc,
+    fonts,
+    {
+      meta: {
+        ...meta,
+        title: `${safeStr(meta.title).trim() || "Worksheet"} ANSWER KEY`,
+        subheading: ""
+      },
+      content: {
+        items: answerItems
+      }
+    },
+    options,
+    pageState,
+    {
+      ...(layoutObject || {}),
+      display: {
+        ...(layoutObject?.display || {}),
+        answerKey: true
+      }
+    }
+  );
 }
 
 function renderWorksheetPDF({ res, contentObject, options = {}, layoutObject = null }) {
@@ -1161,7 +1685,7 @@ function renderWorksheetPDF({ res, contentObject, options = {}, layoutObject = n
   renderQuestionsPages(doc, fonts, contentObject, normalized, pageState, layoutObject);
 
   if (normalized.includeAnswerKey) {
-    renderAnswerKey(doc, fonts, contentObject, normalized, pageState);
+    renderAnswerKey(doc, fonts, contentObject, normalized, pageState, layoutObject);
   }
 
   doc.end();

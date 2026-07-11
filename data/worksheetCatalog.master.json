@@ -42,7 +42,20 @@
         "B2"
       ],
       "description": "Students practise basic addition facts within 20.",
-      "sourceType": "curated"
+      "sourceType": "curated",
+      "studentInstruction": "Solve each equation.",
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "standardShortAnswerTarget": true
+      },
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 20,
+        "minB": 0,
+        "maxB": 20,
+        "questionCount": 60,
+        "maxTotal": 20
+      }
     },
     {
       "id": "g1_addition_on_number_line_to_20",
@@ -141,7 +154,20 @@
         "B2"
       ],
       "description": "Students solve simple addition word problems with visual or equation support.",
-      "sourceType": "curated"
+      "sourceType": "curated",
+      "studentInstruction": "Read each problem. Show your work. Write or draw your answer.",
+      "generatorOptions": {
+        "questionCount": 6,
+        "minA": 0,
+        "maxA": 20
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true
+      },
+      "pdfLayout": {
+        "columns": 1,
+        "maxProblemsPerPage": 3
+      }
     },
     {
       "id": "grade1_addition_subtraction_facts_equation_match",
@@ -238,8 +264,21 @@
       "curriculumTags": [
         "B2"
       ],
-      "description": "Students connect related addition and subtraction facts.",
-      "sourceType": "curated"
+      "description": "Students connect related addition and subtraction facts as relationship practice.",
+      "sourceType": "curated",
+      "studentInstruction": "Complete each fact family.",
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 10,
+        "minB": 0,
+        "maxB": 10,
+        "questionCount": 12,
+        "factFamilyMode": "all"
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "standardShortAnswerTarget": true
+      }
     },
     {
       "id": "grade1_addition_subtraction_facts_fact_fluency",
@@ -303,7 +342,20 @@
       ],
       "curriculumTags": [],
       "description": "Students solve missing-addend word problems for focused addition and subtraction practice.",
-      "sourceType": "generated"
+      "sourceType": "generated",
+      "studentInstruction": "Read each problem. Show your work. Write or draw your answer.",
+      "generatorOptions": {
+        "questionCount": 6,
+        "minA": 0,
+        "maxA": 20
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true
+      },
+      "pdfLayout": {
+        "columns": 1,
+        "maxProblemsPerPage": 3
+      }
     },
     {
       "id": "grade1_addition_subtraction_facts_missing_addend",
@@ -370,7 +422,17 @@
       "description": "Students fill in the missing addend in basic equations.",
       "sourceType": "curated",
       "generatorOptions": {
-        "maxTotal": 20
+        "minA": 0,
+        "maxA": 20,
+        "minB": 0,
+        "maxB": 20,
+        "maxTotal": 20,
+        "questionCount": 60
+      },
+      "studentInstruction": "Write the missing number.",
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "standardShortAnswerTarget": true
       }
     },
     {
@@ -437,7 +499,19 @@
         "B2"
       ],
       "description": "Students practise basic subtraction facts within 20.",
-      "sourceType": "curated"
+      "sourceType": "curated",
+      "studentInstruction": "Solve each equation.",
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "standardShortAnswerTarget": true
+      },
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 20,
+        "minB": 0,
+        "maxB": 20,
+        "questionCount": 60
+      }
     },
     {
       "id": "grade1_addition_subtraction_word_problems_subtraction_word_problem",
@@ -469,12 +543,25 @@
       ],
       "curriculumTags": [],
       "description": "Students solve subtraction word problems for focused Grade 1 practice.",
-      "sourceType": "generated"
+      "sourceType": "generated",
+      "studentInstruction": "Read each problem. Show your work. Write or draw your answer.",
+      "generatorOptions": {
+        "questionCount": 6,
+        "minA": 0,
+        "maxA": 20
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true
+      },
+      "pdfLayout": {
+        "columns": 1,
+        "maxProblemsPerPage": 3
+      }
     },
     {
       "id": "g1_ten_frame_addition_within_10",
-      "title": "Ten Frame Addition Within 10",
-      "shortTitle": "Ten Frame Addition",
+      "title": "Counting With Ten Frames",
+      "shortTitle": "Counting With Ten Frames",
       "subject": "Math",
       "grades": [
         "grade1"
@@ -482,7 +569,7 @@
       "gradeLabels": [
         "Grade 1"
       ],
-      "domain": "Addition & Subtraction",
+      "domain": "Number Representation: Ten Frames Within 10",
       "skillKey": "addition_strategies",
       "worksheetFamily": "visual_models",
       "activityTypes": [
@@ -495,15 +582,35 @@
       "hasAnswerKey": true,
       "tags": [
         "ten frame",
-        "addition",
+        "counting",
+        "quantity recognition",
         "within 10",
         "grade 1"
       ],
       "curriculumTags": [
         "B2"
       ],
-      "description": "Students use ten frames to solve addition problems.",
-      "sourceType": "curated"
+      "formatLabel": "Recognize quantities in ten frames within 10",
+      "teacherNote": "Best used as focused Grade 1 number representation practice after hands-on work with ten frames.",
+      "description": "Students count or recognize quantities shown in ten frames within 10. Best used as focused Grade 1 number representation practice after hands-on work with ten frames.",
+      "sourceType": "curated",
+      "studentInstruction": "Count the dots in each ten frame.",
+      "pdfDisplay": {
+        "hideItemPrompts": true,
+        "hideSubtitle": true,
+        "visualVerticalAlign": "topThird",
+        "shortVisualAnswerLine": true
+      },
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 10,
+        "questionCount": 10,
+        "tenFramesPerQuestion": 1
+      },
+      "pdfLayout": {
+        "columns": 2,
+        "maxProblemsPerPage": 10
+      }
     },
     {
       "id": "grade1_addition_subtraction_facts_ten_frame",
@@ -1083,8 +1190,8 @@
     },
     {
       "id": "grade1_place_value_representation_base_ten_blocks",
-      "title": "Base Ten Blocks — Grade 1",
-      "shortTitle": "Base Ten Blocks",
+      "title": "Base Ten Blocks to 50 — Grade 1",
+      "shortTitle": "Base Ten Blocks to 50",
       "subject": "Math",
       "grades": [
         "grade1"
@@ -1092,7 +1199,7 @@
       "gradeLabels": [
         "Grade 1"
       ],
-      "domain": "Number Sense",
+      "domain": "Number Representation: Base-Ten Blocks to 50",
       "skillKey": "place_value_representation",
       "worksheetFamily": "visual_models",
       "activityTypes": [
@@ -1107,11 +1214,26 @@
         "grade 1",
         "number sense",
         "place value representation",
-        "base ten blocks"
+        "base ten blocks",
+        "to 50"
       ],
       "curriculumTags": [],
-      "description": "Students interpret base ten block models.",
-      "sourceType": "generated"
+      "formatLabel": "Identify numbers to 50 with tens and ones",
+      "teacherNote": "Best used after hands-on base-ten modelling.",
+      "description": "Students identify numbers to 50 shown with tens and ones. Best used after hands-on base-ten modelling.",
+      "sourceType": "generated",
+      "generatorOptions": {
+        "minA": 10,
+        "maxA": 50,
+        "questionCount": 10
+      },
+      "studentInstruction": "Write the number shown by each model.",
+      "pdfDisplay": {
+        "hideItemPrompts": true,
+        "hideSubtitle": true,
+        "shortVisualAnswerLine": true,
+        "baseTenAlignedResponse": true
+      }
     },
     {
       "id": "grade1_place_value_representation_compare_numbers",
@@ -1163,7 +1285,7 @@
         "compare_numbers"
       ],
       "templateId": "equation_practice",
-      "formatLabel": "Compare 3-digit numbers",
+      "formatLabel": "Compare numbers to 20",
       "status": "ready",
       "difficulty": "easy",
       "estimatedTimeMinutes": 10,
@@ -1182,7 +1304,14 @@
       "sourceType": "curated",
       "generatorOptions": {
         "minA": 0,
-        "maxA": 20
+        "maxA": 20,
+        "questionCount": 60,
+        "promptStyle": "bare"
+      },
+      "studentInstruction": "Write <, >, or = to compare each pair of numbers.",
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "standardShortAnswerTarget": true
       }
     },
     {
@@ -1236,7 +1365,8 @@
       ],
       "generatorOptions": {
         "minA": 0,
-        "maxA": 20
+        "maxA": 20,
+        "questionCount": 10
       },
       "templateId": "visual_model",
       "status": "ready",
@@ -1253,7 +1383,20 @@
         "B1"
       ],
       "description": "Students identify and read numbers on a number line.",
-      "sourceType": "curated"
+      "sourceType": "curated",
+      "studentInstruction": "What number is marked on each number line?",
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "hideItemPrompts": true,
+        "visualColumns": 1,
+        "hideItemSeparators": true,
+        "numberLineAnswerUnderTarget": true,
+        "numberLineRowGeometry": true
+      },
+      "pdfLayout": {
+        "columns": 1,
+        "maxProblemsPerPage": 5
+      }
     },
     {
       "id": "grade1_place_value_representation_number_line_identify",
@@ -1321,8 +1464,8 @@
     },
     {
       "id": "g1_number_word_match_to_50",
-      "title": "Number Word Match to 50",
-      "shortTitle": "Number Word Match",
+      "title": "Write Number Words to 50",
+      "shortTitle": "Write Number Words",
       "subject": "Math",
       "grades": [
         "grade1"
@@ -1330,7 +1473,7 @@
       "gradeLabels": [
         "Grade 1"
       ],
-      "domain": "Number Sense",
+      "domain": "Number Representation: Number Words to 50",
       "skillKey": "number_representation",
       "worksheetFamily": "representation",
       "activityTypes": [
@@ -1343,18 +1486,34 @@
       "hasAnswerKey": true,
       "tags": [
         "number words",
-        "match",
+        "writing",
         "to 50",
         "grade 1"
       ],
       "curriculumTags": [
         "B1"
       ],
-      "description": "Students match numerals and number words.",
+      "formatLabel": "Write number words to 50",
+      "teacherNote": "Best used as supported late Grade 1 extension or Grade 2 readiness practice after number-word instruction.",
+      "description": "Students write number words for numbers to 50. Best used as supported late Grade 1 extension or Grade 2 readiness practice after number-word instruction.",
       "sourceType": "curated",
       "generatorOptions": {
         "minA": 0,
-        "maxA": 50
+        "maxA": 50,
+        "promptStyle": "number_only",
+        "questionCount": 10,
+        "numberWordMode": "numeral_to_word"
+      },
+      "studentInstruction": "Write each number in words.",
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "hideItemSeparators": true,
+        "writingLine": true,
+        "equalHeightItems": true
+      },
+      "pdfLayout": {
+        "columns": 1,
+        "maxProblemsPerPage": 10
       }
     },
     {

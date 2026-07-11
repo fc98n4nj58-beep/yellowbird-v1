@@ -20,7 +20,12 @@ function generateNumberLineIdentifyProblem(options = {}) {
   const end = hasExplicitMax
     ? Math.max(start + 1, max)
     : Math.max(start + 5, Math.min(max, start + 10));
-  const value = randInt(start, end, random);
+  const selected = Array.isArray(options.selectedNumbers)
+    ? options.selectedNumbers.filter((n) => n >= start && n <= end)
+    : [];
+  const value = selected.length
+    ? selected[Math.floor(random() * selected.length)]
+    : randInt(start, end, random);
 
   return {
     type: "equation",
@@ -29,9 +34,13 @@ function generateNumberLineIdentifyProblem(options = {}) {
     visual: {
       kind: "number_line",
       data: {
+        min: start,
+        max: end,
         start,
         end,
-        highlight: value
+        highlight: value,
+        value,
+        hideValueLabel: true
       }
     }
   };

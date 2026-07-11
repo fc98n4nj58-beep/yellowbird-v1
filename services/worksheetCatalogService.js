@@ -76,6 +76,81 @@ function searchWorksheetCatalog(query = "") {
   });
 }
 
+function finiteNumber(value, fallback = null) {
+  if (value === undefined || value === null || value === "") return fallback;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function parseBoolean(value, fallback = false) {
+  if (value === undefined || value === null || value === "") return fallback;
+  const normalized = String(value).trim().toLowerCase();
+  return ["1", "true", "yes", "on"].includes(normalized);
+}
+
+function parseNumberList(value) {
+  if (Array.isArray(value)) {
+    return value.map((n) => finiteNumber(n)).filter((n) => n !== null);
+  }
+
+  if (typeof value !== "string") return [];
+
+  return value
+    .split(",")
+    .map((part) => finiteNumber(part.trim()))
+    .filter((n) => n !== null);
+}
+
+function normalizeCatalogWorksheetOptions(item, options = {}) {
+  const normalized = {
+    ...(item.generatorOptions || {}),
+    ...options
+  };
+
+  [
+    "questionCount",
+    "questionsPerPage",
+    "minA",
+    "maxA",
+    "minB",
+    "maxB",
+    "maxTotal",
+    "tenFramesPerQuestion",
+    "minTenFrames",
+    "maxTenFrames",
+    "numberLineIntervals"
+  ].forEach((key) => {
+    const value = finiteNumber(normalized[key]);
+    if (value !== null) normalized[key] = value;
+  });
+
+  const selectedNumbers = parseNumberList(
+    normalized.selectedNumbers || normalized.onlyNumbers
+  );
+
+  if (selectedNumbers.length) {
+    normalized.selectedNumbers = selectedNumbers;
+    normalized.onlyNumbers = selectedNumbers.join(",");
+  }
+
+  normalized.includeExample = parseBoolean(
+    normalized.includeExample ?? normalized.completedExample ?? normalized.example,
+    false
+  );
+
+  if (
+    item.activityTypes?.[0] === "number_word_match" &&
+    String(normalized.numberWordMode || normalized.mode || "").toLowerCase() === "word_to_numeral"
+  ) {
+    const questionCount = finiteNumber(normalized.questionCount);
+    if (questionCount !== null) {
+      normalized.questionCount = Math.max(1, questionCount);
+    }
+  }
+
+  return normalized;
+}
+
 function filterWorksheetCatalog({
   grade,
   domain,
@@ -187,6 +262,8 @@ function generateWorksheetFromCatalogId(id, options = {}) {
     throw new Error(`Worksheet catalog item '${id}' is missing a grade.`);
   }
 
+  const generatorOptions = normalizeCatalogWorksheetOptions(item, options);
+
   return buildWorksheet(
     grade,
     "CATALOG",
@@ -195,20 +272,72 @@ function generateWorksheetFromCatalogId(id, options = {}) {
       skill
     },
     {
-      ...(item.generatorOptions || {}),
-      ...options,
-      preferredActivityType: item.activityTypes?.[0] || options.preferredActivityType || null,
-      activityType: item.activityTypes?.[0] || options.activityType || null,
+      ...generatorOptions,
+      preferredActivityType: item.activityTypes?.[0] || generatorOptions.preferredActivityType || null,
+      activityType: item.activityTypes?.[0] || generatorOptions.activityType || null,
       worksheetId: item.id,
       worksheetTitle: item.title
     }
   );
 }
 
-function buildLayoutFromWorksheet(item, worksheet) {
+function buildRangeNotice(item, options = {}) {
+ const grade = Array.isArray(item.grades) ? item.grades[0] : "";
+ if (grade !== "grade1") return "";
+
+ const maxA = finiteNumber(options.maxA);
+ const maxTotal = finiteNumber(options.maxTotal);
+ const tenFramesPerQuestion = finiteNumber(options.tenFramesPerQuestion);
+ const maxTenFrames = finiteNumber(options.maxTenFrames);
+ const activityType = item.activityTypes?.[0] || "";
+
+ if (
+  ["math.addition.basic", "related_subtraction", "missing_addend", "compare_numbers", "fact_family", "word_problems", "addition_word_problem", "subtraction_word_problem", "missing_addend_word_problem"].includes(activityType) &&
+  Math.max(maxA || 0, maxTotal || 0) > 20
+ ) {
+  return "Custom range selected: this goes beyond the Grade 1 default of facts within 20. Use for teacher-selected extension, review, intervention, or Grade 2 readiness.";
+ }
+
+ if (activityType === "number_word_match" && maxA !== null && maxA > 50) {
+  return "Custom range selected: this goes beyond the Grade 1 default of numbers to 50. Use for teacher-selected extension, review, intervention, or Grade 2 readiness.";
+ }
+
+ if (
+  activityType === "ten_frame" &&
+  (maxA > 10 || tenFramesPerQuestion > 1 || maxTenFrames > 1)
+ ) {
+  return "Custom ten-frame range selected: totals may go beyond counting within 10. Use for teacher-selected extension or review.";
+ }
+
+ if (activityType === "number_line_identify" && maxA !== null && maxA > 20) {
+  return "Custom range selected: this goes beyond the Grade 1 default of facts within 20. Use for teacher-selected extension, review, intervention, or Grade 2 readiness.";
+ }
+
+ return "";
+}
+
+function buildLayoutFromWorksheet(item, worksheet, options = {}) {
+ const display = item.pdfDisplay && typeof item.pdfDisplay === "object"
+  ? item.pdfDisplay
+  : {};
+ const subtitle = display.hideSubtitle ? "" : item.shortTitle || "";
+ const normalizedOptions = normalizeCatalogWorksheetOptions(item, options);
+ const rangeNotice = buildRangeNotice(item, normalizedOptions);
+ let instructionText = item.studentInstruction || item.description || "";
+ const isReverseNumberWordMode = item.activityTypes?.[0] === "number_word_match" &&
+  String(normalizedOptions.numberWordMode || normalizedOptions.mode || "").toLowerCase() === "word_to_numeral";
+
+ if (isReverseNumberWordMode) {
+  instructionText = "Write each number word as a number.";
+ }
+
+ const title = isReverseNumberWordMode
+  ? "Write the Numeral to 50"
+  : item.title;
+
  const layout = normalizeWorksheetLayout({
-  title: item.title,
-  subtitle: item.shortTitle || "",
+  title,
+  subtitle,
   meta: {
     grade: item.grades?.[0] || "",
     gradeLabel: item.gradeLabels?.[0] || "",
@@ -218,12 +347,106 @@ function buildLayoutFromWorksheet(item, worksheet) {
     strandLabel: item.domain || "",
     skillLabel: worksheet.skill?.title || item.skillKey || ""
   },
-  instruction: item.description || "",
+  instruction: [instructionText, rangeNotice]
+    .filter(Boolean)
+    .join(" "),
   modeId: item.activityTypes?.[0] || "",
   skillKey: item.skillKey || "",
   problems: worksheet.problems || [],
   sections: []
 });
+
+if (item.pdfLayout && typeof item.pdfLayout === "object") {
+  layout.template = {
+    ...(layout.template || {}),
+    ...item.pdfLayout
+  };
+}
+
+if (item.pdfDisplay && typeof item.pdfDisplay === "object") {
+  layout.display = {
+    ...(layout.display || {}),
+    ...item.pdfDisplay
+  };
+}
+
+if (
+  item.activityTypes?.[0] === "base_ten_blocks" &&
+  ["tens_ones", "tens-ones", "place_value_boxes"].includes(
+    String(normalizedOptions.responseMode || normalizedOptions.baseTenResponseMode || "").toLowerCase()
+  )
+) {
+  layout.display = {
+    ...(layout.display || {}),
+    baseTenTensOnesBoxes: true
+  };
+}
+
+if (item.activityTypes?.[0] === "base_ten_blocks" && layout.display?.baseTenAlignedResponse) {
+  layout.display = {
+    ...(layout.display || {}),
+    visualVerticalAlign: "center"
+  };
+}
+
+if (normalizedOptions.includeExample && layout.problems?.length) {
+  layout.display = {
+    ...(layout.display || {}),
+    includeExample: true
+  };
+  layout.problems[0] = {
+    ...layout.problems[0],
+    isExample: true
+  };
+}
+
+if (Number.isFinite(normalizedOptions.questionsPerPage) && normalizedOptions.questionsPerPage > 0) {
+  layout.template = {
+    ...(layout.template || {}),
+    maxProblemsPerPage: normalizedOptions.questionsPerPage
+  };
+}
+
+if (item.activityTypes?.[0] === "ten_frame") {
+  const fixedFrames = finiteNumber(normalizedOptions.tenFramesPerQuestion);
+  const maxFrames = finiteNumber(normalizedOptions.maxTenFrames);
+  const framesPerQuestion = Math.max(1, fixedFrames || maxFrames || 1);
+  const frameCapacity = framesPerQuestion >= 6 ? 5 : layout.template?.maxProblemsPerPage || 10;
+  const visualColumns = framesPerQuestion >= 6 ? 1 : 2;
+
+  layout.template = {
+    ...(layout.template || {}),
+    maxProblemsPerPage: Math.min(layout.template?.maxProblemsPerPage || frameCapacity, frameCapacity)
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    visualColumns
+  };
+}
+
+if (isReverseNumberWordMode) {
+  const questionCount = Math.max(
+    1,
+    finiteNumber(normalizedOptions.questionCount) || worksheet.problems?.length || 10
+  );
+  const pageCount = Math.min(30, questionCount);
+  const derivedColumns = pageCount > 20 ? 3 : pageCount > 10 ? 2 : 1;
+
+  layout.template = {
+    ...(layout.template || {}),
+    columns: derivedColumns,
+    maxProblemsPerPage: 30
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    shortWritingLine: true,
+    reverseNumberWordWriting: true,
+    reverseNumberWordLineWidth: 46,
+    reverseNumberWordPromptZoneWidth: 70,
+    reverseNumberWordRowsPerColumn: 10,
+    sequentialColumnFill: true
+  };
+}
 
 return layout;
 }
@@ -237,9 +460,7 @@ function generateWorksheetLayoutFromCatalogId(id, options = {}) {
 
   const worksheet = generateWorksheetFromCatalogId(id, options);
 
-  console.log("WORKSHEET FIRST PROBLEM:", worksheet.problems?.[0]);
-
-return buildLayoutFromWorksheet(item, worksheet);
+return buildLayoutFromWorksheet(item, worksheet, options);
 }
 
 module.exports = {

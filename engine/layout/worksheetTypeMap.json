@@ -3,13 +3,31 @@
     "worksheetType": "arithmetic_fact_fluency",
     "templateId": "fluency_grid",
     "interactionType": "write_answer",
-    "instruction": "Solve each problem."
+    "instruction": "Solve each problem.",
+    "display": {
+      "hideItemSeparators": true,
+      "equalHeightItems": true,
+      "denseGridRows": 15
+    },
+    "template": {
+      "columns": 4,
+      "maxProblemsPerPage": 60
+    }
   },
   "math.subtraction.nonnegative": {
     "worksheetType": "related_subtraction",
     "templateId": "fluency_grid",
     "interactionType": "write_answer",
-    "instruction": "Solve each problem."
+    "instruction": "Solve each problem.",
+    "display": {
+      "hideItemSeparators": true,
+      "equalHeightItems": true,
+      "denseGridRows": 15
+    },
+    "template": {
+      "columns": 4,
+      "maxProblemsPerPage": 60
+    }
   },
   "math.multiplication.basic": {
     "worksheetType": "arithmetic_fact_fluency",
@@ -33,13 +51,31 @@
     "worksheetType": "missing_addend",
     "templateId": "fluency_grid",
     "interactionType": "fill_blank",
-    "instruction": "Fill in the missing number."
+    "instruction": "Fill in the missing number.",
+    "display": {
+      "hideItemSeparators": true,
+      "equalHeightItems": true,
+      "denseGridRows": 15
+    },
+    "template": {
+      "columns": 4,
+      "maxProblemsPerPage": 60
+    }
   },
   "related_subtraction": {
     "worksheetType": "related_subtraction",
     "templateId": "fluency_grid",
     "interactionType": "write_answer",
-    "instruction": "Solve each problem."
+    "instruction": "Solve each problem.",
+    "display": {
+      "hideItemSeparators": true,
+      "equalHeightItems": true,
+      "denseGridRows": 15
+    },
+    "template": {
+      "columns": 4,
+      "maxProblemsPerPage": 60
+    }
   },
   "missing_factor": {
     "worksheetType": "missing_factor",
@@ -51,7 +87,16 @@
     "worksheetType": "compare_numbers",
     "templateId": "equation_practice",
     "interactionType": "compare_symbol",
-    "instruction": "Insert the correct symbol."
+    "instruction": "Write <, >, or = to compare each pair of numbers.",
+    "display": {
+      "hideItemSeparators": true,
+      "equalHeightItems": true,
+      "denseGridRows": 15
+    },
+    "template": {
+      "columns": 4,
+      "maxProblemsPerPage": 60
+    }
   },
   "skip_counting": {
     "worksheetType": "skip_counting",
@@ -83,11 +128,79 @@
     "interactionType": "match",
     "instruction": "Match each item in column A with column B."
   },
+  "word_problems": {
+    "worksheetType": "word_problem",
+    "templateId": "word_problem",
+    "interactionType": "write_answer",
+    "instruction": "Read each problem. Draw or write an equation to show your thinking.",
+    "display": {
+      "workSpaceBox": true,
+      "equalHeightItems": true,
+      "hideItemSeparators": true
+    },
+    "template": {
+      "columns": 1,
+      "maxProblemsPerPage": 3
+    }
+  },
+  "addition_word_problem": {
+    "worksheetType": "word_problem",
+    "templateId": "word_problem",
+    "interactionType": "write_answer",
+    "instruction": "Read each problem. Draw or write an equation to show your thinking.",
+    "display": {
+      "workSpaceBox": true,
+      "equalHeightItems": true,
+      "hideItemSeparators": true
+    },
+    "template": {
+      "columns": 1,
+      "maxProblemsPerPage": 3
+    }
+  },
+  "subtraction_word_problem": {
+    "worksheetType": "word_problem",
+    "templateId": "word_problem",
+    "interactionType": "write_answer",
+    "instruction": "Read each problem. Draw or write an equation to show your thinking.",
+    "display": {
+      "workSpaceBox": true,
+      "equalHeightItems": true,
+      "hideItemSeparators": true
+    },
+    "template": {
+      "columns": 1,
+      "maxProblemsPerPage": 3
+    }
+  },
+  "missing_addend_word_problem": {
+    "worksheetType": "word_problem",
+    "templateId": "word_problem",
+    "interactionType": "write_answer",
+    "instruction": "Read each problem. Draw or write an equation to show your thinking.",
+    "display": {
+      "workSpaceBox": true,
+      "equalHeightItems": true,
+      "hideItemSeparators": true
+    },
+    "template": {
+      "columns": 1,
+      "maxProblemsPerPage": 3
+    }
+  },
   "fact_family": {
     "worksheetType": "fact_family",
     "templateId": "matching",
     "interactionType": "match",
-    "instruction": "Match each item in column A with column B."
+    "instruction": "Complete each fact family.",
+    "template": {
+      "columns": 3,
+      "maxProblemsPerPage": 12
+    },
+    "display": {
+      "factFamilyGrid": true,
+      "hideItemSeparators": true
+    }
   },
   "arrays": {
     "worksheetType": "arrays",
@@ -105,18 +218,36 @@
     "worksheetType": "base_ten_blocks",
     "templateId": "visual_model",
     "interactionType": "interpret_model",
-    "instruction": "Use the model to answer."
+    "instruction": "Use the model to answer.",
+    "display": {
+      "visualVerticalAlign": "topThird",
+      "shortVisualAnswerLine": true
+    }
   },
   "ten_frame": {
     "worksheetType": "ten_frame",
     "templateId": "visual_model",
     "interactionType": "interpret_model",
-    "instruction": "Use the model to answer."
+    "instruction": "Use the model to answer.",
+    "display": {
+      "visualVerticalAlign": "topThird",
+      "shortVisualAnswerLine": true
+    }
   },
   "number_line_identify": {
     "worksheetType": "number_line_identify",
     "templateId": "visual_model",
     "interactionType": "interpret_model",
-    "instruction": "Use the model to answer."
+    "instruction": "Use the model to answer.",
+    "template": {
+      "columns": 1,
+      "maxProblemsPerPage": 5
+    },
+    "display": {
+      "hideItemPrompts": true,
+      "visualColumns": 1,
+      "hideItemSeparators": true,
+      "numberLineAnswerUnderTarget": true
+    }
   }
 }

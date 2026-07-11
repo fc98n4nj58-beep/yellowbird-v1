@@ -36,12 +36,31 @@ function generateNumberWordMatchProblem(options = {}) {
   const random = options.random || Math.random;
   const min = Number.isFinite(options.minA) ? options.minA : 0;
   const max = Number.isFinite(options.maxA) ? options.maxA : 999;
+  const promptStyle = String(options.promptStyle || "").toLowerCase();
+  const mode = String(options.numberWordMode || options.mode || "").toLowerCase();
 
-  const value = randInt(min, max, random);
+  const usedProblemKeys = options.usedProblemKeys;
+  let value = randInt(min, max, random);
+
+  if (usedProblemKeys && max >= min) {
+    for (let attempt = 0; attempt < 50; attempt += 1) {
+      const candidate = randInt(min, max, random);
+      const key = `number_word_match:${candidate}`;
+      if (!usedProblemKeys.has(key)) {
+        value = candidate;
+        usedProblemKeys.add(key);
+        break;
+      }
+    }
+  }
 
   return {
-    prompt: `Write this number in words: ${value}`,
-    answer: numberToWords(value)
+    prompt: mode === "word_to_numeral"
+      ? numberToWords(value)
+      : promptStyle === "number_only"
+      ? String(value)
+      : `Write this number in words: ${value}`,
+    answer: mode === "word_to_numeral" ? value : numberToWords(value)
   };
 }
 

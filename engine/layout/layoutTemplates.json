@@ -84,6 +84,23 @@
       "G4_6": { "answerHeight": 0.45 }
     }
   },
+  "word_problem": {
+    "id": "word_problem",
+    "label": "Word Problem Sheet",
+    "defaultColumns": 1,
+    "maxColumns": 1,
+    "spacingDensity": "spacious",
+    "answerSpaceType": "line",
+    "visualSupport": false,
+    "blockStyle": "minimal",
+    "supportsSectionHeaders": false,
+    "maxProblemsPerPage": 4,
+    "gradeBandOverrides": {
+      "K1": { "answerHeight": 1.0 },
+      "G2_3": { "answerHeight": 0.7 },
+      "G4_6": { "answerHeight": 0.45 }
+    }
+  },
   "model_interpretation": {
     "id": "model_interpretation",
     "label": "Model Interpretation",
