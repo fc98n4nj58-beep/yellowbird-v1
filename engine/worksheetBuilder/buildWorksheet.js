@@ -69,6 +69,14 @@ function pickActivitiesFromRecipe(recipe, requestedCount = null, preferredActivi
     return selectedActivities;
   }
 
+  if (
+    preferredActivity &&
+    !recipeContainsActivity(preferredActivity) &&
+    getGenerator(preferredActivity)
+  ) {
+    return Array(requestedCount || 8).fill(preferredActivity);
+  }
+
   let mode = recipe.defaultMode || Object.keys(recipe.variants)[0];
 
   if (preferredActivity) {
@@ -166,6 +174,15 @@ function resolveDefaultQuestionCount(options = {}, preferredActivity = null) {
 
   if (Number.isFinite(questionCount) && questionCount > 0) {
     return questionCount;
+  }
+
+  const denseFactActivities = new Set([
+    "math.multiplication.basic",
+    "missing_factor"
+  ]);
+
+  if (preferredActivity && denseFactActivities.has(preferredActivity)) {
+    return 60;
   }
 
   const visualActivities = new Set([

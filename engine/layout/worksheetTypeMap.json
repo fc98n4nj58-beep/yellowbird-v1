@@ -33,7 +33,17 @@
     "worksheetType": "arithmetic_fact_fluency",
     "templateId": "fluency_grid",
     "interactionType": "write_answer",
-    "instruction": "Solve each problem."
+    "instruction": "Solve each problem.",
+    "display": {
+      "hideItemSeparators": true,
+      "equalHeightItems": true,
+      "denseGridRows": 15,
+      "standardShortAnswerTarget": true
+    },
+    "template": {
+      "columns": 4,
+      "maxProblemsPerPage": 60
+    }
   },
   "math.division.integer": {
     "worksheetType": "arithmetic_fact_fluency",
@@ -81,7 +91,17 @@
     "worksheetType": "missing_factor",
     "templateId": "fluency_grid",
     "interactionType": "fill_blank",
-    "instruction": "Fill in the missing number."
+    "instruction": "Fill in the missing number.",
+    "display": {
+      "hideItemSeparators": true,
+      "equalHeightItems": true,
+      "denseGridRows": 15,
+      "standardShortAnswerTarget": true
+    },
+    "template": {
+      "columns": 4,
+      "maxProblemsPerPage": 60
+    }
   },
   "compare_numbers": {
     "worksheetType": "compare_numbers",

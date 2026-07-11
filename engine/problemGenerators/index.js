@@ -12,6 +12,7 @@ const generateMatchDataToGraphProblem = require("./matchDataToGraph");
 const generateGraphQuestionsProblem = require("./graphQuestions");
 const generateInterpretDataProblem = require("./interpretData");
 const generateFactFluencyProblem = require("./factFluency");
+const generateMultiplicationBasicProblem = require("./multiplicationBasic");
 const generateMissingAddendProblem = require("./missingAddend");
 const generateRelatedSubtractionProblem = require("./relatedSubtraction");
 const generateEquationMatchProblem = require("./equationMatch");
@@ -55,6 +56,7 @@ function getGenerator(activityType) {
     interpret_data: generateInterpretDataProblem,
 
     fact_fluency: generateFactFluencyProblem,
+    "math.multiplication.basic": generateMultiplicationBasicProblem,
     missing_addend: generateMissingAddendProblem,
     related_subtraction: generateRelatedSubtractionProblem,
     equation_match: generateEquationMatchProblem,
