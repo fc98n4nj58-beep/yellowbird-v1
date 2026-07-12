@@ -1,23 +1,25 @@
 # Worksheet Customization Technical Design
 
-Status: Technical design only
+Status: Technical design plus Addition Facts runtime proof
 
 Product source: Worksheet Customization Product and UX Specification - Version 2
 
-Implementation status: Not implemented
+Implementation status: Addition Facts registry runtime implemented for catalog preview/PDF paths; public UI not implemented
 
 Foundation implementation status:
 
 - Global registry, Addition Facts support declaration, normalization service, deterministic serialization, and option hashing have been implemented as a foundation.
+- Addition Facts registry normalization is consumed by the active shared catalog runtime for `g1_addition_facts_within_20`.
+- The active Addition Facts generator consumes the normalized range, selected-value emphasis, question count, example, seed, and answer-key package settings described below.
 - No public UI has been built.
-- Existing preview/PDF routes are not wired to the new service yet.
 - Renderer geometry is unchanged.
+- PDF proof artifacts were generated under `review/addition-facts-customization-runtime/`; that review directory is intentionally not part of production source.
 
 ## Purpose
 
 Yellow Bird customization should start from an approved, classroom-ready worksheet and allow a teacher to adjust a few meaningful, family-supported settings.
 
-This document defines the technical contract for the future customization registry and runtime flow. It does not implement the registry, public UI, route changes, generators, or renderer changes.
+This document defines the technical contract for the customization registry and the first implemented family runtime. It does not approve public UI controls, broad route redesigns, renderer geometry changes, or customization across all catalog resources.
 
 ## Non-Goals
 
@@ -63,6 +65,7 @@ Implemented foundation modules:
   - serialize normalized options for preview and PDF
 - existing `services/catalogWorksheetRuntimeService.js`
   - remains the runtime handoff for preview and PDF
+  - now receives Addition Facts options through the registry-backed catalog service path
 - Resource Detail Page client state
   - owns stale-preview state and applied-settings state
 
@@ -89,7 +92,7 @@ Family declarations own:
 - layout risk
 - public approval/proof status
 
-In the registry foundation, Addition Facts controls use foundation-only support metadata. Future UI must not infer public exposure from the existence of a registry variable or support declaration alone. Public exposure requires an explicit later UI approval/proof step.
+Addition Facts controls still use non-public support metadata. Future UI must not infer public exposure from the existence of a registry variable, a support declaration, or runtime proof artifacts alone. Public exposure requires an explicit later UI approval step.
 
 Resource declarations or catalog metadata own:
 
@@ -417,7 +420,7 @@ Main controls:
 
 Additional controls:
 
-- `questionsPerPage`, deferred until proof PDFs pass
+- `questionsPerPage`, proofed at the fixed internal value of 60 and not approved as a public control
 
 Initial defaults:
 
@@ -428,11 +431,11 @@ Initial defaults:
 - `includeExample`: false
 - `includeAnswerKey`: true
 - `questionsPerPage`: 60 internally, not public until approved
-- control support status: foundation-only until the Addition Facts public prototype is approved
+- control support status: runtime-supported but not public until the Addition Facts public prototype is approved
 
 Compatibility mapping:
 
-- `minimumValue` -> `minA`
+- `minimumValue` -> `minA` and `minB`
 - `maximumValue` -> `maxA`, `maxB`, and `maxTotal`
 - `selectedValues` -> `selectedNumbers` / `onlyNumbers`
 - `includeExample` -> `includeExample`
@@ -443,27 +446,56 @@ Adapter mapping:
 - `minimumValue` maps to both operand minimums: `minA` and `minB`
 - `maximumValue` maps to both operand maximums: `maxA` and `maxB`
 - `maximumValue` also maps to `maxTotal` so the default "within 20" contract remains a total cap
-- `selectedValues` maps to existing selected-number aliases as emphasis groundwork
+- `selectedValues` maps to selected-number aliases and is consumed as emphasis, not exclusivity
 
-Runtime gap:
+Active runtime path:
 
-- The active catalog fact-fluency generator does not yet consume `minA`, `maxA`, `minB`, `maxB`, `maxTotal`, or selected-number emphasis.
-- This pass implements declaration, validation, serialization, and adapter groundwork only.
-- A later Addition Facts runtime pass must connect the adapter output to generation without broad generator rewrites.
+- Catalog ID: `g1_addition_facts_within_20`
+- activity type: `math.addition.basic`
+- skill recipe: `addition_subtraction_facts`
+- builder: `engine/worksheetBuilder/buildWorksheet.js`
+- active problem generator: `engine/problemGenerators/factFluency.js`
+- runtime handoff: `services/catalogWorksheetRuntimeService.js`
+- catalog options boundary: `services/worksheetCatalogService.js`
+- layout and answer-key output: shared catalog layout plus `renderers/pdfRenderer.js`
 
-Proof required before public approval:
+The older arithmetic engine is not involved in the active Addition Facts catalog path.
+
+Runtime generation contract:
+
+- Default options remain ready-to-use: operands 0-20, sums capped at 20, 60 student questions, fixed 60-question density, no completed example, answer key requested, and deterministic seeded output.
+- Custom ranges use the public `minimumValue` and `maximumValue` as both operand bounds, with `maximumValue` also applied as `maxTotal`.
+- The generator builds a finite valid fact pool first. If no facts exist for the range, generation fails clearly instead of retrying indefinitely.
+- Repetition is avoided while unused valid facts remain, except selected-value emphasis may intentionally repeat preferred facts to reach its target.
+- `selectedValues` means numbers to emphasize. The generator targets about two thirds of student questions from facts where either operand matches a selected value, then fills from the full valid pool.
+- `selectedValues` outside the normalized range are rejected during registry validation.
+- `questionCount` is the exact number of student questions. A completed example, when included, is generated as one extra item before student questions and is not counted.
+- `questionsPerPage` is consumed only at the fixed internal proof value of 60.
+- `includeAnswerKey` affects the PDF package and canonical option hash but is not sent as a problem-generation option.
+- Preview and PDF use the same normalized canonical payload and seeded runtime path.
+- Custom range notices remain validation metadata and catalog instruction text; they are not embedded as a separate student-facing registry payload.
+
+Proof generated before public approval:
 
 - short question totals
 - default 60 questions
-- one-, two-, and three-page output
+- one-, two-, and multi-page output
 - uneven final pages
 - selected values including zero
 - custom range above 20
 - completed example on and off
 - answer key on and off
 - preview/download parity
+- deterministic same-seed parity
+- duplicate and selected-value coverage scans
+- answer checks
+
+Still deferred:
+
+- public Resource Detail controls
 - stale-preview behavior
 - mobile and keyboard flow
+- additional public `questionsPerPage` choices
 
 ## Prototype 2 Family Declaration: Arrays
 
@@ -565,13 +597,16 @@ Customization must not turn Quick Checks or Exit Tickets into full worksheets.
 
 ## Migration Boundaries
 
-Step 3 registry foundation should build only:
+The registry and Addition Facts runtime pass built only:
 
 - canonical variable definitions
 - family/resource support declarations
 - alias normalization
 - validation
 - serialization
+- narrow catalog-runtime consumption for Addition Facts
+- Addition Facts finite-pool generation
+- focused runtime/proof tests
 
 It should not:
 
@@ -585,21 +620,19 @@ It should not:
 
 ## Open Approval Questions
 
-- What exact maximum `questionCount` is approved for Addition Facts before proof?
-- Which `questionsPerPage` choices are approved for Addition Facts after proof: fixed set or bounded numeric input?
-- Should Addition Facts map `maximumValue` to `maxA`, `maxTotal`, or both?
+- Is Addition Facts approved for public Resource Detail exposure after founder PDF review?
+- Which `questionsPerPage` choices are approved for Addition Facts after public approval: keep fixed at 60, fixed set, or bounded numeric input?
 - Should Arrays expose one shared factor range only, or eventually ordered first/second factor controls?
 - Should Arrays default `includeExample` to on for the public prototype?
 - What is the first approved title change rule for task-direction changes?
 - Should preview/download serialization use canonical settings in query params or a short-lived payload ID?
 
-## Step 1 Deliverable
+## Runtime Proof Deliverable
 
-This document completes the technical design pass requested before implementation. The next step is Project Lead approval of:
+This document records the Addition Facts runtime and proof pass. The next step is founder review of:
 
-- central registry responsibilities
-- family-specific boundaries
-- alias compatibility
-- validation error contract
-- preview and download serialization
-- migration scope for the registry foundation
+- proof PDFs and metadata
+- public-exposure readiness
+- Resource Detail UI behavior
+- stale-preview and applied-settings behavior
+- mobile and keyboard flow

@@ -271,10 +271,10 @@ function validateCrossFields(options, result) {
     );
 
     if (outside.length) {
-      result.warnings.push({
+      result.errors.push({
         field: "selectedValues",
         code: "selected_values_outside_range",
-        message: "Some numbers to practise are outside the selected range."
+        message: "Numbers to practise must stay inside the selected range."
       });
     }
   }

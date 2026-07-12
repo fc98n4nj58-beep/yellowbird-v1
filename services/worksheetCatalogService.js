@@ -6,6 +6,12 @@ const path = require("path");
 const { buildWorksheet } = require("../engine/worksheetBuilder/buildWorksheet");
 const { getSkillDefinition } = require("../engine/skills");
 const { normalizeWorksheetLayout } = require("../engine/layout/normalizeWorksheetLayout");
+const {
+  normalizeWorksheetCustomization
+} = require("./worksheetCustomizationService");
+const {
+  getCustomizationFamilyForResource
+} = require("../config/worksheetCustomization");
 
 const MASTER_CATALOG_PATH = path.join(__dirname, "../data/worksheetCatalog.master.json");
 
@@ -257,6 +263,51 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
   return normalized;
 }
 
+const NON_CUSTOMIZATION_QUERY_KEYS = new Set([
+  "disposition",
+  "filename",
+  "source",
+  "font",
+  "cols"
+]);
+
+function filterCustomizationInput(options = {}) {
+  return Object.keys(options).reduce((acc, key) => {
+    if (!NON_CUSTOMIZATION_QUERY_KEYS.has(key)) {
+      acc[key] = options[key];
+    }
+    return acc;
+  }, {});
+}
+
+function resolveCatalogWorksheetOptions(item, options = {}) {
+  const legacyOptions = normalizeCatalogWorksheetOptions(item, options);
+  const family = getCustomizationFamilyForResource(item.id);
+
+  if (!family) return legacyOptions;
+
+  const customization = normalizeWorksheetCustomization(
+    item.id,
+    filterCustomizationInput(options)
+  );
+
+  if (!customization.ok) {
+    const err = new Error(
+      customization.errors[0]?.message || "Worksheet customization options are invalid."
+    );
+    err.status = 400;
+    err.details = customization;
+    throw err;
+  }
+
+  return normalizeCatalogWorksheetOptions(item, {
+    ...legacyOptions,
+    ...customization.generatorOptions,
+    includeAnswerKey: customization.normalizedOptions.includeAnswerKey,
+    _customization: customization
+  });
+}
+
 function filterWorksheetCatalog({
   grade,
   domain,
@@ -368,7 +419,7 @@ function generateWorksheetFromCatalogId(id, options = {}) {
     throw new Error(`Worksheet catalog item '${id}' is missing a grade.`);
   }
 
-  const generatorOptions = normalizeCatalogWorksheetOptions(item, options);
+  const generatorOptions = resolveCatalogWorksheetOptions(item, options);
   const activityType = item.activityTypes?.[0] || generatorOptions.preferredActivityType || generatorOptions.activityType || null;
   const defaultQuestionCount =
     activityType === "standard_form" && item.grades?.[0] === "grade2"
@@ -377,23 +428,37 @@ function generateWorksheetFromCatalogId(id, options = {}) {
         ? 45
         : null;
 
-  return buildWorksheet(
-    grade,
-    "CATALOG",
-    {
-      skillKey: item.skillKey,
-      skill
-    },
-    {
-      ...generatorOptions,
-      questionCount: generatorOptions.questionCount || defaultQuestionCount || generatorOptions.questionCount,
-      preferredActivityType: activityType,
-      activityType,
+  const requestedQuestionCount = generatorOptions.questionCount || defaultQuestionCount || generatorOptions.questionCount;
+  const generationQuestionCount =
+    generatorOptions.includeExample && Number.isFinite(requestedQuestionCount)
+      ? requestedQuestionCount + 1
+      : requestedQuestionCount;
+
+  try {
+    return buildWorksheet(
       grade,
-      worksheetId: item.id,
-      worksheetTitle: item.title
+      "CATALOG",
+      {
+        skillKey: item.skillKey,
+        skill
+      },
+      {
+        ...generatorOptions,
+        questionCount: generationQuestionCount,
+        studentQuestionCount: requestedQuestionCount,
+        preferredActivityType: activityType,
+        activityType,
+        grade,
+        worksheetId: item.id,
+        worksheetTitle: item.title
+      }
+    );
+  } catch (err) {
+    if (/No addition facts are available/.test(err.message)) {
+      err.status = 400;
     }
-  );
+    throw err;
+  }
 }
 
 function buildRangeNotice(item, options = {}) {
@@ -484,7 +549,7 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
  const display = item.pdfDisplay && typeof item.pdfDisplay === "object"
   ? item.pdfDisplay
   : {};
- const normalizedOptions = normalizeCatalogWorksheetOptions(item, options);
+ const normalizedOptions = resolveCatalogWorksheetOptions(item, options);
  const subtitle = resolveWorksheetSubtitle(item, display, normalizedOptions);
  const rangeNotice = buildRangeNotice(item, normalizedOptions);
  let instructionText = buildStudentFacingInstruction(

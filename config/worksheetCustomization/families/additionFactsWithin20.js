@@ -131,9 +131,15 @@ const additionFactsWithin20 = Object.freeze({
     })
   }),
   adapter: adaptAdditionFactsOptions,
+  runtimeStatus: Object.freeze({
+    registrySupport: "implemented",
+    catalogRuntimeConsumption: "implemented",
+    pdfProof: "generated",
+    publicExposure: "not_approved"
+  }),
   runtimeGaps: Object.freeze([
-    "selectedValues is declared as emphasis groundwork; the active catalog fact-fluency generator does not yet prioritize selected values.",
-    "The active catalog fact-fluency generator does not currently consume minA, maxA, minB, maxB, or maxTotal."
+    "Public Resource Detail controls are not approved or wired.",
+    "questionsPerPage remains fixed at the proofed internal value until a later public-control decision."
   ])
 });
 
