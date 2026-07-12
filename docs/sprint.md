@@ -66,6 +66,19 @@ Engineering Principles:
 
 ---
 
+## Current Closeout Notes
+
+[x] Multiplication Models family founder closeout prepared
+- Arrays and Multiplication Equal Groups use fixed 8-question, 2-column x 4-row visual grids.
+- Equal Sharing Division is rebuilt as a separate division-facing model family.
+- Shared multiplication-model factor pools preserve seeded parity and avoid duplicates until pool exhaustion.
+- Canonical model-dot size, teacher variables, completed examples, and answer-key parity are preserved.
+- Shared worksheet PDFs now hide subtitles by default while retaining explicit subtitle support.
+- Student instructions remain visible below the divider.
+- Ready counts remain 103 / 103 working, 0 failures, with 85 worksheets, 11 Quick Checks, and 7 Exit Tickets.
+
+---
+
 ## May 25, 2026
 
 [x] Create docs system

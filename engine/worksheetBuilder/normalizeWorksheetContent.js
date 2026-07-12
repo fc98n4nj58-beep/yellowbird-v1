@@ -37,7 +37,40 @@ function normalizeVisual(visual = {}) {
       kind,
       data: {
         rows: Number(data.rows ?? 1),
-        cols: Number(data.cols ?? 1)
+        cols: Number(data.cols ?? 1),
+        factorA: Number(data.factorA ?? data.rows ?? 1),
+        factorB: Number(data.factorB ?? data.cols ?? 1),
+        product: Number(data.product ?? Number(data.rows ?? 1) * Number(data.cols ?? 1)),
+        orientation: data.orientation || "rows_columns"
+      }
+    };
+  }
+
+  if (kind === "equal_groups") {
+    return {
+      kind,
+      data: {
+        groups: Number(data.groups ?? 1),
+        itemsPerGroup: Number(data.itemsPerGroup ?? 1),
+        factorA: Number(data.factorA ?? data.groups ?? 1),
+        factorB: Number(data.factorB ?? data.itemsPerGroup ?? 1),
+        product: Number(data.product ?? Number(data.groups ?? 1) * Number(data.itemsPerGroup ?? 1)),
+        orientation: data.orientation || "groups_items"
+      }
+    };
+  }
+
+  if (kind === "equal_sharing") {
+    return {
+      kind,
+      data: {
+        total: Number(data.total ?? 1),
+        groups: Number(data.groups ?? 1),
+        itemsPerGroup: Number(data.itemsPerGroup ?? data.quotient ?? 1),
+        quotient: Number(data.quotient ?? data.itemsPerGroup ?? 1),
+        taskMode: data.taskMode || "distribute",
+        equationSupport: data.equationSupport || "blanks",
+        orientation: data.orientation || "total_groups"
       }
     };
   }
@@ -68,6 +101,15 @@ function normalizeItem(item = {}, index = 0, meta = {}) {
     type: item.type ?? "question",
     prompt: item.prompt ?? item.text ?? item.question ?? "",
     answer: item.answer ?? "",
+    responseMode: item.responseMode || null,
+    responseValues: Array.isArray(item.responseValues) ? item.responseValues : null,
+    showQuestionSentence: Boolean(item.showQuestionSentence),
+    taskMode: item.taskMode || null,
+    equationSupport: item.equationSupport || null,
+    product: finiteOptionalNumber(item.product),
+    quotient: finiteOptionalNumber(item.quotient),
+    modelKey: item.modelKey || null,
+    orientation: item.orientation || null,
     value: finiteOptionalNumber(item.value),
     a: item.a,
     b: item.b,

@@ -266,6 +266,7 @@ function buildWorksheet(grade, expectationCode, skillContext = null, options = {
     return generator({
       ...options,
       activityType,
+      skillKey: resolvedSkillKey,
       usedProblemKeys,
       generatorState,
       random

@@ -115,6 +115,21 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     "minB",
     "maxB",
     "maxTotal",
+    "maxProduct",
+    "minFactorA",
+    "maxFactorA",
+    "minFactorB",
+    "maxFactorB",
+    "minRows",
+    "maxRows",
+    "minCols",
+    "maxCols",
+    "minColumns",
+    "maxColumns",
+    "minGroups",
+    "maxGroups",
+    "minItemsPerGroup",
+    "maxItemsPerGroup",
     "tenFramesPerQuestion",
     "minTenFrames",
     "maxTenFrames",
@@ -143,6 +158,62 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     normalized.onlyNumbers = selectedNumbers.join(",");
   }
 
+  [
+    ["selectedFactors", "onlyFactors"],
+    ["selectedFactorA", "onlyFactorA"],
+    ["selectedFactorB", "onlyFactorB"],
+    ["selectedRows", "onlyRows"],
+    ["selectedCols", "onlyCols"],
+    ["selectedColumns", "onlyColumns"],
+    ["selectedGroups", "onlyGroups"],
+    ["selectedItemsPerGroup", "onlyItemsPerGroup"]
+  ].forEach(([primary, alias]) => {
+    const values = parseNumberList(normalized[primary] || normalized[alias]);
+    if (values.length) {
+      normalized[primary] = values;
+      normalized[alias] = values.join(",");
+    }
+  });
+
+  const isMultiplicationModel =
+    ["array", "arrays"].includes(item.activityTypes?.[0]) ||
+    (item.activityTypes?.[0] === "equal_groups" && item.skillKey !== "division_foundations");
+
+  if (isMultiplicationModel) {
+    [
+      "maxA",
+      "maxB",
+      "maxFactorA",
+      "maxFactorB",
+      "maxRows",
+      "maxCols",
+      "maxColumns",
+      "maxGroups",
+      "maxItemsPerGroup"
+    ].forEach((key) => {
+      if (finiteNumber(normalized[key]) !== null && normalized[key] > 10) {
+        normalized[key] = 10;
+        normalized.modelRangeCappedWarning = true;
+      }
+    });
+
+    [
+      "selectedFactors",
+      "selectedFactorA",
+      "selectedFactorB",
+      "selectedRows",
+      "selectedCols",
+      "selectedColumns",
+      "selectedGroups",
+      "selectedItemsPerGroup"
+    ].forEach((key) => {
+      if (Array.isArray(normalized[key]) && normalized[key].some((value) => value > 10)) {
+        normalized[key] = [...new Set(normalized[key].map((value) => Math.min(value, 10)))];
+        normalized.modelRangeCappedWarning = true;
+      }
+    });
+  }
+
   normalized.includeExample = parseBoolean(
     normalized.includeExample ?? normalized.completedExample ?? normalized.example,
     false
@@ -152,6 +223,26 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     normalized.showJumpVisuals,
     true
   );
+
+  normalized.showQuestionSentence = parseBoolean(
+    normalized.showQuestionSentence,
+    false
+  );
+
+  const responseMode = String(normalized.responseMode || "").trim().toLowerCase();
+  if (["total_only", "multiplication_sentence"].includes(responseMode)) {
+    normalized.responseMode = responseMode;
+  }
+
+  const taskMode = String(normalized.taskMode || "").trim().toLowerCase();
+  if (["distribute", "circle_groups", "both"].includes(taskMode)) {
+    normalized.taskMode = taskMode;
+  }
+
+  const equationSupport = String(normalized.equationSupport || "").trim().toLowerCase();
+  if (["blanks", "independent"].includes(equationSupport)) {
+    normalized.equationSupport = equationSupport;
+  }
 
   if (
     item.activityTypes?.[0] === "number_word_match" &&
@@ -306,6 +397,10 @@ function generateWorksheetFromCatalogId(id, options = {}) {
 }
 
 function buildRangeNotice(item, options = {}) {
+ if (options.modelRangeCappedWarning) {
+  return "Custom multiplication model range capped at 10 by 10 so the model remains printable in the fixed worksheet grid.";
+ }
+
  const grade = Array.isArray(item.grades) ? item.grades[0] : "";
  if (grade !== "grade1") return "";
 
@@ -355,15 +450,42 @@ function buildStudentFacingInstruction(item, fallback = "") {
   return "Write the missing numbers in each skip-counting pattern.";
  }
 
+  if (["array", "arrays"].includes(activityType)) {
+    return "Use each array to write a multiplication equation.";
+ }
+
+ if (activityType === "equal_groups" && item.skillKey !== "division_foundations") {
+  return "Write the total number of objects in each set of equal groups.";
+ }
+
+ if (activityType === "equal_groups" && item.skillKey === "division_foundations") {
+  return "Share the dots equally and write a division equation.";
+ }
+
  return fallback;
+}
+
+function resolveWorksheetSubtitle(item, display = {}, options = {}) {
+ const explicitOptionSubtitle = typeof options.subtitle === "string"
+  ? options.subtitle.trim()
+  : "";
+ const explicitDisplaySubtitle = typeof display.subtitle === "string"
+  ? display.subtitle.trim()
+  : "";
+
+ if (explicitOptionSubtitle) return explicitOptionSubtitle;
+ if (explicitDisplaySubtitle) return explicitDisplaySubtitle;
+ if (display.showSubtitle === true) return item.shortTitle || "";
+
+ return "";
 }
 
 function buildLayoutFromWorksheet(item, worksheet, options = {}) {
  const display = item.pdfDisplay && typeof item.pdfDisplay === "object"
   ? item.pdfDisplay
   : {};
- const subtitle = display.hideSubtitle ? "" : item.shortTitle || "";
  const normalizedOptions = normalizeCatalogWorksheetOptions(item, options);
+ const subtitle = resolveWorksheetSubtitle(item, display, normalizedOptions);
  const rangeNotice = buildRangeNotice(item, normalizedOptions);
  let instructionText = buildStudentFacingInstruction(
   item,
@@ -449,6 +571,99 @@ if (Number.isFinite(normalizedOptions.questionsPerPage) && normalizedOptions.que
   layout.template = {
     ...(layout.template || {}),
     maxProblemsPerPage: normalizedOptions.questionsPerPage
+  };
+}
+
+if (["array", "arrays"].includes(item.activityTypes?.[0]) && (item.resourceType || "worksheet") === "worksheet") {
+  const questionsPerPage = finiteNumber(normalizedOptions.questionsPerPage);
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 2,
+    maxProblemsPerPage: questionsPerPage || 8
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    visualColumns: 2,
+    multiplicationModelEquation: true,
+    multiplicationModelFamily: "array",
+    multiplicationModelConvention: "rows_columns",
+    arrayModelAlign: "left",
+    arrayModelGutter: 18,
+    equalHeightItems: true,
+    hideItemSeparators: false
+  };
+}
+
+if (
+  item.activityTypes?.[0] === "equal_groups" &&
+  item.skillKey !== "division_foundations" &&
+  (item.resourceType || "worksheet") === "worksheet"
+) {
+  const questionsPerPage = finiteNumber(normalizedOptions.questionsPerPage);
+  const responseMode = normalizedOptions.responseMode || "multiplication_sentence";
+  const showQuestionSentence = Boolean(normalizedOptions.showQuestionSentence);
+  layout.instruction = responseMode === "total_only"
+    ? showQuestionSentence
+      ? "Read each description and write the total number of dots."
+      : "Write the total number of dots in each model."
+    : showQuestionSentence
+      ? "Read each description and use the model to write a multiplication equation."
+      : "Use each model to write a multiplication equation.";
+  if (rangeNotice) {
+    layout.instruction = [layout.instruction, rangeNotice].join(" ");
+  }
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 2,
+    maxProblemsPerPage: questionsPerPage || 8
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    visualColumns: 2,
+    multiplicationModelEquation: responseMode !== "total_only",
+    multiplicationModelTotalOnly: responseMode === "total_only",
+    multiplicationModelFamily: "equal_groups",
+    multiplicationModelConvention: "groups_items",
+    equalHeightItems: true,
+    hideItemSeparators: false
+  };
+}
+
+if (
+  item.activityTypes?.[0] === "equal_groups" &&
+  item.skillKey === "division_foundations" &&
+  (item.resourceType || "worksheet") === "worksheet"
+) {
+  const questionsPerPage = finiteNumber(normalizedOptions.questionsPerPage);
+  const taskMode = normalizedOptions.taskMode || "distribute";
+  const equationSupport = normalizedOptions.equationSupport || "blanks";
+  const showQuestionSentence = Boolean(normalizedOptions.showQuestionSentence);
+  const action = taskMode === "circle_groups"
+    ? "Circle equal groups"
+    : taskMode === "both"
+      ? "Share or circle the dots equally"
+      : "Share the dots equally";
+  const response = equationSupport === "independent"
+    ? "write the division equation"
+    : "complete the division equation";
+
+  layout.instruction = showQuestionSentence
+    ? `Read each description. ${action} and ${response}.`
+    : `${action} and ${response}.`;
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 1,
+    maxProblemsPerPage: questionsPerPage || 3
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    visualColumns: 1,
+    divisionModel: true,
+    divisionEquationBlanks: equationSupport !== "independent",
+    divisionEquationIndependent: equationSupport === "independent",
+    equalSharingTaskMode: taskMode,
+    equalHeightItems: true,
+    hideItemSeparators: false
   };
 }
 

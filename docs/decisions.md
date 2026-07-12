@@ -338,3 +338,24 @@ Rules:
 - Short numeral/symbol answers center on supported answer targets; written number words remain left-aligned; word-problem work boxes keep their approved behavior.
 - Font-size variable controls, public teacher-control UI, and broader number-line label-mode controls remain deferred to later task-family-aware work.
 - Ready counts remain 103 total resources, 85 worksheets, 11 Quick Checks, and 7 Exit Tickets.
+
+## Decision: Multiplication Models Family Closeout
+
+Decision:
+Treat the Arrays, Multiplication Equal Groups, and Equal Sharing Division worksheet-family implementation as founder-approved and ready for controlled production commit review.
+
+Reason:
+The batch standardizes multiplication model worksheets at reusable generator, runtime, and renderer levels while preserving the current 103-resource ready baseline.
+
+Rules:
+- Worksheet subtitles are hidden by default in shared worksheet PDFs; explicit subtitle support is retained for a catalog/family/layout that intentionally requests one.
+- Student-facing instructions remain below the divider.
+- Arrays and Multiplication Equal Groups use fixed 8-question, 2-column x 4-row visual grids.
+- Arrays use canonical dot diameter with adaptive spacing, place models near the question-number gutter, and anchor equations bottom-right.
+- Multiplication Equal Groups use canonical dot diameter, up to 5 group containers across with a second row after 5, raised model placement, bottom-right responses, multiplication-sentence default, total-only optional mode, and question-sentence controls.
+- Equal Sharing Division is division-facing: total divided by number of groups equals number in each group. It uses source dots on the left, fixed large group boxes on the right, maximum 5 containers per row, and division response support for blanks or independent equations.
+- Shared multiplication-model factor pools preserve seeded parity and avoid duplicate model pairs until the available pool is exhausted; explicit single-combination teacher selections may repeat.
+- Completed examples and answer keys use the same geometry as student pages.
+- The Equal Sharing `both` task mode remains architecture-supported but should receive separate founder/design review before being treated as fully approved interaction behavior.
+- Review artifacts under `review/` remain local QA proofs and should not be included in production commits.
+- Counts remain 103 / 103 ready resources working, 0 ready failures, 85 worksheets, 11 Quick Checks, and 7 Exit Tickets.

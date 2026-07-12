@@ -87,6 +87,33 @@ Renderers should render only.
 
 ---
 
+## Current Worksheet Header Standard
+
+Shared worksheet PDFs now hide subtitles by default.
+
+Precedence:
+
+1. If a catalog item, layout, family, or proof configuration explicitly requests a subtitle, render it.
+2. Otherwise, render no subtitle and do not reserve subtitle space.
+
+The main worksheet title, divider, and student-facing instruction below the divider remain visible. Continuation pages and answer keys follow the same shared worksheet-header rule.
+
+## Multiplication Models Family Closeout
+
+Arrays, Multiplication Equal Groups, and Equal Sharing Division are founder-approved for controlled production commit review.
+
+Approved behavior:
+
+* Arrays: fixed 8-question, 2-column x 4-row layout; model near the question-number gutter; canonical dot diameter with adaptive spacing; equation anchored bottom-right; rows x columns = total; default generation avoids duplicates until pool exhaustion.
+* Multiplication Equal Groups: fixed 8-question, 2-column x 4-row layout; canonical dot diameter; up to 5 group containers across, second row after 5; raised model placement; equation anchored bottom-right; multiplication-sentence default; total-only optional; question sentence on/off; default generation avoids duplicates until pool exhaustion.
+* Equal Sharing Division: division-facing model with total divided by number of groups equals number in each group; source dots on the left, fixed large group boxes on the right, maximum 5 boxes per row, equation below, blanks/independent equation support, and student-facing instructions.
+* Shared multiplication-model factor pool supports seeded parity, teacher variables, duplicate avoidance, completed examples, and answer-key parity.
+* Equal Sharing `both` mode remains architecture-supported but still needs separate founder/design review before being treated as final interaction behavior.
+
+Current verified counts remain 103 / 103 ready resources working, 0 ready failures, 85 worksheets, 11 Quick Checks, and 7 Exit Tickets.
+
+---
+
 ## Previous Finding
 
 Project Yellow Bird originally had two worksheet creation systems:

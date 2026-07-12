@@ -7,7 +7,10 @@
     "display": {
       "hideItemSeparators": true,
       "equalHeightItems": true,
-      "denseGridRows": 15
+      "denseGridRows": 15,
+      "directFactAnswerSpace": true,
+      "standardAnswerLineVisible": false,
+      "standardAnswerNoLineAlign": "left"
     },
     "template": {
       "columns": 4,
@@ -22,7 +25,10 @@
     "display": {
       "hideItemSeparators": true,
       "equalHeightItems": true,
-      "denseGridRows": 15
+      "denseGridRows": 15,
+      "directFactAnswerSpace": true,
+      "standardAnswerLineVisible": false,
+      "standardAnswerNoLineAlign": "left"
     },
     "template": {
       "columns": 4,
@@ -38,7 +44,10 @@
       "hideItemSeparators": true,
       "equalHeightItems": true,
       "denseGridRows": 15,
-      "standardShortAnswerTarget": true
+      "standardShortAnswerTarget": true,
+      "directFactAnswerSpace": true,
+      "standardAnswerLineVisible": false,
+      "standardAnswerNoLineAlign": "left"
     },
     "template": {
       "columns": 4,
@@ -80,7 +89,10 @@
     "display": {
       "hideItemSeparators": true,
       "equalHeightItems": true,
-      "denseGridRows": 15
+      "denseGridRows": 15,
+      "directFactAnswerSpace": true,
+      "standardAnswerLineVisible": false,
+      "standardAnswerNoLineAlign": "left"
     },
     "template": {
       "columns": 4,
@@ -133,7 +145,7 @@
     },
     "template": {
       "columns": 1,
-      "maxProblemsPerPage": 10
+      "maxProblemsPerPage": 8
     }
   },
   "expanded_form": {
@@ -261,7 +273,35 @@
     "worksheetType": "arrays",
     "templateId": "model_interpretation",
     "interactionType": "interpret_model",
-    "instruction": "Use the model to answer."
+    "instruction": "Use each array to write a multiplication equation.",
+    "template": {
+      "columns": 2,
+      "maxProblemsPerPage": 8
+    },
+    "display": {
+      "multiplicationModelEquation": true,
+      "multiplicationModelFamily": "array",
+      "multiplicationModelConvention": "rows_columns",
+      "equalHeightItems": true,
+      "hideItemSeparators": true
+    }
+  },
+  "array": {
+    "worksheetType": "arrays",
+    "templateId": "model_interpretation",
+    "interactionType": "interpret_model",
+    "instruction": "Use each array to write a multiplication equation.",
+    "template": {
+      "columns": 2,
+      "maxProblemsPerPage": 10
+    },
+    "display": {
+      "multiplicationModelEquation": true,
+      "multiplicationModelFamily": "array",
+      "multiplicationModelConvention": "rows_columns",
+      "equalHeightItems": true,
+      "hideItemSeparators": true
+    }
   },
   "equal_groups": {
     "worksheetType": "equal_groups",

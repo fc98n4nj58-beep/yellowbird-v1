@@ -32,6 +32,22 @@ const VISUAL_LAYOUT = {
   centerOffsetY: 0
 };
 
+const MULTIPLICATION_MODEL_DOT = {
+  radius: 2.4,
+  diameter: 4.8,
+  cellSize: 9,
+  gap: 3,
+  standardEdgeGap: 7.2,
+  minEdgeGap: 2.4,
+  minGroupGap: 2.5,
+  minGroupPad: 2.5,
+  minItemGap: 1.5,
+  groupPad: 6,
+  groupGap: 14,
+  strokeWidth: 0.5,
+  color: "#6b7280"
+};
+
 function safeStr(v) { return (v ?? "").toString(); }
 function isEquation(item) { return item && item.type === "equation"; }
 function finiteOptionalNumber(value) {
@@ -45,11 +61,17 @@ function buildAnswerKeyItems(items) {
     id: it.id,
     prompt: safeStr(it.prompt),
     answer: it.answer,
+    responseMode: it.responseMode || null,
+    responseValues: Array.isArray(it.responseValues) ? it.responseValues : null,
+    showQuestionSentence: Boolean(it.showQuestionSentence),
+    taskMode: it.taskMode || null,
+    equationSupport: it.equationSupport || null,
     visual: it.visual || null,
     type: it.type || "equation",
     a: it.a,
     b: it.b,
     op: it.op,
+    quotient: finiteOptionalNumber(it.quotient),
     isExample: Boolean(it.isExample),
     value: finiteOptionalNumber(it.value),
     sequence: Array.isArray(it.sequence) ? it.sequence : null,
@@ -342,19 +364,123 @@ function drawBaseTenBlocksPrimitive(doc, x, y, opts = {}) {
 function drawArrayPrimitive(doc, x, y, opts = {}) {
   const rows = Math.max(1, Number(opts.rows || 1));
   const cols = Math.max(1, Number(opts.cols || 1));
-  const cellSize = Number(opts.cellSize || 9);
-  const gap = Number(opts.gap || 2);
-  const r = Number(opts.r || 2.6);
+  const cellSize = Number(opts.cellSize || MULTIPLICATION_MODEL_DOT.cellSize);
+  const gap = Number(opts.gap || MULTIPLICATION_MODEL_DOT.gap);
+  const r = Number(opts.r || MULTIPLICATION_MODEL_DOT.radius);
 
   doc.save();
-  doc.fillColor("#6b7280");
+  doc.fillColor(MULTIPLICATION_MODEL_DOT.color);
+  doc.strokeColor(MULTIPLICATION_MODEL_DOT.color);
+  doc.lineWidth(MULTIPLICATION_MODEL_DOT.strokeWidth);
 
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       const cx = x + col * (cellSize + gap) + cellSize / 2;
       const cy = y + row * (cellSize + gap) + cellSize / 2;
-      doc.circle(cx, cy, r).fill();
+      doc.circle(cx, cy, r).fillAndStroke();
     }
+  }
+
+  doc.restore();
+}
+
+function drawEqualGroupsPrimitive(doc, x, y, opts = {}) {
+  const groups = Math.max(1, Number(opts.groups || 1));
+  const itemsPerGroup = Math.max(1, Number(opts.itemsPerGroup || 1));
+  const groupCols = Math.max(1, Number(opts.groupCols || 1));
+  const itemCols = Math.max(1, Number(opts.itemCols || 1));
+  const cellSize = Number(opts.cellSize || MULTIPLICATION_MODEL_DOT.cellSize);
+  const itemGap = Number(opts.itemGap || MULTIPLICATION_MODEL_DOT.gap);
+  const groupGap = Number(opts.groupGap || 8);
+  const groupPad = Number(opts.groupPad || 4);
+  const dotRadius = Number(opts.dotRadius || MULTIPLICATION_MODEL_DOT.radius);
+  const itemRows = Math.ceil(itemsPerGroup / itemCols);
+  const groupWidth = groupPad * 2 + itemCols * cellSize + Math.max(0, itemCols - 1) * itemGap;
+  const groupHeight = groupPad * 2 + itemRows * cellSize + Math.max(0, itemRows - 1) * itemGap;
+
+  doc.save();
+  doc.strokeColor("#9ca3af");
+  doc.fillColor(MULTIPLICATION_MODEL_DOT.color);
+  doc.lineWidth(0.7);
+
+  for (let group = 0; group < groups; group += 1) {
+    const groupCol = group % groupCols;
+    const groupRow = Math.floor(group / groupCols);
+    const groupX = x + groupCol * (groupWidth + groupGap);
+    const groupY = y + groupRow * (groupHeight + groupGap);
+
+    doc.roundedRect(groupX, groupY, groupWidth, groupHeight, 6).stroke();
+
+    for (let item = 0; item < itemsPerGroup; item += 1) {
+      const itemCol = item % itemCols;
+      const itemRow = Math.floor(item / itemCols);
+      const cx = groupX + groupPad + itemCol * (cellSize + itemGap) + cellSize / 2;
+      const cy = groupY + groupPad + itemRow * (cellSize + itemGap) + cellSize / 2;
+      doc.save();
+      doc.strokeColor(MULTIPLICATION_MODEL_DOT.color);
+      doc.lineWidth(MULTIPLICATION_MODEL_DOT.strokeWidth);
+      doc.circle(cx, cy, dotRadius).fillAndStroke();
+      doc.restore();
+    }
+  }
+
+  doc.restore();
+}
+
+function drawEqualSharingPrimitive(doc, x, y, opts = {}) {
+  const total = Math.max(1, Number(opts.total || 1));
+  const groups = Math.max(1, Number(opts.groups || 1));
+  const itemsPerGroup = Math.max(1, Number(opts.itemsPerGroup || opts.quotient || 1));
+  const taskMode = String(opts.taskMode || "distribute");
+  const groupCols = Math.max(1, Number(opts.groupCols || groups));
+  const sourceCols = Math.max(1, Number(opts.sourceCols || Math.ceil(Math.sqrt(total))));
+  const itemCols = Math.max(1, Number(opts.itemCols || Math.ceil(Math.sqrt(itemsPerGroup))));
+  const cellSize = Number(opts.cellSize || MULTIPLICATION_MODEL_DOT.cellSize);
+  const gap = Number(opts.gap || MULTIPLICATION_MODEL_DOT.gap);
+  const groupPad = Number(opts.groupPad || MULTIPLICATION_MODEL_DOT.groupPad);
+  const groupGap = Number(opts.groupGap || MULTIPLICATION_MODEL_DOT.groupGap);
+  const sourceGroupGap = Number(opts.sourceGroupGap || 18);
+  const dotRadius = Number(opts.dotRadius || MULTIPLICATION_MODEL_DOT.radius);
+  const sourceRows = Math.ceil(total / sourceCols);
+  const groupWidth = Number(opts.groupWidth || 52);
+  const groupHeight = Number(opts.groupHeight || 50);
+  const groupRows = Math.ceil(groups / groupCols);
+  const sourceWidth = sourceCols * cellSize + Math.max(0, sourceCols - 1) * gap;
+  const sourceHeight = sourceRows * cellSize + Math.max(0, sourceRows - 1) * gap;
+  const groupsX = x + sourceWidth + sourceGroupGap;
+  const groupsTop = y;
+
+  function drawDot(cx, cy) {
+    doc.circle(cx, cy, dotRadius).fillAndStroke();
+  }
+
+  doc.save();
+  doc.strokeColor("#9ca3af");
+  doc.fillColor(MULTIPLICATION_MODEL_DOT.color);
+  doc.lineWidth(0.7);
+
+  if (taskMode === "circle_groups") {
+    for (let index = 0; index < total; index += 1) {
+      const col = index % sourceCols;
+      const row = Math.floor(index / sourceCols);
+      drawDot(x + col * (cellSize + gap) + cellSize / 2, y + row * (cellSize + gap) + cellSize / 2);
+    }
+    doc.restore();
+    return;
+  }
+
+  for (let index = 0; index < total; index += 1) {
+    const col = index % sourceCols;
+    const row = Math.floor(index / sourceCols);
+    drawDot(x + col * (cellSize + gap) + cellSize / 2, y + row * (cellSize + gap) + cellSize / 2);
+  }
+
+  for (let group = 0; group < groups; group += 1) {
+    const col = group % groupCols;
+    const row = Math.floor(group / groupCols);
+    const groupX = groupsX + col * (groupWidth + groupGap);
+    const groupY = groupsTop + row * (groupHeight + groupGap);
+    doc.roundedRect(groupX, groupY, groupWidth, groupHeight, 6).stroke();
   }
 
   doc.restore();
@@ -364,29 +490,154 @@ function measureArrayVisual(data = {}, maxWidth, targetHeight) {
   const rows = Math.max(1, Number(data.rows || 1));
   const cols = Math.max(1, Number(data.cols || 1));
 
-  let cellSize = 9;
-  let gap = 2;
-  let dotRadius = 2.6;
-
-  let width = cols * cellSize + (cols - 1) * gap;
-  let height = rows * cellSize + (rows - 1) * gap;
-
-  const widthScale = maxWidth > 0 ? Math.min(1, maxWidth / width) : 1;
-  const heightScale = targetHeight > 0 ? Math.min(1, targetHeight / height) : 1;
-  const scale = Math.min(widthScale, heightScale, 1);
-
-  cellSize *= scale;
-  gap *= scale;
-  dotRadius *= scale;
-
-  width = cols * cellSize + (cols - 1) * gap;
-  height = rows * cellSize + (rows - 1) * gap;
+  const cellSize = MULTIPLICATION_MODEL_DOT.diameter;
+  const standardGap = MULTIPLICATION_MODEL_DOT.standardEdgeGap;
+  const minGap = MULTIPLICATION_MODEL_DOT.minEdgeGap;
+  const horizontalGapLimit = cols > 1
+    ? (maxWidth - cols * cellSize) / (cols - 1)
+    : standardGap;
+  const verticalGapLimit = rows > 1
+    ? (targetHeight - rows * cellSize) / (rows - 1)
+    : standardGap;
+  const gap = Math.max(
+    minGap,
+    Math.min(standardGap, horizontalGapLimit, verticalGapLimit)
+  );
+  const dotRadius = MULTIPLICATION_MODEL_DOT.radius;
+  const width = cols * cellSize + (cols - 1) * gap;
+  const height = rows * cellSize + (rows - 1) * gap;
 
   return {
     width,
     height,
     cellSize,
     gap,
+    dotRadius
+  };
+}
+
+function measureEqualGroupsVisual(data = {}, maxWidth, targetHeight) {
+  const groups = Math.max(1, Number(data.groups || 1));
+  const itemsPerGroup = Math.max(1, Number(data.itemsPerGroup || 1));
+  const itemCols = itemsPerGroup >= 7
+    ? Math.min(5, itemsPerGroup)
+    : Math.max(1, Math.ceil(Math.sqrt(itemsPerGroup)));
+  const itemRows = Math.ceil(itemsPerGroup / itemCols);
+  const cellSize = MULTIPLICATION_MODEL_DOT.diameter;
+  const dotRadius = MULTIPLICATION_MODEL_DOT.radius;
+  const groupCols = Math.min(groups, 5);
+  const groupRows = Math.ceil(groups / groupCols);
+  const standardItemGap = MULTIPLICATION_MODEL_DOT.standardEdgeGap;
+  const minItemGap = MULTIPLICATION_MODEL_DOT.minItemGap;
+  const standardGroupGap = 8;
+  const minGroupGap = MULTIPLICATION_MODEL_DOT.minGroupGap;
+  const standardGroupPad = 4;
+  const minGroupPad = MULTIPLICATION_MODEL_DOT.minGroupPad;
+
+  function dimensions(itemGap, groupGap, groupPad) {
+    const groupWidth = groupPad * 2 + itemCols * cellSize + Math.max(0, itemCols - 1) * itemGap;
+    const groupHeight = groupPad * 2 + itemRows * cellSize + Math.max(0, itemRows - 1) * itemGap;
+
+    return {
+      groupWidth,
+      groupHeight,
+      width: groupCols * groupWidth + Math.max(0, groupCols - 1) * groupGap,
+      height: groupRows * groupHeight + Math.max(0, groupRows - 1) * groupGap
+    };
+  }
+
+  let itemGap = standardItemGap;
+  let groupGap = standardGroupGap;
+  let groupPad = standardGroupPad;
+  let measured = dimensions(itemGap, groupGap, groupPad);
+
+  if (measured.width > maxWidth || measured.height > targetHeight) {
+    itemGap = Math.max(
+      minItemGap,
+      Math.min(
+        standardItemGap,
+        itemCols > 1 ? (maxWidth / groupCols - standardGroupPad * 2 - itemCols * cellSize) / (itemCols - 1) : standardItemGap,
+        itemRows > 1 ? (targetHeight / groupRows - standardGroupPad * 2 - itemRows * cellSize) / (itemRows - 1) : standardItemGap
+      )
+    );
+    groupGap = Math.max(minGroupGap, Math.min(standardGroupGap, (maxWidth - groupCols * (itemCols * cellSize + 2 * minGroupPad + Math.max(0, itemCols - 1) * itemGap)) / Math.max(1, groupCols - 1)));
+    groupPad = Math.max(
+      minGroupPad,
+      Math.min(
+        standardGroupPad,
+        (maxWidth / groupCols - itemCols * cellSize - Math.max(0, itemCols - 1) * itemGap) / 2,
+        (targetHeight / groupRows - itemRows * cellSize - Math.max(0, itemRows - 1) * itemGap) / 2
+      )
+    );
+    measured = dimensions(itemGap, groupGap, groupPad);
+  }
+
+  return {
+    groupRows,
+    groupWidth: measured.groupWidth,
+    groupHeight: measured.groupHeight,
+    width: measured.width,
+    height: measured.height,
+    groups,
+    itemsPerGroup,
+    groupCols,
+    itemCols,
+    cellSize,
+    itemGap,
+    groupGap,
+    groupPad,
+    dotRadius
+  };
+}
+
+function measureEqualSharingVisual(data = {}, maxWidth, targetHeight) {
+  const total = Math.max(1, Number(data.total || 1));
+  const groups = Math.max(1, Number(data.groups || 1));
+  const itemsPerGroup = Math.max(1, Number(data.itemsPerGroup || data.quotient || 1));
+  const taskMode = String(data.taskMode || "distribute");
+  const cellSize = MULTIPLICATION_MODEL_DOT.cellSize;
+  const gap = MULTIPLICATION_MODEL_DOT.gap;
+  const groupPad = Math.max(6, MULTIPLICATION_MODEL_DOT.groupPad || 4);
+  const groupGap = Math.max(10, MULTIPLICATION_MODEL_DOT.groupGap || 8);
+  const sourceGroupGap = 18;
+  const dotRadius = MULTIPLICATION_MODEL_DOT.radius;
+  const itemCols = Math.max(2, Math.min(4, Math.ceil(Math.sqrt(itemsPerGroup))));
+  const groupWidth = 52;
+  const groupHeight = 50;
+  const groupCols = Math.min(groups, 5);
+  const groupRows = Math.ceil(groups / groupCols);
+  const groupsWidth = groupCols * groupWidth + Math.max(0, groupCols - 1) * groupGap;
+  const groupsHeight = groupRows * groupHeight + Math.max(0, groupRows - 1) * groupGap;
+  const availableSourceWidth = taskMode === "circle_groups"
+    ? maxWidth
+    : Math.max(cellSize, maxWidth - groupsWidth - sourceGroupGap);
+  let sourceCols = Math.max(1, Math.ceil(Math.sqrt(total)));
+  while (sourceCols > 1 && sourceCols * cellSize + (sourceCols - 1) * gap > availableSourceWidth) {
+    sourceCols -= 1;
+  }
+  const sourceRows = Math.ceil(total / sourceCols);
+  const sourceWidth = sourceCols * cellSize + Math.max(0, sourceCols - 1) * gap;
+  const sourceHeight = sourceRows * cellSize + Math.max(0, sourceRows - 1) * gap;
+  const width = taskMode === "circle_groups" ? sourceWidth : sourceWidth + sourceGroupGap + groupsWidth;
+  const height = taskMode === "circle_groups" ? sourceHeight : Math.max(sourceHeight, groupsHeight);
+
+  return {
+    width,
+    height,
+    total,
+    groups,
+    itemsPerGroup,
+    taskMode,
+    sourceCols,
+    groupCols,
+    itemCols,
+    groupWidth,
+    groupHeight,
+    cellSize,
+    gap,
+    groupPad,
+    groupGap,
+    sourceGroupGap,
     dotRadius
   };
 }
@@ -491,6 +742,14 @@ function measureVisual(visual, maxWidth, targetHeight) {
     return measureArrayVisual(visual.data, maxWidth, targetHeight);
   }
 
+  if (visual.kind === "equal_groups") {
+    return measureEqualGroupsVisual(visual.data, maxWidth, targetHeight);
+  }
+
+  if (visual.kind === "equal_sharing") {
+    return measureEqualSharingVisual(visual.data, maxWidth, targetHeight);
+  }
+
   if (visual.kind === "ten_frame") {
     return measureTenFrameVisual(visual.data, maxWidth, targetHeight);
   }
@@ -511,6 +770,20 @@ function getVisualKindConfig(kind) {
     return {
       maxWidthRatio: VISUAL_LAYOUT.arrayMaxWidthRatio,
       targetHeightRatio: VISUAL_LAYOUT.arrayTargetHeightRatio
+    };
+  }
+
+  if (kind === "equal_groups") {
+    return {
+      maxWidthRatio: VISUAL_LAYOUT.arrayMaxWidthRatio,
+      targetHeightRatio: 0.7
+    };
+  }
+
+  if (kind === "equal_sharing") {
+    return {
+      maxWidthRatio: VISUAL_LAYOUT.arrayMaxWidthRatio,
+      targetHeightRatio: 0.74
     };
   }
 
@@ -668,6 +941,309 @@ function drawTextOnLine(doc, text, x, y, width, fonts = {}, options = {}) {
   doc.restore();
 }
 
+function drawMultiplicationModelEquation(doc, values, x, y, fonts = {}, options = {}) {
+  const blankWidth = Number(options.blankWidth || 42);
+  const fontSize = Number(options.fontSize || 12);
+  const parts = Array.isArray(values) ? values : [];
+  const showAnswers = Boolean(options.answerKey || options.isExample);
+  const symbolY = y - fontSize - 2;
+  const symbols = ["x", "="];
+  let cursorX = x;
+
+  doc.save();
+  restoreAnswerSurroundingTextStyle(doc, fonts, fontSize);
+
+  for (let index = 0; index < 3; index += 1) {
+    drawShortAnswerLine(doc, cursorX, y, blankWidth);
+
+    if (showAnswers && parts[index] !== undefined && parts[index] !== null) {
+      drawTextOnLine(doc, parts[index], cursorX, y, blankWidth, fonts, { fontSize });
+      restoreAnswerSurroundingTextStyle(doc, fonts, fontSize);
+    }
+
+    cursorX += blankWidth;
+
+    if (index < 2) {
+      const symbol = symbols[index];
+      const symbolWidth = index === 0 ? 20 : 18;
+      doc.text(symbol, cursorX, symbolY, {
+        width: symbolWidth,
+        align: "center",
+        lineBreak: false
+      });
+      cursorX += symbolWidth;
+    }
+  }
+
+  doc.restore();
+}
+
+function drawMultiplicationModelTotalTarget(doc, value, x, y, fonts = {}, options = {}) {
+  const blankWidth = Number(options.blankWidth || 52);
+  const fontSize = Number(options.fontSize || 12);
+
+  drawShortAnswerLine(doc, x, y, blankWidth);
+
+  if (options.answerKey || options.isExample) {
+    drawTextOnLine(doc, value, x, y, blankWidth, fonts, { fontSize });
+    restoreAnswerSurroundingTextStyle(doc, fonts, fontSize);
+  }
+}
+
+function drawDivisionModelEquation(doc, values, x, y, fonts = {}, options = {}) {
+  const blankWidth = Number(options.blankWidth || 46);
+  const fontSize = Number(options.fontSize || 12);
+  const parts = Array.isArray(values) ? values : [];
+  const showAnswers = Boolean(options.answerKey || options.isExample);
+  const symbolY = y - fontSize - 2;
+  const symbols = ["÷", "="];
+  let cursorX = x;
+
+  doc.save();
+  restoreAnswerSurroundingTextStyle(doc, fonts, fontSize);
+
+  for (let index = 0; index < 3; index += 1) {
+    drawShortAnswerLine(doc, cursorX, y, blankWidth);
+
+    if (showAnswers && parts[index] !== undefined && parts[index] !== null) {
+      drawTextOnLine(doc, parts[index], cursorX, y, blankWidth, fonts, { fontSize });
+      restoreAnswerSurroundingTextStyle(doc, fonts, fontSize);
+    }
+
+    cursorX += blankWidth;
+
+    if (index < 2) {
+      const symbol = symbols[index];
+      const symbolWidth = index === 0 ? 22 : 18;
+      doc.text(symbol, cursorX, symbolY, {
+        width: symbolWidth,
+        align: "center",
+        lineBreak: false
+      });
+      cursorX += symbolWidth;
+    }
+  }
+
+  doc.restore();
+}
+
+function drawIndependentEquationLine(doc, values, x, y, width, fonts = {}, options = {}) {
+  drawShortAnswerLine(doc, x, y, width);
+
+  if (options.answerKey || options.isExample) {
+    const text = Array.isArray(values) && values.length >= 3
+      ? `${values[0]} ÷ ${values[1]} = ${values[2]}`
+      : "";
+    drawFittedAnswerOnLine(doc, text, x, y, width, fonts, {
+      align: "left",
+      fontSize: 12,
+      minFontSize: 8.5
+    });
+    restoreAnswerSurroundingTextStyle(doc, fonts, 12);
+  }
+}
+
+function renderMultiplicationModelCell(doc, question, layoutBox, fonts = {}, display = {}) {
+  const { x, y, width, height } = layoutBox;
+  const visual = question.visual || null;
+  if (!visual?.kind) return false;
+
+  const isEquationMode = Boolean(display.multiplicationModelEquation);
+  const isTotalOnly = Boolean(display.multiplicationModelTotalOnly);
+  if (!isEquationMode && !isTotalOnly) return false;
+
+  const isExample = Boolean(display.includeExample && question.isExample && !display.answerKey);
+  const numberPrefix = question.id != null ? `${question.id})` : "";
+  const sentence = safeStr(question.prompt || question.text || "").trim();
+  const lineHeight = layout.typography.body?.lineHeight || 16;
+  const promptY = y;
+  const labelWidth = 34;
+
+  doc.save();
+  doc.fillColor("#111827");
+  setFont(doc, fonts.regular || "Helvetica", 12);
+
+  if (isExample) {
+    setFont(doc, fonts.lightItalic || fonts.regular || "Helvetica", 9);
+    doc.fillColor(pdfDesignTokens.colors.muted);
+    doc.text("Example", x, y - 11, {
+      width,
+      align: "left",
+      lineBreak: false
+    });
+    setFont(doc, fonts.regular || "Helvetica", 12);
+    doc.fillColor("#111827");
+  }
+
+  doc.text(numberPrefix, x, promptY, {
+    width: labelWidth - 4,
+    align: "left",
+    lineBreak: false
+  });
+
+  let promptHeight = lineHeight;
+  if (sentence) {
+    doc.text(sentence, x + labelWidth, promptY, {
+      width: Math.max(20, width - labelWidth),
+      align: "left"
+    });
+    promptHeight = Math.max(
+      lineHeight,
+      doc.heightOfString(sentence, {
+        width: Math.max(20, width - labelWidth),
+        align: "left"
+      })
+    );
+  }
+
+  const responseHeight = 24;
+  const bottomPad = 16;
+  const topGap = sentence ? 8 : 6;
+  const responseY = y + height - bottomPad - 8;
+  const modelTop = promptY + promptHeight + topGap;
+  const modelBottom = Math.max(modelTop + 10, responseY - 16);
+  const modelHeight = Math.max(10, modelBottom - modelTop);
+  const isArrayModel = visual.kind === "array" || visual.kind === "arrays";
+  const modelGutter = isArrayModel
+    ? Number(display.arrayModelGutter || 18)
+    : labelWidth;
+  const modelX = x + modelGutter;
+  const availableWidth = Math.max(40, width - modelGutter);
+  const rightPad = 14;
+  const modelWidth = Math.max(40, availableWidth - rightPad);
+  const measured = measureVisual(visual, modelWidth, modelHeight);
+
+  if (measured) {
+    const alignLeft = display.arrayModelAlign === "left" || visual.kind === "equal_groups";
+    const verticalBias = visual.kind === "equal_groups" ? 0.34 : 0.5;
+    const placed = {
+      x: modelX + (alignLeft ? 0 : Math.max(0, (modelWidth - measured.width) / 2)),
+      y: modelTop + Math.max(0, (modelHeight - measured.height) * verticalBias)
+    };
+    renderVisualByKind(doc, visual, placed, measured);
+  }
+
+  if (isEquationMode) {
+    const values = Array.isArray(question.responseValues) && question.responseValues.length >= 3
+      ? question.responseValues
+      : [question.a, question.b, question.product ?? question.answer];
+    const blankWidth = Number(display.multiplicationModelBlankWidth || 32);
+    const totalWidth = blankWidth * 3 + 38;
+    const equationX = x + width - rightPad - totalWidth;
+    drawMultiplicationModelEquation(doc, values, equationX, responseY, fonts, {
+      answerKey: Boolean(display.answerKey),
+      isExample,
+      blankWidth
+    });
+  } else {
+    const values = Array.isArray(question.responseValues) && question.responseValues.length
+      ? question.responseValues
+      : [question.answer];
+    const blankWidth = Number(display.multiplicationModelTotalLineWidth || 52);
+    const lineX = x + width - rightPad - blankWidth;
+    drawMultiplicationModelTotalTarget(doc, values[0], lineX, responseY, fonts, {
+      answerKey: Boolean(display.answerKey),
+      isExample,
+      blankWidth
+    });
+  }
+
+  doc.restore();
+  return true;
+}
+
+function renderDivisionModelCell(doc, question, layoutBox, fonts = {}, display = {}) {
+  const { x, y, width, height } = layoutBox;
+  const visual = question.visual || null;
+  if (visual?.kind !== "equal_sharing" || !display.divisionModel) return false;
+
+  const isExample = Boolean(display.includeExample && question.isExample && !display.answerKey);
+  const numberPrefix = question.id != null ? `${question.id})` : "";
+  const sentence = safeStr(question.prompt || question.text || "").trim();
+  const labelWidth = 34;
+  const lineHeight = layout.typography.body?.lineHeight || 16;
+
+  doc.save();
+  doc.fillColor("#111827");
+  setFont(doc, fonts.regular || "Helvetica", 12);
+
+  if (isExample) {
+    setFont(doc, fonts.lightItalic || fonts.regular || "Helvetica", 9);
+    doc.fillColor(pdfDesignTokens.colors.muted);
+    doc.text("Example", x, y - 11, {
+      width,
+      align: "left",
+      lineBreak: false
+    });
+    setFont(doc, fonts.regular || "Helvetica", 12);
+    doc.fillColor("#111827");
+  }
+
+  doc.text(numberPrefix, x, y, {
+    width: labelWidth - 4,
+    align: "left",
+    lineBreak: false
+  });
+
+  let promptHeight = lineHeight;
+  if (sentence) {
+    doc.text(sentence, x + labelWidth, y, {
+      width: Math.max(20, width - labelWidth),
+      align: "left"
+    });
+    promptHeight = Math.max(
+      lineHeight,
+      doc.heightOfString(sentence, {
+        width: Math.max(20, width - labelWidth),
+        align: "left"
+      })
+    );
+  }
+
+  const rightPad = Number(display.divisionModelRightPad || 22);
+  const responseY = y + height - 16;
+  const modelTop = y + promptHeight + (sentence ? 12 : 6);
+  const modelHeight = Math.max(16, responseY - modelTop - 14);
+  const modelX = x + labelWidth;
+  const modelWidth = Math.max(80, width - labelWidth);
+  const measured = measureVisual(visual, modelWidth, modelHeight);
+
+  if (measured) {
+    renderVisualByKind(doc, visual, {
+      x: modelX,
+      y: modelTop
+    }, measured);
+  }
+
+  const values = Array.isArray(question.responseValues) && question.responseValues.length >= 3
+    ? question.responseValues
+    : [question.product ?? question.a, question.b, question.quotient ?? question.answer];
+
+  if (display.divisionEquationIndependent) {
+    const lineWidth = Math.min(
+      Number(display.divisionModelIndependentLineWidth || 220),
+      Math.max(92, width - labelWidth - rightPad)
+    );
+    const lineX = x + width - rightPad - lineWidth;
+    drawIndependentEquationLine(doc, values, lineX, responseY, lineWidth, fonts, {
+      answerKey: Boolean(display.answerKey),
+      isExample
+    });
+  } else {
+    const blankWidth = Number(display.divisionModelBlankWidth || 46);
+    const totalWidth = blankWidth * 3 + 40;
+    const equationX = x + width - rightPad - totalWidth;
+    drawDivisionModelEquation(doc, values, equationX, responseY, fonts, {
+      answerKey: Boolean(display.answerKey),
+      isExample,
+      blankWidth
+    });
+  }
+
+  doc.restore();
+  return true;
+}
+
 function drawTextInSequenceCell(doc, text, x, y, width, fonts = {}, options = {}) {
   doc.save();
   const fontSize = Number(options.fontSize || 12);
@@ -761,7 +1337,7 @@ function drawInlineAnswerPrompt(doc, promptText, answers, x, y, width, fonts = {
           doc.fillColor(pdfDesignTokens.colors.text);
           doc.text(answerText, cursorX, y, {
             width: safeBlankWidth,
-            align: "center",
+            align: display.standardAnswerNoLineAlign || "center",
             lineBreak: false
           });
           doc.restore();
@@ -1037,6 +1613,16 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
   const hasInlineAnswerBlank = Boolean(promptText.match(/_{2,}/));
   const visual = question.visual || null;
 
+  if (visual?.kind && (display.multiplicationModelEquation || display.multiplicationModelTotalOnly)) {
+    const rendered = renderMultiplicationModelCell(doc, question, layoutBox, fonts, display);
+    if (rendered) return height;
+  }
+
+  if (visual?.kind === "equal_sharing" && display.divisionModel) {
+    const rendered = renderDivisionModelCell(doc, question, layoutBox, fonts, display);
+    if (rendered) return height;
+  }
+
   const promptX = x;
   const promptY = y;
   const promptWidth = width;
@@ -1201,7 +1787,23 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
     );
   }
 
-  if (!visual?.kind && display.standardShortAnswerTarget && hasInlineAnswerBlank) {
+  if (!visual?.kind && display.directFactAnswerSpace && hasInlineAnswerBlank) {
+    drawInlineAnswerPrompt(
+      doc,
+      promptText,
+      question.answer,
+      promptX,
+      promptY,
+      promptWidth,
+      fonts,
+      {
+        ...display,
+        inlineAnswerValues: Boolean(display.answerKey || isExample),
+        standardAnswerLineVisible: false,
+        standardAnswerNoLineAlign: display.standardAnswerNoLineAlign || "left"
+      }
+    );
+  } else if (!visual?.kind && display.standardShortAnswerTarget && hasInlineAnswerBlank) {
     drawInlineAnswerPrompt(
       doc,
       promptText,
@@ -1424,6 +2026,36 @@ function renderVisualByKind(doc, visual, placed, measured) {
     });
   }
 
+  if (visual.kind === "equal_groups") {
+    return drawEqualGroupsPrimitive(doc, placed.x, placed.y, {
+      ...(visual.data || {}),
+      groupCols: measured.groupCols,
+      itemCols: measured.itemCols,
+      cellSize: measured.cellSize,
+      itemGap: measured.itemGap,
+      groupGap: measured.groupGap,
+      groupPad: measured.groupPad,
+      dotRadius: measured.dotRadius
+    });
+  }
+
+  if (visual.kind === "equal_sharing") {
+    return drawEqualSharingPrimitive(doc, placed.x, placed.y, {
+      ...(visual.data || {}),
+      sourceCols: measured.sourceCols,
+      groupCols: measured.groupCols,
+      itemCols: measured.itemCols,
+      groupWidth: measured.groupWidth,
+      groupHeight: measured.groupHeight,
+      cellSize: measured.cellSize,
+      gap: measured.gap,
+      groupGap: measured.groupGap,
+      groupPad: measured.groupPad,
+      sourceGroupGap: measured.sourceGroupGap,
+      dotRadius: measured.dotRadius
+    });
+  }
+
   if (visual.kind === "ten_frame") {
     return drawTenFramePrimitive(doc, placed.x, placed.y, {
       ...(visual.data || {}),
@@ -1634,6 +2266,213 @@ const maxStep = lineHeight * 2.6;
   step = Math.max(minStep, Math.min(maxStep, step));
   return step;
 }
+
+function modelCellMeasurementBounds(cellWidth, rowHeight, display = {}) {
+  const labelWidth = 34;
+  const lineHeight = layout.typography.body?.lineHeight || 16;
+  const responseHeight = 30;
+  const bottomPad = 12;
+  const topGap = 6;
+  const modelWidth = Math.max(40, cellWidth - labelWidth);
+  const modelHeight = Math.max(10, rowHeight - lineHeight - topGap - responseHeight - bottomPad - 8);
+
+  return {
+    modelWidth,
+    modelHeight,
+    labelWidth,
+    display
+  };
+}
+
+function classifyModelCellWidth(item, halfCellWidth, fullCellWidth, rowHeight, rowsPerPage, display = {}) {
+  const visual = item?.visual || null;
+  if (!visual?.kind) return { full: false, span: 1 };
+
+  const bounds = modelCellMeasurementBounds(halfCellWidth, rowHeight, display);
+  const measured = measureVisual(visual, bounds.modelWidth, bounds.modelHeight);
+  if (!measured) return { full: false, span: 1 };
+
+  if (visual.kind === "array" || visual.kind === "arrays") {
+    const rows = Number(visual.data?.rows || 0);
+    if (rows <= Number(display.arrayFullWidthRowsOver || 5)) return { full: false, span: 1 };
+
+    return {
+      full:
+      measured.width > bounds.modelWidth ||
+      measured.height > bounds.modelHeight * 0.72,
+      span: 1
+    };
+  }
+
+  if (visual.kind === "equal_groups") {
+    const full = (
+      measured.width > bounds.modelWidth ||
+      measured.height > bounds.modelHeight
+    );
+
+    if (!full) return { full: false, span: 1 };
+
+    const fullBounds = modelCellMeasurementBounds(fullCellWidth, rowHeight, display);
+    const fullMeasured = measureVisual(visual, fullBounds.modelWidth, fullBounds.modelHeight);
+    const span = fullMeasured && fullMeasured.height > fullBounds.modelHeight
+      ? Math.min(Math.max(1, rowsPerPage), 2)
+      : 1;
+
+    return { full: true, span };
+  }
+
+  return { full: false, span: 1 };
+}
+
+function buildMixedModelRows(items, rowsPerPage, classifyItem) {
+  const pages = [];
+  let pageRows = [];
+  let usedRows = 0;
+  let pending = null;
+
+  function pushRow(row) {
+    const rowSpan = Math.max(1, Number(row.span || 1));
+    if (usedRows + rowSpan > rowsPerPage) {
+      pages.push(pageRows);
+      pageRows = [];
+      usedRows = 0;
+    }
+    pageRows.push(row);
+    usedRows += rowSpan;
+  }
+
+  items.forEach((item) => {
+    const classification = classifyItem(item);
+    const isFull = Boolean(classification.full);
+
+    if (isFull) {
+      if (pending) {
+        pushRow({ type: "half", items: [pending] });
+        pending = null;
+      }
+      pushRow({ type: "full", items: [item], span: classification.span || 1 });
+      return;
+    }
+
+    if (!pending) {
+      pending = item;
+      return;
+    }
+
+    pushRow({ type: "half", items: [pending, item] });
+    pending = null;
+  });
+
+  if (pending) pushRow({ type: "half", items: [pending] });
+  if (pageRows.length) pages.push(pageRows);
+
+  return pages;
+}
+
+function renderMixedModelPages(doc, fonts, contentObject, options, pageState, layoutObject = null) {
+  const meta = contentObject?.meta || {};
+  const allItems = (
+    contentObject?.content?.items && contentObject.content.items.length
+      ? contentObject.content.items
+      : contentObject?.problems || []
+  );
+  const instruction = layoutObject?.instruction || "";
+  const display = layoutObject?.display || {};
+  const footerRuleY = doc.page.height - layout.page.margins.bottom;
+  const footerBufferH = layout.zones?.footerBuffer?.height ?? 24;
+  const bottomContentY = footerRuleY - footerBufferH;
+  const rowsPerPage = Math.max(
+    1,
+    Number(display.arrayRowsPerPage || 0) ||
+      Number(display.multiplicationModelRowsPerPage || 0) ||
+      Math.ceil(Number(layoutObject?.template?.maxProblemsPerPage || 8) / 2)
+  );
+  const { cb, colW, xForCol } = getColumns(2);
+  const preInstructionStartY = renderHeader(doc, fonts, meta);
+  const measuredStartY = preInstructionStartY + (instruction ? 28 : 0);
+  const rowHeightForClassification = (bottomContentY - measuredStartY) / rowsPerPage;
+  const pages = buildMixedModelRows(
+    allItems,
+    rowsPerPage,
+    (item) => classifyModelCellWidth(item, colW, cb.width, rowHeightForClassification, rowsPerPage, display)
+  );
+
+  pages.forEach((pageRows, pageIndex) => {
+    if (pageIndex > 0) {
+      doc.addPage();
+      pageState.pageNum += 1;
+    }
+
+    let startY = pageIndex === 0 ? preInstructionStartY : renderHeader(doc, fonts, meta);
+
+    if (instruction) {
+      setFont(doc, fonts.light || fonts.regular, 11);
+      doc.fillColor(pdfDesignTokens.colors.muted);
+      doc.text(instruction, layout.page.contentBox.x, startY - 12, {
+        width: layout.page.contentBox.width,
+        align: "left"
+      });
+      startY += 28;
+    }
+
+    const rowHeight = (bottomContentY - startY) / rowsPerPage;
+    let rowCursor = 0;
+
+    pageRows.forEach((row, rowIndex) => {
+      const span = Math.max(1, Number(row.span || 1));
+      const rowY = startY + rowCursor * rowHeight;
+      const effectiveRowHeight = rowHeight * span;
+      const isFull = row.type === "full";
+
+      if (isFull) {
+        renderQuestionItem(doc, row.items[0], {
+          x: cb.x,
+          y: rowY,
+          width: cb.width,
+          height: effectiveRowHeight,
+          dividerY: null
+        }, fonts, display);
+      } else {
+        row.items.forEach((item, colIndex) => {
+          renderQuestionItem(doc, item, {
+            x: xForCol(colIndex),
+            y: rowY,
+            width: colW,
+            height: effectiveRowHeight,
+            dividerY: null
+          }, fonts, display);
+        });
+
+        if (row.items.length > 1) {
+          const centerX = cb.x + cb.width / 2;
+          doc.save();
+          doc.strokeColor(pdfDesignTokens.colors.lightRule);
+          doc.lineWidth(pdfDesignTokens.rules.thin);
+          doc.moveTo(centerX, rowY + 4)
+            .lineTo(centerX, rowY + effectiveRowHeight - 8)
+            .stroke();
+          doc.restore();
+        }
+      }
+
+      const separatorY = rowY + effectiveRowHeight - 8;
+      if (separatorY < bottomContentY - 4) {
+        doc.save();
+        doc.strokeColor(pdfDesignTokens.colors.lightRule);
+        doc.lineWidth(pdfDesignTokens.rules.thin);
+        doc.moveTo(cb.x, separatorY)
+          .lineTo(cb.x + cb.width, separatorY)
+          .stroke();
+        doc.restore();
+      }
+
+      rowCursor += span;
+    });
+
+    drawFooter(doc, fonts, pageState.pageNum, meta);
+  });
+}
+
 function renderPageColumns(
   doc,
   cols,
@@ -1755,6 +2594,19 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
 
   const hasVisuals = allItems.some((item) => item.visual);
   const isReverseNumberWordLayout = Boolean(display.reverseNumberWordWriting);
+
+  if (
+    Boolean(display.enableMeasuredMixedModelGrid) &&
+    hasVisuals &&
+    (
+      allItems.some((item) => item.visual?.kind === "array" || item.visual?.kind === "arrays") ||
+      allItems.some((item) => item.visual?.kind === "equal_groups" && display.multiplicationModelFamily === "equal_groups")
+    )
+  ) {
+    renderMixedModelPages(doc, fonts, contentObject, options, pageState, layoutObject);
+    return;
+  }
+
   const cols = hasVisuals
     ? clampCols(display.visualColumns || 2)
     : clampCols(layoutObject?.template?.columns || options.cols);
