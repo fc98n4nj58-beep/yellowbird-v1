@@ -1,32 +1,44 @@
-function randInt(min, max, random = Math.random) {
-  return Math.floor(random() * (max - min + 1)) + min;
+const { nextPlaceValueFormValue } = require("./placeValueFormValues");
+
+function expandedParts(value) {
+  const digits = String(value).split("").map((d) => Number(d));
+  const parts = [];
+
+  digits.forEach((digit, index) => {
+    if (!digit) return;
+    const place = 10 ** (digits.length - index - 1);
+    parts.push(String(digit * place));
+  });
+
+  return parts;
 }
 
 function generateStandardFormProblem(options = {}) {
 
-  const random = options.random || Math.random;
-  const min = options.minA || 100;
-  const max = options.maxA || 999;
+  const usedProblemKeys = options.usedProblemKeys || new Set();
+  let fallbackProblem = null;
 
-  const value = randInt(min, max, random);
+  for (let attempt = 0; attempt < 120; attempt += 1) {
+    const { value, uniqueAvailable } = nextPlaceValueFormValue(options, "standard_form");
+    const key = `standard_form:${value}`;
+    const exhaustedUniqueValues = [...usedProblemKeys].filter((usedKey) =>
+      String(usedKey).startsWith("standard_form:")
+    ).length >= uniqueAvailable;
+    const expanded = expandedParts(value).join(" + ");
+    const problem = {
+      prompt: `${expanded} = ___`,
+      value,
+      answer: value
+    };
 
-  const hundreds = Math.floor(value / 100);
-  const tens = Math.floor((value % 100) / 10);
-  const ones = value % 10;
+    fallbackProblem = problem;
+    if (!usedProblemKeys.has(key) || exhaustedUniqueValues) {
+      usedProblemKeys.add(key);
+      return problem;
+    }
+  }
 
-  let parts = [];
-
-  if (hundreds) parts.push(`${hundreds * 100}`);
-  if (tens) parts.push(`${tens * 10}`);
-  if (ones) parts.push(`${ones}`);
-
-  const expanded = parts.join(" + ");
-
-  return {
-    prompt: `Write the number in standard form: ${expanded}`,
-    answer: value
-  };
-
+  return fallbackProblem;
 }
 
 module.exports = generateStandardFormProblem;

@@ -1004,3 +1004,12 @@ Guiding phrase: build the flight network before inviting passengers.
   * broader number-line label-mode options
 * Counts remain 103 / 103 ready resources working, 0 ready failures, 85 worksheets, 11 Quick Checks, and 7 Exit Tickets.
 * Do not resume broad content expansion until the Grade 1 commit is reviewed and the next 103-resource inheritance scan is complete.
+
+### Place Value Forms + Skip Counting Founder Closeout
+
+* Expanded Form, Standard Form, and Skip Counting worksheet families are founder-approved for the current 103-resource library.
+* Expanded Form and Standard Form now share grade-aware value-pool generation with seeded variation, duplicate avoidance, selected-number support, selected-range support, completed examples, and answer-key parity.
+* Standard Form keeps approved dense layouts while removing student response lines; students get clean blank writing space after the equals sign, and answer keys/examples place numerals in that same response area.
+* Skip Counting now supports structured rows, curved left-to-right jump arrows, printable progressive fade, visual toggle support, term-count control, missing-count control, beginning/end/random missing placement, seeded parity, completed examples, and aligned answer-key baselines.
+* Review proofs remain local QA artifacts under `review/` and are excluded from production commits.
+* Counts remain 103 / 103 ready resources working, 0 ready failures, 85 worksheets, 11 Quick Checks, and 7 Exit Tickets.

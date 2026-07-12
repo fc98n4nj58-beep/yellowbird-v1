@@ -1,6 +1,12 @@
 const worksheetCatalogService = require("./worksheetCatalogService");
 const { normalizeWorksheetContent } = require("../engine/worksheetBuilder/normalizeWorksheetContent");
 
+function finiteOptionalNumber(value) {
+  if (value === undefined || value === null || value === "") return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
+
 function buildCatalogWorksheetRuntime(id, query = {}) {
   const item = worksheetCatalogService.getWorksheetCatalogById(id);
 
@@ -37,8 +43,15 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         type: p.type || "equation",
         prompt: p.prompt || "",
         answer: p.answer,
+        value: finiteOptionalNumber(p.value),
         visual: p.visual || null,
-        isExample: Boolean(p.isExample)
+        isExample: Boolean(p.isExample),
+        sequence: Array.isArray(p.sequence) ? p.sequence : null,
+        missingIndex: finiteOptionalNumber(p.missingIndex),
+        missingIndexes: Array.isArray(p.missingIndexes)
+          ? p.missingIndexes.map(finiteOptionalNumber).filter((n) => n !== null)
+          : null,
+        step: finiteOptionalNumber(p.step)
       }))
     }
   };

@@ -56,16 +56,29 @@ function normalizeVisual(visual = {}) {
   return { kind, data };
 }
 
+function finiteOptionalNumber(value) {
+  if (value === undefined || value === null || value === "") return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
+
 function normalizeItem(item = {}, index = 0, meta = {}) {
   return {
     id: item.id ?? index + 1,
     type: item.type ?? "question",
     prompt: item.prompt ?? item.text ?? item.question ?? "",
     answer: item.answer ?? "",
+    value: finiteOptionalNumber(item.value),
     a: item.a,
     b: item.b,
     op: item.op,
     isExample: Boolean(item.isExample),
+    sequence: Array.isArray(item.sequence) ? item.sequence : null,
+    missingIndex: finiteOptionalNumber(item.missingIndex),
+    missingIndexes: Array.isArray(item.missingIndexes)
+      ? item.missingIndexes.map(finiteOptionalNumber).filter((n) => n !== null)
+      : null,
+    step: finiteOptionalNumber(item.step),
     visual: normalizeVisual(item.visual),
     meta: {
       grade: meta.grade ?? item.grade ?? null,

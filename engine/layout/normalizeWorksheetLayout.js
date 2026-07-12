@@ -8,6 +8,12 @@ function safeStr(v) {
   return (v ?? "").toString().trim();
 }
 
+function finiteOptionalNumber(value) {
+  if (value === undefined || value === null || value === "") return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
+
 function detectGradeBand(gradeLabel = "") {
   const raw = safeStr(gradeLabel).toLowerCase();
 
@@ -67,8 +73,15 @@ function normalizeProblem(problem, index, context) {
     gradeSpacingRule: context.gradeBand,
     visualPlacement: visualRule?.position || (visual ? "above_prompt" : "none"),
     answer: problem.answer,
+    value: finiteOptionalNumber(problem.value),
     type: problem.type || "equation",
-    id: problem.id ?? index + 1
+    id: problem.id ?? index + 1,
+    sequence: Array.isArray(problem.sequence) ? problem.sequence : null,
+    missingIndex: finiteOptionalNumber(problem.missingIndex),
+    missingIndexes: Array.isArray(problem.missingIndexes)
+      ? problem.missingIndexes.map(finiteOptionalNumber).filter((n) => n !== null)
+      : null,
+    step: finiteOptionalNumber(problem.step)
   };
 }
 

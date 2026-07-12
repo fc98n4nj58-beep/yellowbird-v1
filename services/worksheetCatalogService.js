@@ -118,11 +118,21 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     "tenFramesPerQuestion",
     "minTenFrames",
     "maxTenFrames",
-    "numberLineIntervals"
+    "numberLineIntervals",
+    "step",
+    "startNumber",
+    "sequenceLength",
+    "termCount",
+    "missingCount"
   ].forEach((key) => {
     const value = finiteNumber(normalized[key]);
     if (value !== null) normalized[key] = value;
   });
+
+  const missingPlacement = String(normalized.missingPlacement || "").trim().toLowerCase();
+  if (["beginning", "end", "random"].includes(missingPlacement)) {
+    normalized.missingPlacement = missingPlacement;
+  }
 
   const selectedNumbers = parseNumberList(
     normalized.selectedNumbers || normalized.onlyNumbers
@@ -136,6 +146,11 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
   normalized.includeExample = parseBoolean(
     normalized.includeExample ?? normalized.completedExample ?? normalized.example,
     false
+  );
+
+  normalized.showJumpVisuals = parseBoolean(
+    normalized.showJumpVisuals,
+    true
   );
 
   if (
@@ -263,6 +278,13 @@ function generateWorksheetFromCatalogId(id, options = {}) {
   }
 
   const generatorOptions = normalizeCatalogWorksheetOptions(item, options);
+  const activityType = item.activityTypes?.[0] || generatorOptions.preferredActivityType || generatorOptions.activityType || null;
+  const defaultQuestionCount =
+    activityType === "standard_form" && item.grades?.[0] === "grade2"
+      ? 60
+      : ["expanded_form", "standard_form"].includes(activityType)
+        ? 45
+        : null;
 
   return buildWorksheet(
     grade,
@@ -273,8 +295,10 @@ function generateWorksheetFromCatalogId(id, options = {}) {
     },
     {
       ...generatorOptions,
-      preferredActivityType: item.activityTypes?.[0] || generatorOptions.preferredActivityType || null,
-      activityType: item.activityTypes?.[0] || generatorOptions.activityType || null,
+      questionCount: generatorOptions.questionCount || defaultQuestionCount || generatorOptions.questionCount,
+      preferredActivityType: activityType,
+      activityType,
+      grade,
       worksheetId: item.id,
       worksheetTitle: item.title
     }
@@ -316,6 +340,24 @@ function buildRangeNotice(item, options = {}) {
  return "";
 }
 
+function buildStudentFacingInstruction(item, fallback = "") {
+ const activityType = item.activityTypes?.[0] || "";
+
+ if (activityType === "expanded_form") {
+  return "Write each numeral in expanded form.";
+ }
+
+ if (activityType === "standard_form") {
+  return "Write each number in standard form.";
+ }
+
+ if (activityType === "skip_counting") {
+  return "Write the missing numbers in each skip-counting pattern.";
+ }
+
+ return fallback;
+}
+
 function buildLayoutFromWorksheet(item, worksheet, options = {}) {
  const display = item.pdfDisplay && typeof item.pdfDisplay === "object"
   ? item.pdfDisplay
@@ -323,7 +365,10 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
  const subtitle = display.hideSubtitle ? "" : item.shortTitle || "";
  const normalizedOptions = normalizeCatalogWorksheetOptions(item, options);
  const rangeNotice = buildRangeNotice(item, normalizedOptions);
- let instructionText = item.studentInstruction || item.description || "";
+ let instructionText = buildStudentFacingInstruction(
+  item,
+  item.studentInstruction || item.description || ""
+ );
  const isReverseNumberWordMode = item.activityTypes?.[0] === "number_word_match" &&
   String(normalizedOptions.numberWordMode || normalizedOptions.mode || "").toLowerCase() === "word_to_numeral";
 
@@ -404,6 +449,99 @@ if (Number.isFinite(normalizedOptions.questionsPerPage) && normalizedOptions.que
   layout.template = {
     ...(layout.template || {}),
     maxProblemsPerPage: normalizedOptions.questionsPerPage
+  };
+}
+
+if (item.activityTypes?.[0] === "standard_form" && (item.resourceType || "worksheet") === "worksheet") {
+  const grade = item.grades?.[0] || "";
+  const isGrade2 = grade === "grade2";
+  const standardAnswerLineWidth = isGrade2
+    ? 46
+    : grade === "grade3"
+      ? 52
+      : 58;
+  layout.template = {
+    ...(layout.template || {}),
+    columns: isGrade2 ? 4 : 3,
+    maxProblemsPerPage: isGrade2 ? 60 : 45
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    denseGridRows: 15,
+    sequentialColumnFill: true,
+    standardShortAnswerTarget: true,
+    standardFormCompact: true,
+    standardAnswerLineWidth,
+    standardAnswerLineVisible: false
+  };
+}
+
+if (item.activityTypes?.[0] === "expanded_form" && (item.resourceType || "worksheet") === "worksheet") {
+  if (String(normalizedOptions.answerStyle || "") === "hundreds_tens_ones") {
+    layout.display = {
+      ...(layout.display || {}),
+      compactExpandedForm: false,
+      writingLine: false,
+      answerLineBelowPrompt: false
+    };
+  } else {
+    layout.template = {
+      ...(layout.template || {}),
+      columns: 3,
+      maxProblemsPerPage: 45
+    };
+    layout.display = {
+      ...(layout.display || {}),
+      denseGridRows: 15,
+      sequentialColumnFill: true,
+      compactExpandedForm: true,
+      writingLine: false,
+      answerLineBelowPrompt: false
+    };
+  }
+}
+
+if (
+  ["expanded_form", "standard_form"].includes(item.activityTypes?.[0]) &&
+  (item.resourceType || "worksheet") !== "worksheet"
+) {
+  const compactCount = Math.max(
+    1,
+    finiteNumber(normalizedOptions.questionCount) || worksheet.problems?.length || 6
+  );
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 1,
+    maxProblemsPerPage: compactCount
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    compactExpandedForm: false,
+    denseGridRows: compactCount,
+    sequentialColumnFill: true,
+    standardShortAnswerTarget: item.activityTypes?.[0] === "standard_form"
+  };
+}
+
+if (item.activityTypes?.[0] === "skip_counting") {
+  const termCount = Math.max(
+    3,
+    Math.min(15, finiteNumber(normalizedOptions.termCount ?? normalizedOptions.sequenceLength, 8) || 8)
+  );
+  const maxProblemsPerPage = termCount >= 13 ? 6 : termCount >= 9 ? 8 : 10;
+
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 1,
+    maxProblemsPerPage
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    denseGridRows: maxProblemsPerPage,
+    sequentialColumnFill: true,
+    skipCountingRow: true,
+    skipCountingArrows: normalizedOptions.showJumpVisuals !== false,
+    showJumpVisuals: normalizedOptions.showJumpVisuals !== false
   };
 }
 

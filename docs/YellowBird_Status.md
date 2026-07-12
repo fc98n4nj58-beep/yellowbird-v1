@@ -2031,3 +2031,12 @@ Founder review pause:
   * number-line label-mode options are still partially deferred
   * review PDFs/PNGs under `review/` remain local QA artifacts, not production source
 * Counts remain: 103 / 103 ready resources working, 0 ready failures, 85 worksheets, 11 Quick Checks, 7 Exit Tickets.
+
+### Place Value Forms + Skip Counting Founder Closeout
+
+* Expanded Form, Standard Form, and Skip Counting worksheet-family implementation is founder-approved and commit-ready pending Project Lead staged-file review.
+* Expanded Form now uses grade-aware ranges, shared value-pool generation, seeded variation, duplicate avoidance, selected-number/range support, compact rows, direct student instructions, completed examples, and answer-key geometry.
+* Standard Form now uses grade-aware ranges, shared value-pool generation, seeded variation, duplicate avoidance, direct student instructions, dense approved layouts, completed examples, answer-key parity, and clean blank response space after the equals sign with no student response line.
+* Skip Counting now uses structured sequence rows, curved left-to-right jump arrows, printable progressive fade, `showJumpVisuals`, `termCount`, `missingCount`, `missingPlacement`, seeded parity, completed examples, and answer-key baseline alignment.
+* Review proofs remain local QA artifacts under `review/` and should not be part of the production commit.
+* Counts remain: 103 / 103 ready resources working, 0 ready failures, 85 worksheets, 11 Quick Checks, 7 Exit Tickets.

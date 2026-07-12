@@ -272,6 +272,21 @@ Rules:
 - Keep Grade 4 compare-number worksheet held because the current range is too light.
 - Continue treating equivalent-fractions prompt variety, Grade 5/6 foundational framing, visual Quick Checks, decimal resources, and planned `pattern_word_problems` failures as active cautions/deferred work.
 
+## Decision: Place Value Forms + Skip Counting Founder Closeout
+
+Decision:
+Treat the Expanded Form, Standard Form, and Skip Counting worksheet-family implementation as founder-approved and ready for controlled production commit review.
+
+Reason:
+The family work standardizes recurring worksheet behavior at reusable generator, runtime, and renderer levels instead of one-off resource edits. It improves teacher-use quality while preserving the current 103-resource ready baseline.
+
+Rules:
+- Expanded Form and Standard Form use shared grade-aware value-pool generation with seeded variation, duplicate avoidance, selected-number support, selected-range support, completed examples, and answer-key parity.
+- Standard Form keeps the approved dense layouts and uses blank writing space after the equals sign with no student response line.
+- Skip Counting uses structured sequence rows, curved left-to-right arrows, printable progressive fade, visual toggle support, term-count and missing-value controls, beginning/end/random missing placement, seeded parity, completed examples, and aligned answer-key baselines.
+- Review artifacts under `review/` remain local QA proofs and should not be included in production commits.
+- Counts remain 103 / 103 ready resources working, 0 ready failures, 85 worksheets, 11 Quick Checks, and 7 Exit Tickets.
+
 ## Decision: Worksheet Preview/PDF Parity
 
 Worksheet previews should use the same PDF rendering path as downloads.

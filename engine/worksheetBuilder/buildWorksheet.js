@@ -185,6 +185,20 @@ function resolveDefaultQuestionCount(options = {}, preferredActivity = null) {
     return 60;
   }
 
+  if (preferredActivity === "standard_form") {
+    return options.grade === "grade2" || options.worksheetId === "g2_standard_form_to_100"
+      ? 60
+      : 45;
+  }
+
+  if (preferredActivity === "expanded_form") {
+    return 45;
+  }
+
+  if (preferredActivity === "skip_counting") {
+    return 10;
+  }
+
   const visualActivities = new Set([
     "ten_frame",
     "number_line_identify",
@@ -228,7 +242,7 @@ function buildWorksheet(grade, expectationCode, skillContext = null, options = {
     options.activityType ||
     null;
 
-  const questionCount = resolveDefaultQuestionCount(options, preferredActivity);
+  const questionCount = resolveDefaultQuestionCount({ ...options, grade }, preferredActivity);
 
   const activityList = pickActivitiesFromRecipe(
     recipe,

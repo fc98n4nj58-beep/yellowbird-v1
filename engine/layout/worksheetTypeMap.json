@@ -122,19 +122,54 @@
     "worksheetType": "skip_counting",
     "templateId": "equation_practice",
     "interactionType": "write_answer",
-    "instruction": "Complete the pattern."
+    "instruction": "Complete the pattern.",
+    "display": {
+      "skipCountingRow": true,
+      "skipCountingArrows": true,
+      "equalHeightItems": true,
+      "denseGridRows": 10,
+      "hideItemSeparators": true,
+      "sequentialColumnFill": true
+    },
+    "template": {
+      "columns": 1,
+      "maxProblemsPerPage": 10
+    }
   },
   "expanded_form": {
     "worksheetType": "expanded_form",
     "templateId": "representation",
     "interactionType": "convert_representation",
-    "instruction": "Write the matching form."
+    "instruction": "Write each number in expanded form.",
+    "display": {
+      "compactExpandedForm": true,
+      "equalHeightItems": true,
+      "denseGridRows": 15,
+      "hideItemSeparators": true,
+      "sequentialColumnFill": true
+    },
+    "template": {
+      "columns": 3,
+      "maxProblemsPerPage": 45
+    }
   },
   "standard_form": {
     "worksheetType": "standard_form",
     "templateId": "representation",
     "interactionType": "convert_representation",
-    "instruction": "Write the matching form."
+    "instruction": "Write each number in standard form.",
+    "display": {
+      "standardShortAnswerTarget": true,
+      "standardFormCompact": true,
+      "equalHeightItems": true,
+      "denseGridRows": 15,
+      "hideItemSeparators": true,
+      "sequentialColumnFill": true
+    },
+    "template": {
+      "columns": 3,
+      "maxProblemsPerPage": 45
+    }
   },
   "equation_match": {
     "worksheetType": "equation_match",

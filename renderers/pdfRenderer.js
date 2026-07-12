@@ -34,6 +34,11 @@ const VISUAL_LAYOUT = {
 
 function safeStr(v) { return (v ?? "").toString(); }
 function isEquation(item) { return item && item.type === "equation"; }
+function finiteOptionalNumber(value) {
+  if (value === undefined || value === null || value === "") return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
 
 function buildAnswerKeyItems(items) {
   return items.filter(isEquation).map((it) => ({
@@ -46,6 +51,13 @@ function buildAnswerKeyItems(items) {
     b: it.b,
     op: it.op,
     isExample: Boolean(it.isExample),
+    value: finiteOptionalNumber(it.value),
+    sequence: Array.isArray(it.sequence) ? it.sequence : null,
+    missingIndex: finiteOptionalNumber(it.missingIndex),
+    missingIndexes: Array.isArray(it.missingIndexes)
+      ? it.missingIndexes.map(finiteOptionalNumber).filter((n) => n !== null)
+      : null,
+    step: finiteOptionalNumber(it.step),
   }));
 }
 
@@ -79,7 +91,8 @@ function filledAnswerText(prompt, answer) {
 
 function standardizeShortBlanks(prompt, display = {}) {
   if (!display.standardShortAnswerTarget) return prompt;
-  return safeStr(prompt).replace(/_{2,}/g, "___");
+  const blankText = display.standardAnswerBlankText || "___";
+  return safeStr(prompt).replace(/_{2,}/g, blankText);
 }
 
 function clampCols(n) {
@@ -642,16 +655,58 @@ function drawShortAnswerLine(doc, x, y, width = 42) {
 
 function drawTextOnLine(doc, text, x, y, width, fonts = {}, options = {}) {
   doc.save();
-  setFont(doc, fonts.bold || fonts.regular || "Helvetica", 12);
+  const fontSize = Number(options.fontSize || 12);
+  setFont(doc, fonts.bold || fonts.regular || "Helvetica", fontSize);
   doc.fillColor(pdfDesignTokens.colors.text);
   const align = options.align || "center";
   const inset = align === "left" ? 4 : 0;
-  doc.text(formatAnswerValue(text), x + inset, y - 14, {
+  doc.text(formatAnswerValue(text), x + inset, y - fontSize - 2, {
     width: Math.max(20, width - inset * 2),
     align,
     lineBreak: false
   });
   doc.restore();
+}
+
+function drawTextInSequenceCell(doc, text, x, y, width, fonts = {}, options = {}) {
+  doc.save();
+  const fontSize = Number(options.fontSize || 12);
+  setFont(doc, fonts.bold || fonts.regular || "Helvetica", fontSize);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  doc.text(formatAnswerValue(text), x, y, {
+    width: Math.max(20, width),
+    align: "center",
+    lineBreak: false
+  });
+  doc.restore();
+}
+
+function drawFittedAnswerOnLine(doc, text, x, y, width, fonts = {}, options = {}) {
+  let answerText = formatAnswerValue(text);
+  const align = options.align || "left";
+  const minFontSize = Number(options.minFontSize || 8.5);
+  let fontSize = Number(options.fontSize || 12);
+
+  setFont(doc, fonts.bold || fonts.regular || "Helvetica", fontSize);
+  if (
+    options.compactOperators &&
+    doc.widthOfString(answerText) > width - 8
+  ) {
+    const compactText = String(answerText).replace(/\s*\+\s*/g, "+");
+    if (doc.widthOfString(compactText) <= doc.widthOfString(answerText)) {
+      answerText = compactText;
+    }
+  }
+
+  while (fontSize > minFontSize && doc.widthOfString(answerText) > width - 8) {
+    fontSize -= 0.5;
+    setFont(doc, fonts.bold || fonts.regular || "Helvetica", fontSize);
+  }
+
+  drawTextOnLine(doc, answerText, x, y, width, fonts, {
+    align,
+    fontSize
+  });
 }
 
 function restoreAnswerSurroundingTextStyle(doc, fonts = {}, size = 12) {
@@ -665,10 +720,14 @@ function splitAnswerParts(answer) {
     .map((part) => part.trim());
 }
 
-function drawInlineAnswerPrompt(doc, promptText, answers, x, y, width, fonts = {}) {
+function drawInlineAnswerPrompt(doc, promptText, answers, x, y, width, fonts = {}, display = {}) {
   const parts = String(promptText || "").split(/_{2,}/);
   const answerParts = Array.isArray(answers) ? answers : splitAnswerParts(answers);
-  const blankWidth = Math.max(24, doc.widthOfString("___") + 8);
+  const requestedBlankWidth = Number(display.standardAnswerLineWidth || 0);
+  const defaultBlankWidth = Math.max(24, doc.widthOfString(display.standardAnswerBlankText || "___") + 8);
+  const blankWidth = Math.max(defaultBlankWidth, requestedBlankWidth || 0);
+  const shouldDrawAnswers = display.inlineAnswerValues !== false;
+  const shouldDrawAnswerLine = display.standardAnswerLineVisible !== false;
   let cursorX = x;
 
   setFont(doc, fonts.regular || "Helvetica", 12);
@@ -688,13 +747,184 @@ function drawInlineAnswerPrompt(doc, promptText, answers, x, y, width, fonts = {
     if (index < parts.length - 1) {
       const answerText = answerParts[index] ?? answerParts[0] ?? "";
       const lineY = y + (layout.typography.body?.lineHeight || 14);
+      const safeBlankWidth = Math.max(24, Math.min(blankWidth, x + width - cursorX - 2));
 
-      drawShortAnswerLine(doc, cursorX, lineY, blankWidth);
-      drawTextOnLine(doc, answerText, cursorX, lineY, blankWidth, fonts);
-      restoreAnswerSurroundingTextStyle(doc, fonts, 12);
-      cursorX += blankWidth;
+      if (shouldDrawAnswerLine) {
+        drawShortAnswerLine(doc, cursorX, lineY, safeBlankWidth);
+      }
+      if (shouldDrawAnswers && answerText !== "") {
+        if (shouldDrawAnswerLine) {
+          drawTextOnLine(doc, answerText, cursorX, lineY, safeBlankWidth, fonts);
+        } else {
+          doc.save();
+          setFont(doc, fonts.bold || fonts.regular || "Helvetica", 12);
+          doc.fillColor(pdfDesignTokens.colors.text);
+          doc.text(answerText, cursorX, y, {
+            width: safeBlankWidth,
+            align: "center",
+            lineBreak: false
+          });
+          doc.restore();
+        }
+        restoreAnswerSurroundingTextStyle(doc, fonts, 12);
+      }
+      cursorX += safeBlankWidth;
     }
   });
+}
+
+function drawJumpArrow(doc, startX, endX, y, index, count) {
+  const ratio = count <= 1 ? 0 : index / (count - 1);
+  const gray = Math.round(35 + ratio * 95);
+  const hex = gray.toString(16).padStart(2, "0");
+  const color = `#${hex}${hex}${hex}`;
+  const jumpWidth = Math.max(1, endX - startX);
+  const gap = Math.min(8, jumpWidth * 0.18);
+  const arrowStartX = startX + gap;
+  const arrowEndX = endX - gap;
+  const peakY = y - 12;
+  const endY = y;
+  const control2X = arrowStartX + (arrowEndX - arrowStartX) * 0.75;
+  const control2Y = peakY;
+  const tangentX = arrowEndX - control2X;
+  const tangentY = endY - control2Y;
+  const angle = Math.atan2(tangentY, tangentX);
+  const head = 6;
+  const spread = Math.PI / 7;
+  const leftX = arrowEndX - head * Math.cos(angle - spread);
+  const leftY = endY - head * Math.sin(angle - spread);
+  const rightX = arrowEndX - head * Math.cos(angle + spread);
+  const rightY = endY - head * Math.sin(angle + spread);
+
+  doc.save();
+  doc.strokeColor(color);
+  doc.fillColor(color);
+  doc.lineWidth(Math.max(0.7, 1.15 - ratio * 0.25));
+  doc.moveTo(arrowStartX, endY)
+    .bezierCurveTo(
+      arrowStartX + (arrowEndX - arrowStartX) * 0.25,
+      peakY,
+      control2X,
+      control2Y,
+      arrowEndX,
+      endY
+    )
+    .stroke();
+  doc.moveTo(arrowEndX, endY)
+    .lineTo(leftX, leftY)
+    .lineTo(rightX, rightY)
+    .fill();
+  doc.restore();
+}
+
+function renderCompactExpandedFormRow(doc, question, x, y, width, fonts = {}, options = {}) {
+  const safeX = Number.isFinite(Number(x)) ? Number(x) : layout.page.contentBox.x;
+  const safeY = Number.isFinite(Number(y)) ? Number(y) : layout.page.contentBox.y;
+  const safeWidth = Number.isFinite(Number(width)) && Number(width) > 0
+    ? Number(width)
+    : layout.page.contentBox.width;
+  const numberWidth = 24;
+  const gutterWidth = 36;
+  const numeral = formatAnswerValue(question.value ?? question.prompt ?? "");
+  const measuredNumeralWidth = Number(doc.widthOfString(numeral));
+  const numeralWidth = Math.min(44, Math.max(28, (Number.isFinite(measuredNumeralWidth) ? measuredNumeralWidth : 28) + 6));
+  const lineX = safeX + gutterWidth + numeralWidth + 6;
+  const lineWidth = Math.max(44, safeWidth - gutterWidth - numeralWidth - 8);
+  const lineY = safeY + 15;
+
+  doc.text(`${question.id ?? ""})`.trim(), safeX, safeY + 2, {
+    width: numberWidth,
+    align: "left",
+    lineBreak: false
+  });
+  doc.text(numeral, safeX + gutterWidth, safeY + 2, {
+    width: numeralWidth,
+    align: "left",
+    lineBreak: false
+  });
+
+  drawShortAnswerLine(doc, lineX, lineY, lineWidth);
+
+  if ((options.answerKey || options.isExample) && question.answer != null) {
+    drawFittedAnswerOnLine(doc, question.answer, lineX, lineY, lineWidth, fonts, {
+      align: "left",
+      fontSize: 11,
+      minFontSize: 8.5,
+      compactOperators: true
+    });
+    restoreAnswerSurroundingTextStyle(doc, fonts, 12);
+  }
+
+  return Math.max(18, layout.typography.body?.lineHeight || 16);
+}
+
+function renderSkipCountingRow(doc, question, x, y, width, fonts = {}, options = {}) {
+  const sequence = Array.isArray(question.sequence) ? question.sequence : [];
+  if (!sequence.length) return 0;
+
+  const numberWidth = 28;
+  const labelWidth = 42;
+  const rowX = x + numberWidth + labelWidth;
+  const rowWidth = Math.max(120, width - numberWidth - labelWidth);
+  const itemCount = sequence.length;
+  const gap = itemCount >= 13 ? 2 : 4;
+  const cellWidth = Math.max(24, Math.min(58, (rowWidth - gap * (itemCount - 1)) / itemCount));
+  const cellHeight = options.skipCountingArrows ? 36 : 24;
+  const textY = y + (options.skipCountingArrows ? 15 : 3);
+  const arrowY = y + 10;
+  const lineY = textY + 19;
+  const missingIndexes = Array.isArray(question.missingIndexes) && question.missingIndexes.length
+    ? question.missingIndexes
+    : [
+        Number.isFinite(Number(question.missingIndex))
+          ? Number(question.missingIndex)
+          : itemCount - 1
+      ];
+  const missingSet = new Set(missingIndexes);
+  const answers = Array.isArray(question.answer) ? question.answer : [question.answer];
+
+  doc.text(`${question.id ?? ""})`.trim(), x, textY, {
+    width: numberWidth - 4,
+    align: "left",
+    lineBreak: false
+  });
+  doc.text(`By ${question.step || ""}:`, x + numberWidth, textY, {
+    width: labelWidth - 6,
+    align: "left",
+    lineBreak: false
+  });
+
+  if (options.skipCountingArrows) {
+    for (let index = 0; index < itemCount - 1; index += 1) {
+      const startX = rowX + index * (cellWidth + gap) + cellWidth / 2;
+      const endX = rowX + (index + 1) * (cellWidth + gap) + cellWidth / 2;
+      drawJumpArrow(doc, startX, endX, arrowY, index, itemCount - 1);
+    }
+  }
+
+  sequence.forEach((value, index) => {
+    const cellX = rowX + index * (cellWidth + gap);
+
+    if (missingSet.has(index)) {
+      drawShortAnswerLine(doc, cellX, lineY, cellWidth);
+      if ((options.answerKey || options.isExample) && answers.length) {
+        const answerIndex = missingIndexes.indexOf(index);
+        drawTextInSequenceCell(doc, answers[answerIndex] ?? answers[0], cellX, textY, cellWidth, fonts, {
+          fontSize: cellWidth < 30 ? 10 : 12
+        });
+        restoreAnswerSurroundingTextStyle(doc, fonts, 12);
+      }
+      return;
+    }
+
+    doc.text(formatAnswerValue(value), cellX, textY, {
+      width: cellWidth,
+      align: "center",
+      lineBreak: false
+    });
+  });
+
+  return cellHeight;
 }
 
 function drawWorkSpace(doc, x, y, width, lineCount = 2) {
@@ -796,7 +1026,8 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
     !display.workSpaceBox &&
     !display.writingLine &&
     !display.standardShortAnswerTarget &&
-    !display.factFamilyGrid
+    !display.factFamilyGrid &&
+    !display.skipCountingRow
     ? filledAnswerText(question.prompt || question.text || "", question.answer)
     : question.prompt || question.text || "";
   const rawPrompt = standardizeShortBlanks(rawPromptBase, display);
@@ -854,8 +1085,46 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
     return Math.max(gridHeight, layout.typography.body?.lineHeight || 16);
   }
 
+  if (display.skipCountingRow && !visual?.kind && Array.isArray(question.sequence)) {
+    const rowHeight = renderSkipCountingRow(
+      doc,
+      question,
+      promptX,
+      promptY,
+      promptWidth,
+      fonts,
+      {
+        answerKey: Boolean(display.answerKey),
+        isExample,
+        skipCountingArrows: Boolean(display.skipCountingArrows)
+      }
+    );
+
+    return Math.max(rowHeight, layout.typography.body?.lineHeight || 16);
+  }
+
+  if (display.compactExpandedForm && !visual?.kind) {
+    const rowHeight = renderCompactExpandedFormRow(
+      doc,
+      question,
+      promptX,
+      promptY,
+      promptWidth,
+      fonts,
+      {
+        answerKey: Boolean(display.answerKey),
+        isExample
+      }
+    );
+
+    return Math.max(rowHeight, layout.typography.body?.lineHeight || 16);
+  }
+
   if (!visual?.kind && display.writingLine) {
-    const lineY = promptY + (layout.typography.body?.lineHeight || 16);
+    const lineHeight = layout.typography.body?.lineHeight || 16;
+    const lineY = display.answerLineBelowPrompt
+      ? promptY + promptHeight + 18
+      : promptY + lineHeight;
     const lineWidth = display.shortWritingLine
       ? Number(display.reverseNumberWordLineWidth || 46)
       : null;
@@ -870,7 +1139,9 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
       ? x + numberWidth + promptZoneWidth + 6
       : display.shortWritingLine
         ? x + width - lineWidth
-        : x + Math.min(88, width * 0.18);
+        : display.answerLineBelowPrompt
+          ? x + numberWidth
+          : x + Math.min(88, width * 0.18);
     const lineEndX = display.shortWritingLine
       ? lineStartX + lineWidth
       : x + width;
@@ -924,10 +1195,13 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
     }
     doc.restore();
 
-    return Math.max(promptHeight, layout.typography.body?.lineHeight || 16);
+    return Math.max(
+      display.answerLineBelowPrompt ? promptHeight + 28 : promptHeight,
+      lineHeight
+    );
   }
 
-  if ((display.answerKey || isExample) && question.answer != null && hasInlineAnswerBlank) {
+  if (!visual?.kind && display.standardShortAnswerTarget && hasInlineAnswerBlank) {
     drawInlineAnswerPrompt(
       doc,
       promptText,
@@ -935,7 +1209,22 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
       promptX,
       promptY,
       promptWidth,
-      fonts
+      fonts,
+      {
+        ...display,
+        inlineAnswerValues: Boolean(display.answerKey || isExample)
+      }
+    );
+  } else if ((display.answerKey || isExample) && question.answer != null && hasInlineAnswerBlank) {
+    drawInlineAnswerPrompt(
+      doc,
+      promptText,
+      question.answer,
+      promptX,
+      promptY,
+      promptWidth,
+      fonts,
+      display
     );
   } else {
     doc.text(promptText, promptX, promptY, {
@@ -1612,7 +1901,9 @@ function renderAnswerKey(doc, fonts, contentObject, options, pageState, layoutOb
         worksheetType === "word_problem" ||
         layoutObject?.display?.writingLine ||
         layoutObject?.display?.standardShortAnswerTarget ||
-        layoutObject?.display?.factFamilyGrid
+        layoutObject?.display?.factFamilyGrid ||
+        layoutObject?.display?.compactExpandedForm ||
+        layoutObject?.display?.skipCountingRow
         ? it.prompt
         : filledAnswerText(it.prompt, ans)
     };
