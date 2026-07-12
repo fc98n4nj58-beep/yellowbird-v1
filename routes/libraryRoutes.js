@@ -8,6 +8,13 @@ const {
   getAvailableFilters
 } = require("../services/resourceLibraryService");
 const { getWorksheetCatalogById } = require("../services/worksheetCatalogService");
+const {
+  variables,
+  getCustomizationFamilyForResource
+} = require("../config/worksheetCustomization");
+const {
+  normalizeWorksheetCustomization
+} = require("../services/worksheetCustomizationService");
 
 function escapeHtml(value = "") {
   return String(value)
@@ -16,6 +23,10 @@ function escapeHtml(value = "") {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+function safeJson(value) {
+  return JSON.stringify(value).replace(/</g, "\\u003c");
 }
 
 function renderBadge(text) {
@@ -334,7 +345,7 @@ function renderResourceDetailPage(resource, relatedResources = []) {
           </ul>
         </div>
 
-        <div class="card" style="margin-top:18px;">
+        <div class="card">
           <div class="section-title">Curriculum alignment</div>
           <div class="resource-meta-stack">
             <div><strong>Jurisdiction:</strong> ${escapeHtml(alignment.jurisdiction || "Ontario")}</div>
@@ -347,7 +358,7 @@ function renderResourceDetailPage(resource, relatedResources = []) {
           </div>
         </div>
 
-        <div class="card" style="margin-top:18px;">
+        <div class="card">
           <div class="section-title">Resource details</div>
           <div class="resource-meta-stack">
             <div><strong>Prep:</strong> ${escapeHtml(resource.prepTime || "—")}</div>
@@ -392,8 +403,780 @@ function worksheetPdfUrl(id) {
   return `/api/catalog-pdf/${encodeURIComponent(id)}?disposition=inline`;
 }
 
+const PUBLIC_CONTROL_STATUSES = new Set([
+  "public",
+  "public_prototype",
+  "approved",
+  "approved_public"
+]);
+
+const CUSTOMIZATION_CONTROL_ORDER = [
+  "questionCount",
+  "minimumValue",
+  "maximumValue",
+  "selectedValues",
+  "includeExample",
+  "includeAnswerKey",
+  "questionsPerPage"
+];
+
+function isPublicCustomizationControl(control = {}, variable = {}) {
+  return PUBLIC_CONTROL_STATUSES.has(control.publicStatus) &&
+    variable.publicClassification !== "internal";
+}
+
+function buildWorksheetCustomizationModel(item) {
+  const family = getCustomizationFamilyForResource(item.id);
+  if (!family) return null;
+
+  const defaults = normalizeWorksheetCustomization(item.id, {});
+  if (!defaults.ok) return null;
+
+  const resourceDeclaration = family.resources?.[item.id] || {};
+  const controls = CUSTOMIZATION_CONTROL_ORDER
+    .filter((id) => family.controls?.[id] && variables[id])
+    .filter((id) => isPublicCustomizationControl(family.controls[id], variables[id]))
+    .map((id) => ({
+      id,
+      label: variables[id].label,
+      type: variables[id].type,
+      group: variables[id].group,
+      min: family.controls[id].min,
+      max: family.controls[id].max,
+      allowedValues: family.controls[id].allowedValues || null,
+      semantics: family.controls[id].semantics || null
+    }));
+
+  if (!controls.length) return null;
+
+  return {
+    resourceId: item.id,
+    familyId: family.id,
+    label: family.label,
+    defaults: defaults.normalizedOptions,
+    optionHash: defaults.optionHash,
+    suggestedRange: resourceDeclaration.suggestedRange || null,
+    safeRange: resourceDeclaration.safeRange || null,
+    controls,
+    notices: {
+      customRange: resourceDeclaration.notices?.customRange ||
+        "You are using numbers beyond this worksheet's suggested range."
+    },
+    endpoints: {
+      preview: `/api/catalog-preview/${encodeURIComponent(item.id)}`,
+      pdf: `/api/catalog-pdf/${encodeURIComponent(item.id)}`
+    }
+  };
+}
+
+function renderWorksheetPreviewObject(id) {
+  const pdfUrl = worksheetPdfUrl(id);
+
+  return `
+    <div class="detail-pdf-shell" id="ybPdfShell">
+      <object
+        id="ybPdfObject"
+        class="detail-pdf-viewer"
+        data="${escapeHtml(pdfUrl)}#toolbar=1&navpanes=0&view=FitH"
+        type="application/pdf"
+        aria-label="Worksheet PDF preview"
+      >
+        <iframe
+          id="ybPdfFrame"
+          class="detail-pdf-viewer"
+          src="${escapeHtml(pdfUrl)}#toolbar=1&navpanes=0&view=FitH"
+          title="Worksheet PDF preview"
+        ></iframe>
+        <div class="resource-preview-empty">
+          <div class="preview-empty-title">Preview could not load inline</div>
+          <div class="preview-empty-copy">
+            <a href="${escapeHtml(pdfUrl)}" target="_blank" rel="noopener noreferrer">Open the worksheet PDF preview</a>.
+          </div>
+        </div>
+      </object>
+    </div>
+  `;
+}
+
+function renderCustomizationPanel(model) {
+  if (!model) return "";
+
+  const defaults = model.defaults;
+  const questionControl = model.controls.find((control) => control.id === "questionCount") || {};
+  const minControl = model.controls.find((control) => control.id === "minimumValue") || {};
+  const maxControl = model.controls.find((control) => control.id === "maximumValue") || {};
+  const suggested = model.suggestedRange || { minimumValue: 0, maximumValue: 20 };
+  const safe = model.safeRange || suggested;
+
+  return `
+    <section class="customization-card card" id="ybCustomizationPanel" hidden aria-labelledby="ybCustomizationTitle">
+      <div class="customization-card-header">
+        <div>
+          <div class="section-title" id="ybCustomizationTitle">Customize this worksheet</div>
+          <p class="customization-help">Choose a few teacher settings, then update the preview before downloading.</p>
+        </div>
+      </div>
+
+      <div class="customization-error-summary" id="ybErrorSummary" role="alert" tabindex="-1" hidden></div>
+      <div class="customization-notice" id="ybRangeNotice" hidden>
+        You are using numbers beyond this worksheet’s suggested range.
+      </div>
+      <div class="customization-notice" id="ybSelectionNotice" hidden></div>
+
+      <form id="ybCustomizationForm" novalidate>
+        <fieldset class="customization-fieldset">
+          <legend>Practice settings</legend>
+          <div class="control-row">
+            <label class="field-label" for="ybQuestionCount">Number of questions</label>
+            <div class="control-cell">
+              <input
+                id="ybQuestionCount"
+                name="questionCount"
+                type="number"
+                min="${escapeHtml(questionControl.min ?? 1)}"
+                max="${escapeHtml(questionControl.max ?? 180)}"
+                step="1"
+                value="${escapeHtml(defaults.questionCount)}"
+                aria-describedby="ybQuestionCountHelp ybQuestionCountError"
+              />
+              <div class="field-help" id="ybQuestionCountHelp">Student questions. A completed example is additional.</div>
+              <div class="field-error" id="ybQuestionCountError"></div>
+            </div>
+          </div>
+
+          <fieldset class="inline-choice-fieldset" aria-describedby="ybRangeHelp">
+            <legend>Number range</legend>
+            <div class="field-help" id="ybRangeHelp">Suggested for this worksheet: ${escapeHtml(suggested.minimumValue)}–${escapeHtml(suggested.maximumValue)}</div>
+            <label class="radio-row">
+              <input type="radio" name="rangeMode" value="suggested" checked />
+              <span>Use suggested range</span>
+            </label>
+            <label class="radio-row">
+              <input type="radio" name="rangeMode" value="custom" />
+              <span>Choose a custom range</span>
+            </label>
+          </fieldset>
+
+          <div id="ybCustomRangeFields">
+            <div class="control-row">
+              <label class="field-label" for="ybMinimumValue">Lowest number</label>
+              <div class="control-cell">
+                <input
+                  id="ybMinimumValue"
+                  name="minimumValue"
+                  type="number"
+                  min="${escapeHtml(minControl.min ?? safe.minimumValue)}"
+                  max="${escapeHtml(minControl.max ?? safe.maximumValue)}"
+                  step="1"
+                  value="${escapeHtml(defaults.minimumValue)}"
+                  aria-describedby="ybMinimumValueError"
+                />
+                <div class="field-error" id="ybMinimumValueError"></div>
+              </div>
+            </div>
+            <div class="control-row">
+              <label class="field-label" for="ybMaximumValue">Highest number</label>
+              <div class="control-cell">
+                <input
+                  id="ybMaximumValue"
+                  name="maximumValue"
+                  type="number"
+                  min="${escapeHtml(maxControl.min ?? safe.minimumValue)}"
+                  max="${escapeHtml(maxControl.max ?? safe.maximumValue)}"
+                  step="1"
+                  value="${escapeHtml(defaults.maximumValue)}"
+                  aria-describedby="ybMaximumValueError"
+                />
+                <div class="field-error" id="ybMaximumValueError"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="control-row">
+            <label class="field-label" id="ybSelectedValuesLabel" for="ybSelectedValuesButton">Numbers to practise</label>
+            <div class="control-cell">
+              <div class="number-selector" id="ybSelectedValues">
+                <button
+                  class="number-selector-button"
+                  id="ybSelectedValuesButton"
+                  type="button"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  aria-controls="ybSelectedValuesPanel"
+                  aria-labelledby="ybSelectedValuesLabel ybSelectedValuesSummary"
+                  aria-describedby="ybSelectedValuesHelp ybSelectedValuesError"
+                >
+                  <span id="ybSelectedValuesSummary">Choose numbers…</span>
+                </button>
+                <div class="number-selector-panel" id="ybSelectedValuesPanel" hidden>
+                  <div class="number-selector-list" id="ybSelectedValuesList" role="group" aria-labelledby="ybSelectedValuesLabel"></div>
+                </div>
+              </div>
+              <div class="field-help" id="ybSelectedValuesHelp">These numbers will appear more often.</div>
+              <div class="field-error" id="ybSelectedValuesError"></div>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="customization-fieldset">
+          <legend>Student support</legend>
+          <label class="checkbox-row" for="ybIncludeExample">
+            <input id="ybIncludeExample" name="includeExample" type="checkbox" />
+            <span>
+              <strong>Show one completed example</strong>
+              <small>Added before the student questions.</small>
+            </span>
+          </label>
+          <div class="field-error" id="ybIncludeExampleError"></div>
+        </fieldset>
+
+        <fieldset class="customization-fieldset">
+          <legend>Answer key and download</legend>
+          <label class="checkbox-row" for="ybIncludeAnswerKey">
+            <input id="ybIncludeAnswerKey" name="includeAnswerKey" type="checkbox" checked />
+            <span><strong>Include answer key</strong></span>
+          </label>
+          <div class="field-error" id="ybIncludeAnswerKeyError"></div>
+        </fieldset>
+
+        <div class="customization-actions">
+          <button class="btn primary" id="ybUpdatePreviewBtn" type="submit">Update preview</button>
+          <button class="btn" id="ybRestoreBtn" type="button">Restore recommended settings</button>
+        </div>
+      </form>
+    </section>
+  `;
+}
+
+function renderCustomizationScript(model) {
+  return `
+    <script>
+      window.YELLOW_BIRD_CUSTOMIZATION = ${safeJson(model)};
+
+      (function () {
+        const model = window.YELLOW_BIRD_CUSTOMIZATION;
+        const form = document.getElementById("ybCustomizationForm");
+        const panel = document.getElementById("ybCustomizationPanel");
+        const toggle = document.getElementById("ybCustomizeToggle");
+        const updateBtn = document.getElementById("ybUpdatePreviewBtn");
+        const restoreBtn = document.getElementById("ybRestoreBtn");
+        const downloadBtn = document.getElementById("ybDownloadBtn");
+        const downloadNote = document.getElementById("ybDownloadNote");
+        const previewState = document.getElementById("ybPreviewStateLabel");
+        const previewCopy = document.getElementById("ybPreviewCopy");
+        const summary = document.getElementById("ybCustomizationSummary");
+        const errorSummary = document.getElementById("ybErrorSummary");
+        const rangeNotice = document.getElementById("ybRangeNotice");
+        const selectionNotice = document.getElementById("ybSelectionNotice");
+        const pdfObject = document.getElementById("ybPdfObject");
+        const pdfFrame = document.getElementById("ybPdfFrame");
+        const selectedValues = document.getElementById("ybSelectedValues");
+        const selectedButton = document.getElementById("ybSelectedValuesButton");
+        const selectedPanel = document.getElementById("ybSelectedValuesPanel");
+        const selectedList = document.getElementById("ybSelectedValuesList");
+        const selectedSummary = document.getElementById("ybSelectedValuesSummary");
+        const live = document.createElement("div");
+
+        if (!model || !form || !panel || !toggle) return;
+
+        live.className = "sr-only";
+        live.setAttribute("aria-live", "polite");
+        live.setAttribute("aria-atomic", "true");
+        document.body.appendChild(live);
+
+        const defaults = normalizeSettings(model.defaults);
+        let selectedValueSet = new Set(defaults.selectedValues);
+        let lastCustomRange = {
+          minimumValue: defaults.minimumValue,
+          maximumValue: defaults.maximumValue
+        };
+        let lastSuccessful = {
+          settings: { ...defaults },
+          optionHash: model.optionHash,
+          mode: "ready",
+          downloadUrl: buildPdfUrl(defaults, "attachment"),
+          previewUrl: buildPdfUrl(defaults, "inline")
+        };
+
+        function normalizeSettings(settings) {
+          return {
+            questionCount: Number(settings.questionCount),
+            minimumValue: Number(settings.minimumValue),
+            maximumValue: Number(settings.maximumValue),
+            selectedValues: Array.isArray(settings.selectedValues)
+              ? settings.selectedValues.map(Number).filter(Number.isFinite).sort((a, b) => a - b)
+              : [],
+            includeExample: Boolean(settings.includeExample),
+            includeAnswerKey: settings.includeAnswerKey !== false,
+            worksheetSeed: settings.worksheetSeed || "yellowbird-default"
+          };
+        }
+
+        function stableSettings(settings) {
+          const normalized = normalizeSettings(settings);
+          return JSON.stringify({
+            questionCount: normalized.questionCount,
+            minimumValue: normalized.minimumValue,
+            maximumValue: normalized.maximumValue,
+            selectedValues: normalized.selectedValues,
+            includeExample: normalized.includeExample,
+            includeAnswerKey: normalized.includeAnswerKey,
+            worksheetSeed: normalized.worksheetSeed
+          });
+        }
+
+        function settingsEqual(a, b) {
+          return stableSettings(a) === stableSettings(b);
+        }
+
+        function buildParams(settings, disposition) {
+          const params = new URLSearchParams();
+          params.set("questionCount", String(settings.questionCount));
+          params.set("minimumValue", String(settings.minimumValue));
+          params.set("maximumValue", String(settings.maximumValue));
+          params.set("includeExample", settings.includeExample ? "true" : "false");
+          params.set("includeAnswerKey", settings.includeAnswerKey ? "true" : "false");
+          params.set("answers", settings.includeAnswerKey ? "1" : "0");
+          params.set("worksheetSeed", settings.worksheetSeed || "yellowbird-default");
+          if (settings.selectedValues.length) {
+            params.set("selectedValues", settings.selectedValues.join(","));
+          }
+          if (disposition) params.set("disposition", disposition);
+          return params;
+        }
+
+        function buildPreviewJsonUrl(settings) {
+          return model.endpoints.preview + "?" + buildParams(settings).toString();
+        }
+
+        function buildPdfUrl(settings, disposition) {
+          return model.endpoints.pdf + "?" + buildParams(settings, disposition).toString();
+        }
+
+        function currentRangeMode() {
+          return form.elements.rangeMode.value;
+        }
+
+        function suggestedRange() {
+          return {
+            minimumValue: Number(model.suggestedRange.minimumValue),
+            maximumValue: Number(model.suggestedRange.maximumValue)
+          };
+        }
+
+        function visibleRangeValues() {
+          return {
+            minimumValue: Number(form.elements.minimumValue.value),
+            maximumValue: Number(form.elements.maximumValue.value)
+          };
+        }
+
+        function storeCustomRangeIfValid() {
+          const values = visibleRangeValues();
+          if (
+            Number.isFinite(values.minimumValue) &&
+            Number.isFinite(values.maximumValue) &&
+            values.minimumValue <= values.maximumValue
+          ) {
+            lastCustomRange = values;
+          }
+        }
+
+        function readSettings() {
+          const rangeMode = currentRangeMode();
+          const min = rangeMode === "suggested"
+            ? model.suggestedRange.minimumValue
+            : Number(form.elements.minimumValue.value);
+          const max = rangeMode === "suggested"
+            ? model.suggestedRange.maximumValue
+            : Number(form.elements.maximumValue.value);
+
+          return normalizeSettings({
+            questionCount: Number(form.elements.questionCount.value),
+            minimumValue: min,
+            maximumValue: max,
+            selectedValues: Array.from(selectedValueSet),
+            includeExample: form.elements.includeExample.checked,
+            includeAnswerKey: form.elements.includeAnswerKey.checked,
+            worksheetSeed: defaults.worksheetSeed
+          });
+        }
+
+        function setRangeMode(mode, options = {}) {
+          const radio = Array.from(form.elements.rangeMode).find((item) => item.value === mode);
+          if (radio) radio.checked = true;
+          const suggested = suggestedRange();
+
+          if (mode === "suggested") {
+            if (options.storeCustom !== false) storeCustomRangeIfValid();
+            form.elements.minimumValue.value = String(suggested.minimumValue);
+            form.elements.maximumValue.value = String(suggested.maximumValue);
+            form.elements.minimumValue.disabled = true;
+            form.elements.maximumValue.disabled = true;
+          } else {
+            form.elements.minimumValue.disabled = false;
+            form.elements.maximumValue.disabled = false;
+            form.elements.minimumValue.value = String(lastCustomRange.minimumValue);
+            form.elements.maximumValue.value = String(lastCustomRange.maximumValue);
+          }
+        }
+
+        function writeSettings(settings) {
+          const normalized = normalizeSettings(settings);
+          form.elements.questionCount.value = String(normalized.questionCount);
+          form.elements.minimumValue.value = String(normalized.minimumValue);
+          form.elements.maximumValue.value = String(normalized.maximumValue);
+          form.elements.includeExample.checked = normalized.includeExample;
+          form.elements.includeAnswerKey.checked = normalized.includeAnswerKey;
+
+          const isSuggested =
+            normalized.minimumValue === model.suggestedRange.minimumValue &&
+            normalized.maximumValue === model.suggestedRange.maximumValue;
+          if (!isSuggested) {
+            lastCustomRange = {
+              minimumValue: normalized.minimumValue,
+              maximumValue: normalized.maximumValue
+            };
+          }
+          selectedValueSet = new Set(normalized.selectedValues);
+          setRangeMode(isSuggested ? "suggested" : "custom", { storeCustom: false });
+          refreshSelectedOptions(normalized.selectedValues);
+        }
+
+        function refreshSelectedOptions(valuesToKeep) {
+          const settings = readSettingsWithoutSelected();
+          const min = Number(settings.minimumValue);
+          const max = Number(settings.maximumValue);
+          const keep = valuesToKeep ? new Set(valuesToKeep.map(Number)) : null;
+          const selected = keep || selectedValueSet;
+          const removed = [];
+
+          selectedList.innerHTML = "";
+          for (let value = min; value <= max; value += 1) {
+            const label = document.createElement("label");
+            label.className = "number-selector-option";
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.value = String(value);
+            checkbox.checked = selected.has(value);
+            const text = document.createElement("span");
+            text.textContent = String(value);
+            label.appendChild(checkbox);
+            label.appendChild(text);
+            selectedList.appendChild(label);
+          }
+
+          selected.forEach((value) => {
+            if (value < min || value > max) removed.push(value);
+          });
+
+          selectedValueSet = new Set(
+            Array.from(selected).filter((value) => value >= min && value <= max)
+          );
+          updateSelectedSummary();
+
+          if (removed.length) {
+            selectionNotice.hidden = false;
+            selectionNotice.textContent = "Numbers outside the active range were removed: " + removed.join(", ") + ".";
+          } else {
+            selectionNotice.hidden = true;
+            selectionNotice.textContent = "";
+          }
+        }
+
+        function readSettingsWithoutSelected() {
+          const rangeMode = currentRangeMode();
+          return {
+            minimumValue: rangeMode === "suggested"
+              ? model.suggestedRange.minimumValue
+              : Number(form.elements.minimumValue.value),
+            maximumValue: rangeMode === "suggested"
+              ? model.suggestedRange.maximumValue
+              : Number(form.elements.maximumValue.value)
+          };
+        }
+
+        function updateSelectedSummary() {
+          const values = Array.from(selectedValueSet).sort((a, b) => a - b);
+          if (!values.length) {
+            selectedSummary.textContent = "Choose numbers…";
+            return;
+          }
+          selectedSummary.textContent = values.length <= 4
+            ? values.join(", ")
+            : values.slice(0, 4).join(", ") + " +" + (values.length - 4) + " more";
+        }
+
+        function setSelectorOpen(open) {
+          selectedPanel.hidden = !open;
+          selectedButton.setAttribute("aria-expanded", String(open));
+        }
+
+        function clearErrors() {
+          errorSummary.hidden = true;
+          errorSummary.innerHTML = "";
+          ["questionCount", "minimumValue", "maximumValue", "selectedValues", "includeExample", "includeAnswerKey"].forEach((field) => {
+            const error = document.getElementById("yb" + field.charAt(0).toUpperCase() + field.slice(1) + "Error");
+            if (error) error.textContent = "";
+          });
+          Array.from(form.querySelectorAll("[aria-invalid='true']")).forEach((input) => {
+            input.removeAttribute("aria-invalid");
+          });
+        }
+
+        function fieldElementFor(field) {
+          const map = {
+            questionCount: form.elements.questionCount,
+            minimumValue: form.elements.minimumValue,
+            maximumValue: form.elements.maximumValue,
+            selectedValues: selectedButton,
+            includeExample: form.elements.includeExample,
+            includeAnswerKey: form.elements.includeAnswerKey,
+            unsupportedOptions: form
+          };
+          return map[field] || form.elements[field] || form;
+        }
+
+        function errorElementFor(field) {
+          const map = {
+            unsupportedOptions: "ybErrorSummary"
+          };
+          return document.getElementById(map[field] || ("yb" + field.charAt(0).toUpperCase() + field.slice(1) + "Error"));
+        }
+
+        function showErrors(errors) {
+          clearErrors();
+          const safeErrors = (errors || []).filter(Boolean);
+          if (!safeErrors.length) return;
+
+          errorSummary.hidden = false;
+          errorSummary.innerHTML = "<strong>Check these settings:</strong><ul>" +
+            safeErrors.map((error) => "<li>" + escapeHtml(error.message || "This setting needs attention.") + "</li>").join("") +
+            "</ul>";
+
+          safeErrors.forEach((error) => {
+            const field = error.field || "unsupportedOptions";
+            const input = fieldElementFor(field);
+            const target = errorElementFor(field);
+            if (target && target !== errorSummary) target.textContent = error.message || "This setting needs attention.";
+            if (input && input.setAttribute) input.setAttribute("aria-invalid", "true");
+          });
+        }
+
+        function escapeHtml(value) {
+          return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+        }
+
+        function updateRangeNotice(settings) {
+          const suggestedMax = Number(model.suggestedRange.maximumValue);
+          rangeNotice.hidden = !(Number(settings.maximumValue) > suggestedMax);
+        }
+
+        function setPreviewState(state, message) {
+          const labels = {
+            ready: "Ready-to-use worksheet",
+            stale: "Preview not updated",
+            updating: "Updating preview…",
+            customized: "Customized preview",
+            validation: "Preview not updated",
+            generationError: "We could not update this preview"
+          };
+          const copy = {
+            ready: "The approved worksheet is ready to preview, download, and print.",
+            stale: "Your selections have changed. Update the preview before downloading.",
+            updating: "Keeping the previous preview visible while the new preview is generated.",
+            customized: "Preview updated to match your selections.",
+            validation: "Your selections need attention. Update the preview before downloading.",
+            generationError: "Your selections are still here. Try updating the preview again."
+          };
+          previewState.textContent = labels[state] || labels.ready;
+          previewCopy.textContent = message || copy[state] || copy.ready;
+          previewState.dataset.state = state;
+          live.textContent = labels[state] || "";
+        }
+
+        function setDownloadEnabled(enabled, label) {
+          downloadBtn.toggleAttribute("aria-disabled", !enabled);
+          downloadBtn.classList.toggle("disabled", !enabled);
+          downloadBtn.textContent = label || downloadBtn.textContent;
+          downloadNote.hidden = enabled;
+        }
+
+        function summarize(settings) {
+          const parts = [
+            settings.questionCount + " student questions",
+            settings.minimumValue === model.suggestedRange.minimumValue && settings.maximumValue === model.suggestedRange.maximumValue
+              ? "Numbers " + settings.minimumValue + "–" + settings.maximumValue
+              : "Custom range " + settings.minimumValue + "–" + settings.maximumValue,
+            settings.selectedValues.length
+              ? "Practising " + settings.selectedValues.join(" and ")
+              : "",
+            settings.includeExample ? "Completed example on" : "Completed example off",
+            settings.includeAnswerKey ? "Answer key included" : "Answer key off"
+          ].filter(Boolean);
+          return parts.join(" · ");
+        }
+
+        function applyStaleState() {
+          const settings = readSettings();
+          updateRangeNotice(settings);
+          const stale = !settingsEqual(settings, lastSuccessful.settings);
+          if (stale) {
+            setPreviewState("stale");
+            setDownloadEnabled(false, lastSuccessful.mode === "customized" ? "Download customized PDF" : "Download worksheet PDF");
+          } else {
+            setPreviewState(lastSuccessful.mode);
+            setDownloadEnabled(true, lastSuccessful.mode === "customized" ? "Download customized PDF" : "Download worksheet PDF");
+            downloadBtn.href = lastSuccessful.downloadUrl;
+          }
+        }
+
+        async function updatePreview(event) {
+          event.preventDefault();
+          clearErrors();
+          const settings = readSettings();
+          updateRangeNotice(settings);
+          setPreviewState("updating");
+          setDownloadEnabled(false, lastSuccessful.mode === "customized" ? "Download customized PDF" : "Download worksheet PDF");
+          updateBtn.disabled = true;
+
+          try {
+            const response = await fetch(buildPreviewJsonUrl(settings), {
+              headers: { "Accept": "application/json" }
+            });
+            const data = await response.json();
+
+            if (!response.ok || !data.ok) {
+              const errors = data.customization?.errors || [{ message: data.error || "We could not update this preview." }];
+              showErrors(errors);
+              setPreviewState(response.status === 400 ? "validation" : "generationError");
+              return;
+            }
+
+            const normalized = normalizeSettings(data.customization?.normalizedOptions || settings);
+            lastSuccessful = {
+              settings: normalized,
+              optionHash: data.customization?.optionHash || "",
+              mode: settingsEqual(normalized, defaults) ? "ready" : "customized",
+              downloadUrl: buildPdfUrl(normalized, "attachment"),
+              previewUrl: buildPdfUrl(normalized, "inline")
+            };
+
+            pdfObject.data = lastSuccessful.previewUrl + "#toolbar=1&navpanes=0&view=FitH";
+            pdfFrame.src = lastSuccessful.previewUrl + "#toolbar=1&navpanes=0&view=FitH";
+            downloadBtn.href = lastSuccessful.downloadUrl;
+            summary.hidden = false;
+            summary.textContent = summarize(normalized);
+            setPreviewState(lastSuccessful.mode);
+            setDownloadEnabled(true, lastSuccessful.mode === "customized" ? "Download customized PDF" : "Download worksheet PDF");
+          } catch (error) {
+            setPreviewState("generationError");
+            showErrors([{ message: "We could not update this preview." }]);
+          } finally {
+            updateBtn.disabled = false;
+          }
+        }
+
+        function restoreDefaults() {
+          writeSettings(defaults);
+          setSelectorOpen(false);
+          summary.hidden = true;
+          summary.textContent = "";
+          clearErrors();
+          applyStaleState();
+        }
+
+        toggle.addEventListener("click", () => {
+          const willOpen = panel.hidden;
+          panel.hidden = !willOpen;
+          toggle.setAttribute("aria-expanded", String(willOpen));
+          toggle.textContent = willOpen ? "Hide customization options" : "Customize this worksheet";
+        });
+
+        form.addEventListener("submit", updatePreview);
+        restoreBtn.addEventListener("click", restoreDefaults);
+        form.addEventListener("input", (event) => {
+          if (event.target.name === "minimumValue" || event.target.name === "maximumValue") {
+            storeCustomRangeIfValid();
+            refreshSelectedOptions();
+          }
+          clearErrors();
+          applyStaleState();
+        });
+        form.addEventListener("change", (event) => {
+          if (event.target.name === "rangeMode") {
+            setRangeMode(currentRangeMode());
+            refreshSelectedOptions();
+          }
+          clearErrors();
+          applyStaleState();
+        });
+
+        selectedButton.addEventListener("click", () => {
+          setSelectorOpen(selectedPanel.hidden);
+        });
+
+        selectedButton.addEventListener("keydown", (event) => {
+          if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setSelectorOpen(true);
+            const first = selectedList.querySelector("input");
+            if (first) first.focus();
+          }
+          if (event.key === "Escape") {
+            setSelectorOpen(false);
+          }
+        });
+
+        selectedList.addEventListener("change", (event) => {
+          if (event.target.type !== "checkbox") return;
+          const value = Number(event.target.value);
+          if (event.target.checked) {
+            selectedValueSet.add(value);
+          } else {
+            selectedValueSet.delete(value);
+          }
+          updateSelectedSummary();
+          clearErrors();
+          applyStaleState();
+        });
+
+        selectedList.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            setSelectorOpen(false);
+            selectedButton.focus();
+          }
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!selectedValues.contains(event.target)) {
+            setSelectorOpen(false);
+          }
+        });
+
+        downloadBtn.addEventListener("click", (event) => {
+          if (downloadBtn.getAttribute("aria-disabled") === "true") {
+            event.preventDefault();
+            setPreviewState("stale");
+          }
+        });
+
+        writeSettings(defaults);
+        setPreviewState("ready");
+        setDownloadEnabled(true, "Download worksheet PDF");
+      })();
+    </script>
+  `;
+}
+
 function renderWorksheetDetailPage(item) {
   const id = item.id;
+  const customizationModel = buildWorksheetCustomizationModel(item);
   const worksheetType = worksheetTypeLabel(item);
   const worksheetFormat = worksheetFormatLabel(item);
   const domain = worksheetDomainLabel(item);
@@ -420,6 +1203,34 @@ function renderWorksheetDetailPage(item) {
     .filter(Boolean)
     .map(renderBadge)
     .join("");
+
+  const defaultPdfUrl = worksheetPdfUrl(id);
+  const defaultPreviewUrl = worksheetPreviewUrl(id);
+  const customizationMarkup = customizationModel
+    ? `
+        <section class="card detail-preview-card" aria-labelledby="ybPreviewHeading">
+          <div class="preview-status-row">
+            <div>
+              <div class="section-title" id="ybPreviewHeading">Ready-to-use worksheet</div>
+              <p class="preview-status-copy" id="ybPreviewCopy">The approved worksheet is ready to preview, download, and print.</p>
+            </div>
+            <div class="preview-state-pill" id="ybPreviewStateLabel">Ready-to-use worksheet</div>
+          </div>
+          <div class="customization-summary" id="ybCustomizationSummary" hidden></div>
+          ${renderWorksheetPreviewObject(id)}
+          <div class="resource-actions preview-download-row">
+            <a class="btn primary" id="ybDownloadBtn" href="${escapeHtml(defaultPdfUrl)}">Download worksheet PDF</a>
+            <span class="download-disabled-note" id="ybDownloadNote" hidden>Your selections have changed. Update the preview before downloading.</span>
+          </div>
+        </section>
+      `
+    : "";
+  const customizationToggle = customizationModel
+    ? `<button class="btn" id="ybCustomizeToggle" type="button" aria-expanded="false" aria-controls="ybCustomizationPanel">Customize this worksheet</button>`
+    : "";
+  const customizationScript = customizationModel
+    ? renderCustomizationScript(customizationModel)
+    : "";
 
   return `<!doctype html>
 <html lang="en">
@@ -465,13 +1276,18 @@ function renderWorksheetDetailPage(item) {
         <p class="lede">${escapeHtml(item.description || "")}</p>
 
         <div class="resource-actions" style="margin-top:18px;">
-          <a class="btn" href="${worksheetPreviewUrl(id)}">Preview PDF</a>
-          <a class="btn primary" href="${worksheetPdfUrl(id)}">Download PDF</a>
+          <a class="btn" href="${escapeHtml(defaultPreviewUrl)}">Preview PDF</a>
+          <a class="btn primary" href="${escapeHtml(defaultPdfUrl)}">${customizationModel ? "Download worksheet PDF" : "Download PDF"}</a>
+          ${customizationToggle}
           <a class="btn" href="/browse">Browse More</a>
         </div>
+
+        ${customizationMarkup}
       </section>
 
       <aside class="resource-side-panel">
+        ${renderCustomizationPanel(customizationModel)}
+
         <div class="card">
           <div class="section-title">${escapeHtml(detailsTitle)}</div>
           <div class="resource-meta-stack">
@@ -485,7 +1301,7 @@ function renderWorksheetDetailPage(item) {
           </div>
         </div>
 
-        <div class="card" style="margin-top:18px;">
+        <div class="card">
           <div class="section-title">Curriculum</div>
           <div class="resource-meta-stack">
             <div><strong>Subject:</strong> ${escapeHtml(item.subject || "Math")}</div>
@@ -499,6 +1315,7 @@ function renderWorksheetDetailPage(item) {
   </div>
 
   <div class="footer">© Project Yellow Bird — calm, print-first resources.</div>
+  ${customizationScript}
 </body>
 </html>`;
 }
@@ -597,5 +1414,10 @@ router.get("/resource/:slug", (req, res) => {
     return res.status(500).send("Failed to load resource.");
   }
 });
+
+router._test = {
+  buildWorksheetCustomizationModel,
+  renderWorksheetDetailPage
+};
 
 module.exports = router;

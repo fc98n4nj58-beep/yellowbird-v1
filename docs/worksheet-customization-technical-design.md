@@ -1,17 +1,17 @@
 # Worksheet Customization Technical Design
 
-Status: Technical design plus Addition Facts runtime proof
+Status: Technical design plus Addition Facts public prototype
 
 Product source: Worksheet Customization Product and UX Specification - Version 2
 
-Implementation status: Addition Facts registry runtime implemented for catalog preview/PDF paths; public UI not implemented
+Implementation status: Addition Facts registry runtime and Resource Detail customization UI implemented for `g1_addition_facts_within_20`
 
 Foundation implementation status:
 
 - Global registry, Addition Facts support declaration, normalization service, deterministic serialization, and option hashing have been implemented as a foundation.
 - Addition Facts registry normalization is consumed by the active shared catalog runtime for `g1_addition_facts_within_20`.
 - The active Addition Facts generator consumes the normalized range, selected-value emphasis, question count, example, seed, and answer-key package settings described below.
-- No public UI has been built.
+- The Resource Detail Page exposes the first public customization prototype for Addition Facts only.
 - Renderer geometry is unchanged.
 - PDF proof artifacts were generated under `review/addition-facts-customization-runtime/`; that review directory is intentionally not part of production source.
 
@@ -19,7 +19,7 @@ Foundation implementation status:
 
 Yellow Bird customization should start from an approved, classroom-ready worksheet and allow a teacher to adjust a few meaningful, family-supported settings.
 
-This document defines the technical contract for the customization registry and the first implemented family runtime. It does not approve public UI controls, broad route redesigns, renderer geometry changes, or customization across all catalog resources.
+This document defines the technical contract for the customization registry, the first implemented family runtime, and the first public Resource Detail prototype. It does not approve broad route redesigns, renderer geometry changes, or customization across all catalog resources.
 
 ## Non-Goals
 
@@ -92,7 +92,7 @@ Family declarations own:
 - layout risk
 - public approval/proof status
 
-Addition Facts controls still use non-public support metadata. Future UI must not infer public exposure from the existence of a registry variable, a support declaration, or runtime proof artifacts alone. Public exposure requires an explicit later UI approval step.
+Addition Facts controls use explicit public-prototype support metadata. Future UI must not infer public exposure for any other family from the existence of a registry variable, a support declaration, or runtime proof artifacts alone.
 
 Resource declarations or catalog metadata own:
 
@@ -431,7 +431,7 @@ Initial defaults:
 - `includeExample`: false
 - `includeAnswerKey`: true
 - `questionsPerPage`: 60 internally, not public until approved
-- control support status: runtime-supported but not public until the Addition Facts public prototype is approved
+- control support status: public-prototype for the approved Addition Facts controls only
 
 Compatibility mapping:
 
@@ -475,6 +475,74 @@ Runtime generation contract:
 - Preview and PDF use the same normalized canonical payload and seeded runtime path.
 - Custom range notices remain validation metadata and catalog instruction text; they are not embedded as a separate student-facing registry payload.
 
+Public Resource Detail prototype:
+
+- Route: `/resource/worksheet/g1_addition_facts_within_20`
+- Template: server-rendered worksheet detail page in `routes/libraryRoutes.js`
+- Preview source: embedded `/api/catalog-pdf/g1_addition_facts_within_20?disposition=inline`
+- Preview update source: `/api/catalog-preview/g1_addition_facts_within_20`
+- Download source: `/api/catalog-pdf/g1_addition_facts_within_20`
+- Client enhancement: inline Resource Detail script scoped to the Addition Facts customization model
+
+Exposed controls:
+
+- `questionCount`
+- `minimumValue` and `maximumValue`
+- `selectedValues`
+- `includeExample`
+- `includeAnswerKey`
+
+Control layout and range behavior:
+
+- On desktop and wide tablet layouts, practice controls use compact rows with right-aligned labels and one consistent control column.
+- On narrow layouts, labels stack above full-width controls.
+- Suggested range mode keeps the visible lowest/highest fields disabled and effective at 0-20.
+- Custom range mode enables the lowest/highest fields and restores the teacher's most recent valid custom values.
+- `selectedValues` uses a compact checkbox selector that is closed by default and summarizes selected numbers.
+
+Hidden controls:
+
+- `questionsPerPage` remains hidden from public use. It is consumed only at the proofed internal value of 60 until a later public-control decision.
+- `worksheetSeed` remains internal. No public shuffle or seed control exists.
+
+Preview truth-state contract:
+
+- Ready-to-use worksheet: default preview visible, default download enabled, no stale notice.
+- Settings changed: previous preview remains visible, stale notice appears, download is disabled.
+- Updating: previous preview remains visible, update button and download are disabled.
+- Customized preview: preview and download are enabled only after the server returns normalized successful settings and an option hash.
+- Validation error: field messages and a summary are shown; previous preview remains visible; download remains disabled while settings differ from the last successful preview.
+- Generation error: previous preview remains visible; settings are preserved; retry is available.
+
+Download parity rule:
+
+- The enabled download URL is built only from the last successful normalized settings.
+- The browser never downloads unsaved form state.
+- `includeAnswerKey` is also serialized as the existing `answers` PDF parameter so preview and download use the same answer-key package.
+- Stale form state disables the download link and shows explanatory text.
+
+Validation and security boundary:
+
+- The browser uses registry metadata to render controls, but all submitted values are normalized and validated on the server.
+- Unsupported controls are rejected by the server and do not enter the canonical payload.
+- Public API errors return field, code, and message only; diagnostics and stack traces are not returned.
+- Numeric values, arrays, range choices, and selected values are bounded by the family/resource declaration.
+
+Accessibility requirements implemented:
+
+- Visible labels, fieldsets, and legends
+- Keyboard-operable disclosure, inputs, select, checkboxes, and buttons
+- Field-level errors associated with controls
+- Error summary with alert semantics
+- Live-region announcements for preview states
+- Download action outside the embedded PDF
+- Mobile single-column layout with touch-friendly controls
+
+Unsupported-family behavior:
+
+- Families without explicit public-prototype support metadata render the existing Resource Detail page with no customization panel.
+- Quick Checks, Exit Tickets, Arrays, Patterning, and other worksheet families remain deferred.
+
 Proof generated before public approval:
 
 - short question totals
@@ -492,10 +560,10 @@ Proof generated before public approval:
 
 Still deferred:
 
-- public Resource Detail controls
-- stale-preview behavior
-- mobile and keyboard flow
 - additional public `questionsPerPage` choices
+- Arrays customization
+- Patterning customization
+- deeper cross-browser/mobile device QA
 
 ## Prototype 2 Family Declaration: Arrays
 
@@ -597,7 +665,7 @@ Customization must not turn Quick Checks or Exit Tickets into full worksheets.
 
 ## Migration Boundaries
 
-The registry and Addition Facts runtime pass built only:
+The registry, Addition Facts runtime, and Resource Detail prototype built only:
 
 - canonical variable definitions
 - family/resource support declarations
@@ -607,6 +675,8 @@ The registry and Addition Facts runtime pass built only:
 - narrow catalog-runtime consumption for Addition Facts
 - Addition Facts finite-pool generation
 - focused runtime/proof tests
+- Addition Facts-only Resource Detail customization UI
+- stale-preview/download protection for the Addition Facts prototype
 
 It should not:
 
@@ -620,19 +690,17 @@ It should not:
 
 ## Open Approval Questions
 
-- Is Addition Facts approved for public Resource Detail exposure after founder PDF review?
 - Which `questionsPerPage` choices are approved for Addition Facts after public approval: keep fixed at 60, fixed set, or bounded numeric input?
 - Should Arrays expose one shared factor range only, or eventually ordered first/second factor controls?
 - Should Arrays default `includeExample` to on for the public prototype?
 - What is the first approved title change rule for task-direction changes?
 - Should preview/download serialization use canonical settings in query params or a short-lived payload ID?
 
-## Runtime Proof Deliverable
+## Public Prototype Deliverable
 
-This document records the Addition Facts runtime and proof pass. The next step is founder review of:
+This document records the Addition Facts runtime, proof pass, and first public Resource Detail prototype. The next step is founder review of:
 
-- proof PDFs and metadata
-- public-exposure readiness
-- Resource Detail UI behavior
+- Resource Detail UI behavior in the browser
 - stale-preview and applied-settings behavior
 - mobile and keyboard flow
+- whether to commit the prototype as the public baseline

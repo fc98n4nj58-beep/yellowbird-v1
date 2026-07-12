@@ -10,6 +10,22 @@ const { buildWorksheetRuntime } = require("../services/worksheetRuntimeService")
 
 const { normalizeWorksheetContent } = require("../engine/worksheetBuilder/normalizeWorksheetContent");
 
+function parseBooleanLike(value, fallback = true) {
+  if (value === undefined || value === null || value === "") return fallback;
+  const normalized = String(value).trim().toLowerCase();
+  if (["0", "false", "no", "off"].includes(normalized)) return false;
+  if (["1", "true", "yes", "on"].includes(normalized)) return true;
+  return fallback;
+}
+
+function catalogIncludeAnswerKey(query = {}) {
+  if (query.answers !== undefined) {
+    return String(query.answers ?? "1") !== "0";
+  }
+
+  return parseBooleanLike(query.includeAnswerKey, true);
+}
+
 /* =========================
    WORKSHEET PDF API
    ========================= */
@@ -116,13 +132,15 @@ router.get("/api/catalog-pdf/:id", (req, res) => {
       req.query || {}
     );
 
+    const includeAnswerKey = catalogIncludeAnswerKey(req.query || {});
+
     if (item.resourceType === "quick_check") {
       renderQuickCheckPDF({
         res,
         item,
         contentObject: normalizedContentObject,
         options: {
-          includeAnswerKey: String(req.query.answers ?? "1") !== "0",
+          includeAnswerKey,
           filename: `${item.id}.pdf`,
           disposition: String(
             req.query.disposition || "attachment"
@@ -139,7 +157,7 @@ router.get("/api/catalog-pdf/:id", (req, res) => {
         item,
         contentObject: normalizedContentObject,
         options: {
-          includeAnswerKey: String(req.query.answers ?? "1") !== "0",
+          includeAnswerKey,
           filename: `${item.id}.pdf`,
           disposition: String(
             req.query.disposition || "attachment"
@@ -154,7 +172,7 @@ router.get("/api/catalog-pdf/:id", (req, res) => {
       res,
       contentObject: normalizedContentObject,
       options: {
-        includeAnswerKey: String(req.query.answers ?? "1") !== "0",
+        includeAnswerKey,
         fontSize: parseInt(req.query.font || "11", 10),
         cols: parseInt(
           req.query.cols ||

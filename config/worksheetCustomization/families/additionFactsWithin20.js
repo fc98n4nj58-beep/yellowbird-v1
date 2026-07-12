@@ -49,7 +49,7 @@ const additionFactsWithin20 = Object.freeze({
       max: 180,
       integer: true,
       layoutRisk: "medium",
-      publicStatus: "foundation_only"
+      publicStatus: "public_prototype"
     },
     questionsPerPage: {
       allowedValues: [60],
@@ -59,31 +59,31 @@ const additionFactsWithin20 = Object.freeze({
     },
     includeExample: {
       layoutRisk: "medium",
-      publicStatus: "foundation_only"
+      publicStatus: "public_prototype"
     },
     includeAnswerKey: {
       layoutRisk: "none",
-      publicStatus: "foundation_only"
+      publicStatus: "public_prototype"
     },
     minimumValue: {
       min: 0,
       max: 50,
       integer: true,
       layoutRisk: "medium",
-      publicStatus: "foundation_only"
+      publicStatus: "public_prototype"
     },
     maximumValue: {
       min: 0,
       max: 50,
       integer: true,
       layoutRisk: "medium",
-      publicStatus: "foundation_only"
+      publicStatus: "public_prototype"
     },
     selectedValues: {
       min: 0,
       max: 50,
       layoutRisk: "low",
-      publicStatus: "foundation_only",
+      publicStatus: "public_prototype",
       semantics: "emphasis"
     },
     worksheetSeed: {
@@ -135,7 +135,7 @@ const additionFactsWithin20 = Object.freeze({
     registrySupport: "implemented",
     catalogRuntimeConsumption: "implemented",
     pdfProof: "generated",
-    publicExposure: "not_approved"
+    publicExposure: "addition_facts_prototype"
   }),
   runtimeGaps: Object.freeze([
     "Public Resource Detail controls are not approved or wired.",
