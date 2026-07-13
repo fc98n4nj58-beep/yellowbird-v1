@@ -93,7 +93,14 @@ function normalizeProblem(problem, index, context) {
     missingIndexes: Array.isArray(problem.missingIndexes)
       ? problem.missingIndexes.map(finiteOptionalNumber).filter((n) => n !== null)
       : null,
-    step: finiteOptionalNumber(problem.step)
+    step: finiteOptionalNumber(problem.step),
+    patternKind: problem.patternKind || null,
+    patternRule: problem.patternRule || null,
+    patternOperation: problem.patternOperation || null,
+    continuationCount: finiteOptionalNumber(problem.continuationCount),
+    continuationAnswers: Array.isArray(problem.continuationAnswers) ? problem.continuationAnswers : null,
+    missingTermPlacement: problem.missingTermPlacement || null,
+    diagnostics: Array.isArray(problem.diagnostics) ? problem.diagnostics : null
   };
 }
 

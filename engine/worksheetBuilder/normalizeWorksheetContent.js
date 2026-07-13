@@ -121,6 +121,13 @@ function normalizeItem(item = {}, index = 0, meta = {}) {
       ? item.missingIndexes.map(finiteOptionalNumber).filter((n) => n !== null)
       : null,
     step: finiteOptionalNumber(item.step),
+    patternKind: item.patternKind || null,
+    patternRule: item.patternRule || null,
+    patternOperation: item.patternOperation || null,
+    continuationCount: finiteOptionalNumber(item.continuationCount),
+    continuationAnswers: Array.isArray(item.continuationAnswers) ? item.continuationAnswers : null,
+    missingTermPlacement: item.missingTermPlacement || null,
+    diagnostics: Array.isArray(item.diagnostics) ? item.diagnostics : null,
     visual: normalizeVisual(item.visual),
     meta: {
       grade: meta.grade ?? item.grade ?? null,

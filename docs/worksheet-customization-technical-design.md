@@ -644,6 +644,35 @@ Patterning may be implemented before the public customization UI, but its intern
 
 Patterning should not create a new public option scheme with local names that conflict with the registry direction.
 
+Numeric Patterning runtime groundwork:
+
+- Shared helper: `engine/problemGenerators/numericPatternRules.js`
+- Approved core activities: `extend_pattern`, `missing_value_pattern`, and `identify_pattern_rule`
+- Internal-only compatibility: arithmetic `function_table`
+- Supported rule family: arithmetic sequences only, using add/subtract steps
+- Supported internal options: `operationMode`, `startingValue`, `minStart`, `maxStart`, `sequenceStep`, `minStep`, `maxStep`, `sequenceLength`, `missingTermCount`, `missingTermPlacement`, `questionCount`, `includeExample`, and `worksheetSeed`
+- Duplicate policy: the helper builds a deterministic finite candidate pool and avoids duplicate signatures until the pool is exhausted; if a request exceeds the unique pool, it repeats candidates in a controlled deterministic cycle
+- Low-variety policy: narrow teacher selections may reduce variety; the runtime records an internal `low_variety_candidate_pool` diagnostic and does not expose that diagnostic on the worksheet PDF
+- Range policy: defaults avoid negative values; addition candidates must stay at or below the configured maximum, and subtraction candidates must stay at or above the configured minimum
+- Layout policy: Patterning worksheets use task-specific print layouts, not the generic equation prompt layout
+- Pagination policy: Patterning PDFs use a reusable balanced paginator that distributes items within the task capacity and avoids one- or two-question final pages when safe
+- Extend Pattern layout: two columns where safe, 12-16 student questions per page for one continuation term, 10-12 for multi-continuation variants, large equal-width continuation answer targets, and support for one, two, or three continuation terms
+- Missing Value layout: two columns where safe, clearer inline answer targets, 12 questions per page for one missing value, and 10-12 questions per page for two missing values
+- Identify Pattern Rule layout: one column only, 6-8 questions per page, or 8 questions plus one completed example where safe, and a labelled `Rule:` response line under each sequence
+- Sequence typography: Patterning sequence text uses a task-aware 12-13.5 point size inside existing Yellow Bird typography bounds
+- Continuation punctuation: continuation targets render as structured sequence tokens, for example `6, 7, 8, 9, ______, ______`, with the comma attached after the preceding term or target
+- Missing Value target token: missing values use a medium-grey underline target (`#8f98a8`, 0.95pt) rather than raw underscores
+- Header policy: no marketing or metadata subtitle; the title is followed by the divider and a student-facing instruction
+- Footer policy: Patterning PDFs use the public strand label, for example `Grade 3 • Math • Patterning & Algebra`, and must not expose the internal `patterning_and_algebra` slug
+- Completed-example policy: examples are additional to the requested student-question count, are labelled `Example`, are not numbered, use a small 6px label-to-sequence spacing step, and the first student question begins at 1
+- Answer-key policy: sequences and labels remain regular weight; only answers are bold
+- PDF status: proof artifacts are generated under `review/numeric-patterning-family/` for founder re-review
+- Public exposure status: no public Patterning customization UI is approved or wired
+- Registry status: no public Patterning family declaration is registered yet, so future UI code must not infer readiness from the internal generator option support
+- Runtime-supported future labels: Number of questions, Pattern type, Steps to practise, Starting-number range, Numbers in each sequence, Numbers to write, Missing numbers in each pattern, Where the missing numbers appear, Show one completed example, and Include answer key remain runtime-supported only and await a later UI decision
+- Deferred: Function Table public layout, visual/geometric patterns, shape patterns, alternating rules, multiplication/division patterns, negative-number defaults, and `pattern_word_problems` remain outside this first public-ready numeric family
+- Catalog status: no Patterning resource promotion is included with this runtime groundwork
+
 ## Resource-Kind Boundaries
 
 Worksheets may support the fullest customization after family proof.

@@ -80,6 +80,13 @@ function buildAnswerKeyItems(items) {
       ? it.missingIndexes.map(finiteOptionalNumber).filter((n) => n !== null)
       : null,
     step: finiteOptionalNumber(it.step),
+    patternKind: it.patternKind || null,
+    patternRule: it.patternRule || null,
+    patternOperation: it.patternOperation || null,
+    continuationCount: finiteOptionalNumber(it.continuationCount),
+    continuationAnswers: Array.isArray(it.continuationAnswers) ? it.continuationAnswers : null,
+    missingTermPlacement: it.missingTermPlacement || null,
+    diagnostics: Array.isArray(it.diagnostics) ? it.diagnostics : null,
   }));
 }
 
@@ -1503,6 +1510,202 @@ function renderSkipCountingRow(doc, question, x, y, width, fonts = {}, options =
   return cellHeight;
 }
 
+function patternDisplayNumber(question, display = {}) {
+  if (question.isExample) return "";
+  const n = Number(question.id);
+  if (!Number.isFinite(n)) return "";
+  return display.includeExample ? Math.max(1, n - 1) : n;
+}
+
+function drawPatternAnswerTarget(doc, value, x, y, width, fonts = {}, options = {}) {
+  doc.save();
+  doc.strokeColor(options.strokeColor || "#8f98a8");
+  doc.lineWidth(Number(options.strokeWidth || 0.95));
+  doc.moveTo(x, y).lineTo(x + width, y).stroke();
+  doc.restore();
+
+  if (options.showAnswer && value !== undefined && value !== null && value !== "") {
+    drawTextOnLine(doc, value, x, y, width, fonts, {
+      align: "center",
+      fontSize: Number(options.fontSize || 12)
+    });
+    restoreAnswerSurroundingTextStyle(doc, fonts, Number(options.fontSize || 12));
+  }
+}
+
+function drawPatternSequenceParts(doc, parts, x, y, width, fonts = {}, options = {}) {
+  const fontSize = Number(options.fontSize || 13);
+  const targetWidth = Number(options.targetWidth || 48);
+  let cursorX = x;
+  const commaGap = Number(options.commaGap || 5);
+  const baselineY = y + fontSize + 4;
+
+  setFont(doc, fonts.regular || "Helvetica", fontSize);
+  doc.fillColor(pdfDesignTokens.colors.text);
+
+  parts.forEach((part, index) => {
+    if (index > 0) {
+      const comma = ",";
+      doc.text(comma, cursorX, y, {
+        width: Math.max(10, width - (cursorX - x)),
+        align: "left",
+        lineBreak: false
+      });
+      cursorX += doc.widthOfString(comma) + commaGap;
+    }
+
+    if (part.target) {
+      drawPatternAnswerTarget(doc, part.answer, cursorX, baselineY, targetWidth, fonts, {
+        showAnswer: Boolean(options.showAnswers),
+        fontSize,
+        strokeColor: options.targetStrokeColor,
+        strokeWidth: options.targetStrokeWidth
+      });
+      cursorX += targetWidth;
+      return;
+    }
+
+    doc.save();
+    setFont(doc, part.bold ? fonts.bold || fonts.regular || "Helvetica" : fonts.regular || "Helvetica", fontSize);
+    doc.fillColor(pdfDesignTokens.colors.text);
+    const text = String(formatAnswerValue(part.value));
+    doc.text(text, cursorX, y, {
+      width: Math.max(12, width - (cursorX - x)),
+      align: "left",
+      lineBreak: false
+    });
+    cursorX += doc.widthOfString(text);
+    doc.restore();
+    restoreAnswerSurroundingTextStyle(doc, fonts, fontSize);
+  });
+
+  return baselineY - y + 4;
+}
+
+function renderPatterningRow(doc, question, layoutBox, fonts = {}, display = {}) {
+  const { x, y, width, height } = layoutBox;
+  const mode = display.patterningLayout || question.patternKind || "";
+  if (!mode || !Array.isArray(question.sequence)) return 0;
+
+  const isExample = Boolean(display.includeExample && question.isExample && !display.answerKey);
+  const showAnswers = Boolean(display.answerKey || isExample);
+  const lineHeight = layout.typography.body?.lineHeight || 16;
+  const fontSize = Number(display.patterningSequenceFontSize || 13);
+  const labelWidth = question.isExample ? 0 : 30;
+  const sequenceX = x + labelWidth;
+  const sequenceWidth = Math.max(40, width - labelWidth);
+  const exampleLabelGap = Number(display.patterningExampleLabelGap || 6);
+  const cursorY = question.isExample ? y + exampleLabelGap : y;
+
+  doc.save();
+  doc.fillColor(pdfDesignTokens.colors.text);
+  setFont(doc, fonts.regular || "Helvetica", fontSize);
+
+  if (question.isExample) {
+    setFont(doc, fonts.lightItalic || fonts.regular || "Helvetica", 9);
+    doc.fillColor(pdfDesignTokens.colors.muted);
+    doc.text("Example", x, y - 3, {
+      width,
+      align: "left",
+      lineBreak: false
+    });
+    doc.fillColor(pdfDesignTokens.colors.text);
+    setFont(doc, fonts.regular || "Helvetica", fontSize);
+  } else {
+    const n = patternDisplayNumber(question, display);
+    doc.text(`${n})`, x, cursorY, {
+      width: labelWidth - 4,
+      align: "left",
+      lineBreak: false
+    });
+  }
+
+  if (mode === "extend_pattern") {
+    const answers = Array.isArray(question.continuationAnswers) && question.continuationAnswers.length
+      ? question.continuationAnswers
+      : Array.isArray(question.responseValues)
+        ? question.responseValues
+        : splitAnswerParts(question.answer);
+    const continuationCount = Math.max(1, Number(question.continuationCount || answers.length || display.patterningContinuationCount || 1));
+    const visibleCount = Math.max(1, question.sequence.length - continuationCount);
+    const visible = question.sequence.slice(0, visibleCount);
+    const parts = visible.map((value) => ({ value }));
+    for (let index = 0; index < continuationCount; index += 1) {
+      parts.push({ target: true, answer: answers[index] ?? answers[0] ?? "" });
+    }
+
+    drawPatternSequenceParts(doc, parts, sequenceX, cursorY, sequenceWidth, fonts, {
+      showAnswers,
+      targetWidth: continuationCount > 1 ? 46 : 56,
+      fontSize,
+      targetStrokeColor: display.patterningTargetStrokeColor,
+      targetStrokeWidth: display.patterningTargetStrokeWidth
+    });
+    doc.restore();
+    return Math.max(height || 0, question.isExample ? lineHeight + 24 : lineHeight + 12);
+  }
+
+  if (mode === "missing_value_pattern") {
+    const missingIndexes = Array.isArray(question.missingIndexes) ? question.missingIndexes : [];
+    const answers = Array.isArray(question.responseValues) && question.responseValues.length
+      ? question.responseValues
+      : splitAnswerParts(question.answer);
+    const parts = question.sequence.map((value, index) => {
+      if (value !== null && value !== undefined) return { value };
+      const answerIndex = missingIndexes.indexOf(index);
+      const answer = answers[answerIndex >= 0 ? answerIndex : 0] ?? "";
+      return showAnswers && isExample
+        ? { value: answer, bold: true }
+        : { target: true, answer };
+    });
+    const missingCount = Math.max(1, missingIndexes.length || answers.length || display.patterningMissingCount || 1);
+    drawPatternSequenceParts(doc, parts, sequenceX, cursorY, sequenceWidth, fonts, {
+      showAnswers: showAnswers && !isExample,
+      targetWidth: missingCount > 1 ? 48 : 58,
+      fontSize,
+      targetStrokeColor: display.patterningTargetStrokeColor,
+      targetStrokeWidth: display.patterningTargetStrokeWidth
+    });
+    doc.restore();
+    return Math.max(height || 0, question.isExample ? lineHeight + 24 : lineHeight + 14);
+  }
+
+  if (mode === "identify_pattern_rule") {
+    doc.text(question.sequence.join(", "), sequenceX, cursorY, {
+      width: sequenceWidth,
+      align: "left",
+      lineBreak: false
+    });
+
+    const ruleY = cursorY + 26;
+    setFont(doc, fonts.regular || "Helvetica", fontSize);
+    doc.fillColor(pdfDesignTokens.colors.text);
+    doc.text("Rule:", sequenceX, ruleY, {
+      width: 34,
+      align: "left",
+      lineBreak: false
+    });
+    const lineX = sequenceX + 38;
+    const lineWidth = Math.min(260, Math.max(120, sequenceWidth - 42));
+    drawShortAnswerLine(doc, lineX, ruleY + 14, lineWidth);
+
+    if (showAnswers) {
+      drawFittedAnswerOnLine(doc, question.patternRule || question.answer, lineX, ruleY + 14, lineWidth, fonts, {
+        align: "left",
+      fontSize,
+      minFontSize: 9
+    });
+      restoreAnswerSurroundingTextStyle(doc, fonts, fontSize);
+    }
+
+    doc.restore();
+    return Math.max(height || 0, question.isExample ? 58 : 50);
+  }
+
+  doc.restore();
+  return 0;
+}
+
 function drawWorkSpace(doc, x, y, width, lineCount = 2) {
   const lines = Math.max(0, Number(lineCount) || 0);
   if (!lines) return 0;
@@ -1612,6 +1815,11 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
   const promptText = `${numberPrefix}${hidePrompt ? "" : rawPrompt}`.trim();
   const hasInlineAnswerBlank = Boolean(promptText.match(/_{2,}/));
   const visual = question.visual || null;
+
+  if (!visual?.kind && display.patterningLayout) {
+    const rendered = renderPatterningRow(doc, question, layoutBox, fonts, display);
+    if (rendered) return rendered;
+  }
 
   if (visual?.kind && (display.multiplicationModelEquation || display.multiplicationModelTotalOnly)) {
     const rendered = renderMultiplicationModelCell(doc, question, layoutBox, fonts, display);
@@ -2253,6 +2461,49 @@ function paginateSequential(items, maxPerPage) {
   return pages;
 }
 
+function paginateBalancedWithinCapacity(items, maxPerPage, options = {}) {
+  const pageSize = Math.max(1, Math.floor(Number(maxPerPage) || 1));
+  const n = items.length;
+  if (n <= pageSize) return [items];
+
+  const pageCount = Math.ceil(n / pageSize);
+  const base = Math.floor(n / pageCount);
+  const remainder = n % pageCount;
+  const pages = [];
+  let cursor = 0;
+
+  for (let index = 0; index < pageCount; index += 1) {
+    const take = base + (index < remainder ? 1 : 0);
+    pages.push(items.slice(cursor, cursor + take));
+    cursor += take;
+  }
+
+  const minimumFinal = Math.max(1, Math.ceil(pageSize / 3));
+  const finalPage = pages[pages.length - 1] || [];
+  if (
+    finalPage.length < minimumFinal &&
+    pages.length > 1 &&
+    pages[0].length < pageSize
+  ) {
+    return paginateBalancedWithinCapacity(items, Math.max(1, pageSize - 1), options);
+  }
+
+  return pages;
+}
+
+function patterningDistributionMetadata(pages, capacity, cols) {
+  return {
+    capacity,
+    columns: cols,
+    pageItemCounts: pages.map((page) => page.length),
+    pageStudentCounts: pages.map((page) => page.filter((item) => !item.isExample).length),
+    orphanFinalPageAvoided: pages.length <= 1
+      ? true
+      : pages[pages.length - 1].length > 2,
+    pageCount: pages.length
+  };
+}
+
 function computeFillStep(startY, bottomContentY, lineHeight, maxCountInAnyColumn) {
   const usable = Math.max(0, (bottomContentY - startY) - lineHeight);
 
@@ -2640,9 +2891,15 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     : hasVisuals
     ? cols * questionsPerColumn
     : Math.max(1, layoutMaxProblemsPerPage || cols * questionsPerColumn);
-  const pages = isReverseNumberWordLayout
-    ? paginateSequential(allItems, maxPerPage)
-    : paginateEven(allItems, maxPerPage);
+  const pages = display.patterningLayout
+    ? paginateBalancedWithinCapacity(allItems, maxPerPage)
+    : isReverseNumberWordLayout
+      ? paginateSequential(allItems, maxPerPage)
+      : paginateEven(allItems, maxPerPage);
+
+  if (display.patterningLayout && layoutObject) {
+    layoutObject.patterningPagination = patterningDistributionMetadata(pages, maxPerPage, cols);
+  }
 
   pages.forEach((pageItems, pageIndex) => {
     if (pageIndex > 0) {
@@ -2673,7 +2930,16 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     const { colW: pageColW, xForCol: pageXForCol } = pageCols === cols
       ? { colW, xForCol }
       : getColumns(pageCols);
-    const columns = display.sequentialColumnFill
+    const pageDisplay = display.patterningLayout
+      ? {
+          ...display,
+          denseGridRows: Math.max(
+            1,
+            Math.ceil(pageItems.length / Math.max(1, pageCols))
+          )
+        }
+      : display;
+    const columns = pageDisplay.sequentialColumnFill
       ? distributeSequential(pageItems, pageCols)
       : distributeBalanced(pageItems, pageCols);
 
@@ -2716,12 +2982,12 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
         dividerY: null
       },
       fonts,
-      display
+      pageDisplay
     );
   },
 	  itemGap,
 	  pageQuestionsPerColumn,
-	  display
+	  pageDisplay
 	);
 
     drawFooter(doc, fonts, pageState.pageNum, meta);
@@ -2755,7 +3021,8 @@ function renderAnswerKey(doc, fonts, contentObject, options, pageState, layoutOb
         layoutObject?.display?.standardShortAnswerTarget ||
         layoutObject?.display?.factFamilyGrid ||
         layoutObject?.display?.compactExpandedForm ||
-        layoutObject?.display?.skipCountingRow
+        layoutObject?.display?.skipCountingRow ||
+        layoutObject?.display?.patterningLayout
         ? it.prompt
         : filledAnswerText(it.prompt, ans)
     };

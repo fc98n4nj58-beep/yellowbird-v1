@@ -7,6 +7,11 @@ function finiteOptionalNumber(value) {
   return Number.isFinite(n) ? n : null;
 }
 
+function publicSkillLabel(item) {
+  if (item?.skillKey === "patterning_and_algebra") return "";
+  return item?.skillKey || "";
+}
+
 function buildCatalogWorksheetRuntime(id, query = {}) {
   const item = worksheetCatalogService.getWorksheetCatalogById(id);
 
@@ -33,7 +38,7 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
           item.gradeLabels?.[0] || "",
           item.subject || "Math",
           item.domain || "",
-          item.skillKey || ""
+          publicSkillLabel(item)
         ].filter(Boolean).join(" • ")
       }
     },
@@ -63,7 +68,14 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         missingIndexes: Array.isArray(p.missingIndexes)
           ? p.missingIndexes.map(finiteOptionalNumber).filter((n) => n !== null)
           : null,
-        step: finiteOptionalNumber(p.step)
+        step: finiteOptionalNumber(p.step),
+        patternKind: p.patternKind || null,
+        patternRule: p.patternRule || null,
+        patternOperation: p.patternOperation || null,
+        continuationCount: finiteOptionalNumber(p.continuationCount),
+        continuationAnswers: Array.isArray(p.continuationAnswers) ? p.continuationAnswers : null,
+        missingTermPlacement: p.missingTermPlacement || null,
+        diagnostics: Array.isArray(p.diagnostics) ? p.diagnostics : null
       }))
     }
   };

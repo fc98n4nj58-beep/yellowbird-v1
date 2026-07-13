@@ -515,6 +515,18 @@ function buildStudentFacingInstruction(item, fallback = "") {
   return "Write the missing numbers in each skip-counting pattern.";
  }
 
+ if (activityType === "extend_pattern") {
+  return "Extend each pattern. Write the next number.";
+ }
+
+ if (activityType === "missing_value_pattern") {
+  return "Write the missing number in each pattern.";
+ }
+
+ if (activityType === "identify_pattern_rule") {
+  return "Write the rule for each pattern.";
+ }
+
   if (["array", "arrays"].includes(activityType)) {
     return "Use each array to write a multiplication equation.";
  }
@@ -528,6 +540,83 @@ function buildStudentFacingInstruction(item, fallback = "") {
  }
 
  return fallback;
+}
+
+function patterningInstruction(activityType, normalizedOptions = {}) {
+  if (activityType === "extend_pattern") {
+    const continuationCount = Math.max(
+      1,
+      finiteNumber(normalizedOptions.continuationCount ?? normalizedOptions.extensionCount ?? normalizedOptions.answerCount) || 1
+    );
+    return continuationCount > 1
+      ? "Extend each pattern. Write the next numbers."
+      : "Extend each pattern. Write the next number.";
+  }
+
+  if (activityType === "missing_value_pattern") {
+    const missingCount = Math.max(
+      1,
+      finiteNumber(normalizedOptions.missingTermCount ?? normalizedOptions.missingCount) || 1
+    );
+    return missingCount > 1
+      ? "Write the missing numbers in each pattern."
+      : "Write the missing number in each pattern.";
+  }
+
+  if (activityType === "identify_pattern_rule") {
+    return "Write the rule for each pattern.";
+  }
+
+  return "";
+}
+
+function resolvePatterningPageCapacity(activityType, normalizedOptions = {}) {
+  const continuationCount = Math.max(
+    1,
+    finiteNumber(normalizedOptions.continuationCount ?? normalizedOptions.extensionCount ?? normalizedOptions.answerCount) || 1
+  );
+  const missingCount = Math.max(
+    1,
+    finiteNumber(normalizedOptions.missingTermCount ?? normalizedOptions.missingCount) || 1
+  );
+  const includeExample = Boolean(normalizedOptions.includeExample);
+  const requestedPerPage = finiteNumber(normalizedOptions.questionsPerPage);
+
+  if (requestedPerPage) return requestedPerPage;
+
+  if (activityType === "identify_pattern_rule") {
+    return includeExample ? 9 : 8;
+  }
+
+  if (activityType === "missing_value_pattern") {
+    if (missingCount > 1) return includeExample ? 13 : 12;
+    return includeExample ? 13 : 12;
+  }
+
+  if (activityType === "extend_pattern") {
+    if (continuationCount >= 3) return includeExample ? 11 : 10;
+    if (continuationCount === 2) return includeExample ? 13 : 12;
+    return includeExample ? 13 : 16;
+  }
+
+  return 12;
+}
+
+function patterningSequenceFontSize(item, activityType, normalizedOptions = {}) {
+  const grade = item.grades?.[0] || "";
+  const continuationCount = Math.max(
+    1,
+    finiteNumber(normalizedOptions.continuationCount ?? normalizedOptions.extensionCount ?? normalizedOptions.answerCount) || 1
+  );
+  const missingCount = Math.max(
+    1,
+    finiteNumber(normalizedOptions.missingTermCount ?? normalizedOptions.missingCount) || 1
+  );
+
+  if (activityType === "extend_pattern" && continuationCount >= 3) return 12;
+  if (activityType === "missing_value_pattern" && missingCount > 1) return grade === "grade2" ? 13 : 12.5;
+  if (activityType === "identify_pattern_rule") return 13;
+  return grade === "grade2" ? 13.5 : 13;
 }
 
 function resolveWorksheetSubtitle(item, display = {}, options = {}) {
@@ -636,6 +725,45 @@ if (Number.isFinite(normalizedOptions.questionsPerPage) && normalizedOptions.que
   layout.template = {
     ...(layout.template || {}),
     maxProblemsPerPage: normalizedOptions.questionsPerPage
+  };
+}
+
+if (
+  ["extend_pattern", "missing_value_pattern", "identify_pattern_rule"].includes(item.activityTypes?.[0]) &&
+  (item.resourceType || "worksheet") === "worksheet"
+) {
+  const activityType = item.activityTypes[0];
+  const continuationCount = Math.max(
+    1,
+    finiteNumber(normalizedOptions.continuationCount ?? normalizedOptions.extensionCount ?? normalizedOptions.answerCount) || 1
+  );
+  const missingCount = Math.max(
+    1,
+    finiteNumber(normalizedOptions.missingTermCount ?? normalizedOptions.missingCount) || 1
+  );
+  const maxProblemsPerPage = resolvePatterningPageCapacity(activityType, normalizedOptions);
+  const columns = activityType === "identify_pattern_rule" ? 1 : 2;
+
+  layout.instruction = patterningInstruction(activityType, normalizedOptions);
+  layout.template = {
+    ...(layout.template || {}),
+    columns,
+    maxProblemsPerPage
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    patterningLayout: activityType,
+    patterningContinuationCount: continuationCount,
+    patterningMissingCount: missingCount,
+    patterningPageCapacity: maxProblemsPerPage,
+    patterningSequenceFontSize: patterningSequenceFontSize(item, activityType, normalizedOptions),
+    patterningTargetStrokeColor: "#8f98a8",
+    patterningTargetStrokeWidth: 0.95,
+    denseGridRows: Math.ceil(maxProblemsPerPage / columns),
+    sequentialColumnFill: true,
+    equalHeightItems: true,
+    hideItemSeparators: false,
+    patterningPublicReady: true
   };
 }
 
