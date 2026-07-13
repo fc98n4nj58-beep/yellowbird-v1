@@ -272,6 +272,24 @@ Rules:
 - Keep Grade 4 compare-number worksheet held because the current range is too light.
 - Continue treating equivalent-fractions prompt variety, Grade 5/6 foundational framing, visual Quick Checks, decimal resources, and planned `pattern_word_problems` failures as active cautions/deferred work.
 
+July 2026
+
+Decision:
+New worksheet families and major worksheet-family redesigns require a Founder Worksheet Design Preflight before implementation.
+
+Reason:
+Recent Addition Facts and Numeric Patterning work showed that architecture-first implementation is not enough. Founder design decisions about headers, instructions, task-specific layouts, answer targets, typography, pagination, completed examples, answer keys, footers, and teacher variables need to be applied before code is written so first proof packets are closer to approval.
+
+Rules:
+- Use `docs/worksheet-design-preflight.md` before implementing any new worksheet family, major family redesign, new task-family layout, public customization candidate, new answer format, or new pagination behavior.
+- Follow the workflow: Architecture scan -> Founder Design Preflight -> Variable contract -> Implementation -> Proof packet -> Founder review -> Commit.
+- Do not claim this process retroactively invalidates already approved families.
+- Addition Facts remains the first complete public customization prototype.
+- Numeric Patterning is the first family completed after applying more formal task-specific layout review.
+- Function Tables remain deferred.
+- Arrays customization remains deferred.
+- No new family is selected by this workflow decision.
+
 ## Decision: Place Value Forms + Skip Counting Founder Closeout
 
 Decision:

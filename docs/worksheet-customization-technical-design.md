@@ -48,6 +48,24 @@ Catalog item and teacher settings
 
 The shared catalog runtime remains the single place where customized preview and customized download should meet. Routes should stay thin, generators should generate, layouts should calculate space, and renderers should render.
 
+## Design Preflight Gate
+
+Before a new worksheet family, major worksheet-family redesign, or public customization candidate is implemented, complete `docs/worksheet-design-preflight.md`.
+
+Required workflow:
+
+Architecture scan
+-> Founder Design Preflight
+-> Variable contract
+-> Implementation
+-> Proof packet
+-> Founder review
+-> Commit
+
+The preflight must define the worksheet layout, answer targets, page capacity, completed-example behavior, answer-key behavior, footer wording, teacher-facing variables, runtime-only controls, deferred controls, and proof-packet coverage before code is written.
+
+Addition Facts remains the first complete public customization prototype. Numeric Patterning is the first family completed after applying more formal task-specific layout review. Patterning customization UI, Arrays customization, and Function Tables remain deferred unless a later founder-approved preflight reopens them.
+
 ## Proposed Future Modules
 
 Implemented foundation modules:

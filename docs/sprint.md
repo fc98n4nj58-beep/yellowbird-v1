@@ -68,6 +68,15 @@ Engineering Principles:
 
 ## Current Closeout Notes
 
+[x] Founder Worksheet Design Preflight formalized
+- New worksheet families, major family redesigns, new task-family layouts, public customization candidates, new answer formats, and new pagination behavior must complete `docs/worksheet-design-preflight.md` before implementation.
+- Required workflow: Architecture scan -> Founder Design Preflight -> Variable contract -> Implementation -> Proof packet -> Founder review -> Commit.
+- Addition Facts remains the first complete public customization prototype.
+- Numeric Patterning is the first family completed after applying more formal task-specific layout review.
+- Function Tables remain deferred.
+- Arrays customization remains deferred.
+- No new family is selected by this workflow task.
+
 [x] Multiplication Models family founder closeout prepared
 - Arrays and Multiplication Equal Groups use fixed 8-question, 2-column x 4-row visual grids.
 - Equal Sharing Division is rebuilt as a separate division-facing model family.
