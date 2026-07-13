@@ -1,3 +1,12 @@
+const {
+  generateNumberWordProblem
+} = require("./grade1NumberRepresentation");
+
+const GRADE1_NUMBER_WORD_RESOURCE_IDS = new Set([
+  "g1_number_word_match_to_50",
+  "g1_write_the_numeral_to_50"
+]);
+
 function randInt(min, max, random = Math.random) {
   return Math.floor(random() * (max - min + 1)) + min;
 }
@@ -33,6 +42,10 @@ function numberToWords(n) {
 }
 
 function generateNumberWordMatchProblem(options = {}) {
+  if (GRADE1_NUMBER_WORD_RESOURCE_IDS.has(options.worksheetId)) {
+    return generateNumberWordProblem(options);
+  }
+
   const random = options.random || Math.random;
   const min = Number.isFinite(options.minA) ? options.minA : 0;
   const max = Number.isFinite(options.maxA) ? options.maxA : 999;

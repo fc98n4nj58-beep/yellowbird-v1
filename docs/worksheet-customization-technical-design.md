@@ -4,7 +4,7 @@ Status: Technical design plus Addition Facts public prototype
 
 Product source: Worksheet Customization Product and UX Specification - Version 2
 
-Implementation status: Addition Facts registry runtime and Resource Detail customization UI implemented for `g1_addition_facts_within_20`; Grade 1 Subtraction Facts, Missing Addends, and Compare Numbers runtime/proof support implemented without public UI
+Implementation status: Addition Facts registry runtime and Resource Detail customization UI implemented for `g1_addition_facts_within_20`; Grade 1 Subtraction Facts, Missing Addends, Compare Numbers, and Grade 1 Number Representation runtime/proof support implemented without public UI
 
 Foundation implementation status:
 
@@ -12,7 +12,7 @@ Foundation implementation status:
 - Addition Facts registry normalization is consumed by the active shared catalog runtime for `g1_addition_facts_within_20`.
 - The active Addition Facts generator consumes the normalized range, selected-value emphasis, question count, example, seed, and answer-key package settings described below.
 - The Resource Detail Page exposes the first public customization prototype for Addition Facts only.
-- Grade 1 Subtraction Facts, Missing Addends, and Compare Numbers now have runtime/proof support for the shared variable contract, but no public customization controls are approved or wired.
+- Grade 1 Subtraction Facts, Missing Addends, Compare Numbers, and Number Representation now have runtime/proof support for shared variable-contract ideas, but no public customization controls are approved or wired for these families.
 - Renderer geometry is unchanged.
 - PDF proof artifacts were generated under `review/addition-facts-customization-runtime/`; that review directory is intentionally not part of production source.
 
@@ -67,7 +67,7 @@ The preflight must define the worksheet layout, answer targets, page capacity, c
 
 Addition Facts remains the first complete public customization prototype. Numeric Patterning is the first family completed after applying more formal task-specific layout review. Patterning customization UI, Arrays customization, and Function Tables remain deferred unless a later founder-approved preflight reopens them.
 
-Grade 1 Subtraction Facts, Missing Addends, and Compare Numbers have runtime/proof support only. Future UI code must not infer public readiness from their generator metadata, structured answer metadata, proof artifacts, or shared option adapter support.
+Grade 1 Subtraction Facts, Missing Addends, Compare Numbers, and Number Representation have runtime/proof support only. Future UI code must not infer public readiness from their generator metadata, structured answer metadata, proof artifacts, or shared option adapter support.
 
 ## Proposed Future Modules
 
@@ -703,6 +703,41 @@ Numeric Patterning runtime groundwork:
 - Runtime-supported future labels: Number of questions, Pattern type, Steps to practise, Starting-number range, Numbers in each sequence, Numbers to write, Missing numbers in each pattern, Where the missing numbers appear, Show one completed example, and Include answer key remain runtime-supported only and await a later UI decision
 - Deferred: Function Table public layout, visual/geometric patterns, shape patterns, alternating rules, multiplication/division patterns, negative-number defaults, and `pattern_word_problems` remain outside this first public-ready numeric family
 - Catalog status: no Patterning resource promotion is included with this runtime groundwork
+
+## Grade 1 Number Representation Runtime Support
+
+Grade 1 Number Representation now has runtime/proof support for the approved consolidation batch:
+
+- `g1_number_word_match_to_50` remains the ready `Write Number Words to 50` resource.
+- `g1_write_the_numeral_to_50` exists as a separate `partial` public catalog resource for founder PDF review.
+- `grade1_place_value_representation_base_ten_blocks` remains the ready `Base Ten Blocks to 50` resource.
+- `g1_ten_frame_addition_within_10` remains the ready `Counting With Ten Frames` resource.
+
+Supported runtime contract:
+
+- `questionCount` is exact.
+- `includeExample` uses solved Question 1 and counts inside the requested total.
+- `minimumValue` / `maximumValue` aliases normalize to the generator range.
+- `selectedValues`, `selectedNumbers`, and `onlyNumbers` normalize to a shared selected-value list.
+- number-word direction remains internal to the separate resource defaults; no public direction toggle is exposed.
+- base-ten label mode is runtime-supported through internal options, not public UI.
+- ten-frame zero is runtime-supported only through explicit internal options, not public default behavior.
+
+Layout/proof status:
+
+- Write Number Words defaults to 20 questions in two columns, with a 30-question 3-column proof mode.
+- Write the Numeral uses the same shared number-word runtime with the short-numeral response target.
+- Base Ten Blocks keeps the visual model in the top third and preserves the short response target.
+- Counting With Ten Frames uses responsive count bands: 1-5 questions use a low-count two-column band, 6-8 use a medium full-width band, 9-10 keep the approved standard full-width band, and more than 10 keeps standard balanced multi-page behavior.
+- Canonical public footers are resource-specific and do not expose internal implementation slugs: Number Words, Write the Numeral, Base-Ten Blocks, and Ten Frames each use the approved public strand label.
+- `scripts/testGrade1NumberRepresentationRuntime.js` covers normalization, exact counts, selected values, completed Question 1, separate resource identity, answer metadata, same-seed parity, and legacy-resource guardrails.
+- `scripts/generateGrade1NumberRepresentationProofs.js` writes the full technical packet under `review/grade-1-number-representation/` and the reduced six-PDF founder recheck packet under `review/grade-1-number-representation/founder-recheck/`.
+
+Public exposure status:
+
+- no public Number Representation customization UI is approved or wired;
+- no resource promotion is included in the runtime checkpoint;
+- future UI code must not infer public readiness from the existence of runtime aliases, structured metadata, proof files, or the separate `partial` Write-the-Numeral resource.
 
 ## Grade 1 Fluency + Comparison Runtime Support
 

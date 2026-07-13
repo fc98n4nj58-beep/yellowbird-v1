@@ -1,8 +1,16 @@
+const {
+  generateBaseTenProblem
+} = require("./grade1NumberRepresentation");
+
 function randInt(min, max, random = Math.random) {
   return Math.floor(random() * (max - min + 1)) + min;
 }
 
 function generateBaseTenBlocksProblem(options = {}) {
+  if (options.worksheetId === "grade1_place_value_representation_base_ten_blocks") {
+    return generateBaseTenProblem(options);
+  }
+
   const random = options.random || Math.random;
   const min = Number.isFinite(options.minA) ? options.minA : 10;
   const max = Number.isFinite(options.maxA) ? options.maxA : 99;

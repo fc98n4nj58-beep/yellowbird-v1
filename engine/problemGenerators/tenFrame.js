@@ -1,3 +1,7 @@
+const {
+  generateTenFrameProblem: generateGrade1TenFrameProblem
+} = require("./grade1NumberRepresentation");
+
 function randInt(min, max, random = Math.random) {
   return Math.floor(random() * (max - min + 1)) + min;
 }
@@ -23,6 +27,10 @@ function pickUniqueValue(min, max, options = {}) {
 }
 
 function generateTenFrameProblem(options = {}) {
+  if (options.worksheetId === "g1_ten_frame_addition_within_10") {
+    return generateGrade1TenFrameProblem(options);
+  }
+
   const random = options.random || Math.random;
   const min = Number.isFinite(options.minA) ? options.minA : 0;
   const max = Number.isFinite(options.maxA) ? options.maxA : 10;

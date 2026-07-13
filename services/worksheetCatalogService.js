@@ -113,11 +113,27 @@ const GRADE1_FLUENCY_COMPARISON_IDS = new Set([
   "g1_compare_numbers_to_20"
 ]);
 
+const GRADE1_NUMBER_REPRESENTATION_IDS = new Set([
+  "g1_number_word_match_to_50",
+  "g1_write_the_numeral_to_50",
+  "grade1_place_value_representation_base_ten_blocks",
+  "g1_ten_frame_addition_within_10"
+]);
+
+const GRADE1_NUMBER_WORD_RESOURCE_IDS = new Set([
+  "g1_number_word_match_to_50",
+  "g1_write_the_numeral_to_50"
+]);
+
 const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
   "g1_addition_facts_within_20",
   "g1_subtraction_facts_within_20",
   "g1_missing_addends_within_20",
-  "g1_compare_numbers_to_20"
+  "g1_compare_numbers_to_20",
+  "g1_number_word_match_to_50",
+  "g1_write_the_numeral_to_50",
+  "grade1_place_value_representation_base_ten_blocks",
+  "g1_ten_frame_addition_within_10"
 ]);
 
 function usesQuestion1CompletedExample(item) {
@@ -151,6 +167,67 @@ function normalizeGrade1FluencyComparisonOptions(item, options = {}) {
     normalized.selectedValues = selectedValues;
     normalized.selectedNumbers = selectedValues;
     normalized.onlyNumbers = selectedValues.join(",");
+  }
+
+  return normalized;
+}
+
+function normalizeGrade1NumberRepresentationOptions(item, options = {}) {
+  if (!GRADE1_NUMBER_REPRESENTATION_IDS.has(item.id)) return options;
+
+  const normalized = { ...options };
+  const selectedValues = parseNumberList(
+    normalized.selectedValues || normalized.selectedNumbers || normalized.onlyNumbers
+  );
+  const minimumValue = finiteNumber(normalized.minimumValue ?? normalized.minimumNumber);
+  const maximumValue = finiteNumber(normalized.maximumValue ?? normalized.maximumNumber);
+  const activityType = item.activityTypes?.[0] || "";
+
+  if (minimumValue !== null) {
+    normalized.minA = minimumValue;
+  }
+
+  if (maximumValue !== null) {
+    normalized.maxA = maximumValue;
+  }
+
+  if (selectedValues.length) {
+    normalized.selectedValues = selectedValues;
+    normalized.selectedNumbers = selectedValues;
+    normalized.onlyNumbers = selectedValues.join(",");
+  }
+
+  if (GRADE1_NUMBER_WORD_RESOURCE_IDS.has(item.id)) {
+    normalized.minA = finiteNumber(normalized.minA, 0);
+    normalized.maxA = finiteNumber(normalized.maxA, 50);
+    normalized.questionCount = finiteNumber(normalized.questionCount, 20);
+    normalized.promptStyle = "number_only";
+    normalized.numberWordMode = item.id === "g1_write_the_numeral_to_50"
+      ? "word_to_numeral"
+      : "numeral_to_word";
+  }
+
+  if (item.id === "grade1_place_value_representation_base_ten_blocks") {
+    normalized.minA = finiteNumber(normalized.minA, 0);
+    normalized.maxA = finiteNumber(normalized.maxA, 50);
+    normalized.questionCount = finiteNumber(normalized.questionCount, 10);
+    if (parseBoolean(normalized.showPlaceValueLabels ?? normalized.baseTenTensOnesBoxes, false)) {
+      normalized.showPlaceValueLabels = true;
+      normalized.baseTenTensOnesBoxes = true;
+      normalized.responseMode = "tens_ones";
+    }
+  }
+
+  if (activityType === "ten_frame") {
+    const hasExplicitZeroMinimum = String(normalized.minimumValue ?? normalized.minA ?? "").trim() === "0";
+    const selectedIncludesZero = selectedValues.includes(0);
+    normalized.minA = finiteNumber(normalized.minA, hasExplicitZeroMinimum || selectedIncludesZero ? 0 : 1);
+    normalized.maxA = finiteNumber(normalized.maxA, 10);
+    normalized.questionCount = finiteNumber(normalized.questionCount, 10);
+    normalized.tenFramesPerQuestion = finiteNumber(normalized.tenFramesPerQuestion, 1);
+    if (selectedValues.length) {
+      normalized.frameSelectionMode = "exact";
+    }
   }
 
   return normalized;
@@ -314,7 +391,10 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalizeGrade1FluencyComparisonOptions(item, normalized);
+  return normalizeGrade1NumberRepresentationOptions(
+    item,
+    normalizeGrade1FluencyComparisonOptions(item, normalized)
+  );
 }
 
 const NON_CUSTOMIZATION_QUERY_KEYS = new Set([
@@ -557,6 +637,22 @@ function buildRangeNotice(item, options = {}) {
 function buildStudentFacingInstruction(item, fallback = "") {
  const activityType = item.activityTypes?.[0] || "";
 
+ if (item.id === "g1_number_word_match_to_50") {
+  return "Write each number in words.";
+ }
+
+ if (item.id === "g1_write_the_numeral_to_50") {
+  return "Write the numeral for each number word.";
+ }
+
+ if (item.id === "grade1_place_value_representation_base_ten_blocks") {
+  return "Count the base ten blocks. Write the number.";
+ }
+
+ if (item.id === "g1_ten_frame_addition_within_10") {
+  return "Count the dots. Write the number.";
+ }
+
  if (activityType === "expanded_form") {
   return "Write each numeral in expanded form.";
  }
@@ -713,9 +809,10 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
  );
  const isReverseNumberWordMode = item.activityTypes?.[0] === "number_word_match" &&
   String(normalizedOptions.numberWordMode || normalizedOptions.mode || "").toLowerCase() === "word_to_numeral";
+ const isGrade1NumberWordMode = GRADE1_NUMBER_WORD_RESOURCE_IDS.has(item.id);
 
  if (isReverseNumberWordMode) {
-  instructionText = "Write each number word as a number.";
+  instructionText = "Write the numeral for each number word.";
  }
 
  const title = isReverseNumberWordMode
@@ -772,7 +869,9 @@ if (
 if (item.activityTypes?.[0] === "base_ten_blocks" && layout.display?.baseTenAlignedResponse) {
   layout.display = {
     ...(layout.display || {}),
-    visualVerticalAlign: "center"
+    visualVerticalAlign: item.id === "grade1_place_value_representation_base_ten_blocks"
+      ? "topThird"
+      : "center"
   };
 }
 
@@ -1047,6 +1146,39 @@ if (item.activityTypes?.[0] === "skip_counting") {
 }
 
 if (item.activityTypes?.[0] === "ten_frame") {
+  if (item.id === "g1_ten_frame_addition_within_10") {
+    const questionCount = Math.max(
+      1,
+      finiteNumber(normalizedOptions.questionCount) || worksheet.problems?.length || 10
+    );
+    const compact = questionCount <= 5;
+    const medium = questionCount >= 6 && questionCount <= 8;
+    const tenFrameBand = compact
+      ? "low_count_two_column"
+      : medium
+        ? "medium_count_full_width"
+        : "standard_full_width";
+
+    layout.template = {
+      ...(layout.template || {}),
+      columns: compact ? 2 : 1,
+      maxProblemsPerPage: compact ? 5 : medium ? questionCount : 10
+    };
+    layout.display = {
+      ...(layout.display || {}),
+      visualColumns: compact ? 2 : 1,
+      visualVerticalAlign: "topThird",
+      shortVisualAnswerLine: true,
+      hideItemPrompts: true,
+      tenFrameQuestionLayout: compact ? "two_column" : "full_width",
+      tenFrameResponsiveBand: tenFrameBand,
+      tenFrameScale: compact ? 1.42 : medium ? 1.24 : 1,
+      visualHorizontalAlign: compact || medium ? "center" : null,
+      visualAnswerLineAlign: compact || medium ? "center" : null,
+      shortVisualAnswerLineRatio: compact ? 0.68 : medium ? 0.6 : null,
+      visualAnswerLineYRatio: compact ? 0.84 : medium ? 0.9 : null
+    };
+  } else {
   const fixedFrames = finiteNumber(normalizedOptions.tenFramesPerQuestion);
   const maxFrames = finiteNumber(normalizedOptions.maxTenFrames);
   const framesPerQuestion = Math.max(1, fixedFrames || maxFrames || 1);
@@ -1061,25 +1193,31 @@ if (item.activityTypes?.[0] === "ten_frame") {
     ...(layout.display || {}),
     visualColumns
   };
+  }
 }
 
-if (isReverseNumberWordMode) {
+if (isGrade1NumberWordMode) {
   const questionCount = Math.max(
     1,
-    finiteNumber(normalizedOptions.questionCount) || worksheet.problems?.length || 10
+    finiteNumber(normalizedOptions.questionCount) || worksheet.problems?.length || 20
   );
   const pageCount = Math.min(30, questionCount);
-  const derivedColumns = pageCount > 20 ? 3 : pageCount > 10 ? 2 : 1;
+  const derivedColumns = pageCount > 20 ? 3 : 2;
 
   layout.template = {
     ...(layout.template || {}),
     columns: derivedColumns,
-    maxProblemsPerPage: 30
+    maxProblemsPerPage: derivedColumns === 3 ? 30 : 20
   };
   layout.display = {
     ...(layout.display || {}),
-    shortWritingLine: true,
-    reverseNumberWordWriting: true,
+    hideSubtitle: true,
+    hideItemSeparators: true,
+    writingLine: true,
+    equalHeightItems: true,
+    numberWordResponseTarget: isReverseNumberWordMode ? "shortNumeral" : "writtenWord",
+    shortWritingLine: isReverseNumberWordMode,
+    reverseNumberWordWriting: isReverseNumberWordMode,
     reverseNumberWordLineWidth: 46,
     reverseNumberWordPromptZoneWidth: 70,
     reverseNumberWordRowsPerColumn: 10,

@@ -1,6 +1,13 @@
 const worksheetCatalogService = require("./worksheetCatalogService");
 const { normalizeWorksheetContent } = require("../engine/worksheetBuilder/normalizeWorksheetContent");
 
+const PUBLIC_SKILL_LABEL_HIDDEN_IDS = new Set([
+  "g1_number_word_match_to_50",
+  "g1_write_the_numeral_to_50",
+  "grade1_place_value_representation_base_ten_blocks",
+  "g1_ten_frame_addition_within_10"
+]);
+
 function finiteOptionalNumber(value) {
   if (value === undefined || value === null || value === "") return null;
   const n = Number(value);
@@ -8,6 +15,7 @@ function finiteOptionalNumber(value) {
 }
 
 function publicSkillLabel(item) {
+  if (PUBLIC_SKILL_LABEL_HIDDEN_IDS.has(item?.id)) return "";
   if (item?.skillKey === "patterning_and_algebra") return "";
   return item?.skillKey || "";
 }
@@ -62,6 +70,15 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         modelKey: p.modelKey || null,
         orientation: p.orientation || null,
         value: finiteOptionalNumber(p.value),
+        numberWord: p.numberWord || null,
+        numberWordMode: p.numberWordMode || null,
+        representedValue: finiteOptionalNumber(p.representedValue),
+        frameCount: finiteOptionalNumber(p.frameCount),
+        dotArrangement: p.dotArrangement || null,
+        selectionMode: p.selectionMode || null,
+        tens: finiteOptionalNumber(p.tens),
+        ones: finiteOptionalNumber(p.ones),
+        labelMode: p.labelMode || null,
         visual: p.visual || null,
         isExample: Boolean(p.isExample),
         sequence: Array.isArray(p.sequence) ? p.sequence : null,

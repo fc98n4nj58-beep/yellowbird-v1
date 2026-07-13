@@ -594,7 +594,7 @@
       "teacherNote": "Best used as focused Grade 1 number representation practice after hands-on work with ten frames.",
       "description": "Students count or recognize quantities shown in ten frames within 10. Best used as focused Grade 1 number representation practice after hands-on work with ten frames.",
       "sourceType": "curated",
-      "studentInstruction": "Count the dots in each ten frame.",
+      "studentInstruction": "Count the dots. Write the number.",
       "pdfDisplay": {
         "hideItemPrompts": true,
         "hideSubtitle": true,
@@ -602,13 +602,13 @@
         "shortVisualAnswerLine": true
       },
       "generatorOptions": {
-        "minA": 0,
+        "minA": 1,
         "maxA": 10,
         "questionCount": 10,
         "tenFramesPerQuestion": 1
       },
       "pdfLayout": {
-        "columns": 2,
+        "columns": 1,
         "maxProblemsPerPage": 10
       }
     },
@@ -1223,11 +1223,11 @@
       "description": "Students identify numbers to 50 shown with tens and ones. Best used after hands-on base-ten modelling.",
       "sourceType": "generated",
       "generatorOptions": {
-        "minA": 10,
+        "minA": 0,
         "maxA": 50,
         "questionCount": 10
       },
-      "studentInstruction": "Write the number shown by each model.",
+      "studentInstruction": "Count the base ten blocks. Write the number.",
       "pdfDisplay": {
         "hideItemPrompts": true,
         "hideSubtitle": true,
@@ -1501,7 +1501,7 @@
         "minA": 0,
         "maxA": 50,
         "promptStyle": "number_only",
-        "questionCount": 10,
+        "questionCount": 20,
         "numberWordMode": "numeral_to_word"
       },
       "studentInstruction": "Write each number in words.",
@@ -1512,8 +1512,63 @@
         "equalHeightItems": true
       },
       "pdfLayout": {
-        "columns": 1,
-        "maxProblemsPerPage": 10
+        "columns": 2,
+        "maxProblemsPerPage": 20
+      }
+    },
+    {
+      "id": "g1_write_the_numeral_to_50",
+      "title": "Write the Numeral to 50",
+      "shortTitle": "Write the Numeral",
+      "subject": "Math",
+      "grades": [
+        "grade1"
+      ],
+      "gradeLabels": [
+        "Grade 1"
+      ],
+      "domain": "Number Representation: Write the Numeral to 50",
+      "skillKey": "number_representation",
+      "worksheetFamily": "representation",
+      "activityTypes": [
+        "number_word_match"
+      ],
+      "templateId": "matching",
+      "status": "partial",
+      "difficulty": "easy",
+      "estimatedTimeMinutes": 10,
+      "hasAnswerKey": true,
+      "tags": [
+        "number words",
+        "numerals",
+        "writing",
+        "to 50",
+        "grade 1"
+      ],
+      "curriculumTags": [
+        "B1"
+      ],
+      "formatLabel": "Write numerals to 50",
+      "teacherNote": "Separate public resource for founder review; uses the shared number-word runtime without exposing a direction toggle.",
+      "description": "Students write numerals for number words to 50. Public-ready status is deferred until founder PDF review.",
+      "sourceType": "curated",
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 50,
+        "promptStyle": "number_only",
+        "questionCount": 20,
+        "numberWordMode": "word_to_numeral"
+      },
+      "studentInstruction": "Write the numeral for each number word.",
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "hideItemSeparators": true,
+        "writingLine": true,
+        "equalHeightItems": true
+      },
+      "pdfLayout": {
+        "columns": 2,
+        "maxProblemsPerPage": 20
       }
     },
     {

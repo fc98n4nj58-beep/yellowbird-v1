@@ -74,6 +74,15 @@ function buildAnswerKeyItems(items) {
     quotient: finiteOptionalNumber(it.quotient),
     isExample: Boolean(it.isExample),
     value: finiteOptionalNumber(it.value),
+    numberWord: it.numberWord || null,
+    numberWordMode: it.numberWordMode || null,
+    representedValue: finiteOptionalNumber(it.representedValue),
+    frameCount: finiteOptionalNumber(it.frameCount),
+    dotArrangement: it.dotArrangement || null,
+    selectionMode: it.selectionMode || null,
+    tens: finiteOptionalNumber(it.tens),
+    ones: finiteOptionalNumber(it.ones),
+    labelMode: it.labelMode || null,
     sequence: Array.isArray(it.sequence) ? it.sequence : null,
     missingIndex: finiteOptionalNumber(it.missingIndex),
     missingIndexes: Array.isArray(it.missingIndexes)
@@ -680,9 +689,10 @@ function measureEqualSharingVisual(data = {}, maxWidth, targetHeight) {
 
 function measureTenFrameVisual(data = {}, maxWidth, targetHeight) {
   const frameCount = Math.max(1, Number(data.frames || 1));
-  const cellSizeBase = 10;
+  const requestedScale = Math.max(1, Math.min(1.6, Number(data.scale || 1)));
+  const cellSizeBase = 10 * requestedScale;
   const cellGapBase = 0;
-  const frameGapBase = 8;
+  const frameGapBase = 8 * requestedScale;
 
   const singleFrameWidth = cellSizeBase * 5 + cellGapBase * 4;
   const singleFrameHeight = cellSizeBase * 2 + cellGapBase;
@@ -691,12 +701,18 @@ function measureTenFrameVisual(data = {}, maxWidth, targetHeight) {
   const widthBase = framesPerRow * singleFrameWidth + (framesPerRow - 1) * frameGapBase;
   const heightBase = frameRows * singleFrameHeight + (frameRows - 1) * frameGapBase;
 
+  const fitScale = Math.min(
+    1,
+    maxWidth > 0 ? maxWidth / widthBase : 1,
+    targetHeight > 0 ? targetHeight / heightBase : 1
+  );
+
   return {
-    width: widthBase,
-    height: heightBase,
-    cellSize: cellSizeBase,
-    cellGap: cellGapBase,
-    frameGap: frameGapBase
+    width: widthBase * fitScale,
+    height: heightBase * fitScale,
+    cellSize: cellSizeBase * fitScale,
+    cellGap: cellGapBase * fitScale,
+    frameGap: frameGapBase * fitScale
   };
 }
 
@@ -902,7 +918,9 @@ function getVisualRegion({
 function placeVisualInRegion(region, measured) {
   if (!region || !measured) return null;
 
-  const x = region.x;
+  const x = display.visualHorizontalAlign === "center"
+    ? region.x + Math.max(0, (region.width - measured.width) / 2)
+    : region.x;
   const y =
     region.topY +
     (region.height - measured.height) / 2 +
@@ -934,10 +952,14 @@ function placeVisualInRegionWithDisplay(region, measured, display = {}) {
 function drawAnswerLine(doc, region, options = {}) {
   if (!region || region.answerWidth <= 20) return null;
 
-  const lineY = region.topY + region.height * 0.95;
-  const lineStartX = region.answerX;
-  const lineWidth = options.short ? region.answerWidth * 0.5 : region.answerWidth;
-  const lineEndX = region.answerX + lineWidth;
+  const lineYRatio = Math.max(0.5, Math.min(0.97, Number(options.yRatio || 0.95)));
+  const lineY = region.topY + region.height * lineYRatio;
+  const shortRatio = Math.max(0.45, Math.min(0.85, Number(options.shortRatio || 0.5)));
+  const lineWidth = options.short ? region.answerWidth * shortRatio : region.answerWidth;
+  const lineStartX = options.align === "center"
+    ? region.answerX + Math.max(0, (region.answerWidth - lineWidth) / 2)
+    : region.answerX;
+  const lineEndX = lineStartX + lineWidth;
 
   doc.save();
   doc.strokeColor(pdfDesignTokens.colors.answerRule);
@@ -1966,13 +1988,21 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
         Math.max(48, width - numberWidth - lineWidth - 10)
       )
       : null;
+    const writtenNumberWordPromptWidth = display.numberWordResponseTarget === "writtenWord"
+      ? Math.min(
+        Math.max(18, doc.widthOfString(rawPrompt) + 12),
+        Math.max(18, width * 0.28)
+      )
+      : null;
     const lineStartX = display.reverseNumberWordWriting
       ? x + numberWidth + promptZoneWidth + 6
       : display.shortWritingLine
         ? x + width - lineWidth
         : display.answerLineBelowPrompt
           ? x + numberWidth
-          : x + Math.min(88, width * 0.18);
+          : display.numberWordResponseTarget === "writtenWord"
+            ? x + numberWidth + writtenNumberWordPromptWidth
+            : x + Math.min(88, width * 0.18);
     const lineEndX = display.shortWritingLine
       ? lineStartX + lineWidth
       : x + width;
@@ -2086,18 +2116,27 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
   if (visual?.kind && !doc._ended) {
     const visualCellX = hidePrompt ? x + 34 : x;
     const visualCellWidth = hidePrompt ? Math.max(40, width - 34) : width;
-    const fullWidthVisual = Boolean(display.numberLineAnswerUnderTarget && visual.kind === "number_line");
+    const visualForRender = visual.kind === "ten_frame" && Number(display.tenFrameScale) > 1
+      ? {
+          ...visual,
+          data: {
+            ...(visual.data || {}),
+            scale: Number(display.tenFrameScale)
+          }
+        }
+      : visual;
+    const fullWidthVisual = Boolean(display.numberLineAnswerUnderTarget && visualForRender.kind === "number_line");
     const region = getVisualRegion({
       cellBottomY,
       promptBottomY,
       cellX: visualCellX,
       cellWidth: visualCellWidth,
-      visualKind: visual.kind,
+      visualKind: visualForRender.kind,
       fullWidth: fullWidthVisual
     });
 
     const measured = measureVisual(
-      visual,
+      visualForRender,
       region.maxWidth,
       region.targetHeight
     );
@@ -2106,9 +2145,9 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
 
     if (measured && placed) {
       try {
-        const renderMeta = renderVisualByKind(doc, visual, placed, measured);
+        const renderMeta = renderVisualByKind(doc, visualForRender, placed, measured);
 
-        if (visual.kind === "number_line" && display.numberLineAnswerUnderTarget && renderMeta?.dotX) {
+        if (visualForRender.kind === "number_line" && display.numberLineAnswerUnderTarget && renderMeta?.dotX) {
           const answerWidth = 42;
           const pageBox = layout.page.contentBox;
           const minX = pageBox.x + 4;
@@ -2129,7 +2168,7 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
           return height;
         }
 
-        if (visual.kind === "base_ten_blocks" && display.baseTenAlignedResponse) {
+        if (visualForRender.kind === "base_ten_blocks" && display.baseTenAlignedResponse) {
           const modelBottomY = placed.y + (measured.rodLength || measured.height);
 
           if (display.baseTenTensOnesBoxes) {
@@ -2179,14 +2218,20 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
 
         if ((display.answerKey || isExample) && question.answer != null && !hasInlineAnswerBlank) {
           const line = drawAnswerLine(doc, region, {
-            short: Boolean(display.shortVisualAnswerLine)
+            short: Boolean(display.shortVisualAnswerLine),
+            shortRatio: display.shortVisualAnswerLineRatio,
+            yRatio: display.visualAnswerLineYRatio,
+            align: display.visualAnswerLineAlign
           });
           if (line) {
             drawTextOnLine(doc, question.answer, line.x, line.y, line.width, fonts);
           }
         } else if (!hasInlineAnswerBlank) {
           drawAnswerLine(doc, region, {
-            short: Boolean(display.shortVisualAnswerLine)
+            short: Boolean(display.shortVisualAnswerLine),
+            shortRatio: display.shortVisualAnswerLineRatio,
+            yRatio: display.visualAnswerLineYRatio,
+            align: display.visualAnswerLineAlign
           });
         }
       } catch (err) {
