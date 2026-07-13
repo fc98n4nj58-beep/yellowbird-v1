@@ -178,7 +178,7 @@ Preferred pagination principle:
 
 ## Completed-Example Rules
 
-Acceptance criteria:
+Default acceptance criteria:
 
 - label is `Example`;
 - example is unnumbered;
@@ -189,6 +189,16 @@ Acceptance criteria:
 - example does not create excessive whitespace;
 - example participates in pagination;
 - answer key distinguishes the example from student questions.
+
+Family-specific exceptions must be recorded in the family preflight. Dense Grade 1 fluency/comparison worksheets use a Question 1 completed-example pattern instead:
+
+- the completed example is printed as Question 1;
+- it counts within the requested question total;
+- no separate `Example` heading appears;
+- Question 2 follows in the normal grid;
+- only the completed answer is emphasized.
+
+Do not apply the Question 1 pattern to other task families unless the family preflight explicitly approves it.
 
 ## Answer-Key Rules
 

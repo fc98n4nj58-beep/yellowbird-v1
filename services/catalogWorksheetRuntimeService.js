@@ -56,6 +56,7 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         a: finiteOptionalNumber(p.a),
         b: finiteOptionalNumber(p.b),
         op: p.op || null,
+        operation: p.operation || null,
         product: finiteOptionalNumber(p.product),
         quotient: finiteOptionalNumber(p.quotient),
         modelKey: p.modelKey || null,
@@ -75,6 +76,20 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         continuationCount: finiteOptionalNumber(p.continuationCount),
         continuationAnswers: Array.isArray(p.continuationAnswers) ? p.continuationAnswers : null,
         missingTermPlacement: p.missingTermPlacement || null,
+        minuend: finiteOptionalNumber(p.minuend),
+        subtrahend: finiteOptionalNumber(p.subtrahend),
+        difference: finiteOptionalNumber(p.difference),
+        firstAddend: finiteOptionalNumber(p.firstAddend),
+        secondAddend: finiteOptionalNumber(p.secondAddend),
+        total: finiteOptionalNumber(p.total),
+        missingPosition: p.missingPosition || null,
+        missingValue: finiteOptionalNumber(p.missingValue),
+        leftValue: finiteOptionalNumber(p.leftValue),
+        rightValue: finiteOptionalNumber(p.rightValue),
+        expectedSymbol: p.expectedSymbol || null,
+        comparisonResult: p.comparisonResult || null,
+        duplicateSignature: p.duplicateSignature || null,
+        relatedDuplicateSignature: p.relatedDuplicateSignature || null,
         diagnostics: Array.isArray(p.diagnostics) ? p.diagnostics : null
       }))
     }

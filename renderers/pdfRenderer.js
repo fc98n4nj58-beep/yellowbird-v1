@@ -86,6 +86,21 @@ function buildAnswerKeyItems(items) {
     continuationCount: finiteOptionalNumber(it.continuationCount),
     continuationAnswers: Array.isArray(it.continuationAnswers) ? it.continuationAnswers : null,
     missingTermPlacement: it.missingTermPlacement || null,
+    operation: it.operation || null,
+    minuend: finiteOptionalNumber(it.minuend),
+    subtrahend: finiteOptionalNumber(it.subtrahend),
+    difference: finiteOptionalNumber(it.difference),
+    firstAddend: finiteOptionalNumber(it.firstAddend),
+    secondAddend: finiteOptionalNumber(it.secondAddend),
+    total: finiteOptionalNumber(it.total),
+    missingPosition: it.missingPosition || null,
+    missingValue: finiteOptionalNumber(it.missingValue),
+    leftValue: finiteOptionalNumber(it.leftValue),
+    rightValue: finiteOptionalNumber(it.rightValue),
+    expectedSymbol: it.expectedSymbol || null,
+    comparisonResult: it.comparisonResult || null,
+    duplicateSignature: it.duplicateSignature || null,
+    relatedDuplicateSignature: it.relatedDuplicateSignature || null,
     diagnostics: Array.isArray(it.diagnostics) ? it.diagnostics : null,
   }));
 }
@@ -122,6 +137,20 @@ function standardizeShortBlanks(prompt, display = {}) {
   if (!display.standardShortAnswerTarget) return prompt;
   const blankText = display.standardAnswerBlankText || "___";
   return safeStr(prompt).replace(/_{2,}/g, blankText);
+}
+
+function answerTargetDefaults(display = {}) {
+  const variant = display.answerTargetVariant || "";
+  if (variant === "comparisonSymbol") {
+    return {
+      width: 34,
+      align: "center"
+    };
+  }
+  return {
+    width: null,
+    align: display.standardAnswerNoLineAlign || "center"
+  };
 }
 
 function clampCols(n) {
@@ -1307,8 +1336,9 @@ function drawInlineAnswerPrompt(doc, promptText, answers, x, y, width, fonts = {
   const parts = String(promptText || "").split(/_{2,}/);
   const answerParts = Array.isArray(answers) ? answers : splitAnswerParts(answers);
   const requestedBlankWidth = Number(display.standardAnswerLineWidth || 0);
+  const targetDefaults = answerTargetDefaults(display);
   const defaultBlankWidth = Math.max(24, doc.widthOfString(display.standardAnswerBlankText || "___") + 8);
-  const blankWidth = Math.max(defaultBlankWidth, requestedBlankWidth || 0);
+  const blankWidth = Math.max(defaultBlankWidth, requestedBlankWidth || targetDefaults.width || 0);
   const shouldDrawAnswers = display.inlineAnswerValues !== false;
   const shouldDrawAnswerLine = display.standardAnswerLineVisible !== false;
   let cursorX = x;
@@ -1344,7 +1374,7 @@ function drawInlineAnswerPrompt(doc, promptText, answers, x, y, width, fonts = {
           doc.fillColor(pdfDesignTokens.colors.text);
           doc.text(answerText, cursorX, y, {
             width: safeBlankWidth,
-            align: display.standardAnswerNoLineAlign || "center",
+            align: targetDefaults.align,
             lineBreak: false
           });
           doc.restore();
@@ -1798,7 +1828,9 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
     dividerY
   } = layoutBox;
 
-  const isExample = Boolean(display.includeExample && question.isExample && !display.answerKey);
+  const isExampleItem = Boolean(display.includeExample && question.isExample);
+  const isExample = Boolean(isExampleItem && !display.answerKey);
+  const exampleCountsAsQuestion = Boolean(display.exampleCountsAsQuestion);
   const rawPromptBase = isExample &&
     question.answer != null &&
     !question.visual &&
@@ -1810,7 +1842,12 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
     ? filledAnswerText(question.prompt || question.text || "", question.answer)
     : question.prompt || question.text || "";
   const rawPrompt = standardizeShortBlanks(rawPromptBase, display);
-  const numberPrefix = question.id != null ? `${question.id})  ` : "";
+  const displayNumber = question.id != null && (!question.isExample || exampleCountsAsQuestion)
+    ? display.includeExample && !exampleCountsAsQuestion
+      ? Math.max(1, Number(question.id) - 1)
+      : question.id
+    : null;
+  const numberPrefix = displayNumber != null ? `${displayNumber})  ` : "";
   const hidePrompt = Boolean(display.hideItemPrompts && question.visual);
   const promptText = `${numberPrefix}${hidePrompt ? "" : rawPrompt}`.trim();
   const hasInlineAnswerBlank = Boolean(promptText.match(/_{2,}/));
@@ -1839,7 +1876,7 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
   doc.font(fonts.regular || "Helvetica");
   doc.fontSize(12);
 
-  if (isExample) {
+  if (isExampleItem && !exampleCountsAsQuestion) {
     setFont(doc, fonts.lightItalic || fonts.regular || "Helvetica", 9);
     doc.fillColor(pdfDesignTokens.colors.muted);
     doc.text(display.workSpaceBox ? "Worked Example" : "Example", x, y - 11, {

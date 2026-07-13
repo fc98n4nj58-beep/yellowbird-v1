@@ -1,3 +1,9 @@
+const {
+  generateCompareNumbersFact
+} = require("./grade1FluencyComparison");
+
+const GRADE1_COMPARE_NUMBERS_ID = "g1_compare_numbers_to_20";
+
 function randInt(min, max, random = Math.random) {
   return Math.floor(random() * (max - min + 1)) + min;
 }
@@ -16,6 +22,10 @@ function pickNumber(options, min, max) {
 }
 
 function generateCompareNumbersProblem(options = {}) {
+  if (options.worksheetId === GRADE1_COMPARE_NUMBERS_ID) {
+    return generateCompareNumbersFact(options);
+  }
+
   const random = options.random || Math.random;
   const min = Number.isFinite(options.minA) ? options.minA : 0;
   const max = Number.isFinite(options.maxA) ? options.maxA : 999;

@@ -19,6 +19,10 @@ function studentItems(items) {
   return items.filter((item) => !item.isExample);
 }
 
+function requestedQuestionItems(items) {
+  return items;
+}
+
 function signature(item) {
   return `${Math.min(item.a, item.b)}:${Math.max(item.a, item.b)}`;
 }
@@ -74,9 +78,12 @@ function run() {
     includeExample: true,
     worksheetSeed: "with-example"
   });
-  assert.strictEqual(includeExample.length, 21);
+  assert.strictEqual(includeExample.length, 20);
   assert.strictEqual(includeExample[0].isExample, true);
-  assert.strictEqual(studentItems(includeExample).length, 20);
+  assert.strictEqual(includeExample[0].id, 1);
+  assert.strictEqual(includeExample[1].id, 2);
+  assert.strictEqual(studentItems(includeExample).length, 19);
+  assert.strictEqual(requestedQuestionItems(includeExample).length, 20);
   assertValidAdditionFacts(includeExample);
 
   const selected = itemsFor({
@@ -220,8 +227,8 @@ function run() {
     includeExample: true,
     worksheetSeed: "multi-page"
   });
-  assert.strictEqual(multiPage.contentObject.content.items.length, 76);
-  assert.strictEqual(studentItems(multiPage.contentObject.content.items).length, 75);
+  assert.strictEqual(multiPage.contentObject.content.items.length, 75);
+  assert.strictEqual(studentItems(multiPage.contentObject.content.items).length, 74);
   assert.strictEqual(multiPage.layout.template.maxProblemsPerPage, 60);
 
   const worksheet = worksheetCatalogService.generateWorksheetFromCatalogId(RESOURCE_ID, {
@@ -229,7 +236,7 @@ function run() {
     includeExample: true,
     worksheetSeed: "worksheet-count"
   });
-  assert.strictEqual(worksheet.problems.length, 13);
+  assert.strictEqual(worksheet.problems.length, 12);
 
   const noMutationInput = {
     questionCount: 8,

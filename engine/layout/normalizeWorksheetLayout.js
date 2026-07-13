@@ -100,6 +100,21 @@ function normalizeProblem(problem, index, context) {
     continuationCount: finiteOptionalNumber(problem.continuationCount),
     continuationAnswers: Array.isArray(problem.continuationAnswers) ? problem.continuationAnswers : null,
     missingTermPlacement: problem.missingTermPlacement || null,
+    operation: problem.operation || null,
+    minuend: finiteOptionalNumber(problem.minuend),
+    subtrahend: finiteOptionalNumber(problem.subtrahend),
+    difference: finiteOptionalNumber(problem.difference),
+    firstAddend: finiteOptionalNumber(problem.firstAddend),
+    secondAddend: finiteOptionalNumber(problem.secondAddend),
+    total: finiteOptionalNumber(problem.total),
+    missingPosition: problem.missingPosition || null,
+    missingValue: finiteOptionalNumber(problem.missingValue),
+    leftValue: finiteOptionalNumber(problem.leftValue),
+    rightValue: finiteOptionalNumber(problem.rightValue),
+    expectedSymbol: problem.expectedSymbol || null,
+    comparisonResult: problem.comparisonResult || null,
+    duplicateSignature: problem.duplicateSignature || null,
+    relatedDuplicateSignature: problem.relatedDuplicateSignature || null,
     diagnostics: Array.isArray(problem.diagnostics) ? problem.diagnostics : null
   };
 }

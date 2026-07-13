@@ -1,10 +1,19 @@
 const generateArithmeticProblem = require("../engines/arithmeticEngine");
+const {
+  generateMissingAddendFact
+} = require("./grade1FluencyComparison");
+
+const GRADE1_MISSING_ADDENDS_ID = "g1_missing_addends_within_20";
 
 function randInt(min, max, random = Math.random) {
   return Math.floor(random() * (max - min + 1)) + min;
 }
 
 function generateMissingAddendProblem(options = {}) {
+  if (options.worksheetId === GRADE1_MISSING_ADDENDS_ID) {
+    return generateMissingAddendFact(options);
+  }
+
   const random = options.random || Math.random;
   const maxTotal = Number(options.maxTotal || options.maxA);
 

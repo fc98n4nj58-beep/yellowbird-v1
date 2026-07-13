@@ -1,6 +1,15 @@
 const generateArithmeticProblem = require("../engines/arithmeticEngine");
+const {
+  generateSubtractionFact
+} = require("./grade1FluencyComparison");
+
+const GRADE1_SUBTRACTION_FACTS_ID = "g1_subtraction_facts_within_20";
 
 function generateRelatedSubtractionProblem(options = {}) {
+  if (options.worksheetId === GRADE1_SUBTRACTION_FACTS_ID) {
+    return generateSubtractionFact(options);
+  }
+
   return generateArithmeticProblem({
     ...options,
     operation: "subtraction",

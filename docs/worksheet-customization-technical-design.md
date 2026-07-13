@@ -4,7 +4,7 @@ Status: Technical design plus Addition Facts public prototype
 
 Product source: Worksheet Customization Product and UX Specification - Version 2
 
-Implementation status: Addition Facts registry runtime and Resource Detail customization UI implemented for `g1_addition_facts_within_20`
+Implementation status: Addition Facts registry runtime and Resource Detail customization UI implemented for `g1_addition_facts_within_20`; Grade 1 Subtraction Facts, Missing Addends, and Compare Numbers runtime/proof support implemented without public UI
 
 Foundation implementation status:
 
@@ -12,6 +12,7 @@ Foundation implementation status:
 - Addition Facts registry normalization is consumed by the active shared catalog runtime for `g1_addition_facts_within_20`.
 - The active Addition Facts generator consumes the normalized range, selected-value emphasis, question count, example, seed, and answer-key package settings described below.
 - The Resource Detail Page exposes the first public customization prototype for Addition Facts only.
+- Grade 1 Subtraction Facts, Missing Addends, and Compare Numbers now have runtime/proof support for the shared variable contract, but no public customization controls are approved or wired.
 - Renderer geometry is unchanged.
 - PDF proof artifacts were generated under `review/addition-facts-customization-runtime/`; that review directory is intentionally not part of production source.
 
@@ -65,6 +66,8 @@ Architecture scan
 The preflight must define the worksheet layout, answer targets, page capacity, completed-example behavior, answer-key behavior, footer wording, teacher-facing variables, runtime-only controls, deferred controls, and proof-packet coverage before code is written.
 
 Addition Facts remains the first complete public customization prototype. Numeric Patterning is the first family completed after applying more formal task-specific layout review. Patterning customization UI, Arrays customization, and Function Tables remain deferred unless a later founder-approved preflight reopens them.
+
+Grade 1 Subtraction Facts, Missing Addends, and Compare Numbers have runtime/proof support only. Future UI code must not infer public readiness from their generator metadata, structured answer metadata, proof artifacts, or shared option adapter support.
 
 ## Proposed Future Modules
 
@@ -159,7 +162,7 @@ Family support declarations should contain:
 | --- | --- | --- | --- |
 | `questionCount` | Number of questions | Student questions requested | Prototype 1 and 2 |
 | `questionsPerPage` | Questions per page | Approved family density | Deferred until proof |
-| `includeExample` | Show one completed example | Adds one completed example before student questions | Prototype 1 and 2 |
+| `includeExample` | Show one completed example | Family-specific completed example; dense Grade 1 fluency/comparison uses solved Question 1, while Patterning uses an additional unnumbered example | Prototype 1 and 2 |
 | `includeAnswerKey` | Include answer key | Includes answer-key output | Prototype 1 and 2 |
 | `minimumValue` | Number range | Lowest generated value | Prototype 1 |
 | `maximumValue` | Number range | Highest generated value | Prototype 1 |
@@ -395,7 +398,9 @@ High-risk controls require family-specific PDF proof before public exposure.
 
 ## Completed Example Contract
 
-`includeExample` means:
+`includeExample` is family-specific.
+
+Default task-family behavior:
 
 - one completed example appears before student questions
 - it does not count toward `questionCount`
@@ -404,6 +409,14 @@ High-risk controls require family-specific PDF proof before public exposure.
 - it uses the same task structure as student questions
 - preview and PDF match
 - answer-key treatment is accurate and clearly distinguished
+
+Dense Grade 1 fluency/comparison behavior:
+
+- Addition Facts, Subtraction Facts, Missing Addends, and Compare Numbers use solved Question 1.
+- The completed example counts within the requested total.
+- No separate `Example` heading appears.
+- Question 2 follows normally.
+- Only the completed answer or comparison symbol is emphasized.
 
 The registry should mark whether a family supports shared completed examples or requires special family approval.
 
@@ -487,7 +500,7 @@ Runtime generation contract:
 - Repetition is avoided while unused valid facts remain, except selected-value emphasis may intentionally repeat preferred facts to reach its target.
 - `selectedValues` means numbers to emphasize. The generator targets about two thirds of student questions from facts where either operand matches a selected value, then fills from the full valid pool.
 - `selectedValues` outside the normalized range are rejected during registry validation.
-- `questionCount` is the exact number of student questions. A completed example, when included, is generated as one extra item before student questions and is not counted.
+- `questionCount` is the exact number of printed questions for dense Grade 1 fluency customization. A completed example, when included, is Question 1 and is counted within the requested total.
 - `questionsPerPage` is consumed only at the fixed internal proof value of 60.
 - `includeAnswerKey` affects the PDF package and canonical option hash but is not sent as a problem-generation option.
 - Preview and PDF use the same normalized canonical payload and seeded runtime path.
@@ -690,6 +703,82 @@ Numeric Patterning runtime groundwork:
 - Runtime-supported future labels: Number of questions, Pattern type, Steps to practise, Starting-number range, Numbers in each sequence, Numbers to write, Missing numbers in each pattern, Where the missing numbers appear, Show one completed example, and Include answer key remain runtime-supported only and await a later UI decision
 - Deferred: Function Table public layout, visual/geometric patterns, shape patterns, alternating rules, multiplication/division patterns, negative-number defaults, and `pattern_word_problems` remain outside this first public-ready numeric family
 - Catalog status: no Patterning resource promotion is included with this runtime groundwork
+
+## Grade 1 Fluency + Comparison Runtime Support
+
+Runtime support is implemented for:
+
+- `g1_subtraction_facts_within_20`
+- `g1_missing_addends_within_20`
+- `g1_compare_numbers_to_20`
+
+Related public customization status:
+
+- Addition Facts remains the only public Resource Detail customization prototype.
+- Subtraction Facts, Missing Addends, and Compare Numbers are runtime-supported and proof-supported only.
+- No public controls, route redesign, or Resource Detail UI wiring are approved for this batch.
+- Future UI code must not infer public readiness because a resource has structured metadata, generator support, or proof artifacts.
+
+Shared runtime contract:
+
+- canonical `questionCount`
+- internal `questionsPerPage`, with 60 as the proofed dense-grid default
+- `includeExample`, where this dense family uses solved Question 1 within the requested question count
+- `includeAnswerKey`
+- `minimumValue` and `maximumValue`
+- `selectedValues`, mapped from `selectedNumbers` and `onlyNumbers` aliases when needed
+- `worksheetSeed` for deterministic preview/PDF parity
+
+Subtraction Facts behavior:
+
+- uses a deterministic finite candidate pool
+- preserves exact student-question counts
+- keeps nonnegative subtraction only
+- supports selected-number emphasis across minuend, subtrahend, and difference
+- emits structured metadata: `minuend`, `subtrahend`, `difference`, `operation`, `answer`, `responseValues`, and duplicate signatures
+
+Missing Addends behavior:
+
+- uses a deterministic finite candidate pool
+- preserves exact student-question counts
+- defaults to balanced mixed missing positions
+- supports explicit first-addend or second-addend missing modes
+- supports selected-number emphasis across the missing value, visible addends, and total
+- emits structured metadata: `firstAddend`, `secondAddend`, `total`, `missingPosition`, `missingValue`, `answer`, `responseValues`, and duplicate signatures
+
+Compare Numbers behavior:
+
+- uses a deterministic finite candidate pool
+- preserves exact student-question counts
+- balances `<`, `>`, and `=` where equality pairs are enabled
+- supports an internal `includeEqualPairs` option, defaulting to true
+- supports selected-number emphasis across the left and right values
+- avoids duplicate exact pairs before repetition and records mirror-pair metadata for related variants
+- emits structured metadata: `leftValue`, `rightValue`, `expectedSymbol`, `comparisonResult`, `answer`, `responseValues`, duplicate signatures, and related duplicate signatures
+
+Answer-target variants:
+
+- Subtraction Facts and Missing Addends use the `shortNumeric` answer-target variant.
+- Compare Numbers uses the `comparisonSymbol` answer-target variant.
+- Written-response answer targets remain reserved for later approved families.
+
+Completed examples and answer keys:
+
+- completed examples are solved Question 1 for this dense Grade 1 fluency/comparison batch
+- the example counts within the requested total
+- no separate `Example` heading appears
+- Question 2 follows normally
+- answer keys consume structured metadata where available rather than reconstructing answers from prompt text
+- answer-only bolding remains the standard; for Compare Numbers only the completed symbol is emphasized
+
+Proof status:
+
+- focused runtime tests: `scripts/testGrade1FluencyComparisonRuntime.js`
+- proof generator: `scripts/generateGrade1FluencyComparisonProofs.js`
+- proof artifacts: `review/grade-1-fluency-comparison/`
+- proof packet currently contains 38 generated PDFs and a JSON summary, including Addition Facts side-by-side comparison cases
+- same-seed parity is checked by the proof generator
+- Founder PDF review is required before any public customization expansion
 
 ## Resource-Kind Boundaries
 

@@ -107,6 +107,55 @@ function parseNumberList(value) {
     .filter((n) => n !== null);
 }
 
+const GRADE1_FLUENCY_COMPARISON_IDS = new Set([
+  "g1_subtraction_facts_within_20",
+  "g1_missing_addends_within_20",
+  "g1_compare_numbers_to_20"
+]);
+
+const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
+  "g1_addition_facts_within_20",
+  "g1_subtraction_facts_within_20",
+  "g1_missing_addends_within_20",
+  "g1_compare_numbers_to_20"
+]);
+
+function usesQuestion1CompletedExample(item) {
+  return DENSE_GRADE1_QUESTION1_EXAMPLE_IDS.has(item.id);
+}
+
+function normalizeGrade1FluencyComparisonOptions(item, options = {}) {
+  if (!GRADE1_FLUENCY_COMPARISON_IDS.has(item.id)) return options;
+
+  const normalized = { ...options };
+  const minimumValue = finiteNumber(normalized.minimumValue);
+  const maximumValue = finiteNumber(normalized.maximumValue);
+  const selectedValues = parseNumberList(
+    normalized.selectedValues || normalized.selectedNumbers || normalized.onlyNumbers
+  );
+
+  if (minimumValue !== null) {
+    normalized.minA = minimumValue;
+    normalized.minB = minimumValue;
+  }
+
+  if (maximumValue !== null) {
+    normalized.maxA = maximumValue;
+    normalized.maxB = maximumValue;
+    if (item.activityTypes?.[0] === "missing_addend") {
+      normalized.maxTotal = maximumValue;
+    }
+  }
+
+  if (selectedValues.length) {
+    normalized.selectedValues = selectedValues;
+    normalized.selectedNumbers = selectedValues;
+    normalized.onlyNumbers = selectedValues.join(",");
+  }
+
+  return normalized;
+}
+
 function normalizeCatalogWorksheetOptions(item, options = {}) {
   const normalized = {
     ...(item.generatorOptions || {}),
@@ -225,6 +274,11 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     false
   );
 
+  normalized.includeEqualPairs = parseBoolean(
+    normalized.includeEqualPairs ?? normalized.equalPairs,
+    true
+  );
+
   normalized.showJumpVisuals = parseBoolean(
     normalized.showJumpVisuals,
     true
@@ -260,7 +314,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalized;
+  return normalizeGrade1FluencyComparisonOptions(item, normalized);
 }
 
 const NON_CUSTOMIZATION_QUERY_KEYS = new Set([
@@ -430,7 +484,7 @@ function generateWorksheetFromCatalogId(id, options = {}) {
 
   const requestedQuestionCount = generatorOptions.questionCount || defaultQuestionCount || generatorOptions.questionCount;
   const generationQuestionCount =
-    generatorOptions.includeExample && Number.isFinite(requestedQuestionCount)
+    generatorOptions.includeExample && Number.isFinite(requestedQuestionCount) && !usesQuestion1CompletedExample(item)
       ? requestedQuestionCount + 1
       : requestedQuestionCount;
 
@@ -513,6 +567,18 @@ function buildStudentFacingInstruction(item, fallback = "") {
 
  if (activityType === "skip_counting") {
   return "Write the missing numbers in each skip-counting pattern.";
+ }
+
+ if (activityType === "related_subtraction") {
+  return "Solve each subtraction fact.";
+ }
+
+ if (activityType === "missing_addend") {
+  return "Write the missing number in each equation.";
+ }
+
+ if (activityType === "compare_numbers") {
+  return "Write >, <, or = to compare each pair of numbers.";
  }
 
  if (activityType === "extend_pattern") {
@@ -713,7 +779,8 @@ if (item.activityTypes?.[0] === "base_ten_blocks" && layout.display?.baseTenAlig
 if (normalizedOptions.includeExample && layout.problems?.length) {
   layout.display = {
     ...(layout.display || {}),
-    includeExample: true
+    includeExample: true,
+    exampleCountsAsQuestion: usesQuestion1CompletedExample(item)
   };
   layout.problems[0] = {
     ...layout.problems[0],
@@ -725,6 +792,32 @@ if (Number.isFinite(normalizedOptions.questionsPerPage) && normalizedOptions.que
   layout.template = {
     ...(layout.template || {}),
     maxProblemsPerPage: normalizedOptions.questionsPerPage
+  };
+}
+
+if (["math.addition.basic", "related_subtraction", "missing_addend"].includes(item.activityTypes?.[0])) {
+  layout.display = {
+    ...(layout.display || {}),
+    answerTargetVariant: "shortNumeric",
+    standardShortAnswerTarget: true
+  };
+}
+
+if (item.activityTypes?.[0] === "compare_numbers") {
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 4,
+    maxProblemsPerPage: finiteNumber(normalizedOptions.questionsPerPage) || 60
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    answerTargetVariant: "comparisonSymbol",
+    standardShortAnswerTarget: true,
+    standardAnswerLineWidth: 34,
+    standardAnswerBlankText: "___",
+    hideItemSeparators: true,
+    equalHeightItems: true,
+    denseGridRows: 15
   };
 }
 
