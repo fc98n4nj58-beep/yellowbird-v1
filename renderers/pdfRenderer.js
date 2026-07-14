@@ -1420,6 +1420,7 @@ function splitAnswerParts(answer) {
 function drawInlineAnswerPrompt(doc, promptText, answers, x, y, width, fonts = {}, display = {}) {
   const parts = String(promptText || "").split(/_{2,}/);
   const answerParts = Array.isArray(answers) ? answers : splitAnswerParts(answers);
+  const fontSize = Number(display.inlineEquationFontSize || 12);
   const requestedBlankWidth = Number(display.standardAnswerLineWidth || 0);
   const targetDefaults = answerTargetDefaults(display);
   const defaultBlankWidth = Math.max(24, doc.widthOfString(display.standardAnswerBlankText || "___") + 8);
@@ -1428,7 +1429,7 @@ function drawInlineAnswerPrompt(doc, promptText, answers, x, y, width, fonts = {
   const shouldDrawAnswerLine = display.standardAnswerLineVisible !== false;
   let cursorX = x;
 
-  setFont(doc, fonts.regular || "Helvetica", 12);
+  setFont(doc, fonts.regular || "Helvetica", fontSize);
   doc.fillColor(pdfDesignTokens.colors.text);
 
   parts.forEach((part, index) => {
@@ -1444,7 +1445,7 @@ function drawInlineAnswerPrompt(doc, promptText, answers, x, y, width, fonts = {
 
     if (index < parts.length - 1) {
       const answerText = answerParts[index] ?? answerParts[0] ?? "";
-      const lineY = y + (layout.typography.body?.lineHeight || 14);
+      const lineY = y + Math.max(layout.typography.body?.lineHeight || 14, fontSize + 3);
       const safeBlankWidth = Math.max(24, Math.min(blankWidth, x + width - cursorX - 2));
 
       if (shouldDrawAnswerLine) {
@@ -1452,10 +1453,10 @@ function drawInlineAnswerPrompt(doc, promptText, answers, x, y, width, fonts = {
       }
       if (shouldDrawAnswers && answerText !== "") {
         if (shouldDrawAnswerLine) {
-          drawTextOnLine(doc, answerText, cursorX, lineY, safeBlankWidth, fonts);
+          drawTextOnLine(doc, answerText, cursorX, lineY, safeBlankWidth, fonts, { fontSize });
         } else {
           doc.save();
-          setFont(doc, fonts.bold || fonts.regular || "Helvetica", 12);
+          setFont(doc, fonts.bold || fonts.regular || "Helvetica", fontSize);
           doc.fillColor(pdfDesignTokens.colors.text);
           doc.text(answerText, cursorX, y, {
             width: safeBlankWidth,
@@ -1464,11 +1465,58 @@ function drawInlineAnswerPrompt(doc, promptText, answers, x, y, width, fonts = {
           });
           doc.restore();
         }
-        restoreAnswerSurroundingTextStyle(doc, fonts, 12);
+        restoreAnswerSurroundingTextStyle(doc, fonts, fontSize);
       }
       cursorX += safeBlankWidth;
     }
   });
+}
+
+function buildCompactWordProblemAnswerKeyGeometry({ y, height, promptHeight }) {
+  const topPadding = 4;
+  const answerGap = 8;
+  const bottomPadding = 10;
+  const promptY = y + topPadding;
+  const answerY = promptY + promptHeight + answerGap;
+  return {
+    promptY,
+    answerY,
+    separatorY: y + height - bottomPadding,
+    requiredHeight: topPadding + promptHeight + answerGap + 18 + bottomPadding
+  };
+}
+
+function renderCompactWordProblemAnswerKeyItem(doc, question, layoutBox, fonts = {}) {
+  const { x, y, width, height } = layoutBox;
+  const prompt = `${question.id != null ? `${question.id})  ` : ""}${question.prompt || question.text || ""}`.trim();
+  const promptFontSize = 11.5;
+  setFont(doc, fonts.regular || "Helvetica", promptFontSize);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  const promptHeight = doc.heightOfString(prompt, { width, align: "left", lineGap: 1 });
+  const geometry = buildCompactWordProblemAnswerKeyGeometry({ y, height, promptHeight });
+
+  doc.text(prompt, x, geometry.promptY, { width, align: "left", lineGap: 1 });
+
+  const label = "Answer: ";
+  setFont(doc, fonts.regular || "Helvetica", 11.5);
+  doc.text(label, x, geometry.answerY, { width, align: "left", lineBreak: false });
+  const answerX = x + doc.widthOfString(label);
+  setFont(doc, fonts.bold || fonts.regular || "Helvetica", 11.5);
+  doc.text(formatAnswerValue(question.answer), answerX, geometry.answerY, {
+    width: Math.max(24, width - (answerX - x)),
+    align: "left",
+    lineBreak: false
+  });
+
+  if (geometry.separatorY > geometry.answerY + 16) {
+    doc.save();
+    doc.strokeColor(pdfDesignTokens.colors.lightRule);
+    doc.lineWidth(pdfDesignTokens.rules.thin);
+    doc.moveTo(x, geometry.separatorY).lineTo(x + width, geometry.separatorY).stroke();
+    doc.restore();
+  }
+
+  return Math.max(height, geometry.requiredHeight);
 }
 
 function drawJumpArrow(doc, startX, endX, y, index, count) {
@@ -2124,6 +2172,10 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
     width: promptWidth,
     align: "left"
   });
+
+  if (!visual?.kind && display.compactWordProblemAnswerKey && display.answerKey) {
+    return renderCompactWordProblemAnswerKeyItem(doc, question, layoutBox, fonts);
+  }
 
   if (display.factFamilyGrid && !visual?.kind) {
     doc.text(numberPrefix.trim(), promptX, promptY, {
@@ -4029,6 +4081,9 @@ function renderAnswerKey(doc, fonts, contentObject, options, pageState, layoutOb
   const answers = buildAnswerKeyItems(contentObject?.content?.items || []);
   if (!answers.length) return;
   const worksheetType = layoutObject?.worksheetType || "";
+  const compactWordProblemAnswerKey = Boolean(
+    worksheetType === "word_problem" && layoutObject?.display?.compactWordProblemAnswerKey
+  );
 
   doc.addPage();
   pageState.pageNum += 1;
@@ -4058,14 +4113,24 @@ function renderAnswerKey(doc, fonts, contentObject, options, pageState, layoutOb
     };
   });
 
+  const answerKeyMeta = compactWordProblemAnswerKey
+    ? {
+        ...meta,
+        title: safeStr(meta.title).trim() || "Worksheet",
+        subheading: "Answer Key"
+      }
+    : {
+        ...meta,
+        title: `${safeStr(meta.title).trim() || "Worksheet"} ANSWER KEY`,
+        subheading: ""
+      };
+
   renderQuestionsPages(
     doc,
     fonts,
     {
       meta: {
-        ...meta,
-        title: `${safeStr(meta.title).trim() || "Worksheet"} ANSWER KEY`,
-        subheading: ""
+        ...answerKeyMeta
       },
       content: {
         items: answerItems
@@ -4075,9 +4140,27 @@ function renderAnswerKey(doc, fonts, contentObject, options, pageState, layoutOb
     pageState,
     {
       ...(layoutObject || {}),
+      instruction: compactWordProblemAnswerKey ? "" : layoutObject?.instruction,
+      template: compactWordProblemAnswerKey
+        ? {
+            ...(layoutObject?.template || {}),
+            columns: 1,
+            maxProblemsPerPage: 6
+          }
+        : layoutObject?.template,
       display: {
         ...(layoutObject?.display || {}),
-        answerKey: true
+        answerKey: true,
+        ...(compactWordProblemAnswerKey
+          ? {
+              workSpaceBox: false,
+              compactWordProblemAnswerKey: true,
+              equalHeightItems: true,
+              denseGridRows: 6,
+              sequentialColumnFill: true,
+              hideItemSeparators: true
+            }
+          : {})
       }
     }
   );
@@ -4143,6 +4226,7 @@ module.exports = {
     matchChoiceStrokeWidth,
     buildFractionStripGeometry,
     drawFractionStripPrimitive,
+    buildCompactWordProblemAnswerKeyGeometry,
     buildDivisibleObjectGeometry,
     drawDivisibleObjectShape,
     drawFairShareModel,

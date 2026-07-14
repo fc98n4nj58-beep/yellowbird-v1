@@ -1,5 +1,15 @@
 # Ideas
 
+## Printable Curriculum Card Sets
+
+Future classroom resource type for early finishers, centres, partner work, intervention, independent practice, and classroom games.
+
+The initial proven concept is a telling-time matching-card set that pairs visual clock representations with written and numeric times. Possible later formats include matching cards, task cards, sort cards, sequence cards, and self-checking question/answer cards across math, literacy, science, and social studies.
+
+The reusable architecture should begin with one structured truth model that can be transformed into cards, worksheets, Quick Checks, Exit Tickets, and answer keys.
+
+This is not part of the current milestone, is not an active build item, and must not delay launch. Revisit it only after the core launch library and founder-review workflow are stable and controlled teacher testing identifies demand. Deferred does not mean promised implementation.
+
 ## Content Excellence / Product Differentiation Pass
 
 Future phase after core launch readiness reaches 100%.

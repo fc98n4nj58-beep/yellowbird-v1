@@ -1327,7 +1327,7 @@
     },
     {
       "id": "grade2_addition_subtraction_facts_fact_family",
-      "title": "Fact Families — Grade 2",
+      "title": "Fact Families",
       "shortTitle": "Fact Families",
       "subject": "Math",
       "grades": [
@@ -1354,7 +1354,22 @@
         "fact family"
       ],
       "curriculumTags": [],
-      "description": "Students connect related fact families."
+      "description": "Students complete related addition and subtraction fact families.",
+      "studentInstruction": "Complete each fact family.",
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 10,
+        "minB": 0,
+        "maxB": 10,
+        "maxTotal": 20,
+        "questionCount": 12,
+        "factFamilyMode": "all",
+        "requireDistinctAddends": true
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "standardShortAnswerTarget": true
+      }
     },
     {
       "id": "grade2_addition_subtraction_facts_fact_fluency",
@@ -1389,8 +1404,8 @@
     },
     {
       "id": "grade2_addition_subtraction_word_problems_missing_addend_word_problem",
-      "title": "Missing Addend Word Problem — Grade 2",
-      "shortTitle": "Missing Addend Word Problem",
+      "title": "Missing Addend Word Problems",
+      "shortTitle": "Missing Addend Word Problems",
       "subject": "Math",
       "grades": [
         "grade2"
@@ -1416,12 +1431,25 @@
         "missing addend word problem"
       ],
       "curriculumTags": [],
-      "description": "Students solve missing-addend word problems for focused part-whole practice."
+      "description": "Students solve missing-addend word problems and show their thinking.",
+      "studentInstruction": "Solve each problem. Show your thinking in the box.",
+      "generatorOptions": {
+        "questionCount": 12,
+        "maxA": 100
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "compactWordProblemAnswerKey": true
+      },
+      "pdfLayout": {
+        "columns": 1,
+        "maxProblemsPerPage": 3
+      }
     },
     {
       "id": "grade2_addition_subtraction_facts_missing_addend",
-      "title": "Missing Addends — Grade 2",
-      "shortTitle": "Missing Addends",
+      "title": "Missing Addends Within 20",
+      "shortTitle": "Missing Addends Within 20",
       "subject": "Math",
       "grades": [
         "grade2"
@@ -1447,7 +1475,31 @@
         "missing addend"
       ],
       "curriculumTags": [],
-      "description": "Students solve equations with a missing addend."
+      "description": "Students solve addition facts with a missing addend and totals within 20.",
+      "studentInstruction": "Write the missing number in each equation.",
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 20,
+        "minB": 0,
+        "maxB": 20,
+        "maxTotal": 20,
+        "questionCount": 12
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "standardShortAnswerTarget": true,
+        "standardAnswerLineWidth": 58,
+        "inlineEquationFontSize": 16,
+        "equalHeightItems": true,
+        "denseGridRows": 6,
+        "sequentialColumnFill": true,
+        "hideItemSeparators": false,
+        "missingAddendWithin20Layout": true
+      },
+      "pdfLayout": {
+        "columns": 2,
+        "maxProblemsPerPage": 12
+      }
     },
     {
       "id": "grade2_addition_subtraction_facts_related_subtraction",
@@ -1482,8 +1534,8 @@
     },
     {
       "id": "grade2_addition_subtraction_word_problems_subtraction_word_problem",
-      "title": "Subtraction Word Problem — Grade 2",
-      "shortTitle": "Subtraction Word Problem",
+      "title": "Take Away Word Problems",
+      "shortTitle": "Take Away Word Problems",
       "subject": "Math",
       "grades": [
         "grade2"
@@ -1509,7 +1561,21 @@
         "subtraction word problem"
       ],
       "curriculumTags": [],
-      "description": "Students solve subtraction word problems for focused Grade 2 practice."
+      "description": "Students solve take-away word problems and show their thinking.",
+      "studentInstruction": "Solve each problem. Show your thinking in the box.",
+      "generatorOptions": {
+        "questionCount": 12,
+        "maxA": 100,
+        "naturalTakeAwayLanguage": true
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "compactWordProblemAnswerKey": true
+      },
+      "pdfLayout": {
+        "columns": 1,
+        "maxProblemsPerPage": 3
+      }
     },
     {
       "id": "grade2_addition_subtraction_facts_ten_frame",

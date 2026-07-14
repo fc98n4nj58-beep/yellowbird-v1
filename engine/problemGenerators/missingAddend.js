@@ -5,6 +5,7 @@ const {
 
 const GRADE1_MISSING_ADDENDS_ID = "g1_missing_addends_within_20";
 const GRADE2_BALANCED_ASSESSMENT_IDS = new Set([
+  "grade2_addition_subtraction_facts_missing_addend",
   "g2_missing_addends_within_20_quick_check",
   "g2_missing_addends_within_20_exit_ticket"
 ]);

@@ -7,6 +7,10 @@ function generateFactFamilyProblem(options = {}) {
   const usedProblemKeys = options.usedProblemKeys || new Set();
   const operation = options.operation || options.factFamilyOperation || "addition_subtraction";
   const factFamilyMode = String(options.factFamilyMode || options.mode || "all").toLowerCase();
+  const requireDistinctAddends = Boolean(options.requireDistinctAddends);
+  const maxTotal = Number.isFinite(Number(options.maxTotal))
+    ? Number(options.maxTotal)
+    : Infinity;
   const {
     minA = 0,
     maxA = 10,
@@ -42,6 +46,8 @@ function generateFactFamilyProblem(options = {}) {
     }
 
     const sum = a + b;
+    if (requireDistinctAddends && a === b) continue;
+    if (sum > maxTotal) continue;
     const low = Math.min(a, b);
     const high = Math.max(a, b);
     const key = `${operation}:${factFamilyMode}:${low}:${high}`;

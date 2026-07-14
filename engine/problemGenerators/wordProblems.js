@@ -51,6 +51,11 @@ function pluralNoun(singular) {
   return pluralize(2, singular);
 }
 
+function capitalizeFirst(value) {
+  const text = String(value || "");
+  return text ? `${text[0].toUpperCase()}${text.slice(1)}` : text;
+}
+
 function pick(list, random) {
   return list[Math.floor(random() * list.length)];
 }
@@ -154,10 +159,11 @@ function generateAdditionWordProblem(options = {}) {
 function generateSubtractionWordProblem(options = {}) {
   const random = options.random || Math.random;
   const maxTotal = getMaxTotal(options);
+  const naturalTakeAwayLanguage = Boolean(options.naturalTakeAwayLanguage);
   const contexts = [
     { name: "Noah", pronoun: "he", item: "pencil", action: "gives away", question: "does he have left" },
     { name: "Mia", pronoun: "she", item: "apple", action: "eats", question: "does she have left" },
-    { name: "Owen", pronoun: "he", item: "card", action: "shares", question: "does he have left" },
+    { name: "Owen", pronoun: "he", item: "card", action: naturalTakeAwayLanguage ? "gives away" : "shares", question: "does he have left" },
     { name: "Lily", pronoun: "she", item: "button", action: "uses", question: "does she have left" },
     { name: "Ben", pronoun: "he", item: "shell", action: "loses", question: "does he have left" },
     { name: "Zoe", pronoun: "she", item: "sticker", action: "uses", question: "does she have left" }
@@ -166,7 +172,7 @@ function generateSubtractionWordProblem(options = {}) {
     {
       id: "start_take",
       build: ({ context, start, taken, startItems, takenItems, leftItems }) =>
-        `${context.name} has ${start} ${startItems}. ${context.name} ${context.action} ${taken} ${takenItems}. How many ${leftItems} ${context.question}?`
+        `${context.name} has ${start} ${startItems}. ${naturalTakeAwayLanguage ? capitalizeFirst(context.pronoun) : context.name} ${context.action} ${taken} ${takenItems}. How many ${leftItems} ${context.question}?`
     },
     {
       id: "left_after",

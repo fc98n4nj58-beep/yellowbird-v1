@@ -38,6 +38,13 @@ const GRADE2_COMPARISON_FOOTER_IDS = new Set([
   "g2_compare_numbers_to_100"
 ]);
 
+const GRADE2_ADDITION_SUBTRACTION_CATEGORY_C_IDS = new Set([
+  "grade2_addition_subtraction_facts_fact_family",
+  "grade2_addition_subtraction_facts_missing_addend",
+  "grade2_addition_subtraction_word_problems_missing_addend_word_problem",
+  "grade2_addition_subtraction_word_problems_subtraction_word_problem"
+]);
+
 function finiteOptionalNumber(value) {
   if (value === undefined || value === null || value === "") return null;
   const n = Number(value);
@@ -46,6 +53,7 @@ function finiteOptionalNumber(value) {
 
 function publicSkillLabel(item) {
   if (GRADE2_COMPARISON_FOOTER_IDS.has(item?.id)) return "";
+  if (GRADE2_ADDITION_SUBTRACTION_CATEGORY_C_IDS.has(item?.id)) return "";
   if (PUBLIC_SKILL_LABEL_HIDDEN_IDS.has(item?.id)) return "";
   if (item?.skillKey === "patterning_and_algebra") return "";
   return item?.skillKey || "";
@@ -53,6 +61,9 @@ function publicSkillLabel(item) {
 
 function publicDomainLabel(item) {
   if (GRADE2_COMPARISON_FOOTER_IDS.has(item?.id)) return "Place Value";
+  if (GRADE2_ADDITION_SUBTRACTION_CATEGORY_C_IDS.has(item?.id)) {
+    return "Addition and Subtraction";
+  }
   if (EARLY_MULTIPLICATION_FOOTER_IDS.has(item?.id)) {
     return "Early Multiplication Thinking";
   }

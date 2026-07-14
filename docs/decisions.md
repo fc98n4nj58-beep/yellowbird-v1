@@ -444,3 +444,9 @@ For exact Grade 2 missing-addend Quick Check and Exit Ticket defaults, determini
 ## Decision: Public PDF Footer Labels
 
 Student-facing PDF footers use public-readable grade, subject, strand, and topic labels only. Internal IDs, enum values, registry keys, generator names, raw catalog fields, and snake_case metadata must never appear in printable output. Student and answer-key pages reuse the same public footer text.
+
+## Decision: Honest Arithmetic Family Labels and Compact Keys
+
+Arithmetic worksheet titles and directions must describe the generated task and range honestly. A take-away-only generator uses a take-away title; a facts-within-20 worksheet states that range. Four-equation fact-family practice suppresses equal addends when they would duplicate the commutative and inverse equations.
+
+Word-problem answer keys prioritize verification over unused writing space. They may use compact prompt-and-answer rows with quiet separators, while student pages retain the full approved work-box geometry. Student and answer-key modes must continue to display the same generator-owned truth.

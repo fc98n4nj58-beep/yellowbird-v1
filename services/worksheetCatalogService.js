@@ -199,6 +199,13 @@ const GRADE2_COMPACT_QUICK_CHECK_IDS = new Set([
 
 const GRADE2_COMPACT_EXIT_TICKET_ID = "g2_missing_addends_within_20_exit_ticket";
 
+const GRADE2_ADDITION_SUBTRACTION_CATEGORY_C_IDS = new Set([
+  "grade2_addition_subtraction_facts_fact_family",
+  "grade2_addition_subtraction_facts_missing_addend",
+  "grade2_addition_subtraction_word_problems_missing_addend_word_problem",
+  "grade2_addition_subtraction_word_problems_subtraction_word_problem"
+]);
+
 const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
   "g1_addition_facts_within_20",
   "g1_subtraction_facts_within_20",
@@ -570,6 +577,10 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     normalized.includeExample ?? normalized.completedExample ?? normalized.example,
     false
   );
+
+  if (GRADE2_ADDITION_SUBTRACTION_CATEGORY_C_IDS.has(item.id)) {
+    normalized.includeExample = false;
+  }
 
   normalized.includeEqualPairs = parseBoolean(
     normalized.includeEqualPairs ?? normalized.equalPairs,
