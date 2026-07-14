@@ -2058,6 +2058,9 @@ Founder review pause:
   * number-line label-mode options are still partially deferred
   * review PDFs/PNGs under `review/` remain local QA artifacts, not production source
 * Counts remain: 103 / 103 ready resources working, 0 ready failures, 85 worksheets, 11 Quick Checks, 7 Exit Tickets.
+* Complete-inventory closure is now recorded: Grade 1 founder review is closed at A31 / B1 / C0 / D0 / E0 / F0 / G17, total 49.
+* `g1_write_the_numeral_to_50` remains Category B; founder review is complete, but its separate promotion gate is the next Grade 1 operational task and is not authorized by closure.
+* The 17 Category G resources are explicit deferrals or legacy records outside current launch scope, not a mandatory future build queue. The next founder-review grade is Grade 2.
 
 ### Place Value Forms + Skip Counting Founder Closeout
 

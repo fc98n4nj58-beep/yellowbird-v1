@@ -414,6 +414,15 @@ Rules:
 
 A visual worksheet is not considered working merely because it produces a PDF. The requested structured visual model must be present, non-empty, aligned with the resource title and instructional task, deterministic, and synchronized with the answer key. Focused family validation must reject blank items, unsupported generator output shapes, generic text/equation fallback, missing visual answer state, and mismatched student/key truth before founder proof or promotion.
 
+## Decision: Deferred Resource Governance
+
+Deferred resources are intentionally outside the current launch scope. They are reconsidered only when a later-grade family review, cross-grade gap audit, teacher-testing evidence, or post-launch roadmap decision provides a clear reason to reopen them.
+
+- Deferral is not a promise of future implementation.
+- Superseded or duplicate records may remain deferred permanently.
+- Later-grade items are reconsidered during the relevant later-grade family review.
+- Launch is not delayed merely to exhaust Category G; quality, curriculum honesty, and distinct teacher use take priority over raw count.
+
 ## Decision: Grade-Appropriate Example Language and Fractional Object Geometry
 
 Student-facing example labels must use grade-appropriate language rather than internal instructional terminology. For Grade 1 fractions, the approved label is `Try this one`.

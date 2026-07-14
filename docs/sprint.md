@@ -1668,6 +1668,22 @@ Guiding phrase: build the flight network before inviting passengers.
 - Counts remain 103 / 103 ready resources working, 0 ready failures, 85 worksheets, 11 Quick Checks, and 7 Exit Tickets.
 - Next recommended move after commit: run a 103-resource inheritance scan before touching more content.
 
+### Grade 1 Founder Review Closure
+
+- Grade 1 founder review is formally closed across the complete 49-resource reconciliation.
+- Final reconciliation: 31 committed and founder-approved; 1 founder-approved and awaiting a separate promotion gate; 17 explicitly deferred or legacy; Categories C, D, E, and F are zero.
+- No unresolved Grade 1 founder proof, runtime consolidation, design correction, or untouched-review item remains.
+- Closure does not mean all 49 resources are launch-ready or promised promotion. Category G is intentionally outside current launch scope and is not a mandatory future build queue.
+- The Category B resource is `g1_write_the_numeral_to_50`. Founder review is complete, but promotion remains a separate operational gate and is not authorized by this closure.
+- The final five F dispositions preserve quality over raw count, curriculum honesty, shared family ownership, and the rule against forced resource creation: generic word problems, abstract missing factors, generic multiplication stories, the duplicate number line, and the worksheet-excluded Exit Ticket now have explicit G decisions.
+- Immediate sequence:
+  1. Complete this Grade 1 founder-review closure checkpoint.
+  2. Run the separate promotion gate for `g1_write_the_numeral_to_50`.
+  3. Run the Grade 2 architecture/reconciliation scan.
+  4. Begin Grade 2 founder review through the established family workflow.
+- The next founder-review grade is Grade 2. Keep one airplane flying; do not expand this milestone into AI features, accounts, payments, or unrelated product work.
+- Source of truth: `docs/grade-1-closure-preflight.md` and `docs/grade-1-founder-review-reconciliation.md`.
+
 ### Place Value Forms + Skip Counting Founder Closeout
 
 - Expanded Form, Standard Form, and Skip Counting worksheet families are founder-approved and ready for a controlled production commit.
