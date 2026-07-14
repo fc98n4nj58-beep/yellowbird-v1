@@ -137,6 +137,16 @@ const GRADE1_CATEGORY_C_CLOSURE_IDS = new Set([
 
 const GRADE1_ADDITION_NUMBER_LINE_ID = "g1_addition_on_number_line_to_20";
 const GRADE1_EQUATION_MATCH_ID = "grade1_addition_subtraction_facts_equation_match";
+const GRADE1_DATA_READING_IDS = new Set([
+  "grade1_data_display_graphing_read_graph",
+  "grade1_data_display_graphing_interpret_data",
+  "grade1_data_display_graphing_graph_questions"
+]);
+const GRADE1_DATA_QUESTION_COUNTS = Object.freeze({
+  grade1_data_display_graphing_read_graph: 6,
+  grade1_data_display_graphing_interpret_data: 6,
+  grade1_data_display_graphing_graph_questions: 8
+});
 
 const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
   "g1_addition_facts_within_20",
@@ -149,6 +159,7 @@ const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
   "g1_ten_frame_addition_within_10",
   ...GRADE1_MULTIPLICATION_MODEL_IDS,
   ...GRADE1_CATEGORY_C_CLOSURE_IDS,
+  ...GRADE1_DATA_READING_IDS,
   GRADE1_ADDITION_NUMBER_LINE_ID,
   GRADE1_EQUATION_MATCH_ID
 ]);
@@ -164,6 +175,14 @@ function normalizeGrade1EquationMatchOptions(item, options = {}) {
   );
   normalized.questionCount = finiteNumber(normalized.questionCount, 12);
   return normalized;
+}
+
+function normalizeGrade1DataReadingOptions(item, options = {}) {
+  if (!GRADE1_DATA_READING_IDS.has(item.id)) return options;
+  return {
+    ...options,
+    questionCount: GRADE1_DATA_QUESTION_COUNTS[item.id]
+  };
 }
 
 function completedExampleCountInsideQuestionTotal(item) {
@@ -525,17 +544,20 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalizeGrade1EquationMatchOptions(
+  return normalizeGrade1DataReadingOptions(
     item,
-    normalizeGrade1AdditionNumberLineOptions(
+    normalizeGrade1EquationMatchOptions(
       item,
-      normalizeGrade1CategoryCClosureOptions(
+      normalizeGrade1AdditionNumberLineOptions(
         item,
-        normalizeGrade1MultiplicationModelOptions(
+        normalizeGrade1CategoryCClosureOptions(
           item,
-          normalizeGrade1NumberRepresentationOptions(
+          normalizeGrade1MultiplicationModelOptions(
             item,
-            normalizeGrade1FluencyComparisonOptions(item, normalized)
+            normalizeGrade1NumberRepresentationOptions(
+              item,
+              normalizeGrade1FluencyComparisonOptions(item, normalized)
+            )
           )
         )
       )
@@ -801,6 +823,18 @@ function buildStudentFacingInstruction(item, fallback = "") {
   return "Solve both sides. Write = if they have the same value. Write ≠ if they have different values.";
  }
 
+ if (item.id === "grade1_data_display_graphing_read_graph") {
+  return "Use the graph to answer each question.";
+ }
+
+ if (item.id === "grade1_data_display_graphing_interpret_data") {
+  return "Use the graph to compare the categories and answer each question.";
+ }
+
+ if (item.id === "grade1_data_display_graphing_graph_questions") {
+  return "Use the graph to answer each question.";
+ }
+
  if (item.id === "g1_number_word_match_to_50") {
   return "Write each number in words.";
  }
@@ -993,6 +1027,12 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
             ? "Addition on a Number Line"
             : item.id === GRADE1_EQUATION_MATCH_ID
               ? "Equal or Not Equal?"
+              : item.id === "grade1_data_display_graphing_read_graph"
+                ? "Read the Graph"
+                : item.id === "grade1_data_display_graphing_interpret_data"
+                  ? "Compare the Data"
+                  : item.id === "grade1_data_display_graphing_graph_questions"
+                    ? "Graph Questions"
       : item.title;
 
  const layout = normalizeWorksheetLayout({
@@ -1375,6 +1415,43 @@ if (item.id === GRADE1_EQUATION_MATCH_ID) {
     equalHeightItems: true,
     denseGridRows: 6,
     sequentialColumnFill: true
+  };
+}
+
+if (GRADE1_DATA_READING_IDS.has(item.id)) {
+  const questionCount = GRADE1_DATA_QUESTION_COUNTS[item.id];
+  const graphData = layout.problems?.[0]?.graphData || null;
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 2,
+    maxProblemsPerPage: questionCount
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    suppressExampleLabel: true,
+    hideItemSeparators: true,
+    writingLine: true,
+    answerLineBelowPrompt: true,
+    grade1DataResponseLines: true,
+    dataResponseLineInset: 44,
+    dataResponsePromptGap: 28,
+    dataResponseLineWidths: {
+      number: 64,
+      category: 136,
+      yes_no: 84
+    },
+    equalHeightItems: true,
+    denseGridRows: Math.ceil(questionCount / 2),
+    sequentialColumnFill: true,
+    sharedDataPictograph: true,
+    sharedDataGraph: graphData,
+    sharedDataGraphHeight: 218,
+    sharedDataScenario: graphData?.scenario || "",
+    sharedDataScenarioPlacement: "between_instruction_and_graph",
+    sharedDataScenarioAlign: "left",
+    sharedDataScenarioFullWidth: true,
+    sharedDataScenarioMaxLines: 2
   };
 }
 

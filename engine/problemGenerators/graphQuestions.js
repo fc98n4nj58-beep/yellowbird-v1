@@ -1,4 +1,13 @@
+const {
+  isGrade1DataGraphWorksheet,
+  generateGrade1DataGraphProblem
+} = require("./grade1DataGraph");
+
 function generateGraphQuestionsProblem(options = {}) {
+  if (isGrade1DataGraphWorksheet(options)) {
+    return generateGrade1DataGraphProblem(options);
+  }
+
   const random = options.random || Math.random;
   const data = [
     { label: "Red", value: 5 },

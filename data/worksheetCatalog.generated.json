@@ -389,7 +389,7 @@
     },
     {
       "id": "grade1_data_display_graphing_graph_questions",
-      "title": "Graph Questions — Grade 1",
+      "title": "Graph Questions",
       "shortTitle": "Graph Questions",
       "subject": "Math",
       "grades": [
@@ -416,7 +416,21 @@
         "graph questions"
       ],
       "curriculumTags": [],
-      "description": "Students answer questions about graph data."
+      "description": "Students answer a mixed set of direct-reading and comparison questions about one pictograph.",
+      "studentInstruction": "Use the graph to answer each question.",
+      "generatorOptions": {
+        "questionCount": 8
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "hideItemSeparators": true,
+        "writingLine": true,
+        "answerLineBelowPrompt": true
+      },
+      "pdfLayout": {
+        "columns": 2,
+        "maxProblemsPerPage": 8
+      }
     },
     {
       "id": "grade1_data_display_graphing_graph_word_problems",
@@ -451,8 +465,8 @@
     },
     {
       "id": "grade1_data_display_graphing_interpret_data",
-      "title": "Interpret Data — Grade 1",
-      "shortTitle": "Interpret Data",
+      "title": "Compare the Data",
+      "shortTitle": "Compare the Data",
       "subject": "Math",
       "grades": [
         "grade1"
@@ -478,7 +492,21 @@
         "interpret data"
       ],
       "curriculumTags": [],
-      "description": "Students interpret data and answer questions in context."
+      "description": "Students compare categories in one pictograph using most, least, more, fewer, same, and a small difference.",
+      "studentInstruction": "Use the graph to compare the categories and answer each question.",
+      "generatorOptions": {
+        "questionCount": 6
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "hideItemSeparators": true,
+        "writingLine": true,
+        "answerLineBelowPrompt": true
+      },
+      "pdfLayout": {
+        "columns": 2,
+        "maxProblemsPerPage": 6
+      }
     },
     {
       "id": "grade1_data_display_graphing_match_data_to_graph",
@@ -513,8 +541,8 @@
     },
     {
       "id": "grade1_data_display_graphing_read_graph",
-      "title": "Read a Graph — Grade 1",
-      "shortTitle": "Read a Graph",
+      "title": "Read the Graph",
+      "shortTitle": "Read the Graph",
       "subject": "Math",
       "grades": [
         "grade1"
@@ -540,7 +568,21 @@
         "read graph"
       ],
       "curriculumTags": [],
-      "description": "Students read graphs and answer questions."
+      "description": "Students directly read category counts and the one-to-one key from one pictograph.",
+      "studentInstruction": "Use the graph to answer each question.",
+      "generatorOptions": {
+        "questionCount": 6
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "hideItemSeparators": true,
+        "writingLine": true,
+        "answerLineBelowPrompt": true
+      },
+      "pdfLayout": {
+        "columns": 2,
+        "maxProblemsPerPage": 6
+      }
     },
     {
       "id": "grade1_fraction_equivalence_compare_fractions",

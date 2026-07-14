@@ -11,7 +11,10 @@ const PUBLIC_SKILL_LABEL_HIDDEN_IDS = new Set([
   "grade1_multiplication_facts_skip_counting",
   "grade1_place_value_representation_expanded_form",
   "g1_addition_on_number_line_to_20",
-  "grade1_addition_subtraction_facts_equation_match"
+  "grade1_addition_subtraction_facts_equation_match",
+  "grade1_data_display_graphing_read_graph",
+  "grade1_data_display_graphing_interpret_data",
+  "grade1_data_display_graphing_graph_questions"
 ]);
 
 const EARLY_MULTIPLICATION_FOOTER_IDS = new Set([
@@ -80,6 +83,7 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         prompt: p.prompt || "",
         answer: p.answer,
         responseMode: p.responseMode || null,
+        responseType: p.responseType || null,
         responseValues: Array.isArray(p.responseValues) ? p.responseValues : null,
         responseOperator: p.responseOperator || null,
         showQuestionSentence: Boolean(p.showQuestionSentence),
@@ -129,6 +133,9 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         rightValue: finiteOptionalNumber(p.rightValue),
         expectedSymbol: p.expectedSymbol || null,
         comparisonResult: p.comparisonResult || null,
+        graphData: p.graphData || null,
+        graphQuestionType: p.graphQuestionType || null,
+        graphCategory: p.graphCategory || null,
         duplicateSignature: p.duplicateSignature || null,
         relatedDuplicateSignature: p.relatedDuplicateSignature || null,
         diagnostics: Array.isArray(p.diagnostics) ? p.diagnostics : null

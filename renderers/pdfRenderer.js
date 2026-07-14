@@ -9,6 +9,11 @@ const {
 } = require("../engine/problemGenerators/multiplicationModelConstants");
 
 const MAX_PER_COLUMN = 30;
+const GRADE1_DATA_RESPONSE_LINE_WIDTHS = Object.freeze({
+  number: 64,
+  category: 136,
+  yes_no: 84
+});
 
 const VISUAL_LAYOUT = {
   paddingTop: 8,
@@ -65,6 +70,7 @@ function buildAnswerKeyItems(items) {
     prompt: safeStr(it.prompt),
     answer: it.answer,
     responseMode: it.responseMode || null,
+    responseType: it.responseType || null,
     responseValues: Array.isArray(it.responseValues) ? it.responseValues : null,
     responseOperator: it.responseOperator || null,
     showQuestionSentence: Boolean(it.showQuestionSentence),
@@ -112,6 +118,9 @@ function buildAnswerKeyItems(items) {
     rightValue: finiteOptionalNumber(it.rightValue),
     expectedSymbol: it.expectedSymbol || null,
     comparisonResult: it.comparisonResult || null,
+    graphData: it.graphData || null,
+    graphQuestionType: it.graphQuestionType || null,
+    graphCategory: it.graphCategory || null,
     duplicateSignature: it.duplicateSignature || null,
     relatedDuplicateSignature: it.relatedDuplicateSignature || null,
     diagnostics: Array.isArray(it.diagnostics) ? it.diagnostics : null,
@@ -1031,7 +1040,7 @@ function drawTextOnLine(doc, text, x, y, width, fonts = {}, options = {}) {
   doc.fillColor(pdfDesignTokens.colors.text);
   const align = options.align || "center";
   const inset = align === "left" ? 4 : 0;
-  doc.text(formatAnswerValue(text), x + inset, y - fontSize - 2, {
+  doc.text(String(formatAnswerValue(text)), x + inset, y - fontSize - 2, {
     width: Math.max(20, width - inset * 2),
     align,
     lineBreak: false
@@ -1880,6 +1889,41 @@ function renderFactFamilyGrid(doc, promptText, x, y, width, fonts = {}, options 
   return gridHeight;
 }
 
+function buildGrade1DataResponseGeometry({
+  x,
+  y,
+  width,
+  promptHeight,
+  responseType,
+  numberGutter = 44,
+  promptGap = 28,
+  lineWidths = GRADE1_DATA_RESPONSE_LINE_WIDTHS
+}) {
+  const preferredWidth = Number(lineWidths?.[responseType]);
+  if (!Number.isFinite(preferredWidth)) {
+    throw new Error(`Unsupported Grade 1 data response type '${responseType || ""}'.`);
+  }
+
+  const localStartX = Number(numberGutter);
+  const availableWidth = Math.max(0, Number(width) - localStartX);
+  const lineWidth = Math.min(preferredWidth, availableWidth);
+  const lineX = Number(x) + localStartX;
+  const lineY = Number(y) + Number(promptHeight) + Number(promptGap);
+
+  return Object.freeze({
+    responseType,
+    localStartX,
+    lineX,
+    lineY,
+    lineWidth,
+    lineEndX: lineX + lineWidth,
+    promptX: Number(x) + localStartX,
+    promptWidth: availableWidth,
+    promptBottomY: Number(y) + Number(promptHeight),
+    requiredHeight: Number(promptHeight) + Number(promptGap)
+  });
+}
+
 function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) {
   if (doc._ended) return 0;
 
@@ -2016,13 +2060,37 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
 
   if (!visual?.kind && display.writingLine) {
     const lineHeight = layout.typography.body?.lineHeight || 16;
-    const lineY = display.answerLineBelowPrompt
-      ? promptY + promptHeight + 18
-      : promptY + lineHeight;
+    const isGrade1DataResponseLine = Boolean(
+      display.grade1DataResponseLines &&
+      question.responseMode === "graph_short_answer"
+    );
     const lineWidth = display.shortWritingLine
       ? Number(display.reverseNumberWordLineWidth || 46)
       : null;
     const numberWidth = display.reverseNumberWordWriting ? 24 : 44;
+    const measuredPromptHeight = isGrade1DataResponseLine
+      ? doc.heightOfString(rawPrompt, {
+          width: Math.max(20, width - numberWidth),
+          align: "left"
+        })
+      : promptHeight;
+    const dataResponseGeometry = isGrade1DataResponseLine
+      ? buildGrade1DataResponseGeometry({
+          x,
+          y: promptY,
+          width,
+          promptHeight: measuredPromptHeight,
+          responseType: question.responseType,
+          numberGutter: Number(display.dataResponseLineInset || numberWidth),
+          promptGap: Number(display.dataResponsePromptGap || 28),
+          lineWidths: display.dataResponseLineWidths || GRADE1_DATA_RESPONSE_LINE_WIDTHS
+        })
+      : null;
+    const lineY = dataResponseGeometry
+      ? dataResponseGeometry.lineY
+      : display.answerLineBelowPrompt
+        ? promptY + promptHeight + 18 + Number(display.answerLineExtraGap || 0)
+        : promptY + lineHeight;
     const promptZoneWidth = display.reverseNumberWordWriting
       ? Math.min(
         Math.max(48, Number(display.reverseNumberWordPromptZoneWidth || 56)),
@@ -2035,18 +2103,22 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
         Math.max(18, width * 0.28)
       )
       : null;
-    const lineStartX = display.reverseNumberWordWriting
-      ? x + numberWidth + promptZoneWidth + 6
+    const lineStartX = dataResponseGeometry
+      ? dataResponseGeometry.lineX
+      : display.reverseNumberWordWriting
+        ? x + numberWidth + promptZoneWidth + 6
+        : display.shortWritingLine
+          ? x + width - lineWidth
+          : display.answerLineBelowPrompt
+            ? x + numberWidth
+            : display.numberWordResponseTarget === "writtenWord"
+              ? x + numberWidth + writtenNumberWordPromptWidth
+              : x + Math.min(88, width * 0.18);
+    const lineEndX = dataResponseGeometry
+      ? dataResponseGeometry.lineEndX
       : display.shortWritingLine
-        ? x + width - lineWidth
-        : display.answerLineBelowPrompt
-          ? x + numberWidth
-          : display.numberWordResponseTarget === "writtenWord"
-            ? x + numberWidth + writtenNumberWordPromptWidth
-            : x + Math.min(88, width * 0.18);
-    const lineEndX = display.shortWritingLine
-      ? lineStartX + lineWidth
-      : x + width;
+        ? lineStartX + lineWidth
+        : x + width;
 
     if (display.reverseNumberWordWriting) {
       const wordX = x + numberWidth;
@@ -2098,7 +2170,11 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
     doc.restore();
 
     return Math.max(
-      display.answerLineBelowPrompt ? promptHeight + 28 : promptHeight,
+      dataResponseGeometry
+        ? dataResponseGeometry.requiredHeight
+        : display.answerLineBelowPrompt
+          ? promptHeight + 28
+          : promptHeight,
       lineHeight
     );
   }
@@ -2970,6 +3046,82 @@ function renderPageColumns(
   }
 }
 
+function buildSharedDataPictographGeometry({ x, y, width, height, categoryCount }) {
+  const resolvedHeight = Math.max(190, Number(height || 218));
+  const count = Math.max(1, Number(categoryCount) || 1);
+  const headerTop = y;
+  const headerBottom = y + 42;
+  const headerCenterY = (headerTop + headerBottom) / 2;
+  const header = Object.freeze({
+    top: headerTop,
+    bottom: headerBottom,
+    centerY: headerCenterY,
+    titleCell: Object.freeze({ top: headerTop, bottom: headerBottom, centerY: headerCenterY }),
+    keyCell: Object.freeze({ top: headerTop, bottom: headerBottom, centerY: headerCenterY }),
+    keySymbolCenterY: headerCenterY
+  });
+  const body = Object.freeze({
+    top: header.bottom,
+    bottom: y + resolvedHeight,
+    height: resolvedHeight - 42
+  });
+  const categoryHeight = body.height / count;
+  const categoryBands = Object.freeze(Array.from({ length: count }, (_, index) => {
+    const top = body.top + index * categoryHeight;
+    const bottom = index === count - 1 ? body.bottom : top + categoryHeight;
+    const centerY = (top + bottom) / 2;
+    return Object.freeze({
+      top,
+      bottom,
+      height: bottom - top,
+      containerTop: body.top,
+      containerBottom: body.bottom,
+      centerY,
+      labelBaselineY: centerY,
+      labelArea: Object.freeze({ top, bottom, height: bottom - top }),
+      symbolArea: Object.freeze({ top, bottom, height: bottom - top }),
+      bottomPadding: (bottom - top - 16) / 2
+    });
+  }));
+
+  return Object.freeze({
+    x,
+    y,
+    width,
+    height: resolvedHeight,
+    header,
+    body,
+    categoryHeight,
+    categoryBands
+  });
+}
+
+function buildSharedDataScenarioGeometry({
+  x,
+  y,
+  width,
+  measuredHeight,
+  lineHeight = 13,
+  maxLines = 2,
+  gapAfter = 14
+}) {
+  const height = Number(measuredHeight) || 0;
+  const resolvedLineHeight = Math.max(1, Number(lineHeight) || 13);
+  const lineCount = Math.max(1, Math.ceil(height / resolvedLineHeight));
+  return Object.freeze({
+    x: Number(x),
+    y: Number(y),
+    width: Number(width),
+    height,
+    lineHeight: resolvedLineHeight,
+    lineCount,
+    maxLines: Number(maxLines) || 2,
+    bottom: Number(y) + height,
+    nextY: Number(y) + height + Number(gapAfter || 0),
+    align: "left"
+  });
+}
+
 function renderQuestionsPages(doc, fonts, contentObject, options, pageState, layoutObject = null) {
   const meta = contentObject?.meta || {};
   const allItems = (
@@ -2985,6 +3137,119 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
   const footerRuleY = doc.page.height - layout.page.margins.bottom;
   const footerBufferH = layout.zones?.footerBuffer?.height ?? 24;
   const bottomContentY = footerRuleY - footerBufferH;
+
+  function renderSharedDataScenario(startAtY) {
+    if (!display.sharedDataPictograph || !display.sharedDataGraph) return startAtY;
+    const scenario = String(display.sharedDataScenario || display.sharedDataGraph.scenario || "").trim();
+    if (!scenario) return startAtY;
+
+    const x = layout.page.contentBox.x;
+    const width = layout.page.contentBox.width;
+    const fontSize = 10;
+    const lineHeight = 13;
+    setFont(doc, fonts.regular || "Helvetica", fontSize);
+    doc.fillColor(pdfDesignTokens.colors.muted);
+    const measuredHeight = doc.heightOfString(scenario, {
+      width,
+      align: "left",
+      lineGap: 0
+    });
+    const geometry = buildSharedDataScenarioGeometry({
+      x,
+      y: startAtY - 4,
+      width,
+      measuredHeight,
+      lineHeight,
+      maxLines: 2,
+      gapAfter: 14
+    });
+    doc.text(scenario, geometry.x, geometry.y, {
+      width: geometry.width,
+      align: geometry.align,
+      lineGap: 0
+    });
+    return geometry.nextY;
+  }
+
+  function renderSharedDataGraph(startAtY) {
+    if (!display.sharedDataPictograph || !display.sharedDataGraph) return startAtY;
+
+    const graph = display.sharedDataGraph;
+    const categories = Array.isArray(graph.categories) ? graph.categories : [];
+    if (!categories.length) return startAtY;
+
+    const x = layout.page.contentBox.x;
+    const width = layout.page.contentBox.width;
+    const geometry = buildSharedDataPictographGeometry({
+      x,
+      y: startAtY,
+      width,
+      height: display.sharedDataGraphHeight || 218,
+      categoryCount: categories.length
+    });
+    const height = geometry.height;
+    const rowTop = geometry.body.top;
+    const labelWidth = 104;
+
+    doc.save();
+    doc.lineWidth(0.8);
+    doc.strokeColor(pdfDesignTokens.colors.lightRule);
+    doc.roundedRect(x, startAtY, width, height, 4).stroke();
+
+    setFont(doc, fonts.bold || fonts.regular, 12);
+    doc.fillColor(pdfDesignTokens.colors.text);
+    const title = graph.title || "Pictograph";
+    const titleWidth = width * 0.58;
+    const titleHeight = doc.heightOfString(title, { width: titleWidth, lineBreak: false });
+    const titleY = geometry.header.centerY - titleHeight / 2;
+    doc.text(title, x + 12, titleY, {
+      width: titleWidth,
+      align: "left",
+      lineBreak: false
+    });
+
+    const keyX = x + width - 126;
+    const keyY = geometry.header.centerY;
+    doc.circle(keyX, keyY, 7).stroke();
+    setFont(doc, fonts.regular, 10);
+    const keyText = String(graph.keyText || "= 1 unit");
+    const keyTextHeight = doc.heightOfString(keyText, { width: 94, lineBreak: false });
+    doc.text(keyText, keyX + 13, geometry.header.centerY - keyTextHeight / 2, {
+      width: 94,
+      align: "left",
+      lineBreak: false
+    });
+
+    doc.moveTo(x, rowTop).lineTo(x + width, rowTop).stroke();
+    doc.moveTo(x + labelWidth, rowTop).lineTo(x + labelWidth, startAtY + height).stroke();
+
+    categories.forEach((category, index) => {
+      const band = geometry.categoryBands[index];
+      const rowY = band.top;
+      const centerY = band.centerY;
+      if (index > 0) {
+        doc.moveTo(x, rowY).lineTo(x + width, rowY).stroke();
+      }
+
+      setFont(doc, fonts.regular, 11);
+      doc.fillColor(pdfDesignTokens.colors.text);
+      doc.text(String(category.label || ""), x + 10, centerY - 7, {
+        width: labelWidth - 18,
+        align: "left",
+        lineBreak: false
+      });
+
+      const count = Math.max(0, Math.min(8, Number(category.value) || 0));
+      const symbolStartX = x + labelWidth + 24;
+      const symbolGap = 31;
+      for (let symbolIndex = 0; symbolIndex < count; symbolIndex += 1) {
+        doc.circle(symbolStartX + symbolIndex * symbolGap, centerY, 8).stroke();
+      }
+    });
+
+    doc.restore();
+    return startAtY + height + 14;
+  }
 
   const hasVisuals = allItems.some((item) => item.visual);
   const isReverseNumberWordLayout = Boolean(display.reverseNumberWordWriting);
@@ -3023,8 +3288,11 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
       width: layout.page.contentBox.width,
       align: "left"
     });
-    startY += 28;
+    startY += display.sharedDataScenario ? 18 : 28;
   }
+
+  startY = renderSharedDataScenario(startY);
+  startY = renderSharedDataGraph(startY);
 
   setFont(doc, fonts.regular, bodyStyle.size);
   doc.fillColor(pdfDesignTokens.colors.text);
@@ -3057,8 +3325,11 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
           width: layout.page.contentBox.width,
           align: "left"
         });
-        startY += 28;
+        startY += display.sharedDataScenario ? 18 : 28;
       }
+
+      startY = renderSharedDataScenario(startY);
+      startY = renderSharedDataGraph(startY);
 
       setFont(doc, fonts.regular, bodyStyle.size);
       doc.fillColor(pdfDesignTokens.colors.text);
@@ -3249,6 +3520,10 @@ module.exports = {
   buildAnswerKeyItems,
   __test: {
     getVisualRegion,
-    measureNumberLineVisual
+    measureNumberLineVisual,
+    buildSharedDataPictographGeometry,
+    buildSharedDataScenarioGeometry,
+    buildGrade1DataResponseGeometry,
+    GRADE1_DATA_RESPONSE_LINE_WIDTHS
   }
 };

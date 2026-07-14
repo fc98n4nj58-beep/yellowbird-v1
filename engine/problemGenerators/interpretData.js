@@ -1,4 +1,13 @@
-function generateInterpretDataProblem() {
+const {
+  isGrade1DataGraphWorksheet,
+  generateGrade1DataGraphProblem
+} = require("./grade1DataGraph");
+
+function generateInterpretDataProblem(options = {}) {
+  if (isGrade1DataGraphWorksheet(options)) {
+    return generateGrade1DataGraphProblem(options);
+  }
+
   const data = [
     { label: "Soccer", value: 12 },
     { label: "Basketball", value: 9 },

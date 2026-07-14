@@ -74,6 +74,7 @@ function normalizeProblem(problem, index, context) {
     visualPlacement: visualRule?.position || (visual ? "above_prompt" : "none"),
     answer: problem.answer,
     responseMode: problem.responseMode || null,
+    responseType: problem.responseType || null,
     responseValues: Array.isArray(problem.responseValues) ? problem.responseValues : null,
     responseOperator: problem.responseOperator || null,
     showQuestionSentence: Boolean(problem.showQuestionSentence),
@@ -123,6 +124,9 @@ function normalizeProblem(problem, index, context) {
     rightValue: finiteOptionalNumber(problem.rightValue),
     expectedSymbol: problem.expectedSymbol || null,
     comparisonResult: problem.comparisonResult || null,
+    graphData: problem.graphData || null,
+    graphQuestionType: problem.graphQuestionType || null,
+    graphCategory: problem.graphCategory || null,
     duplicateSignature: problem.duplicateSignature || null,
     relatedDuplicateSignature: problem.relatedDuplicateSignature || null,
     diagnostics: Array.isArray(problem.diagnostics) ? problem.diagnostics : null

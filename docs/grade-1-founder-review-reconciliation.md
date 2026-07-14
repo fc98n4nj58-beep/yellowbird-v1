@@ -6,7 +6,7 @@ Scope: founder-approval and implementation reconciliation; catalog readiness and
 
 ## Verdict
 
-The complete Grade 1 inventory contains **49 resource candidates**: 13 ready, 2 partial, 33 generated/internal, and 1 planned. Twenty-one resources meet the `COMMITTED + FOUNDER APPROVED` gate, one founder-approved partial resource is awaiting promotion, no resources remain in Category C awaiting Grade 1-specific founder proof, no resources remain in Category E awaiting design correction, sixteen generated or ready candidates have not received a controlled Grade 1 founder pass, and eleven are explicitly held, legacy, or deferred.
+The complete Grade 1 inventory contains **49 resource candidates**: 13 ready, 2 partial, 33 generated/internal, and 1 planned. Twenty-four resources meet the `COMMITTED + FOUNDER APPROVED` gate, one founder-approved partial resource is awaiting promotion, no resources remain in Category C awaiting Grade 1-specific founder proof, no resources remain in Category E awaiting design correction, thirteen generated or ready candidates have not received a controlled Grade 1 founder pass, and eleven are explicitly held, legacy, or deferred.
 
 These totals revise the first reconciliation. That pass under-recorded current-sprint approvals by requiring a second explicit approval statement after already-approved proof packets had produced approved commits. The corrected scan accepts the Project Lead's sprint correction, approved reduced recheck packets, proof-review outcomes, and the approval-gated commits themselves as valid evidence. It does not require duplicate approval evidence.
 
@@ -51,12 +51,12 @@ Approval, implementation, promotion, and public customization are separate dimen
 
 | Classification | Count | Meaning in this scan |
 | --- | ---: | --- |
-| A. Committed + Founder Approved | 21 | Founder proof is approved, implementation is committed, and no founder correction remains; catalog readiness is tracked separately. |
+| A. Committed + Founder Approved | 24 | Founder proof is approved, implementation is committed, and no founder correction remains; catalog readiness is tracked separately. |
 | B. Founder Approved + Awaiting Promotion | 1 | Founder proof and implementation are complete, but the resource remains partial and promotion gates are open. |
 | C. Implemented + awaiting founder proof | 0 | No resources remain in this classification after the approved Category C closure packet. |
 | D. Awaiting variable/runtime consolidation | 0 | The reviewed Grade 1 families are already consolidated; other gaps are proof, design, or untouched work. |
 | E. Awaiting design correction | 0 | No resources remain in this classification after the approved Addition on a Number Line correction. |
-| F. Untouched / not yet reviewed | 16 | Generic generation may work, but no controlled Grade 1 founder pass exists. |
+| F. Untouched / not yet reviewed | 13 | Generic generation may work, but no controlled Grade 1 founder pass exists. |
 | G. Intentionally deferred | 11 | A product decision explicitly holds, supersedes, or keeps the entry as legacy/internal. |
 | **Total** | **49** |  |
 
@@ -74,14 +74,16 @@ This approved Addition on a Number Line checkpoint adds one E -> A correction: `
 
 This approved relational-equations checkpoint adds one F -> A correction: `grade1_addition_subtraction_facts_equation_match`. Its distinct-use gate also moves two deliberate near-duplicate deferrals from F -> G: `grade1_addition_subtraction_facts_missing_addend` and `grade1_place_value_representation_compare_numbers`.
 
+This approved Grade 1 data-reading checkpoint adds three F -> A corrections: `grade1_data_display_graphing_read_graph`, `grade1_data_display_graphing_interpret_data`, and `grade1_data_display_graphing_graph_questions`.
+
 | Classification | Before closure | Before relational checkpoint | Current |
 | --- | ---: | ---: | ---: |
-| A | 15 | 20 | 21 |
+| A | 15 | 20 | 24 |
 | B | 1 | 1 | 1 |
 | C | 4 | 0 | 0 |
 | D | 0 | 0 | 0 |
 | E | 1 | 0 | 0 |
-| F | 19 | 19 | 16 |
+| F | 19 | 19 | 13 |
 | G | 9 | 9 | 11 |
 | **Total** | **49** | **49** | **49** |
 
@@ -90,6 +92,8 @@ Category C is now empty. Arrays and Equal Groups were founder-approved and commi
 Category E is now empty. Addition on a Number Line uses the founder-approved addition model and full-width 0–20 geometry while remaining `partial`; promotion is a separate decision.
 
 The Grade 1 relational-equations resource is founder-approved with the final `Equal or Not Equal?` copy, deterministic two-response completed mode, and 12-question two-column layout while remaining `generated`. Missing Addend and Compare Numbers are now intentionally deferred in Category G as near duplicates of their approved canonical resources; they must not be implemented without a new distinct-use decision.
+
+The three Grade 1 data-reading resources are founder-approved with distinct 6/6/8-question tasks, a shared one-to-one pictograph, a validated 100-topic and 100-scenario registry, aligned response lines, completed-Question-1 mode, and student/answer-key parity. They remain `generated`; promotion and public topic controls require separate decisions.
 
 ## Grade 1 completion matrix
 
@@ -115,11 +119,11 @@ Abbreviations: `live` = Addition Facts public prototype; `runtime-only` = option
 | — | `grade1_addition_subtraction_facts_ten_frame` | Ten Frame Practice — Grade 1 | generated | Explicit legacy sibling; not canonical | Generic legacy runtime | Internal only | none | intentionally held | **G** | Keep legacy/internal | number-representation preflight; Batch 10 hold |
 | — | `grade1_addition_subtraction_facts_word_problems` | Word Problems — Grade 1 | generated | No separate founder review | Generic candidate | No controlled distinct task contract | none | not eligible | **F** | Establish a distinct use case or defer as duplicate | master catalog; audit only |
 | — | `grade1_data_display_graphing_complete_graph` | Complete a Graph — Grade 1 | generated | No founder review | Generic candidate | No controlled Grade 1 pass | none | not eligible | **F** | Founder/teacher-use and grade-fit review | master catalog; audit only |
-| — | `grade1_data_display_graphing_graph_questions` | Graph Questions — Grade 1 | generated | No founder review | Generic candidate | No controlled Grade 1 pass | none | not eligible | **F** | Founder/teacher-use and grade-fit review | master catalog; audit only |
+| — | `grade1_data_display_graphing_graph_questions` | Graph Questions | generated | Founder approved the mixed direct-reading and comparison proof | Controlled shared Grade 1 pictograph runtime | Mature: 8 questions, 100 topics/scenarios, adaptive units, Q1 example, answer-key parity | runtime-only | generated/internal; no promotion decision | **A** | No implementation/proof action; promote only through a separate decision | `docs/grade-1-category-f-batch-2-data-preflight.md`; approved before `feat: add grade 1 data reading family` |
 | — | `grade1_data_display_graphing_graph_word_problems` | Graph Word Problems — Grade 1 | generated | No founder review | Recipe fallback works; no controlled pass | No controlled Grade 1 contract | none | not eligible | **F** | Preflight and explicit generator ownership before promotion | master catalog; audit only |
-| — | `grade1_data_display_graphing_interpret_data` | Interpret Data — Grade 1 | generated | No founder review | Generic candidate | No controlled Grade 1 pass | none | not eligible | **F** | Founder/teacher-use and grade-fit review | master catalog; audit only |
+| — | `grade1_data_display_graphing_interpret_data` | Compare the Data | generated | Founder approved the category-comparison proof | Controlled shared Grade 1 pictograph runtime | Mature: 6 comparison questions, 100 topics/scenarios, adaptive units, Q1 example, answer-key parity | runtime-only | generated/internal; no promotion decision | **A** | No implementation/proof action; promote only through a separate decision | `docs/grade-1-category-f-batch-2-data-preflight.md`; approved before `feat: add grade 1 data reading family` |
 | — | `grade1_data_display_graphing_match_data_to_graph` | Match Data to Graph — Grade 1 | generated | No founder review | Generic candidate | No controlled Grade 1 pass | none | not eligible | **F** | Founder/teacher-use and grade-fit review | master catalog; audit only |
-| — | `grade1_data_display_graphing_read_graph` | Read a Graph — Grade 1 | generated | No founder review | Generic candidate | No controlled Grade 1 pass | none | not eligible | **F** | Founder/teacher-use and grade-fit review | master catalog; audit only |
+| — | `grade1_data_display_graphing_read_graph` | Read the Graph | generated | Founder approved the direct-reading proof | Controlled shared Grade 1 pictograph runtime | Mature: 6 direct-reading questions, 100 topics/scenarios, adaptive units, Q1 example, answer-key parity | runtime-only | generated/internal; no promotion decision | **A** | No implementation/proof action; promote only through a separate decision | `docs/grade-1-category-f-batch-2-data-preflight.md`; approved before `feat: add grade 1 data reading family` |
 | — | `grade1_fraction_equivalence_compare_fractions` | Compare Fractions — Grade 1 | generated | No founder review | Generic candidate | No controlled Grade 1 pass | none | not eligible | **F** | Grade-fit/design preflight | master catalog; audit only |
 | — | `grade1_fraction_equivalence_fraction_number_line` | Fraction Number Line — Grade 1 | generated | No founder review | Generic candidate | No controlled Grade 1 pass | none | not eligible | **F** | Grade-fit/design preflight | master catalog; audit only |
 | — | `grade1_fraction_equivalence_fraction_word_problems` | Fraction Word Problems — Grade 1 | generated | No founder review | Recipe fallback works; no controlled pass | No controlled Grade 1 contract | none | not eligible | **F** | Preflight and explicit generator ownership | master catalog; audit only |
@@ -175,11 +179,11 @@ Delivery codes below: `P` = public detail route plus preview/PDF APIs; `I` = no 
 | `grade1_addition_subtraction_facts_ten_frame` | worksheet / generated | `tenFrame` | `visual_model` / shared PDF | I | yes / generic |
 | `grade1_addition_subtraction_facts_word_problems` | worksheet / generated | `wordProblems` | `equation_practice` / shared PDF | I | yes / generic |
 | `grade1_data_display_graphing_complete_graph` | worksheet / generated | `completeGraph` | `visual_model` / shared PDF | I | yes / generic |
-| `grade1_data_display_graphing_graph_questions` | worksheet / generated | `graphQuestions` | `equation_practice` / shared PDF | I | yes / generic |
+| `grade1_data_display_graphing_graph_questions` | worksheet / generated | shared Grade 1 data runtime via `graphQuestions` | two-column shared pictograph / shared PDF | I | yes / Q1 runtime |
 | `grade1_data_display_graphing_graph_word_problems` | worksheet / generated | recipe fallback | `equation_practice` / shared PDF | I | yes / generic |
-| `grade1_data_display_graphing_interpret_data` | worksheet / generated | `interpretData` | `equation_practice` / shared PDF | I | yes / generic |
+| `grade1_data_display_graphing_interpret_data` | worksheet / generated | shared Grade 1 data runtime via `interpretData` | two-column shared pictograph / shared PDF | I | yes / Q1 runtime |
 | `grade1_data_display_graphing_match_data_to_graph` | worksheet / generated | `matchDataToGraph` | `matching` / shared PDF | I | yes / generic |
-| `grade1_data_display_graphing_read_graph` | worksheet / generated | `readGraph` | `visual_model` / shared PDF | I | yes / generic |
+| `grade1_data_display_graphing_read_graph` | worksheet / generated | shared Grade 1 data runtime via `readGraph` | two-column shared pictograph / shared PDF | I | yes / Q1 runtime |
 | `grade1_fraction_equivalence_compare_fractions` | worksheet / generated | `compareFractions` | `equation_practice` / shared PDF | I | yes / generic |
 | `grade1_fraction_equivalence_fraction_number_line` | worksheet / generated | `fractionNumberLine` | `equation_practice` / shared PDF | I | yes / generic |
 | `grade1_fraction_equivalence_fraction_word_problems` | worksheet / generated | recipe fallback | `equation_practice` / shared PDF | I | yes / generic |

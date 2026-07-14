@@ -377,3 +377,23 @@ Rules:
 - The Equal Sharing `both` task mode remains architecture-supported but should receive separate founder/design review before being treated as fully approved interaction behavior.
 - Review artifacts under `review/` remain local QA proofs and should not be included in production commits.
 - Counts remain 103 / 103 ready resources working, 0 ready failures, 85 worksheets, 11 Quick Checks, and 7 Exit Tickets.
+
+## Decision: Curated Context Registries
+
+Reusable contextual worksheet families must separate task structure from surface context and draw from curated, validated context registries rather than hard-coded repeated topics. Renderers remain context-agnostic; generators receive structured context packages. Public teacher selection requires separate product review before exposure.
+
+## Decision: Aligned Grade 1 Response Lines
+
+Grade 1 response lines should use predictable aligned writing columns and response-type-aware widths rather than being positioned from question-text length. Future worksheet families with short written responses should carry explicit response metadata, measure the complete prompt in its actual text box, and reuse identical geometry for student, completed, and answer-key modes.
+
+## Decision: Grade-Banded Applied-Math Context
+
+Applied-math worksheets should provide brief contextual framing that explains the source and purpose of the data or quantities. The wording must match the maturity and reading level of the grade.
+
+Rules:
+- Grades 1-2 use one or two short, concrete sentences with familiar actions and explicit units.
+- Grades 3-4 may use a slightly richer real-world purpose while keeping vocabulary direct and the task immediately visible.
+- Grades 5-6 may use more authentic constraints and domain language when the worksheet teaches or defines what students need.
+- Context must not reveal an answer, repeat the title as filler, rely on sensitive or inaccessible assumptions, or introduce information the task does not use.
+- Curated generators carry structured scenario metadata; renderers remain topic-agnostic.
+- The higher-grade guidance is a documentation standard only. This Grade 1 follow-up does not implement or change Grade 2-6 worksheets.
