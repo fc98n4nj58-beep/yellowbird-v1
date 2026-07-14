@@ -185,7 +185,7 @@ function assertNumberWordResource() {
 function assertNumeralResource() {
   const catalogItem = getAnyWorksheetCatalogById(NUMERAL_ID);
   assert(catalogItem, "Write the Numeral resource must exist.");
-  assert.strictEqual(catalogItem.status, "partial");
+  assert.strictEqual(catalogItem.status, "ready");
 
   const runtime = runtimeFor(NUMERAL_ID, { worksheetSeed: "numeral-default" });
   const items = runtime.contentObject.content.items;

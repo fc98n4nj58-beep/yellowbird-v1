@@ -332,10 +332,11 @@ async function run() {
   assert(!rendererSource.includes("drawObjectToken"));
 
   const reconciliation = fs.readFileSync(path.join(__dirname, "..", "docs", "grade-1-founder-review-reconciliation.md"), "utf8");
-  assert(reconciliation.includes("| A. Committed + Founder Approved | 31 |"));
+  assert(reconciliation.includes("| A. Committed + Founder Approved | 32 |"));
+  assert(reconciliation.includes("| B. Founder Approved + Awaiting Promotion | 0 |"));
   assert(reconciliation.includes("| C. Implemented + awaiting founder proof | 0 |"));
-  assert(reconciliation.includes("| F. Untouched / not yet reviewed | 5 |"));
-  assert(reconciliation.includes("| G. Intentionally deferred | 12 |"));
+  assert(reconciliation.includes("| F. Untouched / not yet reviewed | 0 |"));
+  assert(reconciliation.includes("| G. Intentionally deferred | 17 |"));
 
   console.log("Grade 1 fraction family tests passed.");
 }

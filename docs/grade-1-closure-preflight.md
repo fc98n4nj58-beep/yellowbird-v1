@@ -4,6 +4,8 @@ Date: 2026-07-14
 
 Scope: planning and reconciliation analysis only. This pass changes no catalog state, generator, renderer, route, reconciliation category, proof artifact, or public surface.
 
+Status note: this document remains the approved pre-promotion decision basis. The later final promotion checkpoint moved `g1_write_the_numeral_to_50` from B to A and from `partial` to `ready`; current totals live in `docs/grade-1-founder-review-reconciliation.md`.
+
 ## Executive recommendation
 
 Close the active Grade 1 founder worksheet review with deferrals only. Do not implement another Grade 1 worksheet family.

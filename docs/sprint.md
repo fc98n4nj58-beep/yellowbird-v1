@@ -1684,6 +1684,15 @@ Guiding phrase: build the flight network before inviting passengers.
 - The next founder-review grade is Grade 2. Keep one airplane flying; do not expand this milestone into AI features, accounts, payments, or unrelated product work.
 - Source of truth: `docs/grade-1-closure-preflight.md` and `docs/grade-1-founder-review-reconciliation.md`.
 
+### Final Grade 1 Promotion Gate
+
+- `g1_write_the_numeral_to_50` (`Write the Numeral to 50`) passed its separate operational promotion gate and moved from `partial` to `ready`.
+- The gate reused the approved shared number-word runtime and confirmed the 20-question/two-column default, 30-question/three-column option, completed Question 1, short numeral targets, answer-key parity, deterministic seeds, clean current proofs, and public browse/detail/preview/PDF flow.
+- Stale founder-review-pending copy was removed; no title, instruction, task, teacher control, generator, renderer, route, or Grade 2+ behavior changed.
+- Final Grade 1 reconciliation: A32 / B0 / C0 / D0 / E0 / F0 / G17, total 49. Founder review remains closed and all 17 deferrals remain unchanged.
+- Catalog health after promotion: 104 ready, 213 generated, 5 partial; total catalog records remain 331. Only the seven known planned `pattern_word_problems` gaps remain.
+- Grade 1 operational promotion is complete. The next founder-review phase remains the Grade 2 architecture/reconciliation scan followed by the established family workflow.
+
 ### Place Value Forms + Skip Counting Founder Closeout
 
 - Expanded Form, Standard Form, and Skip Counting worksheet families are founder-approved and ready for a controlled production commit.

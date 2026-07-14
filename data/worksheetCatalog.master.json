@@ -1615,7 +1615,7 @@
         "number_word_match"
       ],
       "templateId": "matching",
-      "status": "partial",
+      "status": "ready",
       "difficulty": "easy",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -1630,8 +1630,8 @@
         "B1"
       ],
       "formatLabel": "Write numerals to 50",
-      "teacherNote": "Separate public resource for founder review; uses the shared number-word runtime without exposing a direction toggle.",
-      "description": "Students write numerals for number words to 50. Public-ready status is deferred until founder PDF review.",
+      "teacherNote": "Separate public resource using the shared number-word runtime without exposing a direction toggle.",
+      "description": "Students write numerals for number words to 50.",
       "sourceType": "curated",
       "generatorOptions": {
         "minA": 0,

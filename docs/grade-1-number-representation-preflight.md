@@ -1,6 +1,6 @@
 # Grade 1 Number Representation Preflight
 
-Status: Implementation checkpoint ready for founder PDF review
+Status: Implementation and founder review complete; `g1_write_the_numeral_to_50` promoted through the separate operational gate on 2026-07-14
 
 Scope:
 
@@ -25,7 +25,7 @@ Implemented:
 
 - shared internal Grade 1 number-representation runtime helper for number words, base-ten blocks, and ten frames;
 - `Write Number Words to 50` remains the ready public resource and now defaults to 20 questions with a 2-column layout;
-- `Write the Numeral to 50` exists as a separate `partial` public catalog resource for founder PDF review, without exposing a public direction toggle;
+- `Write the Numeral to 50` exists as a separate ready public catalog resource, without exposing a public direction toggle;
 - both number-word directions support 30-question proof mode with a 3-column layout;
 - `Base Ten Blocks to 50` defaults to 0-50, keeps the model in the top third, and supports internal label/selected-value options without public UI;
 - `Counting With Ten Frames` defaults to 1-10, supports zero only through explicit internal options, and uses responsive count bands for low, medium, and standard question counts;
@@ -43,7 +43,7 @@ Correction pass:
 Deferred:
 
 - no public customization UI is wired for this family;
-- `Write the Numeral to 50` remains `partial` pending founder PDF review and resource-promotion approval;
+- `Write the Numeral to 50` passed founder review and the later separate promotion gate;
 - base-ten label controls, selected-value controls, ten-frame zero controls, and number-word direction controls remain internal/runtime-supported only;
 - generated legacy resources remain legacy and are not promoted.
 
@@ -71,7 +71,7 @@ Do not force base-ten blocks or ten frames into generic text-row layouts. Do not
 | User-facing task | Current canonical resource ID | Status | Notes |
 | --- | --- | --- | --- |
 | Write Number Words to 50 | `g1_number_word_match_to_50` | ready | Curated Grade 1 resource. Current title is already `Write Number Words to 50`. |
-| Write the Numeral to 50 | `g1_write_the_numeral_to_50` | partial | Separate catalog resource for founder PDF review; no public direction toggle is exposed. |
+| Write the Numeral to 50 | `g1_write_the_numeral_to_50` | ready | Separate public resource; no public direction toggle is exposed. |
 | Base Ten Blocks to 50 | `grade1_place_value_representation_base_ten_blocks` | ready | Curated generated-style ID with approved title/task alignment. |
 | Counting With Ten Frames | `g1_ten_frame_addition_within_10` | ready | Curated Grade 1 ID; title is `Counting With Ten Frames` even though the ID is legacy addition-strategy wording. |
 
@@ -106,7 +106,7 @@ Write Number Words to 50:
 
 Write the Numeral to 50:
 
-- Current public status: separate `partial` catalog resource pending founder PDF review
+- Current public status: ready after the separate founder-approved promotion gate
 - Runtime mode: `numberWordMode: "word_to_numeral"` inside the shared number-word family
 - Runtime title: `Write the Numeral to 50`
 - Current instruction: `Write the numeral for each number word.`
@@ -171,7 +171,7 @@ Recommendation:
 
 - Write Number Words now defaults to 20 questions and a 2-column layout.
 - Both number-word directions support the 30-question, 3-column proof layout.
-- Write the Numeral now has a separate `partial` catalog resource for founder PDF review.
+- Write the Numeral has a separate ready catalog resource after its promotion gate.
 - Number-word response target variants are named through runtime/layout metadata.
 - Base Ten Blocks uses the approved instruction and 0-50 runtime range.
 - Ten Frames defaults to 1-10, supports zero only through explicit internal options, and uses the approved instruction.
@@ -280,7 +280,7 @@ Current implementation:
 Resource:
 
 - Current ID: `g1_write_the_numeral_to_50`
-- Current status: partial, pending founder PDF review and resource-promotion approval
+- Current status: ready after founder review and the separate resource-promotion gate
 
 Approved design:
 
@@ -301,7 +301,7 @@ Approved design:
 Current implementation:
 
 - Title and instruction are aligned to the approved public copy.
-- A separate public catalog resource exists as `partial`, and the runtime remains shared internally.
+- A separate public catalog resource exists as ready, and the runtime remains shared internally.
 
 ## Response-Target Contract: Number Words
 
@@ -656,7 +656,7 @@ Proof metadata should include:
    - Strong recommendation: yes. It keeps dense response/model sheets aligned with Addition Facts without creating extra example blocks.
 
 2. Should Number Words and Write the Numeral remain separate public resources?
-   - Checkpoint decision: yes for public browsing, with shared runtime internally. Write the Numeral remains `partial` until founder PDF review approves promotion.
+   - Checkpoint decision: yes for public browsing, with shared runtime internally. Write the Numeral is ready after founder review and its separate promotion gate.
 
 3. Should mode switching remain runtime-only?
    - Checkpoint decision: yes. Do not expose a public mode toggle.

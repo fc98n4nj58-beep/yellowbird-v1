@@ -6,11 +6,11 @@ Scope: founder-approval and implementation reconciliation; catalog readiness and
 
 ## Verdict
 
-The complete Grade 1 inventory contains **49 resource candidates**: 13 ready, 2 partial, 33 generated/internal, and 1 planned. Thirty-one resources meet the `COMMITTED + FOUNDER APPROVED` gate, one founder-approved partial resource is awaiting a separate promotion gate, and seventeen are explicitly held, legacy, or deferred. Categories C, D, E, and F are empty.
+The complete Grade 1 inventory contains **49 resource candidates**: 14 ready, 1 partial, 33 generated/internal, and 1 planned. Thirty-two resources meet the `COMMITTED + FOUNDER APPROVED` gate, Category B is empty after the final promotion gate, and seventeen are explicitly held, legacy, or deferred. Categories C, D, E, and F are also empty.
 
 These totals revise the first reconciliation. That pass under-recorded current-sprint approvals by requiring a second explicit approval statement after already-approved proof packets had produced approved commits. The corrected scan accepts the Project Lead's sprint correction, approved reduced recheck packets, proof-review outcomes, and the approval-gated commits themselves as valid evidence. It does not require duplicate approval evidence.
 
-Grade 1 founder review is closed. There are no unresolved Grade 1 founder proofs, runtime consolidations, design corrections, untouched review items, or founder-note conflicts. The next Grade 1 operational task is the separate promotion gate for `g1_write_the_numeral_to_50`; closure does not authorize that promotion. The next founder-review grade is Grade 2.
+Grade 1 founder review remains closed, and its final operational promotion gate is complete. There are no unresolved Grade 1 founder proofs, promotion gates, runtime consolidations, design corrections, untouched review items, or founder-note conflicts. The next founder-review grade is Grade 2.
 
 ## Founder review source
 
@@ -37,22 +37,22 @@ A resource is founder-approved when any one authoritative approval chain is pres
 - the implementation commit was created only after that founder approval; or
 - the current correction directive records that the representative sprint PDFs were approved before the named commit.
 
-Approval, implementation, promotion, and public customization are separate dimensions. A resource can therefore be founder-approved and committed while still generated/internal or partial. `g1_write_the_numeral_to_50` is the controlling example: its proof is approved and its runtime is committed, but its catalog status remains partial and its public promotion gates remain open.
+Approval, implementation, promotion, and public customization are separate dimensions. A resource can therefore be founder-approved and committed while still generated/internal or partial. `g1_write_the_numeral_to_50` followed that sequence: founder approval and implementation preceded this separate promotion checkpoint.
 
 ## Scope and counting rules
 
 - Inventory source: all items whose `grades` includes `grade1` in `data/worksheetCatalog.master.json`, cross-checked with `config/worksheetCatalog/grade1.js` and the Grade 1 Exit Ticket declaration.
 - Count: **49** (48 worksheets and 1 Exit Ticket).
-- Catalog state: **13 ready, 2 partial, 33 generated/internal, 1 planned**.
+- Catalog state: **14 ready, 1 partial, 33 generated/internal, 1 planned**.
 - The 12 founder CSV rows cover ready worksheets only. They do not cover the Grade 1 Exit Ticket, partial resources, or generated/planned candidates.
-- `data/worksheetCatalog.master.json` currently has 331 actual items, while its embedded `summary` is stale (`totalCount: 312`) and the prior project context says 330. The audit reads the actual array and reports 331. The extra current item is the committed partial `g1_write_the_numeral_to_50`. This metadata discrepancy does not change the 49-item Grade 1 count, but the summary should be rebuilt in a later authorized catalog-maintenance task.
+- `data/worksheetCatalog.master.json` currently has 331 actual items, while its embedded `summary` is stale (`totalCount: 312`) and the prior project context says 330. The audit reads the actual array and reports 331. The extra current item is the now-promoted `g1_write_the_numeral_to_50`. This metadata discrepancy does not change the 49-item Grade 1 count, but the summary should be rebuilt in a later authorized catalog-maintenance task.
 
 ## Classification totals
 
 | Classification | Count | Meaning in this scan |
 | --- | ---: | --- |
-| A. Committed + Founder Approved | 31 | Founder proof is approved, implementation is committed, and no founder correction remains; catalog readiness is tracked separately. |
-| B. Founder Approved + Awaiting Promotion | 1 | Founder proof and implementation are complete, but the resource remains partial and promotion gates are open. |
+| A. Committed + Founder Approved | 32 | Founder proof is approved, implementation is committed, and no founder correction remains; catalog readiness is tracked separately. |
+| B. Founder Approved + Awaiting Promotion | 0 | The final Grade 1 promotion gate is complete. |
 | C. Implemented + awaiting founder proof | 0 | No resources remain in this classification after the founder-approved Grade 1 fraction checkpoint. |
 | D. Awaiting variable/runtime consolidation | 0 | The reviewed Grade 1 families are already consolidated; other gaps are proof, design, or untouched work. |
 | E. Awaiting design correction | 0 | No resources remain in this classification after the approved Addition on a Number Line correction. |
@@ -90,18 +90,20 @@ This Grade 1 founder-review closure checkpoint moves the final five F resources 
 - `grade1_place_value_representation_number_line_identify`: direct duplicate of the stronger approved `g1_number_line_identify_to_20` family, with no separate teacher use.
 - `g1_compare_numbers_to_20_exit_ticket`: ready and format-distinct, but intentionally outside the founder worksheet packet; it remains in the validated Exit Ticket lane and is removed from active Grade 1 worksheet review.
 
-No catalog status changes. No deferred item is promised future implementation.
+That closure checkpoint made no catalog status changes. No deferred item is promised future implementation.
 
-| Classification | Before closure | Before relational checkpoint | Before final closure | Closed |
-| --- | ---: | ---: | ---: | ---: |
-| A | 15 | 20 | 31 | 31 |
-| B | 1 | 1 | 1 | 1 |
-| C | 4 | 0 | 0 | 0 |
-| D | 0 | 0 | 0 | 0 |
-| E | 1 | 0 | 0 | 0 |
-| F | 19 | 19 | 5 | 0 |
-| G | 9 | 9 | 12 | 17 |
-| **Total** | **49** | **49** | **49** | **49** |
+This final Grade 1 promotion checkpoint moves `g1_write_the_numeral_to_50` from B -> A after its shared runtime, current proofs, metadata, public detail/preview/PDF flow, deterministic output, answer key, and Grade 2+ isolation passed. Its catalog status changes from `partial` to `ready`; no Category G record changes.
+
+| Classification | Before closure | Before relational checkpoint | Before final closure | Closed | Post-promotion |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| A | 15 | 20 | 31 | 31 | 32 |
+| B | 1 | 1 | 1 | 1 | 0 |
+| C | 4 | 0 | 0 | 0 | 0 |
+| D | 0 | 0 | 0 | 0 | 0 |
+| E | 1 | 0 | 0 | 0 | 0 |
+| F | 19 | 19 | 5 | 0 | 0 |
+| G | 9 | 9 | 12 | 17 | 17 |
+| **Total** | **49** | **49** | **49** | **49** | **49** |
 
 Category C is now empty. The founder-approved Grade 1 fraction family joins the earlier Arrays, Equal Groups, Skip Counting, and Expanded Form work in Category A without changing catalog status.
 
@@ -164,7 +166,7 @@ Abbreviations: `live` = Addition Facts public prototype; `runtime-only` = option
 | — | `grade1_place_value_representation_number_line_identify` | Number Line — Grade 1 | generated | Closure decision: defer as direct duplicate of `g1_number_line_identify_to_20` | Generic duplicate candidate; deliberately not implemented | Inherits generic number-line runtime; no separate teacher use | none | intentionally held | **G** | Keep deferred unless a distinct task is approved | `docs/grade-1-closure-preflight.md` |
 | — | `grade1_place_value_representation_number_word_match` | Number Word Match — Grade 1 | generated | Explicit legacy sibling; not canonical | Generic legacy runtime | Internal only | none | intentionally held | **G** | Keep legacy/internal | number-representation preflight |
 | 9 | `g1_number_word_match_to_50` | Write Number Words to 50 | ready | Founder approved current 20-question output and reduced recheck | Committed controlled number-word runtime | Mature: default 20/2 columns, 30/3 columns, range/selection, Q1 example | runtime-only | none | **A** | No action | `ffc60c7`, `c3768af`; reduced recheck approved |
-| — | `g1_write_the_numeral_to_50` | Write the Numeral to 50 | partial | Founder reviewed and approved the representative PDFs | Committed controlled reverse number-word runtime | Mature: default 20, 30/3 columns, pagination, short target, Q1 example | runtime-only | awaiting metadata/copy correction, promotion decision, then public smoke verification | **B** | Update stale review-pending copy in a later authorized promotion change; decide promotion; verify public route/preview/download after status change | `c3768af`; reduced recheck approved |
+| — | `g1_write_the_numeral_to_50` | Write the Numeral to 50 | ready | Founder reviewed and approved the representative PDFs | Committed controlled reverse number-word runtime | Mature: default 20, 30/3 columns, pagination, short target, Q1 example | runtime-only | promoted after metadata, runtime, visual, and public-flow checks | **A** | No Grade 1 action | `c3768af`; reduced recheck approved; final promotion checkpoint |
 | — | `grade1_place_value_representation_standard_form` | Standard Form — Grade 1 | generated | Explicitly not the canonical Write-the-Numeral resource; legacy/reference | Committed generic place-value runtime | Internal only for this legacy entry | none | intentionally held | **G** | Keep legacy/reference unless a distinct task is reopened | number-representation preflight |
 | — | `grade1_patterning_and_algebra_extend_pattern` | Extend Pattern — Grade 1 | generated | Founder proof approved; earlier grade-fit caution resolved by controlled numeric scope | Committed controlled numeric-pattern runtime | Mature runtime-only arithmetic sequence variables | runtime-only | generated/internal; no promotion decision | **A** | No implementation/proof action; promote only through a separate decision | `feb3bc1`; proof approved before commit |
 | — | `grade1_patterning_and_algebra_function_table` | Function Table — Grade 1 | generated | Explicitly deferred | Compatibility runtime only; public layout not approved | Internal compatibility only | none | do not promote | **G** | Keep deferred pending a future approved preflight | `docs/decisions.md`; `feb3bc1` guardrail |
@@ -224,7 +226,7 @@ Delivery codes below: `P` = public detail route plus preview/PDF APIs; `I` = no 
 | `grade1_place_value_representation_number_line_identify` | worksheet / generated | `numberLineIdentify` | `visual_model` / shared PDF | I | yes / generic |
 | `grade1_place_value_representation_number_word_match` | worksheet / generated | `numberWordMatch` | `matching` / shared PDF | I | yes / generic |
 | `g1_number_word_match_to_50` | worksheet / curated | Grade 1 representation adapter + `numberWordMatch` | number-word response / shared PDF | P | yes / Q1 |
-| `g1_write_the_numeral_to_50` | worksheet / curated | Grade 1 representation adapter + `numberWordMatch` reverse mode | numeral response / shared PDF | I | yes / Q1 |
+| `g1_write_the_numeral_to_50` | worksheet / curated | Grade 1 representation adapter + `numberWordMatch` reverse mode | numeral response / shared PDF | P | yes / Q1 |
 | `grade1_place_value_representation_standard_form` | worksheet / generated | shared `standardForm` runtime | `representation` / shared PDF | I | yes / generic |
 | `grade1_patterning_and_algebra_extend_pattern` | worksheet / generated | shared numeric rules + `extendPattern` | patterning layout / shared PDF | I | yes / controlled example |
 | `grade1_patterning_and_algebra_function_table` | worksheet / generated | compatibility `functionTable` | unapproved generic layout / shared PDF | I | yes / generic |
@@ -249,7 +251,7 @@ Recommendation results:
 - Three word-problem resources: implemented and approved with varied sentences, work space, separation, range/count, and multi-page support.
 - Number Line Identify: implemented and approved with the raised line, blank target, centered answer, endpoints, selection modes, and multi-page support; density exception noted below.
 - Write Number Words: current 20-question/two-column and 30-question/three-column runtime implemented and approved.
-- Write the Numeral: representative output approved and committed as a separate partial resource; only promotion work remains.
+- Write the Numeral: representative output approved, committed, and promoted after the separate operational gate.
 - Base Ten Blocks: current 0–50 model/line/labels/example runtime implemented and approved.
 - Counting With Ten Frames: title and responsive count bands implemented and approved.
 - Numeric Patterning trio: founder proof approved and controlled shared runtime committed; each remains generated/internal rather than public-ready.
@@ -270,7 +272,7 @@ The former Addition on a Number Line title/runtime mismatch is resolved. The res
 ## Public customization status
 
 - **Live public prototype:** `g1_addition_facts_within_20` only.
-- **Runtime-supported but public-deferred:** the other controlled A/B/C worksheet families listed in the matrix.
+- **Runtime-supported but public-deferred:** controlled A worksheet families that retain generated/partial status in the matrix.
 - **Not yet supported:** deferred generic candidates and held legacy entries.
 - **Intentionally not applicable:** the Grade 1 Exit Ticket.
 
@@ -278,23 +280,23 @@ No second public customization panel, new public control family, or accidental r
 
 ## Promotion status
 
-`g1_write_the_numeral_to_50` is founder-approved and committed but remains `partial`. Gate status:
+`g1_write_the_numeral_to_50` is founder-approved, committed, and now promoted to `ready`. Gate status:
 
 | Gate | Current result |
 | --- | --- |
 | Founder approval | **Complete** — reduced representative packet approved before `c3768af`. |
 | Runtime/implementation | **Complete** — committed in `c3768af`. |
 | Catalog metadata | **Structurally complete** — title, short title, subject, grade, domain, skill, family, activity, layout, tags, note, description, instruction, answer-key flag, and generator options exist. |
-| Public copy | **Needs a small correction** — `teacherNote` and `description` still say founder review is pending, which is now stale. |
+| Public copy | **Complete** — stale founder-review-pending wording was removed without changing the approved title or instruction. |
 | Design issues | **None recorded** after the approved response-line and pagination correction passes. |
-| Internal preview/PDF | **Working** through the direct catalog APIs and focused runtime tests. |
-| Answer key | **Working** and covered by the runtime/proof packet. |
-| Audit | **Passing** as one of 6/6 partial resources. |
-| Public detail route | **Not live by design** — `/resource/worksheet/:id` returns 404 while status is `partial`. |
-| Public preview/download | Direct APIs work, but user-facing verification must follow an authorized promotion because the public detail route is status-gated. |
-| Promotion decision | **Open** — an explicit status/promotion checkpoint is still required. |
+| Internal preview/PDF | **Working** through the shared catalog runtime and focused runtime tests. |
+| Answer key | **Working** — the current two-page student/key proof and public PDF endpoint use the same seeded truth. |
+| Audit | **Passing** as one of 104/104 ready resources. |
+| Public detail route | **Working** — `/resource/worksheet/g1_write_the_numeral_to_50` returned 200 after promotion. |
+| Public preview/download | **Working** — browse, ready-catalog listing, detail, preview, student PDF, and answer-key PDF passed the exact-resource route smoke. |
+| Promotion decision | **Complete** — `partial` -> `ready`; B -> A. |
 
-The remaining work is therefore: correct stale metadata/public copy in a later authorized promotion change, make the explicit promotion decision, change status only if approved, then smoke-test the public detail, preview, PDF download, and answer-key package. Founder proof, runtime, audit, and design are not blockers. No promotion was performed.
+The Grade 1 promotion gate is complete. Public customization remains runtime-only and no new teacher controls were added.
 
 ## Category C closure result
 
@@ -321,13 +323,13 @@ There are 32 non-deferred candidates. All 32 (A+B) have a controlled or proofabl
 
 Calculation: `32 / 32 = 100%`.
 
-### Grade 1 promotion/readiness: 27%
+### Grade 1 promotion/readiness: 29%
 
-Thirteen of 49 Grade 1 candidates are catalog-ready and launch-facing: 12 worksheets and 1 Exit Ticket. This is catalog readiness only. Twelve of 49 (24%) are both founder-approved and launch-facing; the three approved Patterning resources remain generated/internal, and Write the Numeral remains partial.
+Fourteen of 49 Grade 1 candidates are catalog-ready and launch-facing: 13 worksheets and 1 Exit Ticket. This is catalog readiness only. Thirteen of 49 (27%) are both founder-approved and launch-facing; other approved resources may remain generated/internal or partial pending separate decisions.
 
-### Weighted Grade 1 completion: 85%
+### Weighted Grade 1 completion: 86%
 
-Planning weights follow the correction directive: founder review/disposition 35%, implementation/runtime maturity for non-deferred candidates 35%, promotion/public readiness 20%, and correction/defer resolution 10%. The component estimates are 100%, 100%, 27%, and 100%, respectively. The composite is `0.35×100 + 0.35×100 + 0.20×27 + 0.10×100 = 85.4%`, rounded to 85%. Separate promotion decisions prevent founder-approved implementation and explicit deferral from being mistaken for full launch readiness.
+Planning weights follow the correction directive: founder review/disposition 35%, implementation/runtime maturity for non-deferred candidates 35%, promotion/public readiness 20%, and correction/defer resolution 10%. The component estimates are 100%, 100%, 29%, and 100%, respectively. The composite is `0.35×100 + 0.35×100 + 0.20×29 + 0.10×100 = 85.8%`, rounded to 86%. Separate promotion decisions prevent founder-approved implementation and explicit deferral from being mistaken for full launch readiness.
 
 ### Milestone 8 completion estimate: 42%
 
@@ -352,8 +354,8 @@ Passed:
 - `node scripts/testGrade1CategoryFBatch1.js`
 - `node scripts/testGrade1CategoryFBatch2Data.js`
 - `node scripts/testGrade1CategoryFBatch3Data.js`
-- `node scripts/testGrade1FractionFamily.js`: four structured visual modes, exact 6/4/6/3 totals, same-seed parity, and Grade 2+ isolation passed before this documentation-only closure. Its historical reconciliation-string assertions still describe the pre-closure F5/G12 checkpoint; this task does not authorize test changes.
-- `npm run audit:worksheets`: 103/103 ready, 213/213 generated, 6/6 partial; only seven known planned Pattern Word Problems failures.
+- `node scripts/testGrade1FractionFamily.js`: four structured visual modes, exact 6/4/6/3 totals, same-seed parity, Grade 2+ isolation, and current A32/B0/F0/G17 reconciliation assertions passed.
+- `npm run audit:worksheets`: 104/104 ready, 213/213 generated, 5/5 partial; only seven known planned Pattern Word Problems failures.
 
 Final checks passed after this document was saved:
 
@@ -369,6 +371,6 @@ Pre-existing excluded untracked paths observed and not altered:
 - `public/styles/images/`
 - `review/`
 
-No resource status, public UI, route, curriculum source, or founder CSV was changed. The fraction changes are limited to the approved Grade 1 runtime, structured normalization fields, shared renderer variants, catalog copy, tests, proof generator, preflight, reusable validation decision, and reconciliation. The deferred number-line resource was not implemented. No resource was promoted and no push occurred.
+This final gate changed only `g1_write_the_numeral_to_50` from `partial` to `ready`, removed its stale review-pending copy, refreshed the focused assertions and current documentation, and verified the existing public flow. No public UI, route, generator, renderer, curriculum source, founder CSV, Grade 2+ behavior, or Category G record changed. No push occurred.
 
-GRADE 1 FOUNDER REVIEW CLOSED — A31 / B1 / C0 / D0 / E0 / F0 / G17 / TOTAL 49
+FINAL GRADE 1 PROMOTION COMPLETE — A32 / B0 / C0 / D0 / E0 / F0 / G17 / TOTAL 49
