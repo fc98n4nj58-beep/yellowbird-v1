@@ -7,12 +7,18 @@ const PUBLIC_SKILL_LABEL_HIDDEN_IDS = new Set([
   "grade1_place_value_representation_base_ten_blocks",
   "g1_ten_frame_addition_within_10",
   "grade1_multiplication_facts_arrays",
-  "grade1_multiplication_facts_equal_groups"
+  "grade1_multiplication_facts_equal_groups",
+  "grade1_multiplication_facts_skip_counting",
+  "grade1_place_value_representation_expanded_form"
 ]);
 
 const EARLY_MULTIPLICATION_FOOTER_IDS = new Set([
   "grade1_multiplication_facts_arrays",
   "grade1_multiplication_facts_equal_groups"
+]);
+
+const NUMBER_PATTERN_FOOTER_IDS = new Set([
+  "grade1_multiplication_facts_skip_counting"
 ]);
 
 function finiteOptionalNumber(value) {
@@ -31,6 +37,7 @@ function publicDomainLabel(item) {
   if (EARLY_MULTIPLICATION_FOOTER_IDS.has(item?.id)) {
     return "Early Multiplication Thinking";
   }
+  if (NUMBER_PATTERN_FOOTER_IDS.has(item?.id)) return "Number Patterns";
   return item?.domain || "";
 }
 

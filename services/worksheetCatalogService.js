@@ -130,6 +130,11 @@ const GRADE1_MULTIPLICATION_MODEL_IDS = new Set([
   "grade1_multiplication_facts_equal_groups"
 ]);
 
+const GRADE1_CATEGORY_C_CLOSURE_IDS = new Set([
+  "grade1_multiplication_facts_skip_counting",
+  "grade1_place_value_representation_expanded_form"
+]);
+
 const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
   "g1_addition_facts_within_20",
   "g1_subtraction_facts_within_20",
@@ -139,7 +144,8 @@ const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
   "g1_write_the_numeral_to_50",
   "grade1_place_value_representation_base_ten_blocks",
   "g1_ten_frame_addition_within_10",
-  ...GRADE1_MULTIPLICATION_MODEL_IDS
+  ...GRADE1_MULTIPLICATION_MODEL_IDS,
+  ...GRADE1_CATEGORY_C_CLOSURE_IDS
 ]);
 
 function usesQuestion1CompletedExample(item) {
@@ -291,6 +297,33 @@ function normalizeGrade1MultiplicationModelOptions(item, options = {}) {
       normalized.maxItemsPerGroup,
       secondMaximum
     );
+  }
+
+  return normalized;
+}
+
+function normalizeGrade1CategoryCClosureOptions(item, options = {}) {
+  if (!GRADE1_CATEGORY_C_CLOSURE_IDS.has(item.id)) return options;
+
+  const normalized = { ...options };
+  if (item.id === "grade1_multiplication_facts_skip_counting") {
+    normalized.questionCount = finiteNumber(normalized.questionCount, 8);
+    normalized.termCount = finiteNumber(normalized.termCount ?? normalized.sequenceLength, 6);
+    normalized.missingCount = finiteNumber(normalized.missingCount, 1);
+    normalized.missingPlacement = normalized.missingPlacement || "random";
+    normalized.selectedSteps = parseNumberList(
+      normalized.selectedSteps || normalized.steps || normalized.onlySteps
+    );
+    if (!normalized.selectedSteps.length) normalized.selectedSteps = [1, 2, 5, 10];
+    normalized.maxValue = finiteNumber(normalized.maxValue, 50);
+    normalized.allowZeroStart = true;
+    normalized.showJumpVisuals = normalized.showJumpVisuals !== false;
+  }
+
+  if (item.id === "grade1_place_value_representation_expanded_form") {
+    normalized.minA = finiteNumber(normalized.minA, 10);
+    normalized.maxA = finiteNumber(normalized.maxA, 50);
+    normalized.questionCount = finiteNumber(normalized.questionCount, 18);
   }
 
   return normalized;
@@ -454,11 +487,14 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalizeGrade1MultiplicationModelOptions(
+  return normalizeGrade1CategoryCClosureOptions(
     item,
-    normalizeGrade1NumberRepresentationOptions(
+    normalizeGrade1MultiplicationModelOptions(
       item,
-      normalizeGrade1FluencyComparisonOptions(item, normalized)
+      normalizeGrade1NumberRepresentationOptions(
+        item,
+        normalizeGrade1FluencyComparisonOptions(item, normalized)
+      )
     )
   );
 }
@@ -889,12 +925,16 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
   instructionText = "Write the numeral for each number word.";
  }
 
- const title = isReverseNumberWordMode
+  const title = isReverseNumberWordMode
   ? "Write the Numeral to 50"
   : item.id === "grade1_multiplication_facts_arrays"
     ? "Arrays"
     : item.id === "grade1_multiplication_facts_equal_groups"
       ? "Equal Groups"
+      : item.id === "grade1_multiplication_facts_skip_counting"
+        ? "Skip Counting"
+        : item.id === "grade1_place_value_representation_expanded_form"
+          ? "Expanded Form"
       : item.title;
 
  const layout = normalizeWorksheetLayout({
@@ -1171,18 +1211,21 @@ if (item.activityTypes?.[0] === "expanded_form" && (item.resourceType || "worksh
       answerLineBelowPrompt: false
     };
   } else {
+    const isGrade1Closure = item.id === "grade1_place_value_representation_expanded_form";
     layout.template = {
       ...(layout.template || {}),
       columns: 3,
-      maxProblemsPerPage: 45
+      maxProblemsPerPage: isGrade1Closure ? 18 : 45
     };
     layout.display = {
       ...(layout.display || {}),
-      denseGridRows: 15,
+      denseGridRows: isGrade1Closure ? 6 : 15,
       sequentialColumnFill: true,
       compactExpandedForm: true,
       writingLine: false,
-      answerLineBelowPrompt: false
+      answerLineBelowPrompt: false,
+      hideSubtitle: isGrade1Closure,
+      suppressExampleLabel: isGrade1Closure
     };
   }
 }
@@ -1227,7 +1270,9 @@ if (item.activityTypes?.[0] === "skip_counting") {
     sequentialColumnFill: true,
     skipCountingRow: true,
     skipCountingArrows: normalizedOptions.showJumpVisuals !== false,
-    showJumpVisuals: normalizedOptions.showJumpVisuals !== false
+    showJumpVisuals: normalizedOptions.showJumpVisuals !== false,
+    hideSubtitle: item.id === "grade1_multiplication_facts_skip_counting",
+    suppressExampleLabel: item.id === "grade1_multiplication_facts_skip_counting"
   };
 }
 

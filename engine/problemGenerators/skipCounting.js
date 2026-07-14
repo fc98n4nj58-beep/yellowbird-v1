@@ -64,6 +64,32 @@ function buildSkipSequence(step, startMultiplier, count, missingIndexes = []) {
   return nums;
 }
 
+function normalizeSelectedSteps(options = {}) {
+  const raw = options.selectedSteps || options.steps || options.onlySteps;
+  const values = Array.isArray(raw)
+    ? raw
+    : typeof raw === "string"
+      ? raw.split(",")
+      : [];
+
+  return [...new Set(values
+    .map((value) => Math.floor(Number(value)))
+    .filter((value) => Number.isFinite(value) && value > 0))];
+}
+
+function nextSelectedStep(options, random) {
+  const selectedSteps = normalizeSelectedSteps(options);
+  if (!selectedSteps.length) return null;
+
+  const generatorState = options.generatorState || {};
+  const key = selectedSteps.join("|");
+  if (!generatorState.skipCountingStepPools) generatorState.skipCountingStepPools = {};
+  if (!generatorState.skipCountingStepPools[key]?.length) {
+    generatorState.skipCountingStepPools[key] = shuffle(selectedSteps, random);
+  }
+  return generatorState.skipCountingStepPools[key].shift();
+}
+
 function generateSkipCountingProblem(options = {}) {
   const random = options.random || Math.random;
   const usedProblemKeys = options.usedProblemKeys || new Set();
@@ -84,11 +110,20 @@ function generateSkipCountingProblem(options = {}) {
   let fallbackProblem = null;
 
   for (let attempt = 0; attempt < 80; attempt++) {
-    const resolvedStep = hasStep ? step : randInt(2, 10, random);
+    const resolvedStep = hasStep ? step : nextSelectedStep(options, random) || randInt(2, 10, random);
     const startNumber = finiteNumber(options.startNumber, null);
+    const allowZeroStart = Boolean(options.allowZeroStart);
+    const minimumMultiplier = allowZeroStart ? 0 : 1;
+    const maxValue = finiteNumber(options.maxValue, null);
+    const maximumMultiplier = maxValue === null
+      ? 12
+      : Math.max(
+          minimumMultiplier,
+          Math.floor(maxValue / resolvedStep) - (termCount - 1)
+        );
     const startMultiplier = startNumber !== null
-      ? Math.max(1, Math.floor(startNumber / resolvedStep))
-      : randInt(1, 12, random);
+      ? Math.max(minimumMultiplier, Math.floor(startNumber / resolvedStep))
+      : randInt(minimumMultiplier, maximumMultiplier, random);
     const missingIndexes = buildMissingIndexes(termCount, missingCount, missingPlacement, random);
     const key = `skip_counting:${resolvedStep}:${startMultiplier}:${termCount}:${missingIndexes.join("-")}`;
     const answer = missingIndexes.map((index) => resolvedStep * (startMultiplier + index));
@@ -114,3 +149,4 @@ function generateSkipCountingProblem(options = {}) {
 }
 
 module.exports = generateSkipCountingProblem;
+module.exports.normalizeSelectedSteps = normalizeSelectedSteps;
