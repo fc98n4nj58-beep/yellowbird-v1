@@ -1,4 +1,5 @@
 const { nextMultiplicationModelFactorPair } = require("./multiplicationModelFactors");
+const { MULTIPLICATION_SYMBOL } = require("./multiplicationModelConstants");
 
 function generateArrayProblem(options = {}) {
   const pair = nextMultiplicationModelFactorPair(options, "array");
@@ -12,6 +13,7 @@ function generateArrayProblem(options = {}) {
     answer: total,
     responseMode: "multiplication_sentence",
     responseValues: [rows, cols, total],
+    responseOperator: MULTIPLICATION_SYMBOL,
     a: rows,
     b: cols,
     op: "*",

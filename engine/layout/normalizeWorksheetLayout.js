@@ -75,6 +75,7 @@ function normalizeProblem(problem, index, context) {
     answer: problem.answer,
     responseMode: problem.responseMode || null,
     responseValues: Array.isArray(problem.responseValues) ? problem.responseValues : null,
+    responseOperator: problem.responseOperator || null,
     showQuestionSentence: Boolean(problem.showQuestionSentence),
     taskMode: problem.taskMode || null,
     equationSupport: problem.equationSupport || null,

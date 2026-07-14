@@ -1,4 +1,5 @@
 const { nextMultiplicationModelFactorPair } = require("./multiplicationModelFactors");
+const { MULTIPLICATION_SYMBOL } = require("./multiplicationModelConstants");
 
 function isDivisionFacing(options = {}) {
   return (
@@ -42,6 +43,9 @@ function generateEqualGroupsProblem(options = {}) {
       responseValues: responseMode === "multiplication_sentence"
         ? [groups, itemsPerGroup, total]
         : [total],
+      responseOperator: responseMode === "multiplication_sentence"
+        ? MULTIPLICATION_SYMBOL
+        : null,
       showQuestionSentence,
       a: groups,
       b: itemsPerGroup,

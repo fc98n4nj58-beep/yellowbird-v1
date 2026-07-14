@@ -4,6 +4,9 @@ const layout = require("../config/layout/layoutSpec.json");
 const { pdfDesignTokens } = require("../config/layout/pdfDesignTokens");
 const path = require("path");
 const PDFDocument = require("pdfkit");
+const {
+  MULTIPLICATION_SYMBOL
+} = require("../engine/problemGenerators/multiplicationModelConstants");
 
 const MAX_PER_COLUMN = 30;
 
@@ -63,6 +66,7 @@ function buildAnswerKeyItems(items) {
     answer: it.answer,
     responseMode: it.responseMode || null,
     responseValues: Array.isArray(it.responseValues) ? it.responseValues : null,
+    responseOperator: it.responseOperator || null,
     showQuestionSentence: Boolean(it.showQuestionSentence),
     taskMode: it.taskMode || null,
     equationSupport: it.equationSupport || null,
@@ -1005,7 +1009,7 @@ function drawMultiplicationModelEquation(doc, values, x, y, fonts = {}, options 
   const parts = Array.isArray(values) ? values : [];
   const showAnswers = Boolean(options.answerKey || options.isExample);
   const symbolY = y - fontSize - 2;
-  const symbols = ["x", "="];
+  const symbols = [options.operator || MULTIPLICATION_SYMBOL, "="];
   let cursorX = x;
 
   doc.save();
@@ -1121,7 +1125,7 @@ function renderMultiplicationModelCell(doc, question, layoutBox, fonts = {}, dis
   doc.fillColor("#111827");
   setFont(doc, fonts.regular || "Helvetica", 12);
 
-  if (isExample) {
+  if (isExample && !display.suppressExampleLabel) {
     setFont(doc, fonts.lightItalic || fonts.regular || "Helvetica", 9);
     doc.fillColor(pdfDesignTokens.colors.muted);
     doc.text("Example", x, y - 11, {
@@ -1191,6 +1195,7 @@ function renderMultiplicationModelCell(doc, question, layoutBox, fonts = {}, dis
     drawMultiplicationModelEquation(doc, values, equationX, responseY, fonts, {
       answerKey: Boolean(display.answerKey),
       isExample,
+      operator: question.responseOperator || MULTIPLICATION_SYMBOL,
       blankWidth
     });
   } else {
@@ -3183,4 +3188,4 @@ function renderWorksheetPDF({ res, contentObject, options = {}, layoutObject = n
   doc.end();
 }
 
-module.exports = { renderWorksheetPDF };
+module.exports = { renderWorksheetPDF, buildAnswerKeyItems };

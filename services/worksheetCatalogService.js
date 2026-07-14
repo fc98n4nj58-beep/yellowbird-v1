@@ -125,6 +125,11 @@ const GRADE1_NUMBER_WORD_RESOURCE_IDS = new Set([
   "g1_write_the_numeral_to_50"
 ]);
 
+const GRADE1_MULTIPLICATION_MODEL_IDS = new Set([
+  "grade1_multiplication_facts_arrays",
+  "grade1_multiplication_facts_equal_groups"
+]);
+
 const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
   "g1_addition_facts_within_20",
   "g1_subtraction_facts_within_20",
@@ -133,7 +138,8 @@ const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
   "g1_number_word_match_to_50",
   "g1_write_the_numeral_to_50",
   "grade1_place_value_representation_base_ten_blocks",
-  "g1_ten_frame_addition_within_10"
+  "g1_ten_frame_addition_within_10",
+  ...GRADE1_MULTIPLICATION_MODEL_IDS
 ]);
 
 function usesQuestion1CompletedExample(item) {
@@ -228,6 +234,63 @@ function normalizeGrade1NumberRepresentationOptions(item, options = {}) {
     if (selectedValues.length) {
       normalized.frameSelectionMode = "exact";
     }
+  }
+
+  return normalized;
+}
+
+function normalizeGrade1MultiplicationModelOptions(item, options = {}) {
+  if (!GRADE1_MULTIPLICATION_MODEL_IDS.has(item.id)) return options;
+
+  const normalized = { ...options };
+  const activityType = item.activityTypes?.[0] || "";
+  const firstMinimum = finiteNumber(
+    normalized.minFactorA ?? normalized.minA,
+    2
+  );
+  const firstMaximum = finiteNumber(
+    normalized.maxFactorA ?? normalized.maxA,
+    5
+  );
+  const secondMinimum = finiteNumber(
+    normalized.minFactorB ?? normalized.minB,
+    2
+  );
+  const secondMaximum = finiteNumber(
+    normalized.maxFactorB ?? normalized.maxB,
+    5
+  );
+
+  normalized.questionCount = finiteNumber(normalized.questionCount, 8);
+  normalized.maxProduct = finiteNumber(
+    normalized.maxProduct ?? normalized.maxTotal,
+    10
+  );
+  normalized.responseMode = "multiplication_sentence";
+  normalized.showQuestionSentence = false;
+
+  if (["array", "arrays"].includes(activityType)) {
+    normalized.minRows = finiteNumber(normalized.minRows, firstMinimum);
+    normalized.maxRows = finiteNumber(normalized.maxRows, firstMaximum);
+    normalized.minCols = finiteNumber(
+      normalized.minCols ?? normalized.minColumns,
+      secondMinimum
+    );
+    normalized.maxCols = finiteNumber(
+      normalized.maxCols ?? normalized.maxColumns,
+      secondMaximum
+    );
+  } else {
+    normalized.minGroups = finiteNumber(normalized.minGroups, firstMinimum);
+    normalized.maxGroups = finiteNumber(normalized.maxGroups, firstMaximum);
+    normalized.minItemsPerGroup = finiteNumber(
+      normalized.minItemsPerGroup,
+      secondMinimum
+    );
+    normalized.maxItemsPerGroup = finiteNumber(
+      normalized.maxItemsPerGroup,
+      secondMaximum
+    );
   }
 
   return normalized;
@@ -391,9 +454,12 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalizeGrade1NumberRepresentationOptions(
+  return normalizeGrade1MultiplicationModelOptions(
     item,
-    normalizeGrade1FluencyComparisonOptions(item, normalized)
+    normalizeGrade1NumberRepresentationOptions(
+      item,
+      normalizeGrade1FluencyComparisonOptions(item, normalized)
+    )
   );
 }
 
@@ -637,6 +703,14 @@ function buildRangeNotice(item, options = {}) {
 function buildStudentFacingInstruction(item, fallback = "") {
  const activityType = item.activityTypes?.[0] || "";
 
+ if (item.id === "grade1_multiplication_facts_arrays") {
+  return "Count the rows and columns. Complete the number sentence for each array.";
+ }
+
+ if (item.id === "grade1_multiplication_facts_equal_groups") {
+  return "Count the groups and the objects in each group. Complete the number sentence.";
+ }
+
  if (item.id === "g1_number_word_match_to_50") {
   return "Write each number in words.";
  }
@@ -817,7 +891,11 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
 
  const title = isReverseNumberWordMode
   ? "Write the Numeral to 50"
-  : item.title;
+  : item.id === "grade1_multiplication_facts_arrays"
+    ? "Arrays"
+    : item.id === "grade1_multiplication_facts_equal_groups"
+      ? "Equal Groups"
+      : item.title;
 
  const layout = normalizeWorksheetLayout({
   title,
@@ -975,7 +1053,10 @@ if (["array", "arrays"].includes(item.activityTypes?.[0]) && (item.resourceType 
     arrayModelAlign: "left",
     arrayModelGutter: 18,
     equalHeightItems: true,
-    hideItemSeparators: false
+    hideItemSeparators: false,
+    hideSubtitle: GRADE1_MULTIPLICATION_MODEL_IDS.has(item.id),
+    suppressExampleLabel: GRADE1_MULTIPLICATION_MODEL_IDS.has(item.id),
+    completedExampleAnswerOnlyEmphasis: GRADE1_MULTIPLICATION_MODEL_IDS.has(item.id)
   };
 }
 
@@ -987,13 +1068,15 @@ if (
   const questionsPerPage = finiteNumber(normalizedOptions.questionsPerPage);
   const responseMode = normalizedOptions.responseMode || "multiplication_sentence";
   const showQuestionSentence = Boolean(normalizedOptions.showQuestionSentence);
-  layout.instruction = responseMode === "total_only"
-    ? showQuestionSentence
-      ? "Read each description and write the total number of dots."
-      : "Write the total number of dots in each model."
-    : showQuestionSentence
-      ? "Read each description and use the model to write a multiplication equation."
-      : "Use each model to write a multiplication equation.";
+  layout.instruction = item.id === "grade1_multiplication_facts_equal_groups"
+    ? "Count the groups and the objects in each group. Complete the number sentence."
+    : responseMode === "total_only"
+      ? showQuestionSentence
+        ? "Read each description and write the total number of dots."
+        : "Write the total number of dots in each model."
+      : showQuestionSentence
+        ? "Read each description and use the model to write a multiplication equation."
+        : "Use each model to write a multiplication equation.";
   if (rangeNotice) {
     layout.instruction = [layout.instruction, rangeNotice].join(" ");
   }
@@ -1010,7 +1093,10 @@ if (
     multiplicationModelFamily: "equal_groups",
     multiplicationModelConvention: "groups_items",
     equalHeightItems: true,
-    hideItemSeparators: false
+    hideItemSeparators: false,
+    hideSubtitle: GRADE1_MULTIPLICATION_MODEL_IDS.has(item.id),
+    suppressExampleLabel: GRADE1_MULTIPLICATION_MODEL_IDS.has(item.id),
+    completedExampleAnswerOnlyEmphasis: GRADE1_MULTIPLICATION_MODEL_IDS.has(item.id)
   };
 }
 

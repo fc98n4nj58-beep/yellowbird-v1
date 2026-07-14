@@ -5,7 +5,14 @@ const PUBLIC_SKILL_LABEL_HIDDEN_IDS = new Set([
   "g1_number_word_match_to_50",
   "g1_write_the_numeral_to_50",
   "grade1_place_value_representation_base_ten_blocks",
-  "g1_ten_frame_addition_within_10"
+  "g1_ten_frame_addition_within_10",
+  "grade1_multiplication_facts_arrays",
+  "grade1_multiplication_facts_equal_groups"
+]);
+
+const EARLY_MULTIPLICATION_FOOTER_IDS = new Set([
+  "grade1_multiplication_facts_arrays",
+  "grade1_multiplication_facts_equal_groups"
 ]);
 
 function finiteOptionalNumber(value) {
@@ -18,6 +25,13 @@ function publicSkillLabel(item) {
   if (PUBLIC_SKILL_LABEL_HIDDEN_IDS.has(item?.id)) return "";
   if (item?.skillKey === "patterning_and_algebra") return "";
   return item?.skillKey || "";
+}
+
+function publicDomainLabel(item) {
+  if (EARLY_MULTIPLICATION_FOOTER_IDS.has(item?.id)) {
+    return "Early Multiplication Thinking";
+  }
+  return item?.domain || "";
 }
 
 function buildCatalogWorksheetRuntime(id, query = {}) {
@@ -45,7 +59,7 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         footerText: [
           item.gradeLabels?.[0] || "",
           item.subject || "Math",
-          item.domain || "",
+          publicDomainLabel(item),
           publicSkillLabel(item)
         ].filter(Boolean).join(" • ")
       }
@@ -58,6 +72,7 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         answer: p.answer,
         responseMode: p.responseMode || null,
         responseValues: Array.isArray(p.responseValues) ? p.responseValues : null,
+        responseOperator: p.responseOperator || null,
         showQuestionSentence: Boolean(p.showQuestionSentence),
         taskMode: p.taskMode || null,
         equationSupport: p.equationSupport || null,

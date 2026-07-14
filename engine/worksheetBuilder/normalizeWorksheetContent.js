@@ -103,6 +103,7 @@ function normalizeItem(item = {}, index = 0, meta = {}) {
     answer: item.answer ?? "",
     responseMode: item.responseMode || null,
     responseValues: Array.isArray(item.responseValues) ? item.responseValues : null,
+    responseOperator: item.responseOperator || null,
     showQuestionSentence: Boolean(item.showQuestionSentence),
     taskMode: item.taskMode || null,
     equationSupport: item.equationSupport || null,
