@@ -2020,8 +2020,8 @@
     },
     {
       "id": "grade2_multiplication_facts_equal_groups",
-      "title": "Equal Groups — Grade 2",
-      "shortTitle": "Equal Groups",
+      "title": "Multiplication Equal Groups",
+      "shortTitle": "Multiplication Equal Groups",
       "subject": "Math",
       "grades": [
         "grade2"
@@ -2040,6 +2040,19 @@
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
+      "studentInstruction": "Write a multiplication sentence for each model.",
+      "generatorOptions": {
+        "minGroups": 2,
+        "maxGroups": 6,
+        "minItemsPerGroup": 2,
+        "maxItemsPerGroup": 6,
+        "maxProduct": 36,
+        "balanceFactorValues": true,
+        "responseMode": "multiplication_sentence",
+        "showQuestionSentence": false,
+        "questionCount": 8,
+        "includeExample": false
+      },
       "tags": [
         "grade 2",
         "multiplication & division",
@@ -2047,7 +2060,7 @@
         "equal groups"
       ],
       "curriculumTags": [],
-      "description": "Students use equal groups to model multiplication or division."
+      "description": "Students use equal-groups models to construct multiplication sentences."
     },
     {
       "id": "grade2_multiplication_facts_missing_factor",

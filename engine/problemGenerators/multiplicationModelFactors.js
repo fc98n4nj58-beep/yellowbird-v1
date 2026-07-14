@@ -110,6 +110,32 @@ function shuffle(values, random = Math.random) {
   return result;
 }
 
+function balancePairOrder(values, random = Math.random) {
+  const remaining = shuffle(values, random);
+  const ordered = [];
+  const factorACounts = new Map();
+  const factorBCounts = new Map();
+
+  while (remaining.length) {
+    let bestIndex = 0;
+    let bestScore = Infinity;
+    remaining.forEach((pair, index) => {
+      const score = (factorACounts.get(pair.factorA) || 0) + (factorBCounts.get(pair.factorB) || 0);
+      if (score < bestScore) {
+        bestIndex = index;
+        bestScore = score;
+      }
+    });
+
+    const [pair] = remaining.splice(bestIndex, 1);
+    ordered.push(pair);
+    factorACounts.set(pair.factorA, (factorACounts.get(pair.factorA) || 0) + 1);
+    factorBCounts.set(pair.factorB, (factorBCounts.get(pair.factorB) || 0) + 1);
+  }
+
+  return ordered;
+}
+
 function buildPairPool(options = {}, family = "array") {
   const { factorAValues, factorBValues } = resolveFactorValues(options, family);
   const maxProduct = finiteNumber(options.maxProduct ?? options.maxTotal);
@@ -154,7 +180,10 @@ function nextMultiplicationModelFactorPair(options = {}, family = "array") {
   if (!state.pool.length) {
     const source = buildPairPool(options, family);
     state.sourceSize = source.length;
-    state.pool = shuffle(source.length ? source : buildPairPool({}, family), random);
+    const available = source.length ? source : buildPairPool({}, family);
+    state.pool = options.balanceFactorValues === true
+      ? balancePairOrder(available, random)
+      : shuffle(available, random);
   }
 
   const pair = state.pool.shift();
@@ -168,6 +197,7 @@ function nextMultiplicationModelFactorPair(options = {}, family = "array") {
 
 module.exports = {
   buildPairPool,
+  balancePairOrder,
   nextMultiplicationModelFactorPair,
   normalizeNumberList
 };

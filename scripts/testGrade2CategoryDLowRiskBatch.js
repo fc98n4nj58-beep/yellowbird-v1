@@ -236,8 +236,8 @@ function assertCatalogParityAndCounts() {
     path.join(ROOT, "docs/grade-2-architecture-reconciliation-preflight.md"),
     "utf8"
   );
-  const categoryALine = reconciliation.split("\n").find((line) => line.startsWith("- **A (21):**"));
-  const categoryDLine = reconciliation.split("\n").find((line) => line.startsWith("- **D (8):**"));
+  const categoryALine = reconciliation.split("\n").find((line) => line.startsWith("- **A (22):**"));
+  const categoryDLine = reconciliation.split("\n").find((line) => line.startsWith("- **D (7):**"));
   assert(categoryALine);
   assert(categoryDLine);
   Object.values(IDS).forEach((id) => {

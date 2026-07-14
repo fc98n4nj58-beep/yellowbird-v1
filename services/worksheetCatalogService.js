@@ -143,10 +143,12 @@ const GRADE1_EQUATION_MATCH_ID = "grade1_addition_subtraction_facts_equation_mat
 const GRADE2_EQUATION_MATCH_ID = "grade2_addition_subtraction_facts_equation_match";
 const GRADE2_NUMBER_LINE_IDENTIFY_ID = "grade2_place_value_representation_number_line_identify";
 const GRADE2_NUMBER_WORD_WRITE_ID = "grade2_place_value_representation_number_word_match";
+const GRADE2_EQUAL_GROUPS_ID = "grade2_multiplication_facts_equal_groups";
 const GRADE2_CATEGORY_D_LOW_RISK_IDS = new Set([
   GRADE2_EQUATION_MATCH_ID,
   GRADE2_NUMBER_LINE_IDENTIFY_ID,
-  GRADE2_NUMBER_WORD_WRITE_ID
+  GRADE2_NUMBER_WORD_WRITE_ID,
+  GRADE2_EQUAL_GROUPS_ID
 ]);
 const GRADE1_DATA_READING_IDS = new Set([
   "grade1_data_display_graphing_read_graph",
@@ -283,6 +285,18 @@ function normalizeGrade2CategoryDLowRiskOptions(item, options = {}) {
     normalized.numberWordMode = "numeral_to_word";
     normalized.promptStyle = "number_only";
     normalized.questionCount = 12;
+  }
+
+  if (item.id === GRADE2_EQUAL_GROUPS_ID) {
+    normalized.minGroups = 2;
+    normalized.maxGroups = 6;
+    normalized.minItemsPerGroup = 2;
+    normalized.maxItemsPerGroup = 6;
+    normalized.maxProduct = 36;
+    normalized.balanceFactorValues = true;
+    normalized.responseMode = "multiplication_sentence";
+    normalized.showQuestionSentence = false;
+    normalized.questionCount = 8;
   }
 
   return normalized;
@@ -954,6 +968,10 @@ function buildStudentFacingInstruction(item, fallback = "") {
   return "Count the groups and the objects in each group. Complete the number sentence.";
  }
 
+ if (item.id === GRADE2_EQUAL_GROUPS_ID) {
+  return "Write a multiplication sentence for each model.";
+ }
+
  if (item.id === GRADE1_ADDITION_NUMBER_LINE_ID) {
   return "Use the number line to solve each addition question.";
  }
@@ -1191,6 +1209,8 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
     ? "Arrays"
     : item.id === "grade1_multiplication_facts_equal_groups"
       ? "Equal Groups"
+      : item.id === GRADE2_EQUAL_GROUPS_ID
+        ? "Multiplication Equal Groups"
       : item.id === "grade1_multiplication_facts_skip_counting"
         ? "Skip Counting"
         : item.id === "grade1_place_value_representation_expanded_form"
@@ -1445,6 +1465,8 @@ if (
   const showQuestionSentence = Boolean(normalizedOptions.showQuestionSentence);
   layout.instruction = item.id === "grade1_multiplication_facts_equal_groups"
     ? "Count the groups and the objects in each group. Complete the number sentence."
+    : item.id === GRADE2_EQUAL_GROUPS_ID
+      ? "Write a multiplication sentence for each model."
     : responseMode === "total_only"
       ? showQuestionSentence
         ? "Read each description and write the total number of dots."
@@ -1469,8 +1491,8 @@ if (
     multiplicationModelConvention: "groups_items",
     equalHeightItems: true,
     hideItemSeparators: false,
-    hideSubtitle: GRADE1_MULTIPLICATION_MODEL_IDS.has(item.id),
-    suppressExampleLabel: GRADE1_MULTIPLICATION_MODEL_IDS.has(item.id),
+    hideSubtitle: GRADE1_MULTIPLICATION_MODEL_IDS.has(item.id) || item.id === GRADE2_EQUAL_GROUPS_ID,
+    suppressExampleLabel: GRADE1_MULTIPLICATION_MODEL_IDS.has(item.id) || item.id === GRADE2_EQUAL_GROUPS_ID,
     completedExampleAnswerOnlyEmphasis: GRADE1_MULTIPLICATION_MODEL_IDS.has(item.id)
   };
 }

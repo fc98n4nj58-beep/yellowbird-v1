@@ -2,7 +2,7 @@
 
 Date: 2026-07-14
 
-Status: Batch 1 founder-approved and reconciled; catalog statuses remain `generated`
+Status: Batch 1 and Equal Groups founder-approved and reconciled; catalog statuses remain `generated`
 
 ## Batch 1 implementation record
 
@@ -33,7 +33,7 @@ The focused 30-seed suite passed same-seed stability, different-seed variation, 
 
 ## Current state
 
-Grade 2 reconciliation is A21 / B0 / C0 / D8 / E9 / F0 / G14, total 52. The three approved Batch 1 records are Category A but retain catalog status `generated`; the remaining eight Category D records are also `generated`. None of those 11 generated records is public or promoted. The master catalog contains each exact ID once, contains no duplicate active ID, and agrees with the reconciliation. No Category E or G record is included here.
+Grade 2 reconciliation is A22 / B0 / C0 / D7 / E9 / F0 / G14, total 52. The three approved Batch 1 records and Multiplication Equal Groups are Category A but retain catalog status `generated`; the remaining seven Category D records are also `generated`. None of those 11 generated records is public or promoted. The master catalog contains each exact ID once, contains no duplicate active ID, and agrees with the reconciliation. No Category E or G record is included here.
 
 All records enter the shared path:
 
@@ -43,7 +43,7 @@ Preview and PDF already call the same runtime. Routes contain no Category D math
 
 ## Pre-implementation Category D inventory
 
-This table preserves the pre-implementation diagnostic used to plan the batch. At that point every record was a worksheet with catalog status `generated`, reconciliation Category D, and declared answer-key support. The three approved Batch 1 records are now Category A while retaining `generated` status. `Current pages` means the temporary diagnostic captured during preflight, not the approved runtime or a proposed proof.
+This table preserves the pre-implementation diagnostic used to plan the batch. At that point every record was a worksheet with catalog status `generated`, reconciliation Category D, and declared answer-key support. The three approved Batch 1 records and Multiplication Equal Groups are now Category A while retaining `generated` status. `Current pages` means the temporary diagnostic captured during preflight, not the approved runtime or a proposed proof.
 
 | Resource | Current title; strand/topic | Current default | Current instruction | Current path | Seed / answer key / output | Current pages |
 | --- | --- | --- | --- | --- | --- | ---: |
@@ -116,11 +116,17 @@ A literal cut-and-match numeral/word activity is **BETTER AS FUTURE CARD SET**. 
 
 Exact resource: `grade2_multiplication_facts_equal_groups`.
 
-This record already uses the approved `equal_groups` visual, ordered `groups x objects per group = total` truth, deterministic factor pool, canonical dot geometry, shared equation targets, and matching key. It is distinct from Arrays because containers, not rows and columns, carry the grouping structure.
+This record uses the approved `equal_groups` visual, ordered `groups × objects per group = total` truth, deterministic shared factor pool, canonical dot geometry, shared equation targets, and matching key. It is distinct from Arrays because containers, not rows and columns, carry the grouping structure.
 
-Recommendation: **GRADE 2 ADAPTER REQUIRED**. Keep the current generator and renderer. Set exactly eight items, two columns by four rows, group and object factors 2-5, product no greater than 25, one student page and one key page. Use the true `×` symbol, no repeated per-item sentence, title `Equal Groups`, and instruction `Count the groups and the objects in each group. Complete the number sentence.`
+Implementation completed on 2026-07-14 through the existing `equalGroups.js` → `multiplicationModelFactors.js` → shared `model_interpretation` → `pdfRenderer` path. The narrow Grade 2 adapter fixes exactly eight items, two columns by four rows, group and object factors 2-6, products no greater than 36, multiplication-sentence response mode, no repeated per-item sentence, and completed-example mode off. The shared pool now supports an opt-in balanced ordering used by this resource so the first eight unique ordered pairs represent multiple group and item factor values without changing Grade 1 or Grade 3+ defaults.
+
+Final public contract: title `Multiplication Equal Groups`; instruction `Write a multiplication sentence for each model.`; footer `Grade 2 • Math • Multiplication`. Factor order remains `number of groups × objects in each group = total`, with three standard inline targets populated from the generator-owned `responseValues` on the answer key. The one student page and matching answer-key page preserve the same eight structured models and constant 2.4 pt dot radius.
+
+Focused verification in `scripts/testGrade2EqualGroupsBatch.js` passed 30 deterministic seeds with zero same-seed failures, different-seed variation, eight unique ordered pairs per default, factor balance, exact mathematical truth, response/key parity, 6×6 fit geometry, Grade 1 and Grade 3+ isolation, and exact two-page PDF output. The sole founder proof is `review/grade-2-equal-groups/founder-review/g2_multiplication_equal_groups_default_student_and_key.pdf`. Both US Letter pages were rendered and visually inspected: eight readable models, unambiguous group boundaries, constant object size, three usable targets, aligned answer-key truth, balanced spacing, public footer, and no clipping or footer collision. Classification: **FOUNDER REVIEW READY**.
 
 Ontario Grade 2 B2.5 explicitly supports repeated equal groups. This concrete whole-object default is safe without adding half/fourth groups in the initial worksheet. Completed Question 1 is architecturally available but should remain unsupported for this exact Grade 2 record until the founder decides whether the shared family example adds value.
+
+Founder review is approved. The catalog status remains `generated`, the resource is now reconciliation Category A, and no promotion has occurred. Fraction and data resources remain untouched.
 
 ## Concrete fractions
 
@@ -247,7 +253,7 @@ Every active family must use title -> divider -> student instruction, hidden sub
 | Order | Exact IDs | Shared family and scope | Tests / proofs / founder decision | Risk |
 | ---: | --- | --- | --- | --- |
 | 1 | `grade2_addition_subtraction_facts_equation_match`; `grade2_place_value_representation_number_line_identify`; `grade2_place_value_representation_number_word_match` | Relational pool, interval-aware number line, number-word response family; exact Grade 2 adapters only | One focused suite plus Grade 1/3 isolation. Three default PDFs; add relational Q1/Q2 and number-word Q1 proofs only if founder approves completed modes. Founder must approve titles, 0-50/0-200 ranges, six-line number-line density, and worksheet-vs-card role. | LOW-MODERATE |
-| 2 | `grade2_multiplication_facts_equal_groups` | Existing multiplication model; eight-item/friendly-factor adapter, public copy/footer | Extend multiplication-model focused tests; one default PDF, plus one completed-Q1 PDF only if approved. Founder decides completed mode and product cap 25. | LOW |
+| 2 | `grade2_multiplication_facts_equal_groups` | Existing multiplication model; eight-item 2-6 factor adapter, public copy/footer | Focused 30-seed suite and one default PDF complete; no completed-Q1 proof. Founder approved. | LOW |
 | 3 | `grade2_fraction_equivalence_shade_fraction_models`; `grade2_fraction_equivalence_fraction_word_problems` | `fraction_strip` direct extension plus `fair_share_set` thirds/fourths/sixths variant | Exact model/conservation/isolation validators. Two default PDFs covering every supported denominator/sharer; no completed proofs initially. Founder approves object pieces, counts, four-page sharing contract, and language. | MODERATE-HIGH |
 | 4 | `grade2_data_display_graphing_read_graph`; `grade2_data_display_graphing_interpret_data`; `grade2_data_display_graphing_graph_questions`; `grade2_data_display_graphing_complete_graph`; `grade2_data_display_graphing_match_data_to_graph` | One Grade 2 adapter over shared topic registry, graph truth, reading, construction, and matching modes | Dedicated five-resource structured-data validator. Five default PDFs; up to three additional completed-Q1 proofs only if approved. Founder approves pictograph-only initial scope, titles, question mix, values, counts, and completed modes. | HIGH |
 
@@ -282,7 +288,7 @@ Additional batch gates:
 - **Relational:** balanced six/six response states, two complete expressions, correct values/symbol, no duplicate pair, centered target, optional Q1/Q2 behavior inside 12.
 - **Number Line:** exactly 10 intervals, allowed step, arithmetic consistency of start/end/target, label-cadence fit, endpoint balance, target-line alignment.
 - **Number Words:** 0-200, unique values while possible, correct spelling/hyphenation, written response metadata, widest prompt/answer fit.
-- **Equal Groups:** exactly eight unique ordered pairs, factors 2-5, product <=25, true `×`, structured response values, identical model geometry in key.
+- **Equal Groups:** exactly eight unique ordered pairs, factors 2-6, product <=36, balanced factor representation, true `×`, structured response values, identical model geometry in key.
 - **Fractions:** nonempty `fraction_strip`/`fair_share_set`, equal partition geometry, safe denominator pool, same-whole identity, conservation of source quantity, divisible-object allow-list, exact answer state, no symbolic legacy fallback.
 - **Data:** nonempty `graphData`/`graphTaskData`; exact labels, values, units, key, scale, mode, answers, and distractors; injected randomness only; deterministic topic selection; no text-only fallback; student/key graph identity. The general audit is insufficient and must not be treated as this validator.
 
