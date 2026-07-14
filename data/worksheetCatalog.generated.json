@@ -595,8 +595,8 @@
     },
     {
       "id": "grade1_fraction_equivalence_compare_fractions",
-      "title": "Compare Fractions — Grade 1",
-      "shortTitle": "Compare Fractions",
+      "title": "Compare Fair Shares",
+      "shortTitle": "Compare Fair Shares",
       "subject": "Math",
       "grades": [
         "grade1"
@@ -610,7 +610,7 @@
       "activityTypes": [
         "compare_fractions"
       ],
-      "templateId": "equation_practice",
+      "templateId": "visual_model",
       "status": "generated",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
@@ -622,7 +622,8 @@
         "compare fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for compare fractions."
+      "description": "Compare drawing-led fair shares using equal-sized fraction strips.",
+      "studentInstruction": "Look at each pair. Circle the share that is greater, or circle Same."
     },
     {
       "id": "grade1_fraction_equivalence_fraction_number_line",
@@ -657,8 +658,8 @@
     },
     {
       "id": "grade1_fraction_equivalence_fraction_word_problems",
-      "title": "Fraction Word Problems — Grade 1",
-      "shortTitle": "Fraction Word Problems",
+      "title": "Share Fairly",
+      "shortTitle": "Share Fairly",
       "subject": "Math",
       "grades": [
         "grade1"
@@ -672,7 +673,7 @@
       "activityTypes": [
         "fraction_word_problems"
       ],
-      "templateId": "equation_practice",
+      "templateId": "visual_model",
       "status": "generated",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
@@ -684,12 +685,13 @@
         "fraction word problems"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for fraction word problems."
+      "description": "Draw equal shares for two or four children using concrete object sets.",
+      "studentInstruction": "Share the objects equally. You may split one object into equal halves. Draw whole objects and halves where needed."
     },
     {
       "id": "grade1_fraction_equivalence_match_equivalent_fractions",
-      "title": "Match Equivalent Fractions — Grade 1",
-      "shortTitle": "Match Equivalent Fractions",
+      "title": "One Half and Two Fourths",
+      "shortTitle": "One Half and Two Fourths",
       "subject": "Math",
       "grades": [
         "grade1"
@@ -703,7 +705,7 @@
       "activityTypes": [
         "match_equivalent_fractions"
       ],
-      "templateId": "equation_practice",
+      "templateId": "visual_model",
       "status": "generated",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
@@ -715,12 +717,13 @@
         "match equivalent fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for match equivalent fractions."
+      "description": "Recognize when one half and two fourths show the same amount of an equal-sized whole.",
+      "studentInstruction": "Look at each pair. Circle Yes if the shaded parts show the same amount. Circle No if they do not."
     },
     {
       "id": "grade1_fraction_equivalence_shade_fraction_models",
-      "title": "Shade Fraction Models — Grade 1",
-      "shortTitle": "Shade Fraction Models",
+      "title": "Shade Equal Parts",
+      "shortTitle": "Shade Equal Parts",
       "subject": "Math",
       "grades": [
         "grade1"
@@ -734,7 +737,7 @@
       "activityTypes": [
         "shade_fraction_models"
       ],
-      "templateId": "equation_practice",
+      "templateId": "visual_model",
       "status": "generated",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
@@ -746,7 +749,8 @@
         "shade fraction models"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for shade fraction models."
+      "description": "Shade halves, thirds, and fourths in exact rectangular fraction strips.",
+      "studentInstruction": "Shade the equal parts to show each fraction."
     },
     {
       "id": "grade1_multiplication_facts_arrays",

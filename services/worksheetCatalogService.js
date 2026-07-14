@@ -12,6 +12,9 @@ const {
 const {
   getCustomizationFamilyForResource
 } = require("../config/worksheetCustomization");
+const {
+  validateGrade1FractionWorksheet
+} = require("../engine/problemGenerators/grade1Fractions");
 
 const MASTER_CATALOG_PATH = path.join(__dirname, "../data/worksheetCatalog.master.json");
 
@@ -160,6 +163,18 @@ const GRADE1_DATA_QUESTION_COUNTS = Object.freeze({
   grade1_data_display_graphing_match_data_to_graph: 2,
   grade1_data_display_graphing_graph_word_problems: 4
 });
+const GRADE1_FRACTION_ACTIVITY_MODES = Object.freeze({
+  grade1_fraction_equivalence_shade_fraction_models: "shade_equal_parts",
+  grade1_fraction_equivalence_match_equivalent_fractions: "half_two_fourths",
+  grade1_fraction_equivalence_compare_fractions: "compare_fair_shares",
+  grade1_fraction_equivalence_fraction_word_problems: "share_fairly"
+});
+const GRADE1_FRACTION_QUESTION_COUNTS = Object.freeze({
+  grade1_fraction_equivalence_shade_fraction_models: 6,
+  grade1_fraction_equivalence_match_equivalent_fractions: 4,
+  grade1_fraction_equivalence_compare_fractions: 6,
+  grade1_fraction_equivalence_fraction_word_problems: 3
+});
 
 const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
   "g1_addition_facts_within_20",
@@ -174,6 +189,7 @@ const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
   ...GRADE1_CATEGORY_C_CLOSURE_IDS,
   ...GRADE1_DATA_READING_IDS,
   "grade1_data_display_graphing_graph_word_problems",
+  "grade1_fraction_equivalence_compare_fractions",
   GRADE1_ADDITION_NUMBER_LINE_ID,
   GRADE1_EQUATION_MATCH_ID
 ]);
@@ -200,6 +216,16 @@ function normalizeGrade1DataReadingOptions(item, options = {}) {
       item.id !== "grade1_data_display_graphing_graph_word_problems"
       ? false
       : options.includeExample
+  };
+}
+
+function normalizeGrade1FractionOptions(item, options = {}) {
+  const taskMode = GRADE1_FRACTION_ACTIVITY_MODES[item.id];
+  if (!taskMode) return options;
+  return {
+    ...options,
+    questionCount: GRADE1_FRACTION_QUESTION_COUNTS[item.id],
+    includeExample: taskMode === "compare_fair_shares" ? Boolean(options.includeExample) : false
   };
 }
 
@@ -562,9 +588,11 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalizeGrade1DataReadingOptions(
+  return normalizeGrade1FractionOptions(
     item,
-    normalizeGrade1EquationMatchOptions(
+    normalizeGrade1DataReadingOptions(
+      item,
+      normalizeGrade1EquationMatchOptions(
       item,
       normalizeGrade1AdditionNumberLineOptions(
         item,
@@ -578,6 +606,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
             )
           )
         )
+      )
       )
     )
   );
@@ -740,7 +769,9 @@ function generateWorksheetFromCatalogId(id, options = {}) {
   }
 
   const generatorOptions = resolveCatalogWorksheetOptions(item, options);
-  const activityType = GRADE1_DATA_ACTIVITY_MODES[item.id] || item.activityTypes?.[0] || generatorOptions.preferredActivityType || generatorOptions.activityType || null;
+  const activityType = GRADE1_FRACTION_ACTIVITY_MODES[item.id]
+    ? "grade1_fraction"
+    : GRADE1_DATA_ACTIVITY_MODES[item.id] || item.activityTypes?.[0] || generatorOptions.preferredActivityType || generatorOptions.activityType || null;
   const defaultQuestionCount =
     activityType === "standard_form" && item.grades?.[0] === "grade2"
       ? 60
@@ -757,7 +788,7 @@ function generateWorksheetFromCatalogId(id, options = {}) {
       : requestedQuestionCount;
 
   try {
-    return buildWorksheet(
+    const worksheet = buildWorksheet(
       grade,
       "CATALOG",
       {
@@ -775,6 +806,8 @@ function generateWorksheetFromCatalogId(id, options = {}) {
         worksheetTitle: item.title
       }
     );
+    validateGrade1FractionWorksheet(item.id, worksheet.problems);
+    return worksheet;
   } catch (err) {
     if (/No addition facts are available/.test(err.message)) {
       err.status = 400;
@@ -851,6 +884,22 @@ function buildStudentFacingInstruction(item, fallback = "") {
 
  if (item.id === "grade1_data_display_graphing_graph_questions") {
   return "Use the graph to answer each question.";
+ }
+
+ if (item.id === "grade1_fraction_equivalence_shade_fraction_models") {
+  return "Shade the equal parts to show each fraction.";
+ }
+
+ if (item.id === "grade1_fraction_equivalence_match_equivalent_fractions") {
+  return "Look at each pair. Circle Yes if the shaded parts show the same amount. Circle No if they do not.";
+ }
+
+ if (item.id === "grade1_fraction_equivalence_compare_fractions") {
+  return "Look at each pair. Circle the share that is greater, or circle Same.";
+ }
+
+ if (item.id === "grade1_fraction_equivalence_fraction_word_problems") {
+  return "Share the objects equally. You may split one object into equal halves. Draw whole objects and halves where needed.";
  }
 
  if (item.id === "g1_number_word_match_to_50") {
@@ -1520,6 +1569,35 @@ if (GRADE1_DATA_BATCH3_IDS.has(item.id)) {
     equalHeightItems: taskMode === "graph_application",
     denseGridRows: taskMode === "graph_application" ? 2 : questionCount,
     sequentialColumnFill: true
+  };
+}
+
+if (GRADE1_FRACTION_ACTIVITY_MODES[item.id]) {
+  const taskMode = GRADE1_FRACTION_ACTIVITY_MODES[item.id];
+  const questionCount = GRADE1_FRACTION_QUESTION_COUNTS[item.id];
+  const columns = taskMode === "half_two_fourths" || taskMode === "share_fairly" ? 1 : 2;
+  layout.template = {
+    ...(layout.template || {}),
+    columns,
+    maxProblemsPerPage: questionCount
+  };
+  layout.worksheetType = "fraction_visual";
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    suppressExampleLabel: true,
+    grade1FractionTaskMode: taskMode,
+    grade1FractionRenderer: true,
+    layoutVariant: taskMode === "share_fairly"
+      ? "fair_share_rows"
+      : taskMode === "half_two_fourths"
+        ? "fraction_strip_pairs"
+        : "fraction_strip_grid",
+    visualColumns: columns,
+    equalHeightItems: true,
+    hideItemSeparators: taskMode !== "half_two_fourths",
+    separateWorkedModel: ["shade_equal_parts", "share_fairly"].includes(taskMode),
+    completedQuestionOne: taskMode === "compare_fair_shares" && Boolean(normalizedOptions.includeExample)
   };
 }
 

@@ -15,6 +15,13 @@ const GRADE1_DATA_RESPONSE_LINE_WIDTHS = Object.freeze({
   yes_no: 84
 });
 const GRADE1_DATA_MATCH_SELECTION_TARGET_DIAMETER = 18;
+const GRADE1_FRACTION_SELECTION_TARGET_DIAMETER = 24;
+const GRADE1_FRACTION_EXAMPLE_LABEL = "Try this one";
+const GRADE1_FRACTION_ALLOWED_DENOMINATORS = Object.freeze([2, 3, 4]);
+const GRADE1_FRACTION_RENDERER_VARIANTS = Object.freeze({
+  fraction_strip: "fraction_strip",
+  fair_share_set: "fair_share_set"
+});
 
 const VISUAL_LAYOUT = {
   paddingTop: 8,
@@ -123,6 +130,10 @@ function buildAnswerKeyItems(items) {
     graphQuestionType: it.graphQuestionType || null,
     graphCategory: it.graphCategory || null,
     graphTaskData: it.graphTaskData || null,
+    fractionModel: it.fractionModel || null,
+    fractionWorkedModel: it.fractionWorkedModel || null,
+    answerState: it.answerState || null,
+    layoutVariant: it.layoutVariant || null,
     duplicateSignature: it.duplicateSignature || null,
     relatedDuplicateSignature: it.relatedDuplicateSignature || null,
     diagnostics: Array.isArray(it.diagnostics) ? it.diagnostics : null,
@@ -3137,6 +3148,373 @@ function matchChoiceStrokeWidth(choice, answerKey = false) {
   return answerKey && choice?.isCorrect ? 2 : 0.8;
 }
 
+function buildFractionStripGeometry({ x, y, width, height, partitionCount }) {
+  const parts = Math.max(1, Number(partitionCount) || 1);
+  if (!GRADE1_FRACTION_ALLOWED_DENOMINATORS.includes(parts)) {
+    throw new Error(`Unsupported Grade 1 fraction partition count '${parts}'.`);
+  }
+  const partWidth = width / parts;
+  return Object.freeze({
+    x,
+    y,
+    width,
+    height,
+    partitionCount: parts,
+    partWidth,
+    parts: Object.freeze(Array.from({ length: parts }, (_, index) => Object.freeze({
+      x: x + index * partWidth,
+      y,
+      width: index === parts - 1 ? x + width - (x + index * partWidth) : partWidth,
+      height
+    })))
+  });
+}
+
+function drawFractionStripPrimitive(doc, model, box, shadedParts = model?.shadedParts || 0) {
+  const geometry = buildFractionStripGeometry({
+    x: box.x,
+    y: box.y,
+    width: box.width,
+    height: box.height,
+    partitionCount: model.partitionCount
+  });
+  const shadeCount = Math.max(0, Math.min(geometry.partitionCount, Number(shadedParts) || 0));
+  doc.save();
+  for (let index = 0; index < shadeCount; index += 1) {
+    const part = geometry.parts[index];
+    doc.fillColor("#d1d5db").rect(part.x, part.y, part.width, part.height).fill();
+    doc.save();
+    doc.rect(part.x, part.y, part.width, part.height).clip();
+    doc.strokeColor("#9ca3af").lineWidth(0.45);
+    for (let startX = part.x - part.height; startX < part.x + part.width; startX += 9) {
+      doc.moveTo(startX, part.y + part.height).lineTo(startX + part.height, part.y).stroke();
+    }
+    doc.restore();
+  }
+  doc.strokeColor(pdfDesignTokens.colors.text).lineWidth(0.95).rect(box.x, box.y, box.width, box.height).stroke();
+  for (let index = 1; index < geometry.partitionCount; index += 1) {
+    const dividerX = box.x + index * geometry.partWidth;
+    doc.moveTo(dividerX, box.y).lineTo(dividerX, box.y + box.height).stroke();
+  }
+  doc.restore();
+  return geometry;
+}
+
+function drawChoiceTarget(doc, fonts, { x, y, label, selected = false, diameter = GRADE1_FRACTION_SELECTION_TARGET_DIAMETER }) {
+  const radius = diameter / 2;
+  doc.save();
+  doc.strokeColor(pdfDesignTokens.colors.text).lineWidth(selected ? 2.2 : 0.85);
+  doc.circle(x, y, radius).stroke();
+  if (selected) {
+    doc.moveTo(x - 5, y).lineTo(x - 1, y + 5).lineTo(x + 7, y - 6).stroke();
+  }
+  setFont(doc, selected ? fonts.bold : fonts.regular, 10.5);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  doc.text(label, x - 30, y + radius + 4, { width: 60, align: "center", lineBreak: false });
+  doc.restore();
+}
+
+function buildDivisibleObjectGeometry(model, x, y, { half = false, compact = false } = {}) {
+  const shape = half ? model.halfShape : model.wholeShape;
+  const scale = compact ? 0.82 : 1;
+  const dimensions = {
+    apple_whole: [15, 14],
+    apple_semicircle: [7.5, 14],
+    sandwich_rectangle: [15, 14],
+    sandwich_triangle: [15, 14],
+    granola_bar_rectangle: [24, 10],
+    granola_bar_half_width_rectangle: [12, 10],
+    paper_strip_rectangle: [28, 7],
+    paper_strip_half_width_rectangle: [14, 7]
+  }[shape];
+  if (!dimensions) throw new Error(`Unsupported divisible-object shape '${shape || ""}'.`);
+  const width = dimensions[0] * scale;
+  const height = dimensions[1] * scale;
+  return {
+    shape,
+    objectType: model.objectType,
+    x,
+    y,
+    width,
+    height,
+    left: x - width / 2,
+    top: y - height / 2,
+    areaFraction: half ? 0.5 : 1,
+    distinctHalfShape: half,
+    usesWholeShapeDivider: false
+  };
+}
+
+function drawDivisibleObjectShape(doc, model, x, y, { half = false, compact = false, muted = false } = {}) {
+  const geometry = buildDivisibleObjectGeometry(model, x, y, { half, compact });
+  doc.save();
+  doc.strokeColor(muted ? pdfDesignTokens.colors.lightRule : pdfDesignTokens.colors.text).lineWidth(0.8);
+  if (geometry.shape === "apple_whole") {
+    doc.ellipse(x, y, geometry.width / 2, geometry.height / 2).stroke();
+    doc.moveTo(x, geometry.top).lineTo(x + 1.5, geometry.top - 3).stroke();
+  } else if (geometry.shape === "apple_semicircle") {
+    const flatX = geometry.left;
+    const rightX = geometry.left + geometry.width;
+    doc.moveTo(flatX, geometry.top)
+      .bezierCurveTo(rightX, geometry.top + 1, rightX, geometry.top + geometry.height - 1, flatX, geometry.top + geometry.height)
+      .lineTo(flatX, geometry.top)
+      .stroke();
+    doc.moveTo(flatX + 1.5, geometry.top + geometry.height * 0.38)
+      .lineTo(flatX + 3, geometry.top + geometry.height * 0.38).stroke();
+    doc.moveTo(flatX + 1.5, geometry.top + geometry.height * 0.62)
+      .lineTo(flatX + 3, geometry.top + geometry.height * 0.62).stroke();
+  } else if (geometry.shape === "sandwich_triangle") {
+    doc.moveTo(geometry.left, geometry.top + geometry.height)
+      .lineTo(geometry.left, geometry.top)
+      .lineTo(geometry.left + geometry.width, geometry.top + geometry.height)
+      .closePath().stroke();
+  } else {
+    doc.rect(geometry.left, geometry.top, geometry.width, geometry.height).stroke();
+  }
+  doc.restore();
+  return geometry;
+}
+
+function drawDivisibleObjectSet(doc, model, { x, y, width, count, compact = false, muted = false }) {
+  const wholeGeometry = buildDivisibleObjectGeometry(model, 0, 0, { compact });
+  const maxColumnsForWidth = Math.max(1, Math.floor(width / (wholeGeometry.width + 5)));
+  const columns = Math.min(5, Math.max(1, count), maxColumnsForWidth);
+  const gapX = columns === 1
+    ? 0
+    : Math.min(36, (width - wholeGeometry.width) / (columns - 1));
+  const startX = x + (width - (columns - 1) * gapX) / 2;
+  for (let index = 0; index < count; index += 1) {
+    const row = Math.floor(index / columns);
+    const column = index % columns;
+    drawDivisibleObjectShape(doc, model, startX + column * gapX, y + row * 22, { compact, muted });
+  }
+}
+
+function drawFairShareModel(doc, fonts, model, answerState, box, { showAnswer = false, compact = false } = {}) {
+  const sourceWidth = compact ? 92 : 132;
+  const gap = compact ? 12 : 18;
+  const trayAreaX = box.x + sourceWidth + gap;
+  const trayAreaWidth = box.width - sourceWidth - gap;
+  const trayColumns = model.sharerCount === 4 ? 2 : model.sharerCount;
+  const trayRows = Math.ceil(model.sharerCount / trayColumns);
+  const trayGap = compact ? 7 : 10;
+  const trayWidth = (trayAreaWidth - (trayColumns - 1) * trayGap) / trayColumns;
+  const trayHeight = (box.height - (trayRows - 1) * trayGap) / trayRows;
+
+  setFont(doc, fonts.regular, compact ? 8 : 9.5);
+  doc.fillColor(pdfDesignTokens.colors.muted);
+  doc.text(compact ? `Start: ${model.pluralNoun}` : `Starting ${model.pluralNoun}`, box.x, box.y - 15, { width: sourceWidth, align: "center", lineBreak: false });
+  drawDivisibleObjectSet(doc, model, {
+    x: box.x,
+    y: box.y + 12,
+    width: sourceWidth,
+    count: model.wholeEquivalentTotal,
+    compact,
+    muted: showAnswer
+  });
+
+  const trays = [];
+  for (let index = 0; index < model.sharerCount; index += 1) {
+    const row = Math.floor(index / trayColumns);
+    const column = index % trayColumns;
+    const trayX = trayAreaX + column * (trayWidth + trayGap);
+    const trayY = box.y + row * (trayHeight + trayGap);
+    doc.save();
+    doc.strokeColor(pdfDesignTokens.colors.lightRule).lineWidth(0.85);
+    doc.roundedRect(trayX, trayY, trayWidth, trayHeight, 4).stroke();
+    setFont(doc, fonts.regular, compact ? 8 : 9);
+    doc.fillColor(pdfDesignTokens.colors.muted);
+    doc.text(`Child ${index + 1}`, trayX + 5, trayY + 5, { width: trayWidth - 10, align: "left", lineBreak: false });
+    doc.restore();
+    if (showAnswer) {
+      const wholeCount = answerState.trayWholeObjects[index];
+      const tokensPerRow = Math.min(4, Math.max(1, wholeCount));
+      const wholeGeometry = buildDivisibleObjectGeometry(model, 0, 0, { compact });
+      const tokenGap = wholeGeometry.width + (compact ? 4 : 6);
+      const wholeAreaWidth = trayWidth - (compact ? 30 : 42);
+      const tokenStartX = trayX + 8 + wholeAreaWidth / 2 - ((tokensPerRow - 1) * tokenGap) / 2;
+      for (let tokenIndex = 0; tokenIndex < wholeCount; tokenIndex += 1) {
+        drawDivisibleObjectShape(
+          doc,
+          model,
+          tokenStartX + (tokenIndex % tokensPerRow) * tokenGap,
+          trayY + (compact ? 28 : 31) + Math.floor(tokenIndex / tokensPerRow) * 17,
+          { compact }
+        );
+      }
+      const halfCount = answerState.trayHalfObjects[index];
+      for (let halfIndex = 0; halfIndex < halfCount; halfIndex += 1) {
+        drawDivisibleObjectShape(doc, model, trayX + trayWidth - 14 - halfIndex * 16, trayY + trayHeight - 14, {
+          half: true,
+          compact
+        });
+      }
+    }
+    trays.push({ x: trayX, y: trayY, width: trayWidth, height: trayHeight });
+  }
+  return { sourceWidth, trayAreaX, trayAreaWidth, trays };
+}
+
+function renderGrade1FractionPages(doc, fonts, contentObject, pageState, layoutObject) {
+  const meta = contentObject.meta || {};
+  const items = contentObject.content?.items || [];
+  const display = layoutObject.display || {};
+  const taskMode = display.grade1FractionTaskMode;
+  const answerKey = Boolean(display.answerKey);
+  const instruction = layoutObject.instruction || "";
+  const expectedModelKind = taskMode === "share_fairly"
+    ? GRADE1_FRACTION_RENDERER_VARIANTS.fair_share_set
+    : GRADE1_FRACTION_RENDERER_VARIANTS.fraction_strip;
+  if (!items.length || items.some((item) => item.fractionModel?.kind !== expectedModelKind)) {
+    throw new Error(`Grade 1 fraction task '${taskMode || ""}' is missing its '${expectedModelKind}' visual model.`);
+  }
+  const cb = layout.page.contentBox;
+  const footerRuleY = doc.page.height - layout.page.margins.bottom;
+  const bottomContentY = footerRuleY - (layout.zones?.footerBuffer?.height ?? 24);
+  let startY = renderHeader(doc, fonts, meta);
+
+  setFont(doc, fonts.regular, 12);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  doc.text(instruction, cb.x, startY - 12, { width: cb.width, align: "left" });
+  startY += 30;
+
+  const worked = items.find((item) => item.fractionWorkedModel)?.fractionWorkedModel || null;
+  if (worked && display.separateWorkedModel) {
+    const workedHeight = taskMode === "share_fairly" ? 104 : 76;
+    doc.save();
+    doc.fillColor("#f7f7f7").strokeColor(pdfDesignTokens.colors.lightRule).lineWidth(0.8);
+    doc.roundedRect(cb.x, startY, cb.width, workedHeight, 5).fillAndStroke();
+    setFont(doc, fonts.bold, 10.5);
+    doc.fillColor(pdfDesignTokens.colors.text);
+    doc.text(GRADE1_FRACTION_EXAMPLE_LABEL, cb.x + 12, startY + 9, { width: 90, lineBreak: false });
+    if (taskMode === "shade_equal_parts") {
+      setFont(doc, fonts.regular, 11);
+      doc.text(worked.prompt, cb.x + 112, startY + 9, { width: 90, lineBreak: false });
+      drawFractionStripPrimitive(
+        doc,
+        worked.model,
+        { x: cb.x + 230, y: startY + 15, width: 210, height: 44 },
+        worked.answerState.shadedParts
+      );
+    } else {
+      setFont(doc, fonts.regular, 9.5);
+      doc.text(worked.prompt, cb.x + 12, startY + 28, { width: 180, lineBreak: false });
+      drawFairShareModel(
+        doc,
+        fonts,
+        worked.model,
+        worked.answerState,
+        { x: cb.x + 194, y: startY + 24, width: cb.width - 206, height: 68 },
+        { showAnswer: true, compact: true }
+      );
+    }
+    doc.restore();
+    startY += workedHeight + 14;
+  }
+
+  if (taskMode === "shade_equal_parts") {
+    const gap = 18;
+    const cellWidth = (cb.width - gap) / 2;
+    const rowHeight = (bottomContentY - startY) / 3;
+    items.forEach((item, index) => {
+      const row = Math.floor(index / 2);
+      const column = index % 2;
+      const x = cb.x + column * (cellWidth + gap);
+      const y = startY + row * rowHeight;
+      setFont(doc, fonts.bold, 11);
+      doc.fillColor(pdfDesignTokens.colors.text);
+      doc.text(`${index + 1}.`, x, y + 4, { width: 24, lineBreak: false });
+      setFont(doc, fonts.regular, 13);
+      doc.text(item.prompt, x + 26, y + 2, { width: cellWidth - 32, lineBreak: false });
+      const model = item.fractionModel.models[0];
+      drawFractionStripPrimitive(
+        doc,
+        model,
+        { x: x + (cellWidth - 176) / 2, y: y + 40, width: 176, height: 62 },
+        answerKey ? item.answerState.shadedParts : 0
+      );
+    });
+  } else if (taskMode === "half_two_fourths") {
+    const rowHeight = (bottomContentY - startY) / 4;
+    items.forEach((item, index) => {
+      const y = startY + index * rowHeight;
+      const models = item.fractionModel.models;
+      setFont(doc, fonts.bold, 11);
+      doc.fillColor(pdfDesignTokens.colors.text);
+      doc.text(`${index + 1}.`, cb.x, y + 7, { width: 22, lineBreak: false });
+      const modelWidth = 168;
+      const modelHeight = 42;
+      const leftX = cb.x + 36;
+      const rightX = cb.x + 244;
+      item.fractionModel.labels.forEach((label, labelIndex) => {
+        const x = labelIndex === 0 ? leftX : rightX;
+        setFont(doc, fonts.regular, 10.5);
+        doc.text(label, x, y + 2, { width: modelWidth, align: "center", lineBreak: false });
+      });
+      drawFractionStripPrimitive(doc, models[0], { x: leftX, y: y + 23, width: modelWidth, height: modelHeight });
+      drawFractionStripPrimitive(doc, models[1], { x: rightX, y: y + 23, width: modelWidth, height: modelHeight });
+      const selected = answerKey ? item.answerState.choice : null;
+      drawChoiceTarget(doc, fonts, { x: cb.x + 444, y: y + 34, label: "Yes", selected: selected === "Yes" });
+      drawChoiceTarget(doc, fonts, { x: cb.x + 492, y: y + 34, label: "No", selected: selected === "No" });
+      if (index < items.length - 1) {
+        doc.save().strokeColor(pdfDesignTokens.colors.lightRule).lineWidth(0.5)
+          .moveTo(cb.x, y + rowHeight - 8).lineTo(cb.x + cb.width, y + rowHeight - 8).stroke().restore();
+      }
+    });
+  } else if (taskMode === "compare_fair_shares") {
+    const gap = 18;
+    const cellWidth = (cb.width - gap) / 2;
+    const rowHeight = (bottomContentY - startY) / 3;
+    items.forEach((item, index) => {
+      const row = Math.floor(index / 2);
+      const column = index % 2;
+      const x = cb.x + column * (cellWidth + gap);
+      const y = startY + row * rowHeight;
+      setFont(doc, fonts.bold, 11);
+      doc.fillColor(pdfDesignTokens.colors.text);
+      doc.text(`${index + 1}.`, x, y + 3, { width: 22, lineBreak: false });
+      const models = item.fractionModel.models;
+      const modelWidth = 94;
+      const leftX = x + 25;
+      const rightX = x + cellWidth - modelWidth - 8;
+      item.fractionModel.labels.forEach((label, labelIndex) => {
+        const labelX = labelIndex === 0 ? leftX : rightX;
+        setFont(doc, fonts.regular, 9.5);
+        doc.text(label, labelX, y + 2, { width: modelWidth, align: "center", lineBreak: false });
+      });
+      drawFractionStripPrimitive(doc, models[0], { x: leftX, y: y + 22, width: modelWidth, height: 38 });
+      drawFractionStripPrimitive(doc, models[1], { x: rightX, y: y + 22, width: modelWidth, height: 38 });
+      const selected = answerKey || item.isExample ? item.answerState.choice : null;
+      const choiceY = y + 82;
+      drawChoiceTarget(doc, fonts, { x: x + 47, y: choiceY, label: "Left", selected: selected === "left" });
+      drawChoiceTarget(doc, fonts, { x: x + cellWidth / 2, y: choiceY, label: "Same", selected: selected === "Same" });
+      drawChoiceTarget(doc, fonts, { x: x + cellWidth - 47, y: choiceY, label: "Right", selected: selected === "right" });
+    });
+  } else if (taskMode === "share_fairly") {
+    const rowHeight = (bottomContentY - startY) / 3;
+    items.forEach((item, index) => {
+      const y = startY + index * rowHeight;
+      setFont(doc, fonts.bold, 11);
+      doc.fillColor(pdfDesignTokens.colors.text);
+      doc.text(`${index + 1}.`, cb.x, y + 3, { width: 22, lineBreak: false });
+      setFont(doc, fonts.regular, 11.5);
+      doc.text(item.prompt, cb.x + 24, y + 1, { width: cb.width - 24, lineBreak: false });
+      drawFairShareModel(
+        doc,
+        fonts,
+        item.fractionModel,
+        item.answerState,
+        { x: cb.x + 4, y: y + 35, width: cb.width - 8, height: rowHeight - 45 },
+        { showAnswer: answerKey }
+      );
+    });
+  } else {
+    throw new Error(`Unsupported Grade 1 fraction renderer task '${taskMode || ""}'.`);
+  }
+
+  drawFooter(doc, fonts, pageState.pageNum, meta);
+}
+
 function renderQuestionsPages(doc, fonts, contentObject, options, pageState, layoutObject = null) {
   const meta = contentObject?.meta || {};
   const allItems = (
@@ -3152,6 +3530,11 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
   const footerRuleY = doc.page.height - layout.page.margins.bottom;
   const footerBufferH = layout.zones?.footerBuffer?.height ?? 24;
   const bottomContentY = footerRuleY - footerBufferH;
+
+  if (display.grade1FractionRenderer) {
+    renderGrade1FractionPages(doc, fonts, contentObject, pageState, layoutObject);
+    return;
+  }
 
   function renderSharedDataScenario(startAtY) {
     if (!display.sharedDataPictograph || !display.sharedDataGraph) return startAtY;
@@ -3646,8 +4029,16 @@ module.exports = {
     buildSharedDataScenarioGeometry,
     buildConstructionGraphCategories,
     matchChoiceStrokeWidth,
+    buildFractionStripGeometry,
+    drawFractionStripPrimitive,
+    buildDivisibleObjectGeometry,
+    drawDivisibleObjectShape,
+    drawFairShareModel,
     buildGrade1DataResponseGeometry,
     GRADE1_DATA_RESPONSE_LINE_WIDTHS,
-    GRADE1_DATA_MATCH_SELECTION_TARGET_DIAMETER
+    GRADE1_DATA_MATCH_SELECTION_TARGET_DIAMETER,
+    GRADE1_FRACTION_SELECTION_TARGET_DIAMETER,
+    GRADE1_FRACTION_EXAMPLE_LABEL,
+    GRADE1_FRACTION_RENDERER_VARIANTS
   }
 };

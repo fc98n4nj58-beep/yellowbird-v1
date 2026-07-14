@@ -17,7 +17,11 @@ const PUBLIC_SKILL_LABEL_HIDDEN_IDS = new Set([
   "grade1_data_display_graphing_graph_questions",
   "grade1_data_display_graphing_complete_graph",
   "grade1_data_display_graphing_match_data_to_graph",
-  "grade1_data_display_graphing_graph_word_problems"
+  "grade1_data_display_graphing_graph_word_problems",
+  "grade1_fraction_equivalence_shade_fraction_models",
+  "grade1_fraction_equivalence_match_equivalent_fractions",
+  "grade1_fraction_equivalence_compare_fractions",
+  "grade1_fraction_equivalence_fraction_word_problems"
 ]);
 
 const EARLY_MULTIPLICATION_FOOTER_IDS = new Set([
@@ -140,6 +144,10 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         graphTaskData: p.graphTaskData || null,
         graphQuestionType: p.graphQuestionType || null,
         graphCategory: p.graphCategory || null,
+        fractionModel: p.fractionModel || null,
+        fractionWorkedModel: p.fractionWorkedModel || null,
+        answerState: p.answerState || null,
+        layoutVariant: p.layoutVariant || null,
         duplicateSignature: p.duplicateSignature || null,
         relatedDuplicateSignature: p.relatedDuplicateSignature || null,
         diagnostics: Array.isArray(p.diagnostics) ? p.diagnostics : null

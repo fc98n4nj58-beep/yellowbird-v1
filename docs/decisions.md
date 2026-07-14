@@ -409,3 +409,13 @@ Rules:
 - Treat worksheet-family specifications, validated options, and founder, teacher, curriculum, and design QA decisions as a strategic Yellow Bird Knowledge Layer.
 - Preserve teacher control, curriculum honesty, print reliability, and human approval for educational judgment and public claims.
 - Detailed direction: `docs/ai-readiness-strategy.md`.
+
+## Decision: Structured Visual Working Gate
+
+A visual worksheet is not considered working merely because it produces a PDF. The requested structured visual model must be present, non-empty, aligned with the resource title and instructional task, deterministic, and synchronized with the answer key. Focused family validation must reject blank items, unsupported generator output shapes, generic text/equation fallback, missing visual answer state, and mismatched student/key truth before founder proof or promotion.
+
+## Decision: Grade-Appropriate Example Language and Fractional Object Geometry
+
+Student-facing example labels must use grade-appropriate language rather than internal instructional terminology. For Grade 1 fractions, the approved label is `Try this one`.
+
+When exact scaling, transformation, and answer-key parity matter, dynamic mathematical visuals use deterministic code-generated geometry rather than imported decorative assets. Fractional fair-sharing tasks may split only naturally divisible allow-listed objects, and a half object must be drawn as a distinct half shape rather than a whole object with a divider.

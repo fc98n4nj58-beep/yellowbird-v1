@@ -128,6 +128,10 @@ function normalizeProblem(problem, index, context) {
     graphTaskData: problem.graphTaskData || null,
     graphQuestionType: problem.graphQuestionType || null,
     graphCategory: problem.graphCategory || null,
+    fractionModel: problem.fractionModel || null,
+    fractionWorkedModel: problem.fractionWorkedModel || null,
+    answerState: problem.answerState || null,
+    layoutVariant: problem.layoutVariant || null,
     duplicateSignature: problem.duplicateSignature || null,
     relatedDuplicateSignature: problem.relatedDuplicateSignature || null,
     diagnostics: Array.isArray(problem.diagnostics) ? problem.diagnostics : null
