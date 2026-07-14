@@ -14,6 +14,7 @@ const GRADE1_DATA_RESPONSE_LINE_WIDTHS = Object.freeze({
   category: 136,
   yes_no: 84
 });
+const GRADE1_DATA_MATCH_SELECTION_TARGET_DIAMETER = 18;
 
 const VISUAL_LAYOUT = {
   paddingTop: 8,
@@ -121,6 +122,7 @@ function buildAnswerKeyItems(items) {
     graphData: it.graphData || null,
     graphQuestionType: it.graphQuestionType || null,
     graphCategory: it.graphCategory || null,
+    graphTaskData: it.graphTaskData || null,
     duplicateSignature: it.duplicateSignature || null,
     relatedDuplicateSignature: it.relatedDuplicateSignature || null,
     diagnostics: Array.isArray(it.diagnostics) ? it.diagnostics : null,
@@ -3046,11 +3048,13 @@ function renderPageColumns(
   }
 }
 
-function buildSharedDataPictographGeometry({ x, y, width, height, categoryCount }) {
-  const resolvedHeight = Math.max(190, Number(height || 218));
+function buildSharedDataPictographGeometry({ x, y, width, height, categoryCount, headerHeight = 42, minimumCategoryHeight = 37 }) {
   const count = Math.max(1, Number(categoryCount) || 1);
+  const numericHeaderHeight = Number(headerHeight);
+  const resolvedHeaderHeight = numericHeaderHeight === 0 ? 0 : Math.max(24, numericHeaderHeight || 42);
+  const resolvedHeight = Math.max(resolvedHeaderHeight + count * minimumCategoryHeight, Number(height || 218));
   const headerTop = y;
-  const headerBottom = y + 42;
+  const headerBottom = y + resolvedHeaderHeight;
   const headerCenterY = (headerTop + headerBottom) / 2;
   const header = Object.freeze({
     top: headerTop,
@@ -3063,7 +3067,7 @@ function buildSharedDataPictographGeometry({ x, y, width, height, categoryCount 
   const body = Object.freeze({
     top: header.bottom,
     bottom: y + resolvedHeight,
-    height: resolvedHeight - 42
+    height: resolvedHeight - resolvedHeaderHeight
   });
   const categoryHeight = body.height / count;
   const categoryBands = Object.freeze(Array.from({ length: count }, (_, index) => {
@@ -3122,6 +3126,17 @@ function buildSharedDataScenarioGeometry({
   });
 }
 
+function buildConstructionGraphCategories(task, answerKey = false) {
+  return (task?.rows || []).map((row) => ({
+    label: row.label,
+    value: answerKey ? row.targetValue : row.visibleCount
+  }));
+}
+
+function matchChoiceStrokeWidth(choice, answerKey = false) {
+  return answerKey && choice?.isCorrect ? 2 : 0.8;
+}
+
 function renderQuestionsPages(doc, fonts, contentObject, options, pageState, layoutObject = null) {
   const meta = contentObject?.meta || {};
   const allItems = (
@@ -3171,56 +3186,61 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     return geometry.nextY;
   }
 
-  function renderSharedDataGraph(startAtY) {
-    if (!display.sharedDataPictograph || !display.sharedDataGraph) return startAtY;
-
-    const graph = display.sharedDataGraph;
+  function renderSharedDataGraph(startAtY, config = {}) {
+    const graph = config.graph || display.sharedDataGraph;
+    if ((!display.sharedDataPictograph && !config.graph) || !graph) return startAtY;
     const categories = Array.isArray(graph.categories) ? graph.categories : [];
     if (!categories.length) return startAtY;
 
-    const x = layout.page.contentBox.x;
-    const width = layout.page.contentBox.width;
+    const x = config.x ?? layout.page.contentBox.x;
+    const width = config.width ?? layout.page.contentBox.width;
     const geometry = buildSharedDataPictographGeometry({
       x,
       y: startAtY,
       width,
-      height: display.sharedDataGraphHeight || 218,
-      categoryCount: categories.length
+      height: config.height || display.sharedDataGraphHeight || 218,
+      categoryCount: categories.length,
+      headerHeight: config.headerHeight ?? 42,
+      minimumCategoryHeight: config.minimumCategoryHeight ?? 37
     });
     const height = geometry.height;
     const rowTop = geometry.body.top;
-    const labelWidth = 104;
+    const labelWidth = config.labelWidth || 104;
 
     doc.save();
     doc.lineWidth(0.8);
     doc.strokeColor(pdfDesignTokens.colors.lightRule);
     doc.roundedRect(x, startAtY, width, height, 4).stroke();
 
-    setFont(doc, fonts.bold || fonts.regular, 12);
-    doc.fillColor(pdfDesignTokens.colors.text);
-    const title = graph.title || "Pictograph";
-    const titleWidth = width * 0.58;
-    const titleHeight = doc.heightOfString(title, { width: titleWidth, lineBreak: false });
-    const titleY = geometry.header.centerY - titleHeight / 2;
-    doc.text(title, x + 12, titleY, {
-      width: titleWidth,
-      align: "left",
-      lineBreak: false
-    });
+    if (config.showHeader !== false) {
+      setFont(doc, fonts.bold || fonts.regular, config.titleSize || 12);
+      doc.fillColor(pdfDesignTokens.colors.text);
+      const title = config.title || graph.title || "Pictograph";
+      const titleWidth = config.showKey === false ? width - 24 : width * 0.58;
+      const titleHeight = doc.heightOfString(title, { width: titleWidth, lineBreak: false });
+      const titleY = geometry.header.centerY - titleHeight / 2;
+      doc.text(title, x + 12, titleY, {
+        width: titleWidth,
+        align: "left",
+        lineBreak: false
+      });
 
-    const keyX = x + width - 126;
-    const keyY = geometry.header.centerY;
-    doc.circle(keyX, keyY, 7).stroke();
-    setFont(doc, fonts.regular, 10);
-    const keyText = String(graph.keyText || "= 1 unit");
-    const keyTextHeight = doc.heightOfString(keyText, { width: 94, lineBreak: false });
-    doc.text(keyText, keyX + 13, geometry.header.centerY - keyTextHeight / 2, {
-      width: 94,
-      align: "left",
-      lineBreak: false
-    });
+      if (config.showKey !== false) {
+        const keyX = x + width - 126;
+        const keyY = geometry.header.centerY;
+        doc.circle(keyX, keyY, config.compact ? 5 : 7).stroke();
+        setFont(doc, fonts.regular, config.compact ? 8.5 : 10);
+        const keyText = String(graph.keyText || "= 1 unit");
+        const keyTextHeight = doc.heightOfString(keyText, { width: 94, lineBreak: false });
+        doc.text(keyText, keyX + 13, geometry.header.centerY - keyTextHeight / 2, {
+          width: 94,
+          align: "left",
+          lineBreak: false
+        });
+      }
+    }
 
-    doc.moveTo(x, rowTop).lineTo(x + width, rowTop).stroke();
+    if (config.showHeader !== false) doc.moveTo(x, rowTop).lineTo(x + width, rowTop).stroke();
     doc.moveTo(x + labelWidth, rowTop).lineTo(x + labelWidth, startAtY + height).stroke();
 
     categories.forEach((category, index) => {
@@ -3231,7 +3251,7 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
         doc.moveTo(x, rowY).lineTo(x + width, rowY).stroke();
       }
 
-      setFont(doc, fonts.regular, 11);
+      setFont(doc, fonts.regular, config.compact ? 8.5 : 11);
       doc.fillColor(pdfDesignTokens.colors.text);
       doc.text(String(category.label || ""), x + 10, centerY - 7, {
         width: labelWidth - 18,
@@ -3240,15 +3260,87 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
       });
 
       const count = Math.max(0, Math.min(8, Number(category.value) || 0));
-      const symbolStartX = x + labelWidth + 24;
-      const symbolGap = 31;
+      const symbolStartX = x + labelWidth + (config.symbolInset ?? (config.compact ? 14 : 24));
+      const symbolGap = config.symbolGap ?? (config.compact ? 18 : 31);
+      const symbolRadius = (config.symbolDiameter ?? (config.compact ? 10 : 16)) / 2;
       for (let symbolIndex = 0; symbolIndex < count; symbolIndex += 1) {
-        doc.circle(symbolStartX + symbolIndex * symbolGap, centerY, 8).stroke();
+        doc.circle(symbolStartX + symbolIndex * symbolGap, centerY, symbolRadius).stroke();
       }
     });
 
     doc.restore();
     return startAtY + height + 14;
+  }
+
+  function renderDataTable(rows, y, { compact = false } = {}) {
+    const x = layout.page.contentBox.x;
+    const width = layout.page.contentBox.width;
+    const height = compact ? 34 : 52;
+    const cellWidth = width / rows.length;
+    doc.save();
+    doc.strokeColor(pdfDesignTokens.colors.lightRule).lineWidth(0.7);
+    doc.roundedRect(x, y, width, height, 3).stroke();
+    rows.forEach((row, index) => {
+      const cellX = x + index * cellWidth;
+      if (index) doc.moveTo(cellX, y).lineTo(cellX, y + height).stroke();
+      setFont(doc, fonts.regular, compact ? 8.5 : 10);
+      doc.fillColor(pdfDesignTokens.colors.muted);
+      doc.text(String(row.label), cellX + 4, y + (compact ? 5 : 8), { width: cellWidth - 8, align: "center", lineBreak: false });
+      setFont(doc, fonts.bold || fonts.regular, compact ? 11 : 14);
+      doc.fillColor(pdfDesignTokens.colors.text);
+      doc.text(String(row.value), cellX + 4, y + (compact ? 18 : 28), { width: cellWidth - 8, align: "center", lineBreak: false });
+    });
+    doc.restore();
+    return y + height + (compact ? 8 : 14);
+  }
+
+  function renderMatchItem(item, number, y) {
+    const graph = item.graphData;
+    const task = item.graphTaskData;
+    const x = layout.page.contentBox.x;
+    const width = layout.page.contentBox.width;
+    setFont(doc, fonts.bold || fonts.regular, 11);
+    doc.fillColor(pdfDesignTokens.colors.text);
+    doc.text(`${number}. ${graph.title}`, x, y, { width, lineBreak: false });
+    setFont(doc, fonts.regular, 9.5);
+    doc.fillColor(pdfDesignTokens.colors.muted);
+    doc.text(graph.scenario, x, y + 17, { width, lineBreak: false });
+    let nextY = renderDataTable(task.dataTable, y + 34, { compact: true });
+    doc.save();
+    doc.strokeColor(pdfDesignTokens.colors.text).lineWidth(0.8);
+    doc.circle(x + 8, nextY + 5, 5).stroke();
+    setFont(doc, fonts.regular, 8.5);
+    doc.fillColor(pdfDesignTokens.colors.text);
+    doc.text(String(graph.keyText), x + 18, nextY, { width: width - 18, lineBreak: false });
+    doc.restore();
+    nextY += 18;
+    const gap = 18;
+    const choiceWidth = (width - gap) / 2;
+    task.choices.forEach((choice, index) => {
+      const choiceX = x + index * (choiceWidth + gap);
+      const targetX = choiceX + 10;
+      const targetY = nextY + 10;
+      doc.save();
+      doc.strokeColor(pdfDesignTokens.colors.text).lineWidth(matchChoiceStrokeWidth(choice, display.answerKey));
+      doc.circle(targetX, targetY, GRADE1_DATA_MATCH_SELECTION_TARGET_DIAMETER / 2).stroke();
+      setFont(doc, fonts.bold || fonts.regular, 10);
+      doc.fillColor(pdfDesignTokens.colors.text);
+      doc.text(choice.id, targetX - 5, targetY - 5.5, { width: 10, align: "center", lineBreak: false });
+      doc.restore();
+      renderSharedDataGraph(nextY + 22, {
+        graph: { ...graph, categories: choice.categories },
+        x: choiceX,
+        width: choiceWidth,
+        height: 138,
+        headerHeight: 0,
+        minimumCategoryHeight: 34.5,
+        labelWidth: 70,
+        showHeader: false,
+        showKey: false,
+        compact: true
+      });
+    });
+    return nextY + 176;
   }
 
   const hasVisuals = allItems.some((item) => item.visual);
@@ -3289,6 +3381,35 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
       align: "left"
     });
     startY += display.sharedDataScenario ? 18 : 28;
+  }
+
+  if (display.grade1DataTaskMode === "complete_graph") {
+    startY = renderSharedDataScenario(startY);
+    const task = allItems[0]?.graphTaskData;
+    startY = renderDataTable(task.dataTable, startY);
+    const rows = buildConstructionGraphCategories(task, display.answerKey);
+    const construction = display.constructionPictograph || {};
+    renderSharedDataGraph(startY, {
+      graph: { ...allItems[0].graphData, categories: rows },
+      width: construction.width,
+      height: construction.height,
+      headerHeight: construction.headerHeight,
+      minimumCategoryHeight: construction.categoryHeight,
+      labelWidth: construction.labelWidth,
+      symbolDiameter: construction.symbolDiameter,
+      symbolGap: construction.symbolGap,
+      symbolInset: construction.symbolInset
+    });
+    drawFooter(doc, fonts, pageState.pageNum, meta);
+    return;
+  }
+
+  if (display.grade1DataTaskMode === "match_graph") {
+    allItems.forEach((item, index) => {
+      startY = renderMatchItem(item, index + 1, startY) + (index < allItems.length - 1 ? 14 : 0);
+    });
+    drawFooter(doc, fonts, pageState.pageNum, meta);
+    return;
   }
 
   startY = renderSharedDataScenario(startY);
@@ -3523,7 +3644,10 @@ module.exports = {
     measureNumberLineVisual,
     buildSharedDataPictographGeometry,
     buildSharedDataScenarioGeometry,
+    buildConstructionGraphCategories,
+    matchChoiceStrokeWidth,
     buildGrade1DataResponseGeometry,
-    GRADE1_DATA_RESPONSE_LINE_WIDTHS
+    GRADE1_DATA_RESPONSE_LINE_WIDTHS,
+    GRADE1_DATA_MATCH_SELECTION_TARGET_DIAMETER
   }
 };

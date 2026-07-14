@@ -704,8 +704,8 @@
     },
     {
       "id": "grade1_data_display_graphing_complete_graph",
-      "title": "Complete a Graph — Grade 1",
-      "shortTitle": "Complete a Graph",
+      "title": "Complete the Pictograph",
+      "shortTitle": "Complete the Pictograph",
       "subject": "Math",
       "grades": [
         "grade1"
@@ -731,8 +731,11 @@
         "complete graph"
       ],
       "curriculumTags": [],
-      "description": "Students complete graph displays from data.",
-      "sourceType": "generated"
+      "description": "Students use a numeral data table to complete two rows of a one-to-one pictograph.",
+      "sourceType": "generated",
+      "studentInstruction": "Use the data table. Draw circles to complete the pictograph.",
+      "generatorOptions": { "questionCount": 1 },
+      "pdfLayout": { "columns": 1, "maxProblemsPerPage": 1 }
     },
     {
       "id": "grade1_data_display_graphing_graph_questions",
@@ -782,8 +785,8 @@
     },
     {
       "id": "grade1_data_display_graphing_graph_word_problems",
-      "title": "Graph Word Problems — Grade 1",
-      "shortTitle": "Graph Word Problems",
+      "title": "Use the Graph to Solve",
+      "shortTitle": "Use the Graph to Solve",
       "subject": "Math",
       "grades": [
         "grade1"
@@ -793,7 +796,7 @@
       ],
       "domain": "Data & Graphing",
       "skillKey": "data_display_graphing",
-      "worksheetFamily": "generated",
+      "worksheetFamily": "data_graphing",
       "activityTypes": [
         "graph_word_problems"
       ],
@@ -809,8 +812,11 @@
         "graph word problems"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for graph word problems.",
-      "sourceType": "generated"
+      "description": "Students combine graph values with one new contextual fact using +1, +2, -1, or -2.",
+      "sourceType": "generated",
+      "studentInstruction": "Use the graph and the new information to answer each question.",
+      "generatorOptions": { "questionCount": 4 },
+      "pdfLayout": { "columns": 2, "maxProblemsPerPage": 4 }
     },
     {
       "id": "grade1_data_display_graphing_interpret_data",
@@ -860,8 +866,8 @@
     },
     {
       "id": "grade1_data_display_graphing_match_data_to_graph",
-      "title": "Match Data to Graph — Grade 1",
-      "shortTitle": "Match Data to Graph",
+      "title": "Choose the Matching Graph",
+      "shortTitle": "Choose the Matching Graph",
       "subject": "Math",
       "grades": [
         "grade1"
@@ -887,8 +893,11 @@
         "match data to graph"
       ],
       "curriculumTags": [],
-      "description": "Students match data sets to graph displays.",
-      "sourceType": "generated"
+      "description": "Students compare a numeral data table with two one-to-one pictographs and circle the matching choice.",
+      "sourceType": "generated",
+      "studentInstruction": "Look at each data set. Circle the graph that matches.",
+      "generatorOptions": { "questionCount": 2 },
+      "pdfLayout": { "columns": 1, "maxProblemsPerPage": 2 }
     },
     {
       "id": "grade1_data_display_graphing_read_graph",

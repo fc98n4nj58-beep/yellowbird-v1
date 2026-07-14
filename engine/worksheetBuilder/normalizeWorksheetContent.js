@@ -156,6 +156,7 @@ function normalizeItem(item = {}, index = 0, meta = {}) {
     expectedSymbol: item.expectedSymbol || null,
     comparisonResult: item.comparisonResult || null,
     graphData: item.graphData || null,
+    graphTaskData: item.graphTaskData || null,
     graphQuestionType: item.graphQuestionType || null,
     graphCategory: item.graphCategory || null,
     duplicateSignature: item.duplicateSignature || null,

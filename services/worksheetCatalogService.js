@@ -142,10 +142,23 @@ const GRADE1_DATA_READING_IDS = new Set([
   "grade1_data_display_graphing_interpret_data",
   "grade1_data_display_graphing_graph_questions"
 ]);
+const GRADE1_DATA_BATCH3_IDS = new Set([
+  "grade1_data_display_graphing_complete_graph",
+  "grade1_data_display_graphing_match_data_to_graph",
+  "grade1_data_display_graphing_graph_word_problems"
+]);
+const GRADE1_DATA_ACTIVITY_MODES = Object.freeze({
+  grade1_data_display_graphing_complete_graph: "complete_graph",
+  grade1_data_display_graphing_match_data_to_graph: "match_graph",
+  grade1_data_display_graphing_graph_word_problems: "graph_application"
+});
 const GRADE1_DATA_QUESTION_COUNTS = Object.freeze({
   grade1_data_display_graphing_read_graph: 6,
   grade1_data_display_graphing_interpret_data: 6,
-  grade1_data_display_graphing_graph_questions: 8
+  grade1_data_display_graphing_graph_questions: 8,
+  grade1_data_display_graphing_complete_graph: 1,
+  grade1_data_display_graphing_match_data_to_graph: 2,
+  grade1_data_display_graphing_graph_word_problems: 4
 });
 
 const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
@@ -160,6 +173,7 @@ const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
   ...GRADE1_MULTIPLICATION_MODEL_IDS,
   ...GRADE1_CATEGORY_C_CLOSURE_IDS,
   ...GRADE1_DATA_READING_IDS,
+  "grade1_data_display_graphing_graph_word_problems",
   GRADE1_ADDITION_NUMBER_LINE_ID,
   GRADE1_EQUATION_MATCH_ID
 ]);
@@ -178,10 +192,14 @@ function normalizeGrade1EquationMatchOptions(item, options = {}) {
 }
 
 function normalizeGrade1DataReadingOptions(item, options = {}) {
-  if (!GRADE1_DATA_READING_IDS.has(item.id)) return options;
+  if (!GRADE1_DATA_READING_IDS.has(item.id) && !GRADE1_DATA_BATCH3_IDS.has(item.id)) return options;
   return {
     ...options,
-    questionCount: GRADE1_DATA_QUESTION_COUNTS[item.id]
+    questionCount: GRADE1_DATA_QUESTION_COUNTS[item.id],
+    includeExample: GRADE1_DATA_BATCH3_IDS.has(item.id) &&
+      item.id !== "grade1_data_display_graphing_graph_word_problems"
+      ? false
+      : options.includeExample
   };
 }
 
@@ -722,7 +740,7 @@ function generateWorksheetFromCatalogId(id, options = {}) {
   }
 
   const generatorOptions = resolveCatalogWorksheetOptions(item, options);
-  const activityType = item.activityTypes?.[0] || generatorOptions.preferredActivityType || generatorOptions.activityType || null;
+  const activityType = GRADE1_DATA_ACTIVITY_MODES[item.id] || item.activityTypes?.[0] || generatorOptions.preferredActivityType || generatorOptions.activityType || null;
   const defaultQuestionCount =
     activityType === "standard_form" && item.grades?.[0] === "grade2"
       ? 60
@@ -1452,6 +1470,56 @@ if (GRADE1_DATA_READING_IDS.has(item.id)) {
     sharedDataScenarioAlign: "left",
     sharedDataScenarioFullWidth: true,
     sharedDataScenarioMaxLines: 2
+  };
+}
+
+if (GRADE1_DATA_BATCH3_IDS.has(item.id)) {
+  const taskMode = GRADE1_DATA_ACTIVITY_MODES[item.id];
+  const questionCount = GRADE1_DATA_QUESTION_COUNTS[item.id];
+  const graphData = layout.problems?.[0]?.graphData || null;
+  const constructionPictograph = taskMode === "complete_graph"
+    ? {
+        width: 504,
+        height: 298,
+        headerHeight: 42,
+        bodyHeight: 256,
+        categoryHeight: 64,
+        labelWidth: 112,
+        symbolDiameter: 22,
+        symbolGap: 38,
+        symbolInset: 28,
+        placement: "after_scenario_and_data_table"
+      }
+    : null;
+  layout.template = {
+    ...(layout.template || {}),
+    columns: taskMode === "graph_application" ? 2 : 1,
+    maxProblemsPerPage: questionCount
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    suppressExampleLabel: true,
+    hideItemSeparators: taskMode !== "match_graph",
+    grade1DataTaskMode: taskMode,
+    sharedDataPictograph: taskMode !== "match_graph",
+    sharedDataGraph: graphData,
+    sharedDataGraphHeight: constructionPictograph?.height || 218,
+    constructionPictograph,
+    sharedDataScenario: graphData?.scenario || "",
+    sharedDataScenarioPlacement: "between_instruction_and_graph",
+    sharedDataScenarioAlign: "left",
+    sharedDataScenarioFullWidth: true,
+    sharedDataScenarioMaxLines: 2,
+    writingLine: taskMode === "graph_application",
+    answerLineBelowPrompt: taskMode === "graph_application",
+    grade1DataResponseLines: taskMode === "graph_application",
+    dataResponseLineInset: 44,
+    dataResponsePromptGap: 28,
+    dataResponseLineWidths: { number: 64, category: 136, yes_no: 84 },
+    equalHeightItems: taskMode === "graph_application",
+    denseGridRows: taskMode === "graph_application" ? 2 : questionCount,
+    sequentialColumnFill: true
   };
 }
 

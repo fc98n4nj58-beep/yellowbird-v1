@@ -125,6 +125,7 @@ function normalizeProblem(problem, index, context) {
     expectedSymbol: problem.expectedSymbol || null,
     comparisonResult: problem.comparisonResult || null,
     graphData: problem.graphData || null,
+    graphTaskData: problem.graphTaskData || null,
     graphQuestionType: problem.graphQuestionType || null,
     graphCategory: problem.graphCategory || null,
     duplicateSignature: problem.duplicateSignature || null,

@@ -587,12 +587,12 @@ function assertDeterminismAndNoMutation() {
   });
 }
 
-function assertBatch3AndGrade2Isolation() {
+function assertBatch3StatusAndGrade2Isolation() {
   BATCH3_IDS.forEach((id) => {
     const item = getAnyWorksheetCatalogById(id);
     assert(item);
     assert.strictEqual(item.status, "generated");
-    assert(!item.studentInstruction);
+    assert(item.studentInstruction);
   });
 
   RESOURCES.forEach((resource) => {
@@ -651,7 +651,7 @@ async function run() {
   assertResourceContracts();
   assertCompletedExamples();
   assertDeterminismAndNoMutation();
-  assertBatch3AndGrade2Isolation();
+  assertBatch3StatusAndGrade2Isolation();
   await assertPdfAndAnswerKeyParity();
   console.log("Grade 1 Category F Batch 2 data checks passed; same-seed failures: 0.");
 }

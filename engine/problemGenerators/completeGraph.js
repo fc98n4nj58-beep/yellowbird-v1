@@ -1,4 +1,12 @@
+const {
+  isGrade1DataGraphWorksheet,
+  generateGrade1DataGraphProblem
+} = require("./grade1DataGraph");
+
 function generateCompleteGraphProblem(options = {}) {
+  if (isGrade1DataGraphWorksheet(options)) {
+    return generateGrade1DataGraphProblem(options);
+  }
   const random = options.random || Math.random;
   const categories = ["Cats", "Dogs", "Birds"];
   const values = [4, 7, 5];

@@ -37,6 +37,7 @@ const generateMissingValuePattern = require("./missingValuePattern");
 
 const generateCompareFractions = require("./compareFractions");
 const generateFunctionTable = require("./functionTable");
+const { generateGrade1DataGraphProblem } = require("./grade1DataGraph");
 
 function getGenerator(activityType) {
   const generators = {
@@ -52,6 +53,8 @@ function getGenerator(activityType) {
 
     read_graph: generateReadGraphProblem,
     complete_graph: generateCompleteGraphProblem,
+    match_graph: generateGrade1DataGraphProblem,
+    graph_application: generateGrade1DataGraphProblem,
     match_data_to_graph: generateMatchDataToGraphProblem,
     graph_questions: generateGraphQuestionsProblem,
     interpret_data: generateInterpretDataProblem,

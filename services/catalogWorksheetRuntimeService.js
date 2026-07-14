@@ -14,7 +14,10 @@ const PUBLIC_SKILL_LABEL_HIDDEN_IDS = new Set([
   "grade1_addition_subtraction_facts_equation_match",
   "grade1_data_display_graphing_read_graph",
   "grade1_data_display_graphing_interpret_data",
-  "grade1_data_display_graphing_graph_questions"
+  "grade1_data_display_graphing_graph_questions",
+  "grade1_data_display_graphing_complete_graph",
+  "grade1_data_display_graphing_match_data_to_graph",
+  "grade1_data_display_graphing_graph_word_problems"
 ]);
 
 const EARLY_MULTIPLICATION_FOOTER_IDS = new Set([
@@ -134,6 +137,7 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         expectedSymbol: p.expectedSymbol || null,
         comparisonResult: p.comparisonResult || null,
         graphData: p.graphData || null,
+        graphTaskData: p.graphTaskData || null,
         graphQuestionType: p.graphQuestionType || null,
         graphCategory: p.graphCategory || null,
         duplicateSignature: p.duplicateSignature || null,

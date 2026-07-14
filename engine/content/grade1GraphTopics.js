@@ -60,6 +60,112 @@ const SCENARIO_TYPE_METADATA = Object.freeze({
   })
 });
 
+function categoryNounLanguage(singularNoun, pluralNoun, options = {}) {
+  return Object.freeze({
+    singularNoun,
+    pluralNoun,
+    addPhrase: Object.freeze({
+      singular: options.addSingular || "was added",
+      plural: options.addPlural || "were added"
+    }),
+    removePhrase: Object.freeze({
+      singular: options.removeSingular || "was taken away",
+      plural: options.removePlural || "were taken away"
+    }),
+    counterType: options.counterType || "count_noun"
+  });
+}
+
+const CATEGORY_NOUN_LANGUAGE = Object.freeze({
+  paper: categoryNounLanguage("sheet of paper", "sheets of paper", {
+    removeSingular: "was used",
+    removePlural: "were used",
+    counterType: "sheet"
+  }),
+  glue: categoryNounLanguage("glue stick", "glue sticks", {
+    removeSingular: "was used",
+    removePlural: "were used",
+    counterType: "stick"
+  }),
+  scissors: categoryNounLanguage("pair of scissors", "pairs of scissors", {
+    removeSingular: "was used",
+    removePlural: "were used",
+    counterType: "pair"
+  }),
+  chalk: categoryNounLanguage("piece of chalk", "pieces of chalk", {
+    removeSingular: "was used",
+    removePlural: "were used",
+    counterType: "piece"
+  }),
+  bark: categoryNounLanguage("piece of bark", "pieces of bark", { counterType: "piece" }),
+  corn: categoryNounLanguage("piece of corn", "pieces of corn", { counterType: "piece" }),
+  yarn: categoryNounLanguage("piece of yarn", "pieces of yarn", {
+    removeSingular: "was used",
+    removePlural: "were used",
+    counterType: "piece"
+  }),
+  foil: categoryNounLanguage("sheet of foil", "sheets of foil", {
+    removeSingular: "was used",
+    removePlural: "were used",
+    counterType: "sheet"
+  }),
+  bread: categoryNounLanguage("loaf of bread", "loaves of bread", { counterType: "loaf" }),
+  fruit: categoryNounLanguage("piece of fruit", "pieces of fruit", { counterType: "piece" }),
+  leaves: categoryNounLanguage("leaf", "leaves"),
+  shelves: categoryNounLanguage("shelf", "shelves"),
+  people: categoryNounLanguage("person", "people")
+});
+
+const UNSAFE_AUTOMATIC_CATEGORY_NOUNS = Object.freeze([
+  "equipment",
+  "furniture",
+  "moss"
+]);
+
+const CATEGORY_APPLICATION_UNSUPPORTED_TOPIC_IDS = Object.freeze([
+  "places-at-school",
+  "story-characters",
+  "weather-tools-used",
+  "story-settings",
+  "book-cover-pictures",
+  "puppet-characters",
+  "things-that-move",
+  "ways-packages-move",
+  "vehicles-with-wheels",
+  "water-transportation",
+  "air-transportation",
+  "puzzle-pictures",
+  "helpers-in-stories",
+  "market-stalls"
+]);
+
+function deriveSingularCategoryNoun(label) {
+  const value = String(label || "").trim().toLowerCase();
+  if (!value || value.includes(" ") || UNSAFE_AUTOMATIC_CATEGORY_NOUNS.includes(value)) return null;
+  if (/^(fish|deer)$/.test(value)) return value;
+  if (/ies$/.test(value)) return `${value.slice(0, -3)}y`;
+  if (/ves$/.test(value)) return null;
+  if (/(ches|shes|xes|zes|oes)$/.test(value)) return value.slice(0, -2);
+  if (/s$/.test(value) && !/(ss|us|is)$/.test(value)) return value.slice(0, -1);
+  return value;
+}
+
+function pluralizeCategoryNoun(singularNoun) {
+  if (/^(fish|deer)$/.test(singularNoun)) return singularNoun;
+  if (/[^aeiou]y$/.test(singularNoun)) return `${singularNoun.slice(0, -1)}ies`;
+  if (/(s|x|z|ch|sh)$/.test(singularNoun)) return `${singularNoun}es`;
+  return `${singularNoun}s`;
+}
+
+function resolveCategoryNounLanguage(label) {
+  const value = String(label || "").trim().toLowerCase();
+  if (CATEGORY_NOUN_LANGUAGE[value]) return CATEGORY_NOUN_LANGUAGE[value];
+  const singularNoun = deriveSingularCategoryNoun(value);
+  if (!singularNoun) return null;
+  const pluralNoun = singularNoun === value ? pluralizeCategoryNoun(singularNoun) : value;
+  return categoryNounLanguage(singularNoun, pluralNoun);
+}
+
 const SCENARIO_CONTEXTS = Object.freeze({
   "favourite-classroom-activities": ["vote", "A class voted for an activity they enjoy. The graph shows their votes."],
   "classroom-materials": ["count", "Students counted supplies in their room. The graph shows the items."],
@@ -195,6 +301,7 @@ function topic(id, title, categories, unitSingular, unitPlural, topicFamily) {
   const [scenarioType, scenario] = scenarioContext;
   const typeMetadata = SCENARIO_TYPE_METADATA[scenarioType];
   if (!typeMetadata) throw new Error(`Unknown Grade 1 graph scenario type '${scenarioType}'.`);
+  const categoryLanguage = Object.freeze(categories.map(resolveCategoryNounLanguage));
   return Object.freeze({
     id,
     title,
@@ -213,6 +320,9 @@ function topic(id, title, categories, unitSingular, unitPlural, topicFamily) {
     dataSource: typeMetadata.dataSource,
     collectionAction: typeMetadata.collectionAction,
     purpose: typeMetadata.purpose,
+    categoryLanguage,
+    supportsCategoryApplicationLanguage: !CATEGORY_APPLICATION_UNSUPPORTED_TOPIC_IDS.includes(id)
+      && categoryLanguage.every(Boolean),
     supportsDirectReading: true,
     supportsComparison: true,
     supportsMixedQuestions: true,
@@ -386,6 +496,21 @@ function validateGrade1GraphTopics(topics = GRADE1_GRAPH_TOPICS) {
       if (String(category).length > 18) errors.push(`${label} category '${category}' exceeds 18 characters.`);
       if (malformedPunctuation.test(String(category))) errors.push(`${label} category '${category}' has malformed punctuation.`);
     });
+    const categoryLanguage = Array.isArray(entry.categoryLanguage) ? entry.categoryLanguage : [];
+    if (categoryLanguage.length !== categories.length) errors.push(`${label} must align category-language metadata with its categories.`);
+    categoryLanguage.filter(Boolean).forEach((language, categoryIndex) => {
+      ["singularNoun", "pluralNoun", "counterType"].forEach((field) => {
+        if (!String(language[field] || "").trim()) errors.push(`${label} category language ${categoryIndex + 1} is missing ${field}.`);
+      });
+      ["addPhrase", "removePhrase"].forEach((field) => {
+        if (!String(language[field]?.singular || "").trim() || !String(language[field]?.plural || "").trim()) {
+          errors.push(`${label} category language ${categoryIndex + 1} has incomplete ${field} metadata.`);
+        }
+      });
+    });
+    if (["count", "sorting"].includes(entry.scenarioType) && entry.supportsCategoryApplicationLanguage === true && categoryLanguage.some((language) => !language)) {
+      errors.push(`${label} claims category-language support but contains an unsafe category noun.`);
+    }
     ["unitSingular", "unitPlural", "keyLabel", "keyText", "questionNoun"].forEach((field) => {
       if (!String(entry[field] || "").trim()) errors.push(`${label} is missing ${field}.`);
     });
@@ -464,7 +589,11 @@ module.exports = {
   FORBIDDEN_SENSITIVE_TAGS,
   SCENARIO_TYPE_METADATA,
   SCENARIO_TYPES_BY_FAMILY,
+  CATEGORY_NOUN_LANGUAGE,
+  UNSAFE_AUTOMATIC_CATEGORY_NOUNS,
+  CATEGORY_APPLICATION_UNSUPPORTED_TOPIC_IDS,
   GRADE1_GRAPH_TOPICS,
   graphTopicById,
+  resolveCategoryNounLanguage,
   validateGrade1GraphTopics
 };
