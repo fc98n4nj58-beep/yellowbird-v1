@@ -21,8 +21,17 @@ const PUBLIC_SKILL_LABEL_HIDDEN_IDS = new Set([
   "grade1_fraction_equivalence_shade_fraction_models",
   "grade1_fraction_equivalence_match_equivalent_fractions",
   "grade1_fraction_equivalence_compare_fractions",
-  "grade1_fraction_equivalence_fraction_word_problems"
+  "grade1_fraction_equivalence_fraction_word_problems",
+  "grade2_addition_subtraction_facts_equation_match",
+  "grade2_place_value_representation_number_line_identify",
+  "grade2_place_value_representation_number_word_match"
 ]);
+
+const GRADE2_CATEGORY_D_FOOTER_LABELS = Object.freeze({
+  grade2_addition_subtraction_facts_equation_match: "Addition and Subtraction",
+  grade2_place_value_representation_number_line_identify: "Number Representation",
+  grade2_place_value_representation_number_word_match: "Number Representation"
+});
 
 const EARLY_MULTIPLICATION_FOOTER_IDS = new Set([
   "grade1_multiplication_facts_arrays",
@@ -60,6 +69,9 @@ function publicSkillLabel(item) {
 }
 
 function publicDomainLabel(item) {
+  if (GRADE2_CATEGORY_D_FOOTER_LABELS[item?.id]) {
+    return GRADE2_CATEGORY_D_FOOTER_LABELS[item.id];
+  }
   if (GRADE2_COMPARISON_FOOTER_IDS.has(item?.id)) return "Place Value";
   if (GRADE2_ADDITION_SUBTRACTION_CATEGORY_C_IDS.has(item?.id)) {
     return "Addition and Subtraction";

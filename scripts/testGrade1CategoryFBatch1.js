@@ -191,11 +191,13 @@ function assertGrade2PlusIsolation() {
     "grade2_addition_subtraction_facts_equation_match",
     { worksheetSeed: "grade2-equation-match-regression", questionCount: 4 }
   );
+  assert.strictEqual(runtime.contentObject.content.items.length, 12);
   runtime.contentObject.content.items.forEach((item) => {
-    assert.strictEqual(item.responseMode, null);
-    assert.strictEqual(item.expectedSymbol, null);
-    assert(/^\d+ [+-] \d+ = __$/.test(item.prompt));
-    assert.strictEqual(typeof item.answer, "number");
+    assert.strictEqual(item.responseMode, "equation_equivalence");
+    assert(["=", "≠"].includes(item.expectedSymbol));
+    assert(/^\d+ [+-] \d+\s+___\s+\d+ [+-] \d+$/.test(item.prompt));
+    assert.strictEqual(item.answer, item.expectedSymbol);
+    assert(item.leftValue <= 50 && item.rightValue <= 50);
   });
 }
 

@@ -4,7 +4,8 @@ const {
 
 const GRADE1_NUMBER_WORD_RESOURCE_IDS = new Set([
   "g1_number_word_match_to_50",
-  "g1_write_the_numeral_to_50"
+  "g1_write_the_numeral_to_50",
+  "grade2_place_value_representation_number_word_match"
 ]);
 
 function randInt(min, max, random = Math.random) {

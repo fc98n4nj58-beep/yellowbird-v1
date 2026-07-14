@@ -140,6 +140,14 @@ const GRADE1_CATEGORY_C_CLOSURE_IDS = new Set([
 
 const GRADE1_ADDITION_NUMBER_LINE_ID = "g1_addition_on_number_line_to_20";
 const GRADE1_EQUATION_MATCH_ID = "grade1_addition_subtraction_facts_equation_match";
+const GRADE2_EQUATION_MATCH_ID = "grade2_addition_subtraction_facts_equation_match";
+const GRADE2_NUMBER_LINE_IDENTIFY_ID = "grade2_place_value_representation_number_line_identify";
+const GRADE2_NUMBER_WORD_WRITE_ID = "grade2_place_value_representation_number_word_match";
+const GRADE2_CATEGORY_D_LOW_RISK_IDS = new Set([
+  GRADE2_EQUATION_MATCH_ID,
+  GRADE2_NUMBER_LINE_IDENTIFY_ID,
+  GRADE2_NUMBER_WORD_WRITE_ID
+]);
 const GRADE1_DATA_READING_IDS = new Set([
   "grade1_data_display_graphing_read_graph",
   "grade1_data_display_graphing_interpret_data",
@@ -234,6 +242,49 @@ function normalizeGrade1EquationMatchOptions(item, options = {}) {
     Math.max(normalized.minimumResult + 1, finiteNumber(normalized.maximumResult, 20))
   );
   normalized.questionCount = finiteNumber(normalized.questionCount, 12);
+  return normalized;
+}
+
+function normalizeGrade2CategoryDLowRiskOptions(item, options = {}) {
+  if (!GRADE2_CATEGORY_D_LOW_RISK_IDS.has(item.id)) return options;
+
+  const normalized = { ...options, includeExample: false };
+
+  if (item.id === GRADE2_EQUATION_MATCH_ID) {
+    normalized.minimumResult = Math.min(49, Math.max(0, finiteNumber(normalized.minimumResult, 0)));
+    normalized.maximumResult = Math.min(
+      50,
+      Math.max(normalized.minimumResult + 1, finiteNumber(normalized.maximumResult, 50))
+    );
+    normalized.questionCount = 12;
+  }
+
+  if (item.id === GRADE2_NUMBER_LINE_IDENTIFY_ID) {
+    normalized.minValue = Math.min(
+      190,
+      Math.max(0, finiteNumber(normalized.minValue ?? normalized.minA, 0))
+    );
+    normalized.maxValue = Math.min(
+      200,
+      Math.max(normalized.minValue + 10, finiteNumber(normalized.maxValue ?? normalized.maxA, 200))
+    );
+    normalized.tickCount = 10;
+    normalized.allowedIntervals = parseNumberList(
+      normalized.allowedIntervals || normalized.intervals || normalized.selectedIntervals
+    ).filter((value) => [1, 2, 5, 10].includes(value));
+    if (!normalized.allowedIntervals.length) normalized.allowedIntervals = [1, 2, 5, 10];
+    normalized.allowEndpointTargets = parseBoolean(normalized.allowEndpointTargets, true);
+    normalized.questionCount = 6;
+  }
+
+  if (item.id === GRADE2_NUMBER_WORD_WRITE_ID) {
+    normalized.minA = Math.min(200, Math.max(0, finiteNumber(normalized.minA, 0)));
+    normalized.maxA = Math.min(200, Math.max(normalized.minA, finiteNumber(normalized.maxA, 200)));
+    normalized.numberWordMode = "numeral_to_word";
+    normalized.promptStyle = "number_only";
+    normalized.questionCount = 12;
+  }
+
   return normalized;
 }
 
@@ -622,7 +673,9 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalizeGrade1FractionOptions(
+  return normalizeGrade2CategoryDLowRiskOptions(
+    item,
+    normalizeGrade1FractionOptions(
     item,
     normalizeGrade1DataReadingOptions(
       item,
@@ -642,6 +695,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
         )
       )
       )
+    )
     )
   );
 }
@@ -908,6 +962,18 @@ function buildStudentFacingInstruction(item, fallback = "") {
   return "Solve both sides. Write = if they have the same value. Write ≠ if they have different values.";
  }
 
+ if (item.id === GRADE2_EQUATION_MATCH_ID) {
+  return "Solve both sides. Write = if they have the same value. Write ≠ if they have different values.";
+ }
+
+ if (item.id === GRADE2_NUMBER_LINE_IDENTIFY_ID) {
+  return "Write the number marked on each number line.";
+ }
+
+ if (item.id === GRADE2_NUMBER_WORD_WRITE_ID) {
+  return "Write each number in words.";
+ }
+
  if (item.id === "grade1_data_display_graphing_read_graph") {
   return "Use the graph to answer each question.";
  }
@@ -1131,8 +1197,12 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
           ? "Expanded Form"
           : item.id === GRADE1_ADDITION_NUMBER_LINE_ID
             ? "Addition on a Number Line"
-            : item.id === GRADE1_EQUATION_MATCH_ID
+            : item.id === GRADE1_EQUATION_MATCH_ID || item.id === GRADE2_EQUATION_MATCH_ID
               ? "Equal or Not Equal?"
+              : item.id === GRADE2_NUMBER_LINE_IDENTIFY_ID
+                ? "Identify Numbers on a Number Line"
+                : item.id === GRADE2_NUMBER_WORD_WRITE_ID
+                  ? "Write Number Words to 200"
               : item.id === "grade1_data_display_graphing_read_graph"
                 ? "Read the Graph"
                 : item.id === "grade1_data_display_graphing_interpret_data"
@@ -1584,6 +1654,49 @@ if (item.id === GRADE1_EQUATION_MATCH_ID) {
   };
 }
 
+if (item.id === GRADE2_EQUATION_MATCH_ID) {
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 2,
+    maxProblemsPerPage: 12
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    suppressExampleLabel: true,
+    hideItemSeparators: true,
+    standardShortAnswerTarget: true,
+    answerTargetVariant: "comparisonSymbol",
+    standardAnswerLineWidth: 34,
+    equalHeightItems: true,
+    denseGridRows: 6,
+    sequentialColumnFill: true
+  };
+}
+
+if (item.id === GRADE2_NUMBER_LINE_IDENTIFY_ID) {
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 1,
+    maxProblemsPerPage: 6
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    suppressExampleLabel: true,
+    numberLineFullContentWidth: true,
+    numberLineRowGeometry: true,
+    numberLineAnswerUnderTarget: true,
+    numberLineEndpointSafeInset: true,
+    hideItemPrompts: true,
+    equalHeightItems: true,
+    denseGridRows: 6,
+    hideItemSeparators: true,
+    sequentialColumnFill: true,
+    standardAnswerLineWidth: 64
+  };
+}
+
 if (GRADE1_DATA_READING_IDS.has(item.id)) {
   const questionCount = GRADE1_DATA_QUESTION_COUNTS[item.id];
   const graphData = layout.problems?.[0]?.graphData || null;
@@ -1751,7 +1864,7 @@ if (item.activityTypes?.[0] === "ten_frame") {
   }
 }
 
-if (isGrade1NumberWordMode) {
+if (isGrade1NumberWordMode || item.id === GRADE2_NUMBER_WORD_WRITE_ID) {
   const questionCount = Math.max(
     1,
     finiteNumber(normalizedOptions.questionCount) || worksheet.problems?.length || 20
@@ -1762,7 +1875,9 @@ if (isGrade1NumberWordMode) {
   layout.template = {
     ...(layout.template || {}),
     columns: derivedColumns,
-    maxProblemsPerPage: derivedColumns === 3 ? 30 : 20
+    maxProblemsPerPage: item.id === GRADE2_NUMBER_WORD_WRITE_ID
+      ? 12
+      : derivedColumns === 3 ? 30 : 20
   };
   layout.display = {
     ...(layout.display || {}),
@@ -1771,6 +1886,7 @@ if (isGrade1NumberWordMode) {
     writingLine: true,
     equalHeightItems: true,
     numberWordResponseTarget: isReverseNumberWordMode ? "shortNumeral" : "writtenWord",
+    standardAnswerLineWidth: item.id === GRADE2_NUMBER_WORD_WRITE_ID ? 150 : layout.display?.standardAnswerLineWidth,
     shortWritingLine: isReverseNumberWordMode,
     reverseNumberWordWriting: isReverseNumberWordMode,
     reverseNumberWordLineWidth: 46,

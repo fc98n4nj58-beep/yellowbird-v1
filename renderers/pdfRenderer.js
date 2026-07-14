@@ -290,11 +290,14 @@ function drawNumberLinePrimitive(doc, x, y, opts = {}) {
 
   const width = Number(opts.width || 180);
   const height = Number(opts.height || 34);
+  const interval = Math.max(1, Number(opts.interval || 1));
 
   const lineY = y + height * (isAdditionModel ? 0.7 : 0.55);
   const startX = x;
   const endX = x + width;
-  const steps = Math.max(1, max - min);
+  const steps = Math.max(1, Number.isFinite(Number(opts.tickCount))
+    ? Math.floor(Number(opts.tickCount))
+    : Math.round((max - min) / interval));
   const stepWidth = width / steps;
 
   doc.save();
@@ -307,12 +310,14 @@ doc.lineWidth(1);
   doc.lineTo(endX, lineY);
   doc.stroke();
 
-  const labelEvery = steps > 20 ? 5 : steps > 10 ? 2 : 1;
+  const labelEvery = Math.max(1, Number.isFinite(Number(opts.labelEvery))
+    ? Math.floor(Number(opts.labelEvery))
+    : steps > 20 ? 5 : steps > 10 ? 2 : 1);
   const hideValueLabel = Boolean(opts.hideValueLabel);
 
   for (let i = 0; i <= steps; i++) {
     const tickX = startX + i * stepWidth;
-    const tickValue = min + i;
+    const tickValue = min + i * interval;
 
     doc.moveTo(tickX, lineY - 5);
     doc.lineTo(tickX, lineY + 5);
@@ -339,11 +344,14 @@ doc.lineWidth(1);
   }
 
   const clamped = Math.max(min, Math.min(max, value));
-  const dotX = startX + (clamped - min) * stepWidth;
+  const targetIndex = Number.isFinite(Number(opts.targetIndex))
+    ? Math.max(0, Math.min(steps, Number(opts.targetIndex)))
+    : (clamped - min) / interval;
+  const dotX = startX + targetIndex * stepWidth;
 
   if (isAdditionModel) {
-    const additionStartX = startX + (additionStart - min) * stepWidth;
-    const additionLandingX = startX + (additionLanding - min) * stepWidth;
+    const additionStartX = startX + ((additionStart - min) / interval) * stepWidth;
+    const additionLandingX = startX + ((additionLanding - min) / interval) * stepWidth;
     drawJumpArrow(doc, additionStartX, additionLandingX, lineY - 6, 0, 1);
     doc.save();
     doc.fontSize(9);
@@ -372,6 +380,27 @@ doc.circle(dotX, lineY, 3.2).fillAndStroke();
   return {
     dotX,
     lineY
+  };
+}
+
+function buildNumberLineAnswerTargetGeometry({
+  dotX,
+  lineY,
+  cellBottomY,
+  measuredHeight,
+  pageBox,
+  answerWidth = 42
+}) {
+  const minX = pageBox.x + 4;
+  const maxX = pageBox.x + pageBox.width - answerWidth - 4;
+  const centeredX = dotX - answerWidth / 2;
+  const targetX = Math.max(minX, Math.min(maxX, centeredX));
+  return {
+    x: targetX,
+    y: Math.min(cellBottomY - 22, lineY + Math.max(42, measuredHeight * 1.05)),
+    width: answerWidth,
+    centerX: targetX + answerWidth / 2,
+    clamped: targetX !== centeredX
   };
 }
 
@@ -775,7 +804,10 @@ function measureTenFrameVisual(data = {}, maxWidth, targetHeight) {
 function measureNumberLineVisual(data = {}, maxWidth, targetHeight, options = {}) {
   const minVal = Number(data.min ?? 0);
   const maxVal = Number(data.max ?? 10);
-  const steps = Math.max(1, maxVal - minVal);
+  const interval = Math.max(1, Number(data.interval || 1));
+  const steps = Math.max(1, Number.isFinite(Number(data.tickCount))
+    ? Math.floor(Number(data.tickCount))
+    : Math.round((maxVal - minVal) / interval));
 
   const desiredWidth = options.forceFullWidth
     ? maxWidth
@@ -2422,8 +2454,15 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
   const cellBottomY = y + height;
 
   if (visual?.kind && !doc._ended) {
+    const endpointSafeNumberLine = Boolean(
+      hidePrompt &&
+      visual.kind === "number_line" &&
+      display.numberLineEndpointSafeInset
+    );
     const visualCellX = hidePrompt ? x + 34 : x;
-    const visualCellWidth = hidePrompt ? Math.max(40, width - 34) : width;
+    const visualCellWidth = hidePrompt
+      ? Math.max(40, width - 34 - (endpointSafeNumberLine ? 34 : 0))
+      : width;
     const visualForRender = visual.kind === "ten_frame" && Number(display.tenFrameScale) > 1
       ? {
           ...visual,
@@ -2462,21 +2501,19 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
         const renderMeta = renderVisualByKind(doc, visualForRender, placed, measured);
 
         if (visualForRender.kind === "number_line" && display.numberLineAnswerUnderTarget && renderMeta?.dotX) {
-          const answerWidth = 42;
-          const pageBox = layout.page.contentBox;
-          const minX = pageBox.x + 4;
-          const maxX = pageBox.x + pageBox.width - answerWidth - 4;
-          const lineX = Math.max(minX, Math.min(maxX, renderMeta.dotX - answerWidth / 2));
-          const lineY = Math.min(
-            cellBottomY - 22,
-            renderMeta.lineY + Math.max(42, measured.height * 1.05)
-          );
+          const answerTarget = buildNumberLineAnswerTargetGeometry({
+            dotX: renderMeta.dotX,
+            lineY: renderMeta.lineY,
+            cellBottomY,
+            measuredHeight: measured.height,
+            pageBox: layout.page.contentBox
+          });
 
           if ((display.answerKey || isExample) && question.answer != null) {
-            drawShortAnswerLine(doc, lineX, lineY, answerWidth);
-            drawTextOnLine(doc, question.answer, lineX, lineY, answerWidth, fonts);
+            drawShortAnswerLine(doc, answerTarget.x, answerTarget.y, answerTarget.width);
+            drawTextOnLine(doc, question.answer, answerTarget.x, answerTarget.y, answerTarget.width, fonts);
           } else {
-            drawShortAnswerLine(doc, lineX, lineY, answerWidth);
+            drawShortAnswerLine(doc, answerTarget.x, answerTarget.y, answerTarget.width);
           }
 
           return height;
@@ -4220,6 +4257,7 @@ module.exports = {
   __test: {
     getVisualRegion,
     measureNumberLineVisual,
+    buildNumberLineAnswerTargetGeometry,
     buildSharedDataPictographGeometry,
     buildSharedDataScenarioGeometry,
     buildConstructionGraphCategories,

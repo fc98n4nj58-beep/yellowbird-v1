@@ -1,6 +1,7 @@
 const generateArithmeticProblem = require("../engines/arithmeticEngine");
 
 const GRADE1_EQUATION_MATCH_ID = "grade1_addition_subtraction_facts_equation_match";
+const GRADE2_EQUATION_MATCH_ID = "grade2_addition_subtraction_facts_equation_match";
 
 function finiteInteger(value, fallback) {
   const number = Number(value);
@@ -16,17 +17,23 @@ function shuffle(values, random = Math.random) {
   return result;
 }
 
-function expressionGroups(minimumResult, maximumResult) {
+function expressionGroups(minimumResult, maximumResult, limits = {}) {
   const additions = new Map();
   const subtractions = new Map();
+  const minimumOperand = finiteInteger(limits.minimumOperand, 0);
+  const maximumAddend = finiteInteger(limits.maximumAddend, 10);
+  const maximumMinuend = finiteInteger(limits.maximumMinuend, 20);
+  const maximumSubtrahend = finiteInteger(limits.maximumSubtrahend, 10);
+  const canonicalAddition = Boolean(limits.canonicalAddition);
 
   for (let result = minimumResult; result <= maximumResult; result += 1) {
     additions.set(result, []);
     subtractions.set(result, []);
   }
 
-  for (let a = 0; a <= 10; a += 1) {
-    for (let b = 0; b <= 10; b += 1) {
+  for (let a = minimumOperand; a <= maximumAddend; a += 1) {
+    for (let b = minimumOperand; b <= maximumAddend; b += 1) {
+      if (canonicalAddition && a > b) continue;
       const result = a + b;
       if (additions.has(result)) {
         additions.get(result).push({ text: `${a} + ${b}`, value: result, operation: "addition", a, b });
@@ -34,8 +41,8 @@ function expressionGroups(minimumResult, maximumResult) {
     }
   }
 
-  for (let a = 0; a <= 20; a += 1) {
-    for (let b = 0; b <= Math.min(10, a); b += 1) {
+  for (let a = minimumOperand; a <= maximumMinuend; a += 1) {
+    for (let b = minimumOperand; b <= Math.min(maximumSubtrahend, a); b += 1) {
       const result = a - b;
       if (subtractions.has(result)) {
         subtractions.get(result).push({ text: `${a} - ${b}`, value: result, operation: "subtraction", a, b });
@@ -46,13 +53,14 @@ function expressionGroups(minimumResult, maximumResult) {
   return { additions, subtractions };
 }
 
-function buildGrade1Candidates(options = {}) {
+function buildRelationalCandidates(options = {}, profile = {}) {
+  const resultCap = finiteInteger(profile.resultCap, 20);
   const minimumResult = Math.max(0, finiteInteger(options.minimumResult, 0));
   const maximumResult = Math.min(
-    20,
-    Math.max(minimumResult + 1, finiteInteger(options.maximumResult ?? options.maxTotal, 20))
+    resultCap,
+    Math.max(minimumResult + 1, finiteInteger(options.maximumResult ?? options.maxTotal, resultCap))
   );
-  const { additions, subtractions } = expressionGroups(minimumResult, maximumResult);
+  const { additions, subtractions } = expressionGroups(minimumResult, maximumResult, profile);
   const equal = [];
   const notEqual = [];
 
@@ -81,9 +89,130 @@ function buildGrade1Candidates(options = {}) {
   return { equal, notEqual, minimumResult, maximumResult };
 }
 
-function buildBalancedPool(options = {}) {
+function buildGrade1Candidates(options = {}) {
+  return buildRelationalCandidates(options, {
+    resultCap: 20,
+    maximumAddend: 10,
+    maximumMinuend: 20,
+    maximumSubtrahend: 10
+  });
+}
+
+function buildGrade2Candidates(options = {}) {
+  const minimumResult = Math.max(0, finiteInteger(options.minimumResult, 0));
+  const maximumResult = Math.min(
+    50,
+    Math.max(minimumResult + 1, finiteInteger(options.maximumResult ?? options.maxTotal, 50))
+  );
+  const { additions, subtractions } = expressionGroups(minimumResult, maximumResult, {
+    minimumOperand: 1,
+    maximumAddend: 49,
+    maximumMinuend: 49,
+    maximumSubtrahend: 20,
+    canonicalAddition: true
+  });
+  const equal = [];
+  const notEqual = [];
+
+  function addPairs(target, template, leftGroup, rightGroup, equivalent) {
+    if (!leftGroup.length || !rightGroup.length) return;
+    let added = 0;
+    const usedPairs = new Set();
+    const preferredFractions = [[0.2, 0.8], [0.5, 0.9], [0.75, 0.25]];
+
+    function addPair(leftIndex, rightIndex) {
+      const left = leftGroup[Math.max(0, Math.min(leftGroup.length - 1, leftIndex))];
+      const right = rightGroup[Math.max(0, Math.min(rightGroup.length - 1, rightIndex))];
+      const signature = `${left.text}:${right.text}`;
+      if (left.text === right.text || usedPairs.has(signature)) return;
+      usedPairs.add(signature);
+      target.push({ left, right, equivalent, template });
+      added += 1;
+    }
+
+    preferredFractions.forEach(([leftFraction, rightFraction]) => {
+      if (added >= 3) return;
+      addPair(
+        Math.floor((leftGroup.length - 1) * leftFraction),
+        Math.floor((rightGroup.length - 1) * rightFraction)
+      );
+    });
+
+    for (let leftIndex = 0; leftIndex < leftGroup.length && added < 3; leftIndex += 1) {
+      for (let rightIndex = rightGroup.length - 1; rightIndex >= 0 && added < 3; rightIndex -= 1) {
+        const left = leftGroup[leftIndex];
+        const right = rightGroup[rightIndex];
+        if (left.text === right.text) continue;
+        addPair(leftIndex, rightIndex);
+      }
+    }
+  }
+
+  for (let result = minimumResult; result <= maximumResult; result += 1) {
+    const differentResult = result < maximumResult ? result + 1 : result - 1;
+    const add = additions.get(result) || [];
+    const subtract = subtractions.get(result) || [];
+    const differentAdd = additions.get(differentResult) || [];
+    const differentSubtract = subtractions.get(differentResult) || [];
+
+    addPairs(equal, "addition_addition", add, add, true);
+    addPairs(equal, "subtraction_subtraction", subtract, subtract, true);
+    addPairs(equal, "addition_subtraction", add, subtract, true);
+    addPairs(notEqual, "addition_addition", add, differentAdd, false);
+    addPairs(notEqual, "subtraction_subtraction", subtract, differentSubtract, false);
+    addPairs(notEqual, "addition_subtraction", add, differentSubtract, false);
+  }
+
+  return { equal, notEqual, minimumResult, maximumResult };
+}
+
+function buildGrade2BalancedPool(options = {}) {
   const random = options.random || Math.random;
-  const candidates = buildGrade1Candidates(options);
+  const candidates = buildGrade2Candidates(options);
+  const templates = ["addition_addition", "subtraction_subtraction", "addition_subtraction"];
+  const usedSignatures = new Set();
+  const usedLeftValues = new Set();
+
+  function select(source, template, count) {
+    const candidatesForTemplate = shuffle(
+      source.filter((candidate) => candidate.template === template),
+      random
+    );
+    const selected = [];
+
+    function take(requireNewLeftValue) {
+      for (const candidate of candidatesForTemplate) {
+        const signature = `${candidate.left.text}:${candidate.right.text}`;
+        if (usedSignatures.has(signature)) continue;
+        if (requireNewLeftValue && usedLeftValues.has(candidate.left.value)) continue;
+        usedSignatures.add(signature);
+        usedLeftValues.add(candidate.left.value);
+        selected.push(candidate);
+        if (selected.length === count) return;
+      }
+    }
+
+    take(true);
+    if (selected.length < count) take(false);
+    if (selected.length !== count) {
+      throw new Error(`Insufficient Grade 2 relational variety for ${template}.`);
+    }
+    return selected;
+  }
+
+  const equal = shuffle(templates.flatMap((template) => select(candidates.equal, template, 2)), random);
+  const notEqual = shuffle(templates.flatMap((template) => select(candidates.notEqual, template, 2)), random);
+  const pool = [];
+  for (let index = 0; index < 6; index += 1) {
+    pool.push(index % 2 === 0 ? equal[index] : notEqual[index]);
+    pool.push(index % 2 === 0 ? notEqual[index] : equal[index]);
+  }
+  return { ...candidates, pool };
+}
+
+function buildBalancedPool(options = {}, candidateBuilder = buildGrade1Candidates) {
+  const random = options.random || Math.random;
+  const candidates = candidateBuilder(options);
   const equal = shuffle(candidates.equal, random);
   const notEqual = shuffle(candidates.notEqual, random);
   const pool = [];
@@ -104,18 +233,22 @@ function buildBalancedPool(options = {}) {
   return { ...candidates, pool };
 }
 
-function generateGrade1EquationMatch(options = {}) {
+function generateRelationalEquationMatch(options = {}, config = {}) {
   const generatorState = options.generatorState || {};
-  const built = buildGrade1Candidates(options);
-  const poolKey = `grade1-equation-match:${built.minimumResult}:${built.maximumResult}`;
+  const candidateBuilder = config.candidateBuilder || buildGrade1Candidates;
+  const built = candidateBuilder(options);
+  const poolKey = `${config.poolPrefix}:${built.minimumResult}:${built.maximumResult}`;
 
   if (!generatorState.equationMatchPools) generatorState.equationMatchPools = {};
   if (!generatorState.equationMatchPools[poolKey]?.length) {
-    generatorState.equationMatchPools[poolKey] = buildBalancedPool(options).pool;
+    const builtPool = config.poolBuilder
+      ? config.poolBuilder(options)
+      : buildBalancedPool(options, candidateBuilder);
+    generatorState.equationMatchPools[poolKey] = builtPool.pool;
   }
 
   const candidate = generatorState.equationMatchPools[poolKey].shift();
-  if (!candidate) throw new Error("No Grade 1 equation-match pairs are available.");
+  if (!candidate) throw new Error(`No ${config.gradeLabel} equation-match pairs are available.`);
 
   const expectedSymbol = candidate.equivalent ? "=" : "≠";
   const left = candidate.left;
@@ -138,9 +271,29 @@ function generateGrade1EquationMatch(options = {}) {
   };
 }
 
+function generateGrade1EquationMatch(options = {}) {
+  return generateRelationalEquationMatch(options, {
+    candidateBuilder: buildGrade1Candidates,
+    poolPrefix: "grade1-equation-match",
+    gradeLabel: "Grade 1"
+  });
+}
+
+function generateGrade2EquationMatch(options = {}) {
+  return generateRelationalEquationMatch(options, {
+    candidateBuilder: buildGrade2Candidates,
+    poolBuilder: buildGrade2BalancedPool,
+    poolPrefix: "grade2-equation-match",
+    gradeLabel: "Grade 2"
+  });
+}
+
 function generateEquationMatchProblem(options = {}) {
   if (options.worksheetId === GRADE1_EQUATION_MATCH_ID) {
     return generateGrade1EquationMatch(options);
+  }
+  if (options.worksheetId === GRADE2_EQUATION_MATCH_ID) {
+    return generateGrade2EquationMatch(options);
   }
 
   const random = options.random || Math.random;
@@ -160,3 +313,5 @@ function generateEquationMatchProblem(options = {}) {
 
 module.exports = generateEquationMatchProblem;
 module.exports.buildGrade1Candidates = buildGrade1Candidates;
+module.exports.buildGrade2Candidates = buildGrade2Candidates;
+module.exports.buildGrade2BalancedPool = buildGrade2BalancedPool;

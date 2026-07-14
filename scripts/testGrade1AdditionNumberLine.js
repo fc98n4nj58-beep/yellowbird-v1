@@ -279,10 +279,13 @@ function assertGrade2PlusRegression() {
   );
   assert.strictEqual(runtime.item.activityTypes[0], "number_line_identify");
   assert.strictEqual(Boolean(runtime.layout.display.numberLineAddition), false);
-  assert.strictEqual(Boolean(runtime.layout.display.numberLineFullContentWidth), false);
+  assert.strictEqual(Boolean(runtime.layout.display.numberLineFullContentWidth), true);
+  assert.strictEqual(runtime.contentObject.content.items.length, 6);
   runtime.contentObject.content.items.forEach((item) => {
-    assert.strictEqual(item.prompt, "What number is marked on the number line?");
+    assert.strictEqual(item.prompt, "");
     assert.strictEqual(item.visual.kind, "number_line");
+    assert([1, 2, 5, 10].includes(item.visual.data.interval));
+    assert.strictEqual(item.visual.data.tickCount, 10);
     assert.strictEqual(item.visual.data.additionDirection, undefined);
   });
 }

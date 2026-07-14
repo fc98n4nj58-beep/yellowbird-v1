@@ -1946,8 +1946,8 @@
     },
     {
       "id": "grade2_addition_subtraction_facts_equation_match",
-      "title": "Equation Match — Grade 2",
-      "shortTitle": "Equation Match",
+      "title": "Equal or Not Equal?",
+      "shortTitle": "Equal or Not Equal?",
       "subject": "Math",
       "grades": [
         "grade2"
@@ -1966,6 +1966,13 @@
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
+      "studentInstruction": "Solve both sides. Write = if they have the same value. Write ≠ if they have different values.",
+      "generatorOptions": {
+        "minimumResult": 0,
+        "maximumResult": 50,
+        "questionCount": 12,
+        "includeExample": false
+      },
       "tags": [
         "grade 2",
         "addition & subtraction",
@@ -1973,7 +1980,7 @@
         "equation match"
       ],
       "curriculumTags": [],
-      "description": "Students match related equations.",
+      "description": "Students solve two arithmetic expressions, then decide whether the two values are equal.",
       "sourceType": "generated"
     },
     {
@@ -3356,8 +3363,8 @@
     },
     {
       "id": "grade2_place_value_representation_number_line_identify",
-      "title": "Number Line — Grade 2",
-      "shortTitle": "Number Line",
+      "title": "Identify Numbers on a Number Line",
+      "shortTitle": "Identify Numbers",
       "subject": "Math",
       "grades": [
         "grade2"
@@ -3376,6 +3383,15 @@
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
+      "studentInstruction": "Write the number marked on each number line.",
+      "generatorOptions": {
+        "minValue": 0,
+        "maxValue": 200,
+        "allowedIntervals": [1, 2, 5, 10],
+        "tickCount": 10,
+        "questionCount": 6,
+        "includeExample": false
+      },
       "tags": [
         "grade 2",
         "place value",
@@ -3383,13 +3399,13 @@
         "number line identify"
       ],
       "curriculumTags": [],
-      "description": "Students use a number line to identify or model values.",
+      "description": "Students identify marked values on number lines with intervals of 1, 2, 5, or 10.",
       "sourceType": "generated"
     },
     {
       "id": "grade2_place_value_representation_number_word_match",
-      "title": "Number Word Match — Grade 2",
-      "shortTitle": "Number Word Match",
+      "title": "Write Number Words to 200",
+      "shortTitle": "Number Words to 200",
       "subject": "Math",
       "grades": [
         "grade2"
@@ -3408,6 +3424,15 @@
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
+      "studentInstruction": "Write each number in words.",
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 200,
+        "numberWordMode": "numeral_to_word",
+        "promptStyle": "number_only",
+        "questionCount": 12,
+        "includeExample": false
+      },
       "tags": [
         "grade 2",
         "place value",
@@ -3415,7 +3440,7 @@
         "number word match"
       ],
       "curriculumTags": [],
-      "description": "Students match numerals and number words.",
+      "description": "Students write each numeral from 0 to 200 in words.",
       "sourceType": "generated"
     },
     {
