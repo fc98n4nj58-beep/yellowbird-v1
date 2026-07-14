@@ -136,6 +136,7 @@ const GRADE1_CATEGORY_C_CLOSURE_IDS = new Set([
 ]);
 
 const GRADE1_ADDITION_NUMBER_LINE_ID = "g1_addition_on_number_line_to_20";
+const GRADE1_EQUATION_MATCH_ID = "grade1_addition_subtraction_facts_equation_match";
 
 const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
   "g1_addition_facts_within_20",
@@ -148,11 +149,26 @@ const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
   "g1_ten_frame_addition_within_10",
   ...GRADE1_MULTIPLICATION_MODEL_IDS,
   ...GRADE1_CATEGORY_C_CLOSURE_IDS,
-  GRADE1_ADDITION_NUMBER_LINE_ID
+  GRADE1_ADDITION_NUMBER_LINE_ID,
+  GRADE1_EQUATION_MATCH_ID
 ]);
 
-function usesQuestion1CompletedExample(item) {
-  return DENSE_GRADE1_QUESTION1_EXAMPLE_IDS.has(item.id);
+function normalizeGrade1EquationMatchOptions(item, options = {}) {
+  if (item.id !== GRADE1_EQUATION_MATCH_ID) return options;
+
+  const normalized = { ...options };
+  normalized.minimumResult = Math.max(0, finiteNumber(normalized.minimumResult, 0));
+  normalized.maximumResult = Math.min(
+    20,
+    Math.max(normalized.minimumResult + 1, finiteNumber(normalized.maximumResult, 20))
+  );
+  normalized.questionCount = finiteNumber(normalized.questionCount, 12);
+  return normalized;
+}
+
+function completedExampleCountInsideQuestionTotal(item) {
+  if (item.id === GRADE1_EQUATION_MATCH_ID) return 2;
+  return DENSE_GRADE1_QUESTION1_EXAMPLE_IDS.has(item.id) ? 1 : 0;
 }
 
 function normalizeGrade1FluencyComparisonOptions(item, options = {}) {
@@ -509,15 +525,18 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalizeGrade1AdditionNumberLineOptions(
+  return normalizeGrade1EquationMatchOptions(
     item,
-    normalizeGrade1CategoryCClosureOptions(
+    normalizeGrade1AdditionNumberLineOptions(
       item,
-      normalizeGrade1MultiplicationModelOptions(
+      normalizeGrade1CategoryCClosureOptions(
         item,
-        normalizeGrade1NumberRepresentationOptions(
+        normalizeGrade1MultiplicationModelOptions(
           item,
-          normalizeGrade1FluencyComparisonOptions(item, normalized)
+          normalizeGrade1NumberRepresentationOptions(
+            item,
+            normalizeGrade1FluencyComparisonOptions(item, normalized)
+          )
         )
       )
     )
@@ -691,7 +710,9 @@ function generateWorksheetFromCatalogId(id, options = {}) {
 
   const requestedQuestionCount = generatorOptions.questionCount || defaultQuestionCount || generatorOptions.questionCount;
   const generationQuestionCount =
-    generatorOptions.includeExample && Number.isFinite(requestedQuestionCount) && !usesQuestion1CompletedExample(item)
+    generatorOptions.includeExample &&
+    Number.isFinite(requestedQuestionCount) &&
+    completedExampleCountInsideQuestionTotal(item) === 0
       ? requestedQuestionCount + 1
       : requestedQuestionCount;
 
@@ -774,6 +795,10 @@ function buildStudentFacingInstruction(item, fallback = "") {
 
  if (item.id === GRADE1_ADDITION_NUMBER_LINE_ID) {
   return "Use the number line to solve each addition question.";
+ }
+
+ if (item.id === GRADE1_EQUATION_MATCH_ID) {
+  return "Solve both sides. Write = if they have the same value. Write ≠ if they have different values.";
  }
 
  if (item.id === "g1_number_word_match_to_50") {
@@ -966,6 +991,8 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
           ? "Expanded Form"
           : item.id === GRADE1_ADDITION_NUMBER_LINE_ID
             ? "Addition on a Number Line"
+            : item.id === GRADE1_EQUATION_MATCH_ID
+              ? "Equal or Not Equal?"
       : item.title;
 
  const layout = normalizeWorksheetLayout({
@@ -1025,15 +1052,16 @@ if (item.activityTypes?.[0] === "base_ten_blocks" && layout.display?.baseTenAlig
 }
 
 if (normalizedOptions.includeExample && layout.problems?.length) {
+  const completedExampleCount = completedExampleCountInsideQuestionTotal(item);
   layout.display = {
     ...(layout.display || {}),
     includeExample: true,
-    exampleCountsAsQuestion: usesQuestion1CompletedExample(item)
+    exampleCountsAsQuestion: completedExampleCount > 0
   };
-  layout.problems[0] = {
-    ...layout.problems[0],
-    isExample: true
-  };
+  layout.problems = layout.problems.map((problem, index) => ({
+    ...problem,
+    isExample: index < Math.max(1, completedExampleCount)
+  }));
 }
 
 if (Number.isFinite(normalizedOptions.questionsPerPage) && normalizedOptions.questionsPerPage > 0) {
@@ -1327,6 +1355,26 @@ if (item.id === GRADE1_ADDITION_NUMBER_LINE_ID) {
     hideItemSeparators: true,
     sequentialColumnFill: true,
     standardAnswerLineWidth: 42
+  };
+}
+
+if (item.id === GRADE1_EQUATION_MATCH_ID) {
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 2,
+    maxProblemsPerPage: 12
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    suppressExampleLabel: true,
+    hideItemSeparators: true,
+    standardShortAnswerTarget: true,
+    answerTargetVariant: "comparisonSymbol",
+    standardAnswerLineWidth: 34,
+    equalHeightItems: true,
+    denseGridRows: 6,
+    sequentialColumnFill: true
   };
 }
 

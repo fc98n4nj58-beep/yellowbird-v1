@@ -181,8 +181,8 @@
     },
     {
       "id": "grade1_addition_subtraction_facts_equation_match",
-      "title": "Equation Match — Grade 1",
-      "shortTitle": "Equation Match",
+      "title": "Equal or Not Equal?",
+      "shortTitle": "Equal or Not Equal?",
       "subject": "Math",
       "grades": [
         "grade1"
@@ -208,8 +208,24 @@
         "equation match"
       ],
       "curriculumTags": [],
-      "description": "Students match related equations.",
-      "sourceType": "generated"
+      "description": "Students decide whether pairs of addition and subtraction expressions have the same value.",
+      "sourceType": "generated",
+      "studentInstruction": "Solve both sides. Write = if they have the same value. Write ≠ if they have different values.",
+      "generatorOptions": {
+        "minimumResult": 0,
+        "maximumResult": 20,
+        "questionCount": 12
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "hideItemSeparators": true,
+        "standardShortAnswerTarget": true,
+        "answerTargetVariant": "comparisonSymbol"
+      },
+      "pdfLayout": {
+        "columns": 2,
+        "maxProblemsPerPage": 12
+      }
     },
     {
       "id": "grade1_addition_subtraction_facts_fact_family",
