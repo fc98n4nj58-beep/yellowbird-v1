@@ -135,6 +135,8 @@ const GRADE1_CATEGORY_C_CLOSURE_IDS = new Set([
   "grade1_place_value_representation_expanded_form"
 ]);
 
+const GRADE1_ADDITION_NUMBER_LINE_ID = "g1_addition_on_number_line_to_20";
+
 const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
   "g1_addition_facts_within_20",
   "g1_subtraction_facts_within_20",
@@ -145,7 +147,8 @@ const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
   "grade1_place_value_representation_base_ten_blocks",
   "g1_ten_frame_addition_within_10",
   ...GRADE1_MULTIPLICATION_MODEL_IDS,
-  ...GRADE1_CATEGORY_C_CLOSURE_IDS
+  ...GRADE1_CATEGORY_C_CLOSURE_IDS,
+  GRADE1_ADDITION_NUMBER_LINE_ID
 ]);
 
 function usesQuestion1CompletedExample(item) {
@@ -329,6 +332,20 @@ function normalizeGrade1CategoryCClosureOptions(item, options = {}) {
   return normalized;
 }
 
+function normalizeGrade1AdditionNumberLineOptions(item, options = {}) {
+  if (item.id !== GRADE1_ADDITION_NUMBER_LINE_ID) return options;
+
+  const normalized = { ...options };
+  normalized.minStart = finiteNumber(normalized.minStart ?? normalized.minA, 0);
+  normalized.maxStart = finiteNumber(normalized.maxStart ?? normalized.maxA, 10);
+  normalized.minJump = finiteNumber(normalized.minJump ?? normalized.minB, 1);
+  normalized.maxJump = finiteNumber(normalized.maxJump ?? normalized.maxB, 10);
+  normalized.maxTotal = finiteNumber(normalized.maxTotal, 20);
+  normalized.numberLineMaximum = finiteNumber(normalized.numberLineMaximum, 20);
+  normalized.questionCount = finiteNumber(normalized.questionCount, 6);
+  return normalized;
+}
+
 function normalizeCatalogWorksheetOptions(item, options = {}) {
   const normalized = {
     ...(item.generatorOptions || {}),
@@ -366,7 +383,12 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     "startNumber",
     "sequenceLength",
     "termCount",
-    "missingCount"
+    "missingCount",
+    "minStart",
+    "maxStart",
+    "minJump",
+    "maxJump",
+    "numberLineMaximum"
   ].forEach((key) => {
     const value = finiteNumber(normalized[key]);
     if (value !== null) normalized[key] = value;
@@ -487,13 +509,16 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalizeGrade1CategoryCClosureOptions(
+  return normalizeGrade1AdditionNumberLineOptions(
     item,
-    normalizeGrade1MultiplicationModelOptions(
+    normalizeGrade1CategoryCClosureOptions(
       item,
-      normalizeGrade1NumberRepresentationOptions(
+      normalizeGrade1MultiplicationModelOptions(
         item,
-        normalizeGrade1FluencyComparisonOptions(item, normalized)
+        normalizeGrade1NumberRepresentationOptions(
+          item,
+          normalizeGrade1FluencyComparisonOptions(item, normalized)
+        )
       )
     )
   );
@@ -747,6 +772,10 @@ function buildStudentFacingInstruction(item, fallback = "") {
   return "Count the groups and the objects in each group. Complete the number sentence.";
  }
 
+ if (item.id === GRADE1_ADDITION_NUMBER_LINE_ID) {
+  return "Use the number line to solve each addition question.";
+ }
+
  if (item.id === "g1_number_word_match_to_50") {
   return "Write each number in words.";
  }
@@ -935,6 +964,8 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
         ? "Skip Counting"
         : item.id === "grade1_place_value_representation_expanded_form"
           ? "Expanded Form"
+          : item.id === GRADE1_ADDITION_NUMBER_LINE_ID
+            ? "Addition on a Number Line"
       : item.title;
 
  const layout = normalizeWorksheetLayout({
@@ -1273,6 +1304,29 @@ if (item.activityTypes?.[0] === "skip_counting") {
     showJumpVisuals: normalizedOptions.showJumpVisuals !== false,
     hideSubtitle: item.id === "grade1_multiplication_facts_skip_counting",
     suppressExampleLabel: item.id === "grade1_multiplication_facts_skip_counting"
+  };
+}
+
+if (item.id === GRADE1_ADDITION_NUMBER_LINE_ID) {
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 1,
+    maxProblemsPerPage: 6
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    suppressExampleLabel: true,
+    numberLineAddition: true,
+    numberLineFullContentWidth: true,
+    numberLineRowGeometry: true,
+    numberLineAnswerUnderTarget: false,
+    hideItemPrompts: false,
+    equalHeightItems: true,
+    denseGridRows: 6,
+    hideItemSeparators: true,
+    sequentialColumnFill: true,
+    standardAnswerLineWidth: 42
   };
 }
 

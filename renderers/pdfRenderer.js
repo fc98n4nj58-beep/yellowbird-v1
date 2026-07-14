@@ -260,11 +260,16 @@ function drawNumberLinePrimitive(doc, x, y, opts = {}) {
   const min = Number(opts.min ?? opts.start ?? 0);
   const max = Number(opts.max ?? opts.end ?? 10);
   const value = Number(opts.value ?? opts.highlight ?? min);
+  const additionStart = Number(opts.additionStart);
+  const additionJump = Number(opts.additionJump);
+  const additionLanding = Number(opts.additionLanding);
+  const isAdditionModel = [additionStart, additionJump, additionLanding].every(Number.isFinite) &&
+    additionJump > 0 && additionLanding > additionStart;
 
   const width = Number(opts.width || 180);
   const height = Number(opts.height || 34);
 
-  const lineY = y + height * 0.55;
+  const lineY = y + height * (isAdditionModel ? 0.7 : 0.55);
   const startX = x;
   const endX = x + width;
   const steps = Math.max(1, max - min);
@@ -292,19 +297,44 @@ doc.lineWidth(1);
     doc.stroke();
 
     const isTargetValue = tickValue === value;
-    const shouldLabel = i === 0 || i === steps || i % labelEvery === 0 || isTargetValue;
+    const isAdditionStart = isAdditionModel && tickValue === additionStart;
+    const shouldLabel = i === 0 || i === steps || i % labelEvery === 0 || isTargetValue || isAdditionStart;
 
     if (shouldLabel && !(hideValueLabel && isTargetValue)) {
+      const insetEndpointLabel = isAdditionModel && (i === 0 || i === steps);
+      const labelX = insetEndpointLabel
+        ? (i === 0 ? tickX : tickX - 18)
+        : tickX - 9;
+      const labelAlign = insetEndpointLabel
+        ? (i === 0 ? "left" : "right")
+        : "center";
       doc.fontSize(8);
-      doc.text(String(tickValue), tickX - 9, lineY + 8, {
+      doc.text(String(tickValue), labelX, lineY + 8, {
         width: 18,
-        align: "center"
+        align: labelAlign
       });
     }
   }
 
   const clamped = Math.max(min, Math.min(max, value));
   const dotX = startX + (clamped - min) * stepWidth;
+
+  if (isAdditionModel) {
+    const additionStartX = startX + (additionStart - min) * stepWidth;
+    const additionLandingX = startX + (additionLanding - min) * stepWidth;
+    drawJumpArrow(doc, additionStartX, additionLandingX, lineY - 6, 0, 1);
+    doc.save();
+    doc.fontSize(9);
+    doc.fillColor("#374151");
+    doc.text(`+${additionJump}`, additionStartX, lineY - 29, {
+      width: Math.max(24, additionLandingX - additionStartX),
+      align: "center",
+      lineBreak: false
+    });
+    doc.fillColor("#111111");
+    doc.circle(additionStartX, lineY, 3).fill();
+    doc.restore();
+  }
   
   // fill (light grey)
 doc.fillColor("#acacac");
@@ -720,13 +750,17 @@ function measureTenFrameVisual(data = {}, maxWidth, targetHeight) {
   };
 }
 
-function measureNumberLineVisual(data = {}, maxWidth, targetHeight) {
+function measureNumberLineVisual(data = {}, maxWidth, targetHeight, options = {}) {
   const minVal = Number(data.min ?? 0);
   const maxVal = Number(data.max ?? 10);
   const steps = Math.max(1, maxVal - minVal);
 
-  const desiredWidth = Math.min(maxWidth, Math.max(120, steps * 22));
-  const height = Math.min(targetHeight, 34);
+  const desiredWidth = options.forceFullWidth
+    ? maxWidth
+    : Math.min(maxWidth, Math.max(120, steps * 22));
+  const isAdditionModel = [data.additionStart, data.additionJump, data.additionLanding]
+    .every((value) => Number.isFinite(Number(value)));
+  const height = Math.min(targetHeight, isAdditionModel ? 52 : 34);
 
   return {
     width: desiredWidth,
@@ -791,7 +825,7 @@ function measureBaseTenVisual(data = {}, maxWidth, targetHeight) {
   };
 }
 
-function measureVisual(visual, maxWidth, targetHeight) {
+function measureVisual(visual, maxWidth, targetHeight, options = {}) {
   if (!visual?.kind) return null;
 
  if (visual.kind === "array" || visual.kind === "arrays") {
@@ -811,7 +845,7 @@ function measureVisual(visual, maxWidth, targetHeight) {
   }
 
   if (visual.kind === "number_line") {
-    return measureNumberLineVisual(visual.data, maxWidth, targetHeight);
+    return measureNumberLineVisual(visual.data, maxWidth, targetHeight, options);
   }
 
   if (visual.kind === "base_ten_blocks") {
@@ -876,7 +910,8 @@ function getVisualRegion({
   cellX,
   cellWidth,
   visualKind,
-  fullWidth = false
+  fullWidth = false,
+  flushToCellBounds = false
 }) {
   const kindConfig = getVisualKindConfig(visualKind);
 
@@ -893,13 +928,14 @@ function getVisualRegion({
   const height = Math.max(0, bottomY - topY);
 
   const answerZoneWidth = fullWidth ? 0 : cellWidth * VISUAL_LAYOUT.answerZoneRatio;
+  const leftInset = flushToCellBounds ? 0 : VISUAL_LAYOUT.leftInset;
   const visualZoneWidth =
     cellWidth -
     answerZoneWidth -
     (fullWidth ? 0 : VISUAL_LAYOUT.visualAnswerGap) -
-    VISUAL_LAYOUT.leftInset;
+    leftInset;
 
-  const visualX = cellX + VISUAL_LAYOUT.leftInset;
+  const visualX = cellX + leftInset;
 
   const maxWidth = Math.max(0, visualZoneWidth) * kindConfig.maxWidthRatio;
   const targetHeight = height * kindConfig.targetHeightRatio;
@@ -2067,7 +2103,21 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
     );
   }
 
-  if (!visual?.kind && display.directFactAnswerSpace && hasInlineAnswerBlank) {
+  if (display.numberLineAddition && hasInlineAnswerBlank) {
+    drawInlineAnswerPrompt(
+      doc,
+      promptText,
+      question.answer,
+      promptX,
+      promptY,
+      promptWidth,
+      fonts,
+      {
+        ...display,
+        inlineAnswerValues: Boolean(display.answerKey || isExample)
+      }
+    );
+  } else if (!visual?.kind && display.directFactAnswerSpace && hasInlineAnswerBlank) {
     drawInlineAnswerPrompt(
       doc,
       promptText,
@@ -2130,20 +2180,26 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
           }
         }
       : visual;
-    const fullWidthVisual = Boolean(display.numberLineAnswerUnderTarget && visualForRender.kind === "number_line");
+    const isNumberLine = visualForRender.kind === "number_line";
+    const fullContentWidthNumberLine = Boolean(display.numberLineFullContentWidth && isNumberLine);
+    const fullWidthVisual = Boolean(
+      isNumberLine && (display.numberLineAnswerUnderTarget || fullContentWidthNumberLine)
+    );
     const region = getVisualRegion({
       cellBottomY,
       promptBottomY,
       cellX: visualCellX,
       cellWidth: visualCellWidth,
       visualKind: visualForRender.kind,
-      fullWidth: fullWidthVisual
+      fullWidth: fullWidthVisual,
+      flushToCellBounds: fullContentWidthNumberLine
     });
 
     const measured = measureVisual(
       visualForRender,
       region.maxWidth,
-      region.targetHeight
+      region.targetHeight,
+      { forceFullWidth: fullContentWidthNumberLine }
     );
 
     const placed = placeVisualInRegionWithDisplay(region, measured, display);
@@ -3188,4 +3244,11 @@ function renderWorksheetPDF({ res, contentObject, options = {}, layoutObject = n
   doc.end();
 }
 
-module.exports = { renderWorksheetPDF, buildAnswerKeyItems };
+module.exports = {
+  renderWorksheetPDF,
+  buildAnswerKeyItems,
+  __test: {
+    getVisualRegion,
+    measureNumberLineVisual
+  }
+};

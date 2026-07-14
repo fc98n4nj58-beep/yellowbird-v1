@@ -344,5 +344,26 @@
       "hideItemSeparators": true,
       "numberLineAnswerUnderTarget": true
     }
+  },
+  "addition_number_line": {
+    "worksheetType": "addition_number_line",
+    "templateId": "visual_model",
+    "interactionType": "solve_with_model",
+    "instruction": "Use the number line to solve each addition question.",
+    "template": {
+      "columns": 1,
+      "maxProblemsPerPage": 6
+    },
+    "display": {
+      "visualColumns": 1,
+      "hideItemSeparators": true,
+      "numberLineAddition": true,
+      "numberLineFullContentWidth": true,
+      "numberLineRowGeometry": true,
+      "equalHeightItems": true,
+      "denseGridRows": 6,
+      "sequentialColumnFill": true,
+      "standardAnswerLineWidth": 42
+    }
   }
 }

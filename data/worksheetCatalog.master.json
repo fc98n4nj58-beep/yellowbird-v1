@@ -72,7 +72,7 @@
       "skillKey": "addition_strategies",
       "worksheetFamily": "visual_models",
       "activityTypes": [
-        "number_line_identify"
+        "addition_number_line"
       ],
       "templateId": "visual_model",
       "status": "partial",
@@ -88,8 +88,18 @@
       "curriculumTags": [
         "B2"
       ],
-      "description": "Students use number lines to model and solve addition problems.",
-      "sourceType": "curated"
+      "description": "Students use forward jumps on number lines to solve addition questions within 20.",
+      "sourceType": "curated",
+      "studentInstruction": "Use the number line to solve each addition question.",
+      "generatorOptions": {
+        "minStart": 0,
+        "maxStart": 10,
+        "minJump": 1,
+        "maxJump": 10,
+        "maxTotal": 20,
+        "numberLineMaximum": 20,
+        "questionCount": 6
+      }
     },
     {
       "id": "grade1_addition_subtraction_word_problems_addition_word_problem",

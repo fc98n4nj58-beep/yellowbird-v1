@@ -196,7 +196,7 @@ const grade1Catalog = [
     domain: "Addition & Subtraction",
     skillKey: "addition_strategies",
     worksheetFamily: "visual_models",
-    activityTypes: ["number_line_identify"],
+    activityTypes: ["addition_number_line"],
     templateId: "visual_model",
     status: "partial",
     difficulty: "easy",
@@ -204,7 +204,17 @@ const grade1Catalog = [
     hasAnswerKey: true,
     tags: ["number line", "addition", "to 20", "grade 1"],
     curriculumTags: ["B2"],
-    description: "Students use number lines to model and solve addition problems."
+    description: "Students use forward jumps on number lines to solve addition questions within 20.",
+    studentInstruction: "Use the number line to solve each addition question.",
+    generatorOptions: {
+      minStart: 0,
+      maxStart: 10,
+      minJump: 1,
+      maxJump: 10,
+      maxTotal: 20,
+      numberLineMaximum: 20,
+      questionCount: 6
+    }
   }
 ];
 

@@ -1,12 +1,12 @@
 # Grade 1 Founder Review Reconciliation
 
-Date: 2026-07-13
+Date: 2026-07-14
 
-Scope: status and planning scan only; no production implementation or promotion
+Scope: founder-approval and implementation reconciliation; catalog readiness and promotion are tracked separately
 
 ## Verdict
 
-The complete Grade 1 inventory contains **49 resource candidates**: 13 ready, 2 partial, 33 generated/internal, and 1 planned. Nineteen resources meet the `COMMITTED + FOUNDER APPROVED` gate, one founder-approved partial resource is awaiting promotion, no resources remain in Category C awaiting Grade 1-specific founder proof, one partial resource has a known title/runtime design mismatch, nineteen generated or ready candidates have not received a controlled Grade 1 founder pass, and nine are explicitly held, legacy, or deferred.
+The complete Grade 1 inventory contains **49 resource candidates**: 13 ready, 2 partial, 33 generated/internal, and 1 planned. Twenty resources meet the `COMMITTED + FOUNDER APPROVED` gate, one founder-approved partial resource is awaiting promotion, no resources remain in Category C awaiting Grade 1-specific founder proof, no resources remain in Category E awaiting design correction, nineteen generated or ready candidates have not received a controlled Grade 1 founder pass, and nine are explicitly held, legacy, or deferred.
 
 These totals revise the first reconciliation. That pass under-recorded current-sprint approvals by requiring a second explicit approval statement after already-approved proof packets had produced approved commits. The corrected scan accepts the Project Lead's sprint correction, approved reduced recheck packets, proof-review outcomes, and the approval-gated commits themselves as valid evidence. It does not require duplicate approval evidence.
 
@@ -51,11 +51,11 @@ Approval, implementation, promotion, and public customization are separate dimen
 
 | Classification | Count | Meaning in this scan |
 | --- | ---: | --- |
-| A. Committed + Founder Approved | 19 | Founder proof is approved, implementation is committed, and no founder correction remains; catalog readiness is tracked separately. |
+| A. Committed + Founder Approved | 20 | Founder proof is approved, implementation is committed, and no founder correction remains; catalog readiness is tracked separately. |
 | B. Founder Approved + Awaiting Promotion | 1 | Founder proof and implementation are complete, but the resource remains partial and promotion gates are open. |
 | C. Implemented + awaiting founder proof | 0 | No resources remain in this classification after the approved Category C closure packet. |
 | D. Awaiting variable/runtime consolidation | 0 | The reviewed Grade 1 families are already consolidated; other gaps are proof, design, or untouched work. |
-| E. Awaiting design correction | 1 | A specific title/content/runtime mismatch is documented. |
+| E. Awaiting design correction | 0 | No resources remain in this classification after the approved Addition on a Number Line correction. |
 | F. Untouched / not yet reviewed | 19 | Generic generation may work, but no controlled Grade 1 founder pass exists. |
 | G. Intentionally deferred | 9 | A product decision explicitly holds, supersedes, or keeps the entry as legacy/internal. |
 | **Total** | **49** |  |
@@ -70,18 +70,22 @@ The earlier reconciliation correction changed ten rows:
 
 This approved closure checkpoint adds four C -> A corrections: `grade1_multiplication_facts_arrays`, `grade1_multiplication_facts_equal_groups`, `grade1_multiplication_facts_skip_counting`, and `grade1_place_value_representation_expanded_form`.
 
+This approved Addition on a Number Line checkpoint adds one E -> A correction: `g1_addition_on_number_line_to_20`.
+
 | Classification | Before closure | Current |
 | --- | ---: | ---: |
-| A | 15 | 19 |
+| A | 15 | 20 |
 | B | 1 | 1 |
 | C | 4 | 0 |
 | D | 0 | 0 |
-| E | 1 | 1 |
+| E | 1 | 0 |
 | F | 19 | 19 |
 | G | 9 | 9 |
 | **Total** | **49** | **49** |
 
 Category C is now empty. Arrays and Equal Groups were founder-approved and committed in `6b41015`; the approved Category C closure packet completes the Grade 1-specific proof for Skip Counting and Expanded Form without changing catalog status or promoting any resource.
+
+Category E is now empty. Addition on a Number Line uses the founder-approved addition model and full-width 0–20 geometry while remaining `partial`; promotion is a separate decision.
 
 ## Grade 1 completion matrix
 
@@ -90,7 +94,7 @@ Abbreviations: `live` = Addition Facts public prototype; `runtime-only` = option
 | Review # | Resource ID | Resource title | Catalog status | Founder review status | Implementation status | Variable/runtime status | Public customization status | Promotion status | Primary classification | Outstanding action | Evidence / commit |
 | ---: | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | `g1_addition_facts_within_20` | Addition Facts Within 20 | ready | Approved; later customization controls recorded as approved prototype | Committed controlled family and public prototype | Mature: 1–60, 0–20 default/override, selected values, multi-page, Q1 example | live | none | **A** | Keep as sole prototype; no new UI | `ffc60c7`, `776fcb7`, `8777856` |
-| — | `g1_addition_on_number_line_to_20` | Addition on a Number Line to 20 | partial | No founder row | Existing output is identification, not addition modelling | Wrong activity/runtime (`number_line_identify`) | none | blocked | **E** | Complete a new preflight and correct title/content/runtime alignment | `docs/sprint.md`; `config/worksheetCatalog/grade1.js` |
+| — | `g1_addition_on_number_line_to_20` | Addition on a Number Line to 20 | partial | Founder approved the corrected addition model and full-width recheck | Committed controlled addition-number-line runtime and Grade 1-specific full-width layout | Mature: 6 questions, 0–20 line, start/jump/landing model, range selection, Q1 example, answer-key parity | runtime-only | partial/internal; no promotion decision | **A** | No implementation/proof action; promote only through a separate decision | `docs/grade-1-addition-number-line-preflight.md`; approved before `feat: fix grade 1 addition number line` |
 | — | `grade1_addition_subtraction_word_problems_addition_word_problem` | Addition Word Problem — Grade 1 | generated | Explicitly not promoted; overlaps reviewed canonical resource | Generic runtime only | Generic, no separate controlled contract | none | intentionally held | **G** | Retain as legacy/internal unless a distinct use case is approved | Milestone 6 Batch 10 hold |
 | 2 | `g1_addition_word_problems` | Addition Word Problems | ready | Approved after founder correction passes | Committed shared word-problem layout | Mature internal range/count/multi-page support | runtime-only | none | **A** | No action | `ffc60c7` |
 | — | `grade1_addition_subtraction_facts_equation_match` | Equation Match — Grade 1 | generated | No founder review | Generic generated candidate | No controlled Grade 1 variable pass | none | not eligible | **F** | Founder design/grade-fit review before any controlled pass | master catalog; audit only |
@@ -150,7 +154,7 @@ Delivery codes below: `P` = public detail route plus preview/PDF APIs; `I` = no 
 | Resource ID | Kind / source | Active generator or runtime | Layout / renderer | Delivery | Answer key / completed example |
 | --- | --- | --- | --- | --- | --- |
 | `g1_addition_facts_within_20` | worksheet / curated | `factFluency` + Addition Facts adapter | `fluency_grid` / shared PDF | P | yes / Q1 |
-| `g1_addition_on_number_line_to_20` | worksheet / curated | `numberLineIdentify` (mismatched) | `visual_model` / shared PDF | I | yes / generic |
+| `g1_addition_on_number_line_to_20` | worksheet / curated | controlled `additionNumberLine` runtime | Grade 1 full-width `visual_model` / shared PDF | I | yes / Q1 runtime |
 | `grade1_addition_subtraction_word_problems_addition_word_problem` | worksheet / generated | `wordProblems.addition` | `equation_practice` / shared PDF | I | yes / generic |
 | `g1_addition_word_problems` | worksheet / curated | `wordProblems` | approved work-box layout / shared PDF | P | yes / Q1 |
 | `grade1_addition_subtraction_facts_equation_match` | worksheet / generated | `equationMatch` | `matching` / shared PDF | I | yes / generic |
@@ -231,9 +235,7 @@ No unresolved acceptance conflict remains among the 12 reviewed resources, but t
 4. **Number-word count/direction:** CSV suggested 1–15 and a mixed direction choice. Later decisions keep two distinct public resources, default Write Number Words to 20 questions, proof 30-question modes, and keep direction switching out of public UI.
 5. **Fact-family capacity:** CSV requested up to 12 four-fact groups. Later accepted runtime also permits 24 addition-only or subtraction-only groups with corrected wrapping.
 
-Separate unresolved catalog issue, not a founder-note conflict:
-
-- `g1_addition_on_number_line_to_20` is titled as addition but still runs `number_line_identify`; it remains partial and requires design correction.
+The former Addition on a Number Line title/runtime mismatch is resolved. The resource remains partial only because this checkpoint does not authorize promotion.
 
 ## Public customization status
 

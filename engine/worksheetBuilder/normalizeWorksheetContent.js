@@ -17,7 +17,11 @@ function normalizeVisual(visual = {}) {
         min: Number(data.min ?? data.start ?? 0),
         max: Number(data.max ?? data.end ?? 10),
         value: Number(data.value ?? data.highlight ?? data.min ?? data.start ?? 0),
-        hideValueLabel: Boolean(data.hideValueLabel)
+        hideValueLabel: Boolean(data.hideValueLabel),
+        additionStart: data.additionStart == null ? null : Number(data.additionStart),
+        additionJump: data.additionJump == null ? null : Number(data.additionJump),
+        additionLanding: data.additionLanding == null ? null : Number(data.additionLanding),
+        additionDirection: data.additionDirection || null
       }
     };
   }

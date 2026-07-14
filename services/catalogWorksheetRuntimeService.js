@@ -9,7 +9,8 @@ const PUBLIC_SKILL_LABEL_HIDDEN_IDS = new Set([
   "grade1_multiplication_facts_arrays",
   "grade1_multiplication_facts_equal_groups",
   "grade1_multiplication_facts_skip_counting",
-  "grade1_place_value_representation_expanded_form"
+  "grade1_place_value_representation_expanded_form",
+  "g1_addition_on_number_line_to_20"
 ]);
 
 const EARLY_MULTIPLICATION_FOOTER_IDS = new Set([

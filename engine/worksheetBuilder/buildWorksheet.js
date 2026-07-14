@@ -201,6 +201,7 @@ function resolveDefaultQuestionCount(options = {}, preferredActivity = null) {
 
   const visualActivities = new Set([
     "ten_frame",
+    "addition_number_line",
     "number_line_identify",
     "base_ten_blocks",
     "array",

@@ -4,6 +4,7 @@
   "baseSkill": "addition_subtraction_facts",
   "activities": [
     "ten_frame",
+    "addition_number_line",
     "number_line_identify",
     "equation_match",
     "missing_addend",
