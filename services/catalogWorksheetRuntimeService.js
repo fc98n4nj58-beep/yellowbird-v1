@@ -33,6 +33,11 @@ const NUMBER_PATTERN_FOOTER_IDS = new Set([
   "grade1_multiplication_facts_skip_counting"
 ]);
 
+const GRADE2_COMPARISON_FOOTER_IDS = new Set([
+  "grade2_place_value_representation_compare_numbers",
+  "g2_compare_numbers_to_100"
+]);
+
 function finiteOptionalNumber(value) {
   if (value === undefined || value === null || value === "") return null;
   const n = Number(value);
@@ -40,12 +45,14 @@ function finiteOptionalNumber(value) {
 }
 
 function publicSkillLabel(item) {
+  if (GRADE2_COMPARISON_FOOTER_IDS.has(item?.id)) return "";
   if (PUBLIC_SKILL_LABEL_HIDDEN_IDS.has(item?.id)) return "";
   if (item?.skillKey === "patterning_and_algebra") return "";
   return item?.skillKey || "";
 }
 
 function publicDomainLabel(item) {
+  if (GRADE2_COMPARISON_FOOTER_IDS.has(item?.id)) return "Place Value";
   if (EARLY_MULTIPLICATION_FOOTER_IDS.has(item?.id)) {
     return "Early Multiplication Thinking";
   }

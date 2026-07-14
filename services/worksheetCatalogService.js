@@ -186,6 +186,19 @@ const GRADE2_NUMERIC_PATTERN_IDS = new Set(
   Object.keys(GRADE2_NUMERIC_PATTERN_TITLES)
 );
 
+const GRADE2_COMPARISON_IDS = new Set([
+  "grade2_place_value_representation_compare_numbers",
+  "g2_compare_numbers_to_100"
+]);
+
+const GRADE2_COMPACT_QUICK_CHECK_IDS = new Set([
+  "g2_addition_within_20_quick_check",
+  "g2_subtraction_within_20_quick_check",
+  "g2_missing_addends_within_20_quick_check"
+]);
+
+const GRADE2_COMPACT_EXIT_TICKET_ID = "g2_missing_addends_within_20_exit_ticket";
+
 const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
   "g1_addition_facts_within_20",
   "g1_subtraction_facts_within_20",
@@ -1202,20 +1215,69 @@ if (["math.addition.basic", "related_subtraction", "missing_addend"].includes(it
 }
 
 if (item.activityTypes?.[0] === "compare_numbers") {
+  const isGrade2Comparison = GRADE2_COMPARISON_IDS.has(item.id);
   layout.template = {
     ...(layout.template || {}),
-    columns: 4,
-    maxProblemsPerPage: finiteNumber(normalizedOptions.questionsPerPage) || 60
+    columns: isGrade2Comparison ? 2 : 4,
+    maxProblemsPerPage: finiteNumber(normalizedOptions.questionsPerPage) || (isGrade2Comparison ? 12 : 60)
   };
   layout.display = {
     ...(layout.display || {}),
     answerTargetVariant: "comparisonSymbol",
     standardShortAnswerTarget: true,
-    standardAnswerLineWidth: 34,
+    standardAnswerLineWidth: isGrade2Comparison ? 52 : 34,
     standardAnswerBlankText: "___",
     hideItemSeparators: true,
     equalHeightItems: true,
-    denseGridRows: 15
+    denseGridRows: isGrade2Comparison ? 6 : 15,
+    sequentialColumnFill: isGrade2Comparison,
+    grade2ComparisonLayout: isGrade2Comparison,
+    comparisonTargetWidth: isGrade2Comparison ? 52 : 34,
+    comparisonFontSize: isGrade2Comparison ? 16 : 12
+  };
+}
+
+if (GRADE2_COMPACT_QUICK_CHECK_IDS.has(item.id)) {
+  layout.instruction = item.studentInstructions || layout.instruction;
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 2,
+    maxProblemsPerPage: 6
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    compactAssessmentLayout: true,
+    resourceKindLabel: "Quick Check",
+    assessmentColumns: 2,
+    assessmentRowsPerColumn: 3,
+    inlineTargetsOnly: true,
+    showMetadataSubtitle: false,
+    showTimeEstimate: false,
+    showTeacherPanel: false,
+    showRatingStrip: false,
+    denseGridRows: 3,
+    sequentialColumnFill: true
+  };
+}
+
+if (item.id === GRADE2_COMPACT_EXIT_TICKET_ID) {
+  layout.instruction = item.studentInstructions || layout.instruction;
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 1,
+    maxProblemsPerPage: 3
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    compactAssessmentLayout: true,
+    resourceKindLabel: "Exit Ticket",
+    cutApartTicketCount: 2,
+    assessmentItemsPerTicket: 3,
+    inlineTargetsOnly: true,
+    showMetadataSubtitle: false,
+    showTimeEstimate: false,
+    denseGridRows: 3,
+    sequentialColumnFill: true
   };
 }
 

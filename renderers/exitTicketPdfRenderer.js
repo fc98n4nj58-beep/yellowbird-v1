@@ -2,6 +2,26 @@
 
 const path = require("path");
 const PDFDocument = require("pdfkit");
+const {
+  COLORS,
+  assessmentFonts,
+  setFont: setAssessmentFont,
+  drawRule: drawAssessmentRule,
+  drawInlineEquation,
+  drawStandardFooter,
+  footerText,
+  inlineEquationParts
+} = require("./compactAssessmentPdfLayout");
+
+const GRADE2_COMPACT_EXIT_TICKET_ID = "g2_missing_addends_within_20_exit_ticket";
+const GRADE2_EXIT_TICKET_LAYOUT = Object.freeze({
+  ticketsPerPage: 2,
+  itemsPerTicket: 3,
+  equationFontSize: 14,
+  targetWidth: 58,
+  usesSecondaryAnswerLines: false,
+  conciseTitle: true
+});
 
 function safeStr(value) {
   return (value ?? "").toString();
@@ -126,7 +146,147 @@ function drawAnswerKey(doc, fonts, item, items) {
   });
 }
 
+function isGrade2CompactExitTicket(item) {
+  return item?.id === GRADE2_COMPACT_EXIT_TICKET_ID;
+}
+
+function drawCompactTicketFooter(doc, fonts, item, frame) {
+  const x = frame.x + 18;
+  const width = frame.width - 36;
+  const y = frame.y + frame.height - 22;
+  drawAssessmentRule(doc, x, x + width, y, { color: COLORS.rule, width: 0.5 });
+  setAssessmentFont(doc, fonts.regular, 8.5);
+  doc.fillColor(COLORS.muted).text(footerText(item), x, y + 5, {
+    width,
+    align: "center",
+    lineBreak: false
+  });
+}
+
+function drawCompactTicket(doc, fonts, item, contentObject, items, frame) {
+  const pad = 18;
+  const innerX = frame.x + pad;
+  const innerWidth = frame.width - pad * 2;
+  const title = safeStr(contentObject?.meta?.title || item.title);
+
+  doc.save();
+  doc.strokeColor("#222222").lineWidth(0.9).rect(frame.x, frame.y, frame.width, frame.height).stroke();
+  doc.restore();
+
+  setAssessmentFont(doc, fonts.regular, 9);
+  doc.fillColor(COLORS.muted).text("Exit Ticket", innerX, frame.y + 16, {
+    width: innerWidth,
+    characterSpacing: 0.2,
+    lineBreak: false
+  });
+  setAssessmentFont(doc, fonts.bold, 16);
+  doc.fillColor(COLORS.text).text(title, innerX, frame.y + 33, {
+    width: innerWidth,
+    lineBreak: false
+  });
+
+  setAssessmentFont(doc, fonts.regular, 9.5);
+  doc.fillColor(COLORS.text).text("Name:", innerX, frame.y + 64, { width: 34, lineBreak: false });
+  drawAssessmentRule(doc, innerX + 38, innerX + 205, frame.y + 75, { color: "#444444", width: 0.7 });
+  doc.text("Date:", innerX + 224, frame.y + 64, { width: 32, lineBreak: false });
+  drawAssessmentRule(doc, innerX + 258, innerX + innerWidth, frame.y + 75, { color: "#444444", width: 0.7 });
+  drawAssessmentRule(doc, innerX, innerX + innerWidth, frame.y + 91, { color: COLORS.rule, width: 0.6 });
+
+  setAssessmentFont(doc, fonts.regular, 10.5);
+  doc.fillColor(COLORS.text).text(
+    safeStr(item.studentInstructions || "Complete each question."),
+    innerX,
+    frame.y + 105,
+    { width: innerWidth, lineBreak: false }
+  );
+
+  items.slice(0, GRADE2_EXIT_TICKET_LAYOUT.itemsPerTicket).forEach((problem, index) => {
+    drawInlineEquation(doc, fonts, problem, {
+      x: innerX,
+      y: frame.y + 143 + index * 46,
+      width: innerWidth,
+      height: 42
+    }, {
+      number: index + 1,
+      fontSize: GRADE2_EXIT_TICKET_LAYOUT.equationFontSize,
+      targetWidth: GRADE2_EXIT_TICKET_LAYOUT.targetWidth
+    });
+  });
+
+  drawCompactTicketFooter(doc, fonts, item, frame);
+}
+
+function drawCompactExitAnswerKey(doc, fonts, item, contentObject, items) {
+  const left = 54;
+  const width = 504;
+  const top = 54;
+  const title = safeStr(contentObject?.meta?.title || item.title);
+
+  setAssessmentFont(doc, fonts.regular, 9.5);
+  doc.fillColor(COLORS.muted).text("Answer Key", left, top, { width, lineBreak: false });
+  setAssessmentFont(doc, fonts.bold, 20);
+  doc.fillColor(COLORS.text).text(title, left, top + 18, { width, lineBreak: false });
+  drawAssessmentRule(doc, left, left + width, top + 52, { color: COLORS.rule, width: 0.7 });
+  setAssessmentFont(doc, fonts.regular, 11.5);
+  doc.fillColor(COLORS.text).text(
+    safeStr(item.studentInstructions || "Complete each question."),
+    left,
+    top + 70,
+    { width, lineBreak: false }
+  );
+
+  items.slice(0, GRADE2_EXIT_TICKET_LAYOUT.itemsPerTicket).forEach((problem, index) => {
+    drawInlineEquation(doc, fonts, problem, {
+      x: left,
+      y: top + 122 + index * 72,
+      width: 300,
+      height: 60
+    }, {
+      number: index + 1,
+      showAnswer: true,
+      fontSize: GRADE2_EXIT_TICKET_LAYOUT.equationFontSize,
+      targetWidth: GRADE2_EXIT_TICKET_LAYOUT.targetWidth
+    });
+  });
+
+  drawStandardFooter(doc, fonts, item);
+}
+
+function renderGrade2CompactExitTicketPDF({ res, item, contentObject, options = {} }) {
+  const doc = new PDFDocument({
+    size: "LETTER",
+    margins: { top: 0, bottom: 0, left: 0, right: 0 },
+    bufferPages: false
+  });
+  const fonts = assessmentFonts(doc);
+  const filename = safeStr(options.filename || `${item.id}.pdf`);
+  const disposition = safeStr(options.disposition || "attachment") === "inline" ? "inline" : "attachment";
+  const items = (Array.isArray(contentObject?.content?.items) ? contentObject.content.items : [])
+    .slice(0, GRADE2_EXIT_TICKET_LAYOUT.itemsPerTicket);
+
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", `${disposition}; filename="${filename}"`);
+  doc.pipe(res);
+
+  const frame = { x: 42, y: 42, width: 528, height: 318 };
+  drawCompactTicket(doc, fonts, item, contentObject, items, frame);
+  drawAssessmentRule(doc, 42, 570, 396, { color: "#222222", width: 0.8, dash: 8, space: 5 });
+  setAssessmentFont(doc, fonts.regular, 9);
+  doc.fillColor(COLORS.muted).text("Cut here", 518, 384, { width: 52, align: "right", lineBreak: false });
+  drawCompactTicket(doc, fonts, item, contentObject, items, { ...frame, y: 432 });
+
+  if (options.includeAnswerKey !== false && item.hasAnswerKey !== false) {
+    doc.addPage();
+    drawCompactExitAnswerKey(doc, fonts, item, contentObject, items);
+  }
+  doc.end();
+}
+
 function renderExitTicketPDF({ res, item, contentObject, options = {} }) {
+  if (isGrade2CompactExitTicket(item)) {
+    return renderGrade2CompactExitTicketPDF({ res, item, contentObject, options });
+  }
+
   const doc = new PDFDocument({
     size: "LETTER",
     margins: { top: 0, bottom: 0, left: 0, right: 0 },
@@ -201,5 +361,10 @@ function renderExitTicketPDF({ res, item, contentObject, options = {} }) {
 }
 
 module.exports = {
-  renderExitTicketPDF
+  renderExitTicketPDF,
+  __test: {
+    GRADE2_EXIT_TICKET_LAYOUT,
+    isGrade2CompactExitTicket,
+    inlineEquationParts
+  }
 };

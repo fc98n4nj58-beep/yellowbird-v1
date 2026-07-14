@@ -3146,7 +3146,7 @@
     },
     {
       "id": "grade2_place_value_representation_compare_numbers",
-      "title": "Compare 3-Digit Numbers — Grade 2 Extension",
+      "title": "Compare 3-Digit Numbers",
       "shortTitle": "Compare 3-Digit Numbers",
       "subject": "Math",
       "grades": [
@@ -5024,7 +5024,7 @@
     },
     {
       "id": "g2_subtraction_within_20_quick_check",
-      "title": "Subtraction Within 20 Quick Check",
+      "title": "Subtraction Within 20",
       "shortTitle": "Subtraction Within 20",
       "subject": "Math",
       "grades": [
@@ -5066,7 +5066,7 @@
     },
     {
       "id": "g2_addition_within_20_quick_check",
-      "title": "Addition Within 20 Quick Check",
+      "title": "Addition Within 20",
       "shortTitle": "Addition Within 20",
       "subject": "Math",
       "grades": [
@@ -5195,7 +5195,7 @@
     },
     {
       "id": "g2_missing_addends_within_20_quick_check",
-      "title": "Missing Addends Within 20 Quick Check",
+      "title": "Missing Addends Within 20",
       "shortTitle": "Missing Addends Within 20",
       "subject": "Math",
       "grades": [
@@ -5326,7 +5326,7 @@
     },
     {
       "id": "g2_missing_addends_within_20_exit_ticket",
-      "title": "Missing Addends Within 20 Exit Ticket",
+      "title": "Missing Addends Within 20",
       "shortTitle": "Missing Addends Within 20",
       "subject": "Math",
       "grades": [

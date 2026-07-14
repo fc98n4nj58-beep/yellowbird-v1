@@ -229,16 +229,16 @@ Scaling cautions:
 - Identical cut-apart tickets and shared answer keys are acceptable for now.
 - A/B versions can be considered later, but are not required.
 
-## Decision: Grade 2 Compare 3-Digit Numbers Extension
+## Decision: Grade 2 Compare 3-Digit Numbers Readiness Resource
 
 Decision:
-Promote `grade2_place_value_representation_compare_numbers` only with explicit extension/readiness framing.
+Retain `grade2_place_value_representation_compare_numbers` as an optional readiness resource with a strict three-digit default.
 
 Reason:
 Teacher QA and Curriculum Alignment approved the resource after the builder mapping fix, but only when the 3-digit range is made public-facing and honest. The resource adds a focused upper Grade 2 extension / Grade 3 readiness use case beyond the existing Grade 2 compare-to-100 worksheet.
 
 Rules:
-- Title: `Compare 3-Digit Numbers — Grade 2 Extension`.
+- Student title: `Compare 3-Digit Numbers`; keep the optional extension/readiness role in teacher-facing metadata and guidance rather than repeating it in the worksheet title.
 - Topic: `Place Value: Compare 3-Digit Numbers`.
 - Frame as selected printable practice after instruction with hundreds, tens, and ones.
 - Do not frame as standard Grade 2 number coverage, mastery, assessment, diagnostic, full place-value unit, or official curriculum coverage.
@@ -432,3 +432,15 @@ When exact scaling, transformation, and answer-key parity matter, dynamic mathem
 ## Decision: Grade 2 Numeric Patterning Response and Page Contract
 
 Grade 2 Numeric Patterning keeps its approved deterministic sequence truth while using a shared two-column, six-row presentation contract. Student worksheet titles do not repeat the grade when the footer already carries grade metadata. Identify Pattern Rule uses `Add ______ each time.` because full-sentence writing adds no mathematical value. A readable single-page, two-column layout is preferred over additional pages when it safely supports all 12 tasks. Completed-Question-1 behavior remains deferred.
+
+## Decision: Compact Comparison and Formative-Assessment Geometry
+
+Short comparison and formative-assessment resources should show the mathematical task directly, with the assessment type carried by a quiet label rather than repeated in the content title. Comparison rows use one inline symbol target between operands; compact arithmetic checks use one inline answer target inside each equation. Student and answer-key pages reuse the same target geometry, and renderers display generator-owned truth rather than recomputing it.
+
+Compact printable student pages do not include large teacher-note or rating panels unless a separately approved shared recording contract requires them. Teacher-use guidance remains in resource metadata or detail-page content.
+
+For exact Grade 2 missing-addend Quick Check and Exit Ticket defaults, deterministic batches may contain no more than one zero-related item so the short form is not dominated by additive-identity cases. This batching rule is resource-specific and does not alter other missing-addend families.
+
+## Decision: Public PDF Footer Labels
+
+Student-facing PDF footers use public-readable grade, subject, strand, and topic labels only. Internal IDs, enum values, registry keys, generator names, raw catalog fields, and snake_case metadata must never appear in printable output. Student and answer-key pages reuse the same public footer text.

@@ -1982,6 +1982,68 @@ function buildGrade1DataResponseGeometry({
   });
 }
 
+function comparisonRowParts(question = {}) {
+  const promptNumbers = safeStr(question.prompt).match(/\d+/g) || [];
+  const left = finiteOptionalNumber(question.leftValue) ?? finiteOptionalNumber(promptNumbers[0]);
+  const right = finiteOptionalNumber(question.rightValue) ?? finiteOptionalNumber(promptNumbers[1]);
+  return {
+    left,
+    right,
+    answer: question.expectedSymbol || question.comparisonResult || question.answer
+  };
+}
+
+function renderGrade2ComparisonRow(doc, question, layoutBox, fonts = {}, display = {}) {
+  const { x, y, width } = layoutBox;
+  const parts = comparisonRowParts(question);
+  if (parts.left === null || parts.right === null) return 0;
+
+  const fontSize = Number(display.comparisonFontSize || 16);
+  const targetWidth = Number(display.comparisonTargetWidth || 52);
+  const numberWidth = 30;
+  const operandWidth = 58;
+  const gap = 12;
+  const equationWidth = operandWidth * 2 + targetWidth + gap * 2;
+  const availableWidth = Math.max(equationWidth, width - numberWidth);
+  const equationX = x + numberWidth + Math.max(0, (availableWidth - equationWidth) / 2);
+  const targetX = equationX + operandWidth + gap;
+  const rightX = targetX + targetWidth + gap;
+  const textY = y + 3;
+  const lineY = textY + fontSize + 5;
+
+  doc.save();
+  setFont(doc, fonts.regular || "Helvetica", 12);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  doc.text(`${question.id ?? ""})`, x, textY + 2, {
+    width: numberWidth - 4,
+    align: "left",
+    lineBreak: false
+  });
+
+  setFont(doc, fonts.regular || "Helvetica", fontSize);
+  doc.text(String(parts.left), equationX, textY, {
+    width: operandWidth,
+    align: "center",
+    lineBreak: false
+  });
+  drawShortAnswerLine(doc, targetX, lineY, targetWidth);
+  if (display.answerKey && parts.answer != null) {
+    drawTextOnLine(doc, parts.answer, targetX, lineY, targetWidth, fonts, {
+      align: "center",
+      fontSize
+    });
+  }
+  restoreAnswerSurroundingTextStyle(doc, fonts, fontSize);
+  doc.text(String(parts.right), rightX, textY, {
+    width: operandWidth,
+    align: "center",
+    lineBreak: false
+  });
+  doc.restore();
+
+  return fontSize + 12;
+}
+
 function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) {
   if (doc._ended) return 0;
 
@@ -2020,6 +2082,11 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
 
   if (!visual?.kind && display.patterningLayout) {
     const rendered = renderPatterningRow(doc, question, layoutBox, fonts, display);
+    if (rendered) return rendered;
+  }
+
+  if (!visual?.kind && display.grade2ComparisonLayout) {
+    const rendered = renderGrade2ComparisonRow(doc, question, layoutBox, fonts, display);
     if (rendered) return rendered;
   }
 
@@ -4085,6 +4152,7 @@ module.exports = {
     GRADE1_FRACTION_SELECTION_TARGET_DIAMETER,
     GRADE1_FRACTION_EXAMPLE_LABEL,
     GRADE1_FRACTION_RENDERER_VARIANTS,
-    patterningRuleResponseParts
+    patterningRuleResponseParts,
+    comparisonRowParts
   }
 };

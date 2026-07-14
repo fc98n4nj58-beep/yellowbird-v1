@@ -2,6 +2,34 @@
 
 const path = require("path");
 const PDFDocument = require("pdfkit");
+const {
+  COLORS,
+  assessmentFonts,
+  setFont: setAssessmentFont,
+  drawRule: drawAssessmentRule,
+  drawInlineEquation,
+  drawStandardFooter,
+  inlineEquationParts
+} = require("./compactAssessmentPdfLayout");
+
+const GRADE2_COMPACT_QUICK_CHECK_IDS = new Set([
+  "g2_addition_within_20_quick_check",
+  "g2_subtraction_within_20_quick_check",
+  "g2_missing_addends_within_20_quick_check"
+]);
+
+const GRADE2_QUICK_CHECK_LAYOUT = Object.freeze({
+  columns: 2,
+  rowsPerColumn: 3,
+  itemCount: 6,
+  equationFontSize: 16,
+  targetWidth: 58,
+  metadataSubtitle: false,
+  preciseTimeEstimate: false,
+  teacherPanel: false,
+  ratingStrip: false,
+  usesSecondaryAnswerLines: false
+});
 
 function safeStr(value) {
   return (value ?? "").toString();
@@ -169,7 +197,109 @@ function drawAnswerKey(doc, fonts, item, items) {
   drawFooter(doc, fonts, "Answer key");
 }
 
+function isGrade2CompactQuickCheck(item) {
+  return GRADE2_COMPACT_QUICK_CHECK_IDS.has(item?.id);
+}
+
+function drawCompactHeader(doc, fonts, item, contentObject, options = {}) {
+  const left = 54;
+  const width = 504;
+  const top = 48;
+  const title = safeStr(contentObject?.meta?.title || item.title);
+  const instruction = safeStr(item.studentInstructions || "Complete each question.");
+
+  setAssessmentFont(doc, fonts.regular, 9.5);
+  doc.fillColor(COLORS.muted).text(options.answerKey ? "Answer Key" : "Quick Check", left, top, {
+    width,
+    characterSpacing: 0.2,
+    lineBreak: false
+  });
+
+  setAssessmentFont(doc, fonts.bold, 20);
+  doc.fillColor(COLORS.text).text(title, left, top + 18, {
+    width,
+    lineGap: 1,
+    lineBreak: false
+  });
+
+  drawAssessmentRule(doc, left, left + width, top + 52, { color: COLORS.rule, width: 0.7 });
+  setAssessmentFont(doc, fonts.regular, 11.5);
+  doc.fillColor(COLORS.text).text(instruction, left, top + 70, {
+    width,
+    lineBreak: false
+  });
+
+  if (!options.answerKey) {
+    setAssessmentFont(doc, fonts.regular, 10);
+    doc.fillColor(COLORS.text).text("Name:", left, top + 104, { width: 36, lineBreak: false });
+    drawAssessmentRule(doc, left + 40, left + 250, top + 116, { color: "#a8a29e", width: 0.7 });
+    doc.text("Date:", left + 286, top + 104, { width: 34, lineBreak: false });
+    drawAssessmentRule(doc, left + 322, left + width, top + 116, { color: "#a8a29e", width: 0.7 });
+  }
+
+  return top + 150;
+}
+
+function drawCompactQuestionGrid(doc, fonts, items, startY, options = {}) {
+  const left = 54;
+  const width = 504;
+  const gap = 36;
+  const colWidth = (width - gap) / 2;
+  const rowHeight = 118;
+
+  items.slice(0, GRADE2_QUICK_CHECK_LAYOUT.itemCount).forEach((problem, index) => {
+    const column = Math.floor(index / GRADE2_QUICK_CHECK_LAYOUT.rowsPerColumn);
+    const row = index % GRADE2_QUICK_CHECK_LAYOUT.rowsPerColumn;
+    drawInlineEquation(doc, fonts, problem, {
+      x: left + column * (colWidth + gap),
+      y: startY + row * rowHeight,
+      width: colWidth,
+      height: rowHeight
+    }, {
+      number: index + 1,
+      showAnswer: Boolean(options.answerKey),
+      fontSize: GRADE2_QUICK_CHECK_LAYOUT.equationFontSize,
+      targetWidth: GRADE2_QUICK_CHECK_LAYOUT.targetWidth
+    });
+  });
+}
+
+function renderGrade2CompactQuickCheckPDF({ res, item, contentObject, options = {} }) {
+  const doc = new PDFDocument({
+    size: "LETTER",
+    margins: { top: 0, bottom: 0, left: 0, right: 0 },
+    bufferPages: false
+  });
+  const fonts = assessmentFonts(doc);
+  const filename = safeStr(options.filename || `${item.id}.pdf`);
+  const disposition = safeStr(options.disposition || "attachment") === "inline" ? "inline" : "attachment";
+  const items = Array.isArray(contentObject?.content?.items)
+    ? contentObject.content.items.slice(0, GRADE2_QUICK_CHECK_LAYOUT.itemCount)
+    : [];
+
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", `${disposition}; filename="${filename}"`);
+  doc.pipe(res);
+
+  let startY = drawCompactHeader(doc, fonts, item, contentObject);
+  drawCompactQuestionGrid(doc, fonts, items, startY);
+  drawStandardFooter(doc, fonts, item);
+
+  if (options.includeAnswerKey !== false && item.hasAnswerKey !== false) {
+    doc.addPage();
+    startY = drawCompactHeader(doc, fonts, item, contentObject, { answerKey: true });
+    drawCompactQuestionGrid(doc, fonts, items, startY, { answerKey: true });
+    drawStandardFooter(doc, fonts, item);
+  }
+
+  doc.end();
+}
+
 function renderQuickCheckPDF({ res, item, contentObject, options = {} }) {
+  if (isGrade2CompactQuickCheck(item)) {
+    return renderGrade2CompactQuickCheckPDF({ res, item, contentObject, options });
+  }
+
   const doc = new PDFDocument({
     size: "LETTER",
     margins: { top: 0, bottom: 0, left: 0, right: 0 },
@@ -226,5 +356,10 @@ function renderQuickCheckPDF({ res, item, contentObject, options = {} }) {
 }
 
 module.exports = {
-  renderQuickCheckPDF
+  renderQuickCheckPDF,
+  __test: {
+    GRADE2_QUICK_CHECK_LAYOUT,
+    isGrade2CompactQuickCheck,
+    inlineEquationParts
+  }
 };

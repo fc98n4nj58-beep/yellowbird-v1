@@ -2,7 +2,7 @@
 
 Date: 2026-07-14
 
-Scope: planning and reconciliation only. This scan changes no catalog status, production source, test, public UI, curriculum source, Grade 1 file, or proof artifact.
+Scope: architecture inventory and authoritative Grade 2 reconciliation. The current update records founder-approved family evidence without changing catalog status, public UI, curriculum source, or another grade.
 
 ## Current project state
 
@@ -11,7 +11,7 @@ Scope: planning and reconciliation only. This scan changes no catalog status, pr
 - Catalog health at the scan baseline is 104 ready, 213 generated, 5 partial, and 9 planned, total 331.
 - The Grade 2 founder worksheet packet exists locally, but all 21 Grade 2 worksheet rows in `review/worksheet-founder-review/worksheet-review-index.csv` are still `not_reviewed` and have no founder notes.
 - Earlier Teacher QA, Curriculum Alignment, promotion, and shared-family decisions remain useful evidence, but they are not silently relabelled as Grade 2 founder approval.
-- The explicit shared-family founder closeout covers current Expanded Form, Standard Form, and Skip Counting behavior. Founder approval of the Numeric Patterning family adds Extend Pattern, Identify Pattern Rule, and Missing Value Pattern, bringing Grade 2 Category A to eight ready records.
+- The explicit shared-family founder closeout covers Expanded Form, Standard Form, Skip Counting, and Numeric Patterning. Founder approval of the six-resource Comparison and Assessment batch brings Grade 2 Category A to 14 ready records.
 - Planning verification passed: the Numeric Patterning focused suite and the relevant shared arrays, data-isolation, fraction-isolation, and number-line regression suites all passed. `npm run audit:worksheets` reported 104/104 ready, 213/213 generated, 5/5 partial, and only the seven known planned `pattern_word_problems` failures.
 
 ## Grade 2 catalog inventory
@@ -76,26 +76,26 @@ Inventory abbreviations:
 | `grade2_patterning_and_algebra_pattern_word_problems` - Pattern Word Problems - Grade 2 | W / G / planned | Patterning & Algebra; `patterning_and_algebra` | recipe -> missing `pattern_word_problems` generator | `equation_practice` / W / no / P / no | None required for launch | **G** - known planned gap; no forced implementation |
 | `grade2_place_value_representation_base_ten_blocks` - Base Ten Blocks - Grade 2 | W / G / generated | Place Value; `place_value_representation` | `place_value_representation.json` -> `baseTenBlocks.js` | `visual_model` / W / yes / Y / no | Curated Grade 2 base-ten resource; duplicate | **G** - exact task duplicate of the stronger curated record |
 | `g2_base_ten_blocks_representation` - Base Ten Blocks Representation | W / C2 / ready | Place Value; `place_value_representation`; B1 | `place_value_representation.json` -> `baseTenBlocks.js` | `visual_model` / W / yes / Y / yes | Base Ten Blocks; parameters | **E** - structured model is sound, but repeated per-item prose and catalogue-style instruction need Grade 2 design correction |
-| `grade2_place_value_representation_compare_numbers` - Compare 3-Digit Numbers - Grade 2 Extension | W / G / ready | Place Value: Compare 3-Digit Numbers; `place_value_representation` | `place_value_representation.json` -> `compareNumbers.js` | `equation_practice` / W / yes / Y / yes | Compare Numbers; optional override | **C** - explicit extension/readiness framing is safe; founder decision still required; NO TECHNICAL BLOCKER |
-| `g2_compare_numbers_to_100` - Compare Numbers to 100 | W / C2 / ready | Place Value; `number_relationships`; B1 | `number_relationships.json` -> `compareNumbers.js` | `equation_practice` / W / yes / Y / yes | Compare Numbers; parameters | **C** - title, range, symbols, and seed behavior align; awaiting founder proof; SHARED FAMILY - HEALTHY |
+| `grade2_place_value_representation_compare_numbers` - Compare 3-Digit Numbers | W / G / ready | Place Value: Compare 3-Digit Numbers; `place_value_representation` | `place_value_representation.json` -> `compareNumbers.js` | dedicated two-column comparison layout / W / yes / Y / yes | Compare Numbers; optional readiness override | **A** - founder-approved strict 100-999 comparison contract and public Place Value footer; SHARED FAMILY - HEALTHY |
+| `g2_compare_numbers_to_100` - Compare Numbers to 100 | W / C2 / ready | Place Value; `number_relationships`; B1 | `number_relationships.json` -> `compareNumbers.js` | dedicated two-column comparison layout / W / yes / Y / yes | Compare Numbers; parameters | **A** - founder-approved 0-100 comparison contract and public Place Value footer; SHARED FAMILY - HEALTHY |
 | `grade2_place_value_representation_expanded_form` - Expanded Form - Grade 2 | W / G / generated | Place Value; `place_value_representation` | `place_value_representation.json` -> `expandedForm.js` | `representation` / W / yes / Y / no | `g2_expanded_form_to_100`; duplicate | **G** - old generated shell is superseded by the curated resource |
 | `g2_expanded_form_to_100` - Expanded Form to 100 | W / C2 / ready | Place Value; `place_value_representation`; B1 | `place_value_representation.json` -> `expandedForm.js` | task-specific expanded-form layout / W / yes / Y / yes | Expanded Form; direct parameters | **A** - current shared family is explicitly founder-approved; SHARED FAMILY - HEALTHY |
 | `grade2_place_value_representation_number_line_identify` - Number Line - Grade 2 | W / G / generated | Place Value; `place_value_representation` | `place_value_representation.json` -> `numberLineIdentify.js` | `visual_model` / W / yes / Y / no | Number Line Identify; parameters | **D** - generic default is only 0-10 and needs a distinct Grade 2 range/task adapter |
 | `grade2_place_value_representation_number_word_match` - Number Word Match - Grade 2 | W / G / generated | Place Value; `place_value_representation` | `place_value_representation.json` -> `numberWordMatch.js` | `matching` / W / yes / Y / no | Number Words/Numerals; parameters | **D** - generic 0-999 matching needs Grade 2 defaults, direction, title, and response contract |
 | `grade2_place_value_representation_standard_form` - Standard Form - Grade 2 | W / G / generated | Place Value; `place_value_representation` | `place_value_representation.json` -> `standardForm.js` | `representation` / W / yes / Y / no | `g2_standard_form_to_100`; duplicate | **G** - old generated shell is superseded by the curated resource |
 | `g2_standard_form_to_100` - Standard Form to 100 | W / C2 / ready | Place Value; `place_value_representation`; B1 | `place_value_representation.json` -> `standardForm.js` | dense standard-form layout / W / yes / Y / yes | Standard Form; direct parameters | **A** - current shared family is explicitly founder-approved; SHARED FAMILY - HEALTHY |
-| `g2_subtraction_within_20_quick_check` - Subtraction Within 20 Quick Check | Q / G / ready | Addition and Subtraction Facts; `addition_subtraction_facts` | `addition_subtraction_facts.json` -> `factFluency.js` | `quick_check` / Q / yes / Y / yes | Subtraction Facts plus compact-resource contract | **C** - Teacher QA/Curriculum approved, but no Grade 2 founder decision; NO TECHNICAL BLOCKER |
-| `g2_addition_within_20_quick_check` - Addition Within 20 Quick Check | Q / G / ready | Addition and Subtraction Facts; `addition_subtraction_facts` | `addition_subtraction_facts.json` -> `factFluency.js` | `quick_check` / Q / yes / Y / yes | Addition Facts plus compact-resource contract | **C** - Teacher QA/Curriculum approved, but no Grade 2 founder decision; NO TECHNICAL BLOCKER |
-| `g2_missing_addends_within_20_quick_check` - Missing Addends Within 20 Quick Check | Q / G / ready | Operations: Missing Addends Within 20; `addition_subtraction_facts` | `addition_subtraction_facts.json` -> `missingAddend.js` | `quick_check` / Q / yes / Y / yes | Missing Addends plus compact-resource contract | **C** - Teacher QA/Curriculum approved, but no Grade 2 founder decision; NO TECHNICAL BLOCKER |
-| `g2_missing_addends_within_20_exit_ticket` - Missing Addends Within 20 Exit Ticket | X / G / ready | Operations: Missing Addends Within 20; `addition_subtraction_relationships` | `addition_subtraction_relationships.json` -> `missingAddend.js` | `exit_ticket` / X / yes / Y / yes | Missing Addends plus cut-apart contract | **C** - approved by Teacher QA/Curriculum with zero-addend caution; founder decision still required; NO TECHNICAL BLOCKER |
+| `g2_subtraction_within_20_quick_check` - Subtraction Within 20 | Q / G / ready | Addition and Subtraction Facts; `addition_subtraction_facts` | `addition_subtraction_facts.json` -> `factFluency.js` | compact 2x3 quick check / Q / yes / Y / yes | Subtraction Facts plus compact-resource contract | **A** - founder-approved compact assessment contract; SHARED FAMILY - HEALTHY |
+| `g2_addition_within_20_quick_check` - Addition Within 20 | Q / G / ready | Addition and Subtraction Facts; `addition_subtraction_facts` | `addition_subtraction_facts.json` -> `factFluency.js` | compact 2x3 quick check / Q / yes / Y / yes | Addition Facts plus compact-resource contract | **A** - founder-approved compact assessment contract; SHARED FAMILY - HEALTHY |
+| `g2_missing_addends_within_20_quick_check` - Missing Addends Within 20 | Q / G / ready | Operations: Missing Addends Within 20; `addition_subtraction_facts` | `addition_subtraction_facts.json` -> `missingAddend.js` | compact 2x3 quick check / Q / yes / Y / yes | Missing Addends plus compact-resource contract | **A** - founder-approved compact assessment and zero-balance contract; SHARED FAMILY - HEALTHY |
+| `g2_missing_addends_within_20_exit_ticket` - Missing Addends Within 20 | X / G / ready | Operations: Missing Addends Within 20; `addition_subtraction_relationships` | `addition_subtraction_relationships.json` -> `missingAddend.js` | two-up cut-apart exit ticket / X / yes / Y / yes | Missing Addends plus cut-apart contract | **A** - founder-approved cut-apart assessment and zero-balance contract; SHARED FAMILY - HEALTHY |
 
-## Initial reconciliation
+## Current reconciliation
 
 | Category | Count | Evidence-based meaning |
 | --- | ---: | --- |
-| A - already committed, founder-approved, and launch-ready | 5 | The current Expanded Form, Standard Form, and three curated Skip Counting resources are explicitly covered by the shared-family founder closeout. |
+| A - committed or commit-ready, founder-approved, and launch-ready | 14 | Shared place-value, Skip Counting, Numeric Patterning, Comparison, and compact Assessment families have explicit founder evidence. |
 | B - founder-approved but awaiting promotion | 0 | No generated Grade 2 record has both direct founder approval and a clean promotion-only case. |
-| C - implemented but awaiting founder proof or final decision | 13 | Runtime and public implementation are usable, but the Grade 2 founder packet remains unreviewed. |
+| C - implemented but awaiting founder proof or final decision | 4 | Four ready addition/subtraction worksheet resources still await founder disposition. |
 | D - requires shared-runtime consolidation | 11 | Existing Grade 1/shared family contracts should be extended instead of approving generic Grade 2 fallbacks. |
 | E - requires design, task, title, or print correction | 9 | Current output has an explicit mismatch, missing output, stale instruction pattern, or founder-contract default conflict. |
 | F - untouched or not yet reviewed | 0 | This preflight inspected every Grade 2 catalog record; unresolved records are assigned to a concrete action category. |
@@ -104,9 +104,9 @@ Inventory abbreviations:
 
 Exact IDs by category:
 
-- **A (8):** `g2_expanded_form_to_100`, `g2_skip_counting_by_10`, `g2_skip_counting_by_2`, `g2_skip_counting_by_5`, `g2_standard_form_to_100`, `grade2_patterning_and_algebra_extend_pattern`, `grade2_patterning_and_algebra_identify_pattern_rule`, `grade2_patterning_and_algebra_missing_value_pattern`.
+- **A (14):** `g2_expanded_form_to_100`, `g2_skip_counting_by_10`, `g2_skip_counting_by_2`, `g2_skip_counting_by_5`, `g2_standard_form_to_100`, `grade2_patterning_and_algebra_extend_pattern`, `grade2_patterning_and_algebra_identify_pattern_rule`, `grade2_patterning_and_algebra_missing_value_pattern`, `grade2_place_value_representation_compare_numbers`, `g2_compare_numbers_to_100`, `g2_subtraction_within_20_quick_check`, `g2_addition_within_20_quick_check`, `g2_missing_addends_within_20_quick_check`, `g2_missing_addends_within_20_exit_ticket`.
 - **B (0):** none.
-- **C (10):** `grade2_addition_subtraction_facts_fact_family`, `grade2_addition_subtraction_facts_missing_addend`, `grade2_addition_subtraction_word_problems_missing_addend_word_problem`, `grade2_addition_subtraction_word_problems_subtraction_word_problem`, `grade2_place_value_representation_compare_numbers`, `g2_compare_numbers_to_100`, `g2_subtraction_within_20_quick_check`, `g2_addition_within_20_quick_check`, `g2_missing_addends_within_20_quick_check`, `g2_missing_addends_within_20_exit_ticket`.
+- **C (4):** `grade2_addition_subtraction_facts_fact_family`, `grade2_addition_subtraction_facts_missing_addend`, `grade2_addition_subtraction_word_problems_missing_addend_word_problem`, `grade2_addition_subtraction_word_problems_subtraction_word_problem`.
 - **D (11):** `grade2_addition_subtraction_facts_equation_match`, `grade2_data_display_graphing_complete_graph`, `grade2_data_display_graphing_graph_questions`, `grade2_data_display_graphing_interpret_data`, `grade2_data_display_graphing_match_data_to_graph`, `grade2_data_display_graphing_read_graph`, `grade2_fraction_equivalence_fraction_word_problems`, `grade2_fraction_equivalence_shade_fraction_models`, `grade2_multiplication_facts_equal_groups`, `grade2_place_value_representation_number_line_identify`, `grade2_place_value_representation_number_word_match`.
 - **E (9):** `g2_addition_fluency_within_100`, `g2_addition_word_problems_within_100`, `g2_missing_addends_within_100`, `g2_subtraction_fluency_within_100`, `grade2_addition_subtraction_facts_related_subtraction`, `grade2_data_display_graphing_graph_word_problems`, `grade2_multiplication_facts_arrays`, `grade2_multiplication_facts_word_problems`, `g2_base_ten_blocks_representation`.
 - **F (0):** none.
@@ -177,10 +177,10 @@ No genuinely new family is required to start Grade 2 founder review.
 
 ## Curriculum-safety findings
 
-- **SAFE AS WRITTEN:** the five A resources; `grade2_addition_subtraction_facts_fact_family`; the ready within-20 missing-addend worksheet; missing-addend/subtraction story problems; the three numeric-patterning resources; `g2_compare_numbers_to_100`; and the four compact resources with their existing formative framing.
+- **SAFE AS WRITTEN:** all 14 Category A resources; `grade2_addition_subtraction_facts_fact_family`; the ready within-20 missing-addend worksheet; and the missing-addend/subtraction story problems.
 - **SAFE WITH NARROWED DEFAULT:** Grade 2 Equal Groups, Shade Fraction Models, Fraction Word Problems/Fair Sharing, and any number-line or number-word extension. Defaults must stay concrete, visual, and grade-banded.
 - **SAFE WITH TITLE OR INSTRUCTION CHANGE:** the three `Within 100` fluency/missing-addend records whose runtime is actually within 20; Related Subtraction; Arrays' current count/task contract; Base Ten Blocks' repeated prose; Graph Word Problems; and Multiplication Word Problems.
-- **SAFE AS OPTIONAL OVERRIDE:** Compare 3-Digit Numbers - Grade 2 Extension, only with its current upper-Grade-2/Grade-3-readiness framing.
+- **SAFE AS OPTIONAL OVERRIDE:** Compare 3-Digit Numbers, with its optional upper-Grade-2/Grade-3-readiness role retained in teacher-facing framing.
 - **DUPLICATE:** the seven superseded/generated shells listed above and generic multiplication Skip Counting.
 - **GRADE 3+ DEFERRAL:** symbolic Match Equivalent Fractions, formal Fraction Number Line, Missing Factors, and Function Table. Compare Fractions remains deferred unless redesigned as simple same-whole visual comparison.
 - **GENUINE CURRICULUM CONFLICT:** none established. The unsafe cases are default/task/framing problems, not evidence that the catalog must misstate Ontario curriculum.
@@ -238,7 +238,7 @@ Deterministic mathematics, structured models, answer keys, and validation remain
 
 There are **no promotion-only candidates**.
 
-- The five records with explicit founder approval are already ready.
+- All 14 records with explicit founder approval are already ready.
 - Category B is zero.
 - Generated resources either lack direct Grade 2 founder proof, overlap a stronger record, require an adapter/correction, or are intentionally deferred.
 - Ready resources in Category C still require founder review; ready status is not retroactive founder approval.
@@ -275,13 +275,13 @@ No more than six batches are needed.
 | Order / batch | Exact IDs | Why together / architecture | Preflight and expected proofs | Risk / dependencies |
 | --- | --- | --- | --- | --- |
 | 1 - Numeric Patterning, founder approved | `grade2_patterning_and_algebra_extend_pattern`; `grade2_patterning_and_algebra_identify_pattern_rule`; `grade2_patterning_and_algebra_missing_value_pattern` | One mature deterministic family with focused tests and founder-approved task-specific layouts | Focused family preflight and 3 default two-page PDFs complete; completed-Q1 remains deferred | COMPLETE; no dependency |
-| 2 - Addition/subtraction relationships and formative formats | `grade2_addition_subtraction_facts_fact_family`; `grade2_addition_subtraction_facts_missing_addend`; three Grade 2 Quick Checks; Grade 2 Exit Ticket | Shared fact truth with worksheet, compact, and cut-apart renderers | Existing family contracts; 6 default packets, no extra mode proof unless format changes | LOW; decide full-sheet vs compact differentiation |
-| 3 - Compare/place-value decisions | `g2_compare_numbers_to_100`; `grade2_place_value_representation_compare_numbers`; `g2_base_ten_blocks_representation`; `grade2_place_value_representation_number_line_identify`; `grade2_place_value_representation_number_word_match` | Shared place-value primitives; preserves meaningful 2-digit/3-digit distinction | Adapter/design preflight for base-ten copy, number line, and number words; 5 defaults after corrections | LOW-MODERATE; duplicate place-value shells already excluded |
+| 2 - Addition/subtraction relationships and formative formats, partially approved | `grade2_addition_subtraction_facts_fact_family`; `grade2_addition_subtraction_facts_missing_addend`; three approved Grade 2 Quick Checks; approved Grade 2 Exit Ticket | Shared fact truth with worksheet, compact, and cut-apart renderers | Compact resources complete; two full worksheets still require founder proof | LOW; only full-sheet differentiation remains open |
+| 3 - Compare/place-value decisions, partially approved | approved `g2_compare_numbers_to_100`; approved `grade2_place_value_representation_compare_numbers`; `g2_base_ten_blocks_representation`; `grade2_place_value_representation_number_line_identify`; `grade2_place_value_representation_number_word_match` | Shared place-value primitives; preserves meaningful 2-digit/3-digit distinction | Comparison pair complete; adapters/design proof remain for the other three resources | LOW-MODERATE; duplicate place-value shells already excluded |
 | 4 - Operation fluency and story problems | five E/C operation worksheets plus the two ready operation-specific story problems and multiplication word-problem decision | Resolve title/range and context ownership once at family level | Focused correction preflight; one default per retained resource, completed example only where layout changes | MODERATE; settle within-20 vs within-100 and context registry |
 | 5 - Structured Grade 2 data extension | six data IDs | Reuse the approved data truth/context/renderer family; do not review prose fallbacks | Founder design preflight required; one default per retained distinct task after adapter | MODERATE; deterministic context and structured-model validators first |
 | 6 - Multiplication/fraction close-or-defer decisions | Arrays, Equal Groups, safe fraction-strip/fair-sharing candidates; all G multiplication/fraction records as decision-only rows | Shared model reuse plus explicit deferral of symbolic/later-grade shells | Arrays reduced recheck, Equal Groups default, and one default per retained concrete fraction task; no proof for G rows | MODERATE; Grade 2 default caps and task selection before code |
 
-Batch 1 is complete. The eight Category A resources can be marked reviewed with their shared-family evidence and do not need another broad proof packet.
+Numeric Patterning and the six-resource Comparison and Assessment batch are complete. All 14 Category A resources have founder evidence and do not need another broad proof packet.
 
 ## Founder CSV plan
 
@@ -297,7 +297,7 @@ Use exactly these columns:
 Plan:
 
 - Order rows by the six family batches, not alphabetically and not by catalog status.
-- Put the eight Category A resources first as reviewed, with shared-family or Numeric Patterning founder evidence noted; do not ask the founder to re-review identical defaults without a reason.
+- Put the 14 Category A resources first as reviewed, with their shared-family or focused founder evidence noted; do not ask the founder to re-review identical defaults without a reason.
 - Begin the remaining active-review sequence with Batch 2 and keep each family contiguous.
 - Separate active review rows from a final decision-only G section. Do not generate proofs for G rows.
 - Do not interleave generated/ready merely to balance statuses; status is secondary to family coherence.
