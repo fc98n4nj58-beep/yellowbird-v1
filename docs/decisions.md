@@ -397,3 +397,15 @@ Rules:
 - Context must not reveal an answer, repeat the title as filler, rely on sensitive or inaccessible assumptions, or introduce information the task does not use.
 - Curated generators carry structured scenario metadata; renderers remain topic-agnostic.
 - The higher-grade guidance is a documentation standard only. This Grade 1 follow-up does not implement or change Grade 2-6 worksheets.
+
+## July 14, 2026 — AI-Ready, Launch-First Strategy
+
+Decision:
+Adopt an AI-ready, launch-first product strategy. Finish the launch product and stabilize it before implementing public AI features. Deterministic Yellow Bird generation, curriculum constraints, validation, layout, and QA remain authoritative; future AI may make proposals only through structured Yellow Bird rules. AI may propose. Yellow Bird rules decide.
+
+Rules:
+- AI-ready, not AI-dependent.
+- Remain independent of any one model provider.
+- Treat worksheet-family specifications, validated options, and founder, teacher, curriculum, and design QA decisions as a strategic Yellow Bird Knowledge Layer.
+- Preserve teacher control, curriculum honesty, print reliability, and human approval for educational judgment and public claims.
+- Detailed direction: `docs/ai-readiness-strategy.md`.

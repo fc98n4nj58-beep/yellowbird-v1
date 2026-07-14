@@ -41,6 +41,13 @@ Backlog / Deferred:
 
 [ ] Future phase: Content Excellence / Product Differentiation Pass after core launch readiness reaches 100%
 
+Long-term AI readiness:
+
+- Current launch, library, founder-review, and stabilization work is unchanged.
+- Public AI implementation remains post-launch and requires a separate explicit decision.
+- Current worksheet-family standardization is creating the structured knowledge layer that may support future constrained intelligence.
+- Detailed strategy: `docs/ai-readiness-strategy.md`.
+
 Rules:
 
 Maximum 5 active tasks.
