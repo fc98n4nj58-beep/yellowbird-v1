@@ -1697,6 +1697,22 @@ function drawPatternSequenceParts(doc, parts, x, y, width, fonts = {}, options =
   return baselineY - y + 4;
 }
 
+function patterningRuleResponseParts(question, display = {}) {
+  if (display.patterningRuleResponseMode === "add_step") {
+    return {
+      prefix: "Add",
+      answer: question.step,
+      suffix: "each time."
+    };
+  }
+
+  return {
+    prefix: "Rule:",
+    answer: question.patternRule || question.answer,
+    suffix: ""
+  };
+}
+
 function renderPatterningRow(doc, question, layoutBox, fonts = {}, display = {}) {
   const { x, y, width, height } = layoutBox;
   const mode = display.patterningLayout || question.patternKind || "";
@@ -1751,8 +1767,9 @@ function renderPatterningRow(doc, question, layoutBox, fonts = {}, display = {})
 
     drawPatternSequenceParts(doc, parts, sequenceX, cursorY, sequenceWidth, fonts, {
       showAnswers,
-      targetWidth: continuationCount > 1 ? 46 : 56,
+      targetWidth: Number(display.patterningExtendTargetWidth || (continuationCount > 1 ? 46 : 56)),
       fontSize,
+      commaGap: display.patterningCommaGap,
       targetStrokeColor: display.patterningTargetStrokeColor,
       targetStrokeWidth: display.patterningTargetStrokeWidth
     });
@@ -1776,8 +1793,9 @@ function renderPatterningRow(doc, question, layoutBox, fonts = {}, display = {})
     const missingCount = Math.max(1, missingIndexes.length || answers.length || display.patterningMissingCount || 1);
     drawPatternSequenceParts(doc, parts, sequenceX, cursorY, sequenceWidth, fonts, {
       showAnswers: showAnswers && !isExample,
-      targetWidth: missingCount > 1 ? 48 : 58,
+      targetWidth: Number(display.patterningMissingTargetWidth || (missingCount > 1 ? 48 : 58)),
       fontSize,
+      commaGap: display.patterningCommaGap,
       targetStrokeColor: display.patterningTargetStrokeColor,
       targetStrokeWidth: display.patterningTargetStrokeWidth
     });
@@ -1792,9 +1810,36 @@ function renderPatterningRow(doc, question, layoutBox, fonts = {}, display = {})
       lineBreak: false
     });
 
-    const ruleY = cursorY + 26;
-    setFont(doc, fonts.regular || "Helvetica", fontSize);
+    const ruleY = cursorY + fontSize + 12;
+    const responseFontSize = Number(display.patterningResponseFontSize || fontSize);
+    setFont(doc, fonts.regular || "Helvetica", responseFontSize);
     doc.fillColor(pdfDesignTokens.colors.text);
+
+    if (display.patterningRuleResponseMode === "add_step") {
+      const response = patterningRuleResponseParts(question, display);
+      doc.text(response.prefix, sequenceX, ruleY, {
+        width: 26,
+        align: "left",
+        lineBreak: false
+      });
+      const lineX = sequenceX + 30;
+      const lineWidth = Number(display.patterningRuleTargetWidth || 64);
+      drawPatternAnswerTarget(doc, response.answer, lineX, ruleY + responseFontSize + 3, lineWidth, fonts, {
+        showAnswer: showAnswers,
+        fontSize: responseFontSize,
+        strokeColor: display.patterningTargetStrokeColor,
+        strokeWidth: display.patterningTargetStrokeWidth
+      });
+      restoreAnswerSurroundingTextStyle(doc, fonts, responseFontSize);
+      doc.text(response.suffix, lineX + lineWidth + 8, ruleY, {
+        width: Math.max(54, sequenceWidth - lineWidth - 46),
+        align: "left",
+        lineBreak: false
+      });
+      doc.restore();
+      return Math.max(height || 0, question.isExample ? 64 : 56);
+    }
+
     doc.text("Rule:", sequenceX, ruleY, {
       width: 34,
       align: "left",
@@ -4039,6 +4084,7 @@ module.exports = {
     GRADE1_DATA_MATCH_SELECTION_TARGET_DIAMETER,
     GRADE1_FRACTION_SELECTION_TARGET_DIAMETER,
     GRADE1_FRACTION_EXAMPLE_LABEL,
-    GRADE1_FRACTION_RENDERER_VARIANTS
+    GRADE1_FRACTION_RENDERER_VARIANTS,
+    patterningRuleResponseParts
   }
 };

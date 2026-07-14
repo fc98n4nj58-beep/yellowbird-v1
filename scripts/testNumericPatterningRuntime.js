@@ -10,12 +10,37 @@ const { createSeededRandom } = require("../utils/seededRandom");
 const {
   buildCatalogWorksheetRuntime
 } = require("../services/catalogWorksheetRuntimeService");
-const { renderWorksheetPDF } = require("../renderers/pdfRenderer");
+const {
+  renderWorksheetPDF,
+  buildAnswerKeyItems,
+  __test: rendererTest
+} = require("../renderers/pdfRenderer");
+
+const GRADE2_NUMERIC_PATTERN_IDS = Object.freeze([
+  "grade2_patterning_and_algebra_extend_pattern",
+  "grade2_patterning_and_algebra_identify_pattern_rule",
+  "grade2_patterning_and_algebra_missing_value_pattern"
+]);
 
 class SinkResponse extends Writable {
   setHeader() {}
   _write(chunk, encoding, callback) {
     callback();
+  }
+}
+
+class BufferResponse extends Writable {
+  constructor() {
+    super();
+    this.chunks = [];
+  }
+  setHeader() {}
+  _write(chunk, encoding, callback) {
+    this.chunks.push(Buffer.from(chunk));
+    callback();
+  }
+  toBuffer() {
+    return Buffer.concat(this.chunks);
   }
 }
 
@@ -31,6 +56,27 @@ function renderRuntimeForPagination(runtime) {
     }
   });
   return runtime.layout.patterningPagination || null;
+}
+
+function renderRuntimePdf(runtime) {
+  return new Promise((resolve, reject) => {
+    const res = new BufferResponse();
+    res.once("finish", () => resolve(res.toBuffer()));
+    res.once("error", reject);
+    renderWorksheetPDF({
+      res,
+      contentObject: runtime.contentObject,
+      layoutObject: runtime.layout,
+      options: {
+        filename: "test.pdf",
+        includeAnswerKey: true
+      }
+    });
+  });
+}
+
+function pdfPageCount(buffer) {
+  return (buffer.toString("latin1").match(/\/Type\s*\/Page\b/g) || []).length;
 }
 
 function problemSignature(item) {
@@ -229,6 +275,112 @@ function testCatalogRuntime() {
   });
 }
 
+async function testGrade2ControlledCorrection() {
+  const expected = Object.freeze({
+    grade2_patterning_and_algebra_extend_pattern: {
+      title: "Extend Pattern",
+      instruction: "Extend each pattern. Write the next number.",
+      mode: "extend_pattern"
+    },
+    grade2_patterning_and_algebra_identify_pattern_rule: {
+      title: "Identify Pattern Rule",
+      instruction: "Write the number that is added each time.",
+      mode: "identify_pattern_rule"
+    },
+    grade2_patterning_and_algebra_missing_value_pattern: {
+      title: "Missing Value Pattern",
+      instruction: "Write the missing number in each pattern.",
+      mode: "missing_value_pattern"
+    }
+  });
+
+  assert.deepStrictEqual(Object.keys(expected), [...GRADE2_NUMERIC_PATTERN_IDS]);
+
+  for (const resourceId of GRADE2_NUMERIC_PATTERN_IDS) {
+    const query = { worksheetSeed: "grade2-controlled-correction", questionCount: 12 };
+    const runtime = buildCatalogWorksheetRuntime(resourceId, query);
+    const repeat = buildCatalogWorksheetRuntime(resourceId, query);
+    const spec = expected[resourceId];
+    const items = runtime.contentObject.content.items;
+    const answerItems = buildAnswerKeyItems(items);
+
+    assert.strictEqual(runtime.item.status, "ready");
+    assert.strictEqual(runtime.layout.header.title, spec.title);
+    assert.strictEqual(runtime.contentObject.meta.title, spec.title);
+    assert(!runtime.layout.header.title.includes("— Grade 2"));
+    assert.strictEqual(runtime.layout.header.subtitle, "");
+    assert.strictEqual(runtime.layout.instruction, spec.instruction);
+    assert.strictEqual(runtime.layout.display.patterningLayout, spec.mode);
+    assert.strictEqual(runtime.layout.template.columns, 2);
+    assert.strictEqual(runtime.layout.template.maxProblemsPerPage, resourceId.includes("extend_pattern") ? 16 : 12);
+    assert.strictEqual(runtime.layout.display.denseGridRows, 6);
+    assert(runtime.layout.display.patterningSequenceFontSize >= 16);
+    assert(runtime.layout.display.patterningTargetStrokeWidth >= 1.1);
+    assert.strictEqual(items.length, 12);
+    assert(items.every((item) => !item.isExample), `${resourceId} default should be fully unanswered`);
+    assert.strictEqual(runtime.layout.display.includeExample, undefined);
+    assert.deepStrictEqual(runtimeSignatures(runtime), runtimeSignatures(repeat));
+    assert.strictEqual(answerItems.length, items.length);
+    answerItems.forEach((answerItem, index) => {
+      assert.strictEqual(answerItem.id, items[index].id);
+      assert.strictEqual(answerItem.answer, items[index].answer);
+    });
+
+    if (spec.mode === "extend_pattern") {
+      items.forEach((item) => {
+        assert.strictEqual(item.continuationCount, 1);
+        assert.strictEqual(item.continuationAnswers.length, 1);
+        assert.strictEqual(item.continuationAnswers[0], item.sequence[item.sequence.length - 1]);
+        assert.strictEqual(String(item.continuationAnswers[0]), String(item.answer));
+      });
+      assert(runtime.layout.display.patterningExtendTargetWidth >= 68);
+    }
+
+    if (spec.mode === "missing_value_pattern") {
+      items.forEach((item) => {
+        assert.strictEqual(item.missingIndexes.length, 1);
+        assert(item.missingIndexes[0] > 0);
+        assert(item.missingIndexes[0] < item.sequence.length - 1);
+        assert.strictEqual(item.sequence[item.missingIndexes[0]], null);
+        assert.strictEqual(String(item.responseValues[0]), String(item.answer));
+      });
+      assert(runtime.layout.display.patterningMissingTargetWidth >= 64);
+    }
+
+    if (spec.mode === "identify_pattern_rule") {
+      assert.strictEqual(runtime.layout.display.patterningRuleResponseMode, "add_step");
+      items.forEach((item) => {
+        assert.strictEqual(item.patternOperation, "add");
+        assert.strictEqual(item.sequence[1] - item.sequence[0], item.step);
+        const response = rendererTest.patterningRuleResponseParts(item, runtime.layout.display);
+        assert.deepStrictEqual(response, { prefix: "Add", answer: item.step, suffix: "each time." });
+        assert(!response.prefix.includes("Rule:"));
+      });
+    }
+
+    const pdf = await renderRuntimePdf(runtime);
+    assert.strictEqual(pdfPageCount(pdf), 2, `${resourceId} should render one student page and one answer-key page`);
+    assert.strictEqual(runtime.layout.patterningPagination.pageCount, 1);
+    assert.deepStrictEqual(runtime.layout.patterningPagination.pageItemCounts, [12]);
+  }
+
+  const grade1 = buildCatalogWorksheetRuntime("grade1_patterning_and_algebra_extend_pattern", {
+    worksheetSeed: "grade1-isolation",
+    questionCount: 12
+  });
+  assert.strictEqual(grade1.layout.header.title, "Extend Pattern — Grade 1");
+  assert.notStrictEqual(grade1.layout.display.patterningSequenceFontSize, 16);
+
+  const grade3 = buildCatalogWorksheetRuntime("grade3_patterning_and_algebra_identify_pattern_rule", {
+    worksheetSeed: "grade3-isolation",
+    questionCount: 12
+  });
+  assert.strictEqual(grade3.layout.instruction, "Write the rule for each pattern.");
+  assert.strictEqual(grade3.layout.template.columns, 1);
+  assert.strictEqual(grade3.layout.template.maxProblemsPerPage, 8);
+  assert.strictEqual(grade3.layout.display.patterningRuleResponseMode, "written_rule");
+}
+
 function testPatterningLayoutContract() {
   const extend = buildCatalogWorksheetRuntime("grade2_patterning_and_algebra_extend_pattern", {
     worksheetSeed: "layout-extend",
@@ -240,7 +392,8 @@ function testPatterningLayoutContract() {
   assert.strictEqual(extend.layout.template.maxProblemsPerPage, 16);
   assert.strictEqual(extend.layout.display.patterningLayout, "extend_pattern");
   assert(extend.layout.display.patterningSequenceFontSize >= 13);
-  assert.strictEqual(extend.layout.display.patterningTargetStrokeColor, "#8f98a8");
+  assert.strictEqual(extend.layout.display.patterningTargetStrokeColor, "#68788f");
+  assert.strictEqual(extend.layout.display.patterningTargetStrokeWidth, 1.15);
   assert.strictEqual(extend.contentObject.meta.curriculum.footerText, "Grade 2 • Math • Patterning & Algebra");
   assert(!extend.contentObject.meta.curriculum.footerText.includes("patterning_and_algebra"));
   assertNoRepeatedPromptText(extend);
@@ -270,7 +423,8 @@ function testPatterningLayoutContract() {
   assert.strictEqual(missingOne.layout.instruction, "Write the missing number in each pattern.");
   assert.strictEqual(missingOne.layout.template.columns, 2);
   assert.strictEqual(missingOne.layout.template.maxProblemsPerPage, 12);
-  assert.strictEqual(missingOne.layout.display.patterningTargetStrokeColor, "#8f98a8");
+  assert.strictEqual(missingOne.layout.display.patterningTargetStrokeColor, "#68788f");
+  assert.strictEqual(missingOne.layout.display.patterningTargetStrokeWidth, 1.15);
   assert.strictEqual(missingOne.contentObject.content.items[0].missingIndexes[0], 0);
 
   const missingTwo = buildCatalogWorksheetRuntime("grade4_patterning_and_algebra_missing_value_pattern", {
@@ -414,12 +568,13 @@ function testFunctionTableDeferred() {
   assert.notStrictEqual(runtime.layout.display.patterningLayout, "function_table");
 }
 
-function run() {
+async function run() {
   testOptionNormalization();
   testBoundedCandidatePool();
   testDuplicateAvoidanceAndControlledRepeat();
   testGenerators();
   testCatalogRuntime();
+  await testGrade2ControlledCorrection();
   testPatterningLayoutContract();
   testPatterningPaginationBalance();
   testSameSeedParityAndQuestionCount();
@@ -429,4 +584,7 @@ function run() {
   console.log("Numeric Patterning runtime tests passed.");
 }
 
-run();
+run().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

@@ -428,3 +428,7 @@ Deferred resources are intentionally outside the current launch scope. They are 
 Student-facing example labels must use grade-appropriate language rather than internal instructional terminology. For Grade 1 fractions, the approved label is `Try this one`.
 
 When exact scaling, transformation, and answer-key parity matter, dynamic mathematical visuals use deterministic code-generated geometry rather than imported decorative assets. Fractional fair-sharing tasks may split only naturally divisible allow-listed objects, and a half object must be drawn as a distinct half shape rather than a whole object with a divider.
+
+## Decision: Grade 2 Numeric Patterning Response and Page Contract
+
+Grade 2 Numeric Patterning keeps its approved deterministic sequence truth while using a shared two-column, six-row presentation contract. Student worksheet titles do not repeat the grade when the footer already carries grade metadata. Identify Pattern Rule uses `Add ______ each time.` because full-sentence writing adds no mathematical value. A readable single-page, two-column layout is preferred over additional pages when it safely supports all 12 tasks. Completed-Question-1 behavior remains deferred.

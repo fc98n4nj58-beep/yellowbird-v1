@@ -176,6 +176,16 @@ const GRADE1_FRACTION_QUESTION_COUNTS = Object.freeze({
   grade1_fraction_equivalence_fraction_word_problems: 3
 });
 
+const GRADE2_NUMERIC_PATTERN_TITLES = Object.freeze({
+  grade2_patterning_and_algebra_extend_pattern: "Extend Pattern",
+  grade2_patterning_and_algebra_identify_pattern_rule: "Identify Pattern Rule",
+  grade2_patterning_and_algebra_missing_value_pattern: "Missing Value Pattern"
+});
+
+const GRADE2_NUMERIC_PATTERN_IDS = new Set(
+  Object.keys(GRADE2_NUMERIC_PATTERN_TITLES)
+);
+
 const DENSE_GRADE1_QUESTION1_EXAMPLE_IDS = new Set([
   "g1_addition_facts_within_20",
   "g1_subtraction_facts_within_20",
@@ -969,7 +979,7 @@ function buildStudentFacingInstruction(item, fallback = "") {
  return fallback;
 }
 
-function patterningInstruction(activityType, normalizedOptions = {}) {
+function patterningInstruction(item, activityType, normalizedOptions = {}) {
   if (activityType === "extend_pattern") {
     const continuationCount = Math.max(
       1,
@@ -991,13 +1001,16 @@ function patterningInstruction(activityType, normalizedOptions = {}) {
   }
 
   if (activityType === "identify_pattern_rule") {
+    if (GRADE2_NUMERIC_PATTERN_IDS.has(item.id)) {
+      return "Write the number that is added each time.";
+    }
     return "Write the rule for each pattern.";
   }
 
   return "";
 }
 
-function resolvePatterningPageCapacity(activityType, normalizedOptions = {}) {
+function resolvePatterningPageCapacity(item, activityType, normalizedOptions = {}) {
   const continuationCount = Math.max(
     1,
     finiteNumber(normalizedOptions.continuationCount ?? normalizedOptions.extensionCount ?? normalizedOptions.answerCount) || 1
@@ -1012,6 +1025,7 @@ function resolvePatterningPageCapacity(activityType, normalizedOptions = {}) {
   if (requestedPerPage) return requestedPerPage;
 
   if (activityType === "identify_pattern_rule") {
+    if (GRADE2_NUMERIC_PATTERN_IDS.has(item.id) && !includeExample) return 12;
     return includeExample ? 9 : 8;
   }
 
@@ -1040,6 +1054,7 @@ function patterningSequenceFontSize(item, activityType, normalizedOptions = {}) 
     finiteNumber(normalizedOptions.missingTermCount ?? normalizedOptions.missingCount) || 1
   );
 
+  if (GRADE2_NUMERIC_PATTERN_IDS.has(item.id)) return 16;
   if (activityType === "extend_pattern" && continuationCount >= 3) return 12;
   if (activityType === "missing_value_pattern" && missingCount > 1) return grade === "grade2" ? 13 : 12.5;
   if (activityType === "identify_pattern_rule") return 13;
@@ -1080,7 +1095,7 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
   instructionText = "Write the numeral for each number word.";
  }
 
-  const title = isReverseNumberWordMode
+  const title = GRADE2_NUMERIC_PATTERN_TITLES[item.id] || (isReverseNumberWordMode
   ? "Write the Numeral to 50"
   : item.id === "grade1_multiplication_facts_arrays"
     ? "Arrays"
@@ -1100,7 +1115,7 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
                   ? "Compare the Data"
                   : item.id === "grade1_data_display_graphing_graph_questions"
                     ? "Graph Questions"
-      : item.title;
+      : item.title);
 
  const layout = normalizeWorksheetLayout({
   title,
@@ -1217,10 +1232,13 @@ if (
     1,
     finiteNumber(normalizedOptions.missingTermCount ?? normalizedOptions.missingCount) || 1
   );
-  const maxProblemsPerPage = resolvePatterningPageCapacity(activityType, normalizedOptions);
-  const columns = activityType === "identify_pattern_rule" ? 1 : 2;
+  const isGrade2NumericPattern = GRADE2_NUMERIC_PATTERN_IDS.has(item.id);
+  const maxProblemsPerPage = resolvePatterningPageCapacity(item, activityType, normalizedOptions);
+  const columns = isGrade2NumericPattern
+    ? 2
+    : activityType === "identify_pattern_rule" ? 1 : 2;
 
-  layout.instruction = patterningInstruction(activityType, normalizedOptions);
+  layout.instruction = patterningInstruction(item, activityType, normalizedOptions);
   layout.template = {
     ...(layout.template || {}),
     columns,
@@ -1233,9 +1251,17 @@ if (
     patterningMissingCount: missingCount,
     patterningPageCapacity: maxProblemsPerPage,
     patterningSequenceFontSize: patterningSequenceFontSize(item, activityType, normalizedOptions),
-    patterningTargetStrokeColor: "#8f98a8",
-    patterningTargetStrokeWidth: 0.95,
-    denseGridRows: Math.ceil(maxProblemsPerPage / columns),
+    patterningTargetStrokeColor: isGrade2NumericPattern ? "#68788f" : "#8f98a8",
+    patterningTargetStrokeWidth: isGrade2NumericPattern ? 1.15 : 0.95,
+    patterningCommaGap: isGrade2NumericPattern ? 8 : 5,
+    patterningExtendTargetWidth: isGrade2NumericPattern ? 68 : 56,
+    patterningMissingTargetWidth: isGrade2NumericPattern ? 64 : 58,
+    patterningRuleTargetWidth: isGrade2NumericPattern ? 64 : 120,
+    patterningResponseFontSize: isGrade2NumericPattern ? 15 : patterningSequenceFontSize(item, activityType, normalizedOptions),
+    patterningRuleResponseMode: isGrade2NumericPattern && activityType === "identify_pattern_rule"
+      ? "add_step"
+      : "written_rule",
+    denseGridRows: isGrade2NumericPattern ? 6 : Math.ceil(maxProblemsPerPage / columns),
     sequentialColumnFill: true,
     equalHeightItems: true,
     hideItemSeparators: false,
