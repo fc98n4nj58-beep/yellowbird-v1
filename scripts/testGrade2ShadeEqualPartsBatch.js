@@ -173,18 +173,20 @@ async function run() {
   assert(grade3.contentObject.content.items.every(({ fractionModel }) => !fractionModel));
 
   const shareFairly = getAnyWorksheetCatalogById("grade2_fraction_equivalence_fraction_word_problems");
-  assert.strictEqual(shareFairly.title, "Fraction Word Problems — Grade 2");
+  assert.strictEqual(shareFairly.title, "Share Fairly to 10");
   assert.strictEqual(shareFairly.status, "generated");
-  const shareRuntime = buildCatalogWorksheetRuntime(shareFairly.id, { worksheetSeed: "share-remains-untouched" });
-  assert.strictEqual(shareRuntime.contentObject.content.items.length, 0);
+  const shareRuntime = buildCatalogWorksheetRuntime(shareFairly.id, { worksheetSeed: "share-grade2-isolation" });
+  assert.strictEqual(shareRuntime.contentObject.content.items.length, 4);
+  assert.strictEqual(shareRuntime.layout.display.sharedFractionRenderer, true);
+  assert(shareRuntime.contentObject.content.items.every(({ fractionModel }) => fractionModel?.modelType === "fair_share_set"));
 
   const reconciliation = fs.readFileSync(
     path.join(__dirname, "..", "docs", "grade-2-architecture-reconciliation-preflight.md"),
     "utf8"
   );
   assert(reconciliation.includes(`\`${RESOURCE_ID}\``));
-  assert(reconciliation.includes("**A (23):**"));
-  assert(reconciliation.includes("**D (6):**"));
+  assert(reconciliation.includes("**A (24):**"));
+  assert(reconciliation.includes("**D (5):**"));
 
   const generatorSource = fs.readFileSync(
     path.join(__dirname, "..", "engine", "problemGenerators", "grade2ShadeEqualParts.js"),
@@ -203,7 +205,7 @@ async function run() {
     answerKeyParity: true,
     grade1Isolation: true,
     grade3Isolation: true,
-    shareFairlyUntouched: true
+    shareFairlyIsolation: true
   }, null, 2));
 }
 

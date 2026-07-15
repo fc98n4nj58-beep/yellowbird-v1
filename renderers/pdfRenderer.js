@@ -3499,16 +3499,117 @@ function drawDivisibleObjectSet(doc, model, { x, y, width, count, compact = fals
   }
 }
 
-function drawFairShareModel(doc, fonts, model, answerState, box, { showAnswer = false, compact = false } = {}) {
+function buildFairShareModelGeometry(model, box, { compact = false } = {}) {
   const sourceWidth = compact ? 92 : 132;
   const gap = compact ? 12 : 18;
   const trayAreaX = box.x + sourceWidth + gap;
   const trayAreaWidth = box.width - sourceWidth - gap;
-  const trayColumns = model.sharerCount === 4 ? 2 : model.sharerCount;
+  const trayColumns = model.sharerCount === 4
+    ? 2
+    : model.sharerCount === 6
+      ? 3
+      : model.sharerCount;
   const trayRows = Math.ceil(model.sharerCount / trayColumns);
   const trayGap = compact ? 7 : 10;
   const trayWidth = (trayAreaWidth - (trayColumns - 1) * trayGap) / trayColumns;
   const trayHeight = (box.height - (trayRows - 1) * trayGap) / trayRows;
+  const trays = Array.from({ length: model.sharerCount }, (_, index) => {
+    const row = Math.floor(index / trayColumns);
+    const column = index % trayColumns;
+    return {
+      x: trayAreaX + column * (trayWidth + trayGap),
+      y: box.y + row * (trayHeight + trayGap),
+      width: trayWidth,
+      height: trayHeight
+    };
+  });
+
+  return {
+    sourceWidth,
+    trayAreaX,
+    trayAreaWidth,
+    trayColumns,
+    trayRows,
+    trayGap,
+    trayWidth,
+    trayHeight,
+    trays
+  };
+}
+
+function buildFairSharePageSlots(startY, bottomContentY, itemCount, { slotGap = 0, responseTarget = false } = {}) {
+  const safeCount = Math.max(1, Number(itemCount) || 1);
+  const safeGap = Math.max(0, Number(slotGap) || 0);
+  const responseTargetHeight = responseTarget ? 38 : 0;
+  const slotHeight = (bottomContentY - startY - safeGap * (safeCount - 1)) / safeCount;
+  return Array.from({ length: safeCount }, (_, index) => {
+    const y = startY + index * (slotHeight + safeGap);
+    return {
+      y,
+      height: slotHeight,
+      bottom: y + slotHeight,
+      promptY: y + 1,
+      modelBox: {
+        y: y + 35,
+        height: slotHeight - 45 - responseTargetHeight
+      },
+      responseY: y + slotHeight - 27
+    };
+  });
+}
+
+function buildFairShareObjectRowsGeometry(model, tray, objectCount, { compact = false } = {}) {
+  const count = Math.max(0, Number(objectCount) || 0);
+  const maxObjectsPerRow = 4;
+  const innerPadding = compact ? 6 : 8;
+  const innerX = tray.x + innerPadding;
+  const innerWidth = tray.width - innerPadding * 2;
+  const objectGeometry = buildDivisibleObjectGeometry(model, 0, 0, { compact });
+  const preferredGap = compact ? 4 : 6;
+  const rows = [];
+
+  for (let offset = 0; offset < count; offset += maxObjectsPerRow) {
+    const rowObjectCount = Math.min(maxObjectsPerRow, count - offset);
+    const maxFittingGap = rowObjectCount > 1
+      ? (innerWidth - rowObjectCount * objectGeometry.width) / (rowObjectCount - 1)
+      : 0;
+    const objectGap = rowObjectCount > 1
+      ? Math.max(0, Math.min(preferredGap, maxFittingGap))
+      : 0;
+    const rowWidth = rowObjectCount * objectGeometry.width + (rowObjectCount - 1) * objectGap;
+    if (rowWidth > innerWidth + 0.001) {
+      throw new Error(`Fair-share object row cannot preserve ${innerPadding}pt tray padding.`);
+    }
+    const startX = innerX + (innerWidth - rowWidth) / 2;
+    const objects = Array.from({ length: rowObjectCount }, (_, index) => {
+      const left = startX + index * (objectGeometry.width + objectGap);
+      return {
+        left,
+        right: left + objectGeometry.width,
+        centerX: left + objectGeometry.width / 2,
+        width: objectGeometry.width
+      };
+    });
+    rows.push({
+      objectCount: rowObjectCount,
+      objectGap,
+      objectWidth: objectGeometry.width,
+      rowWidth,
+      startX,
+      objects
+    });
+  }
+
+  return { innerPadding, innerX, innerWidth, rows };
+}
+
+function formatFairShareAnswerResponse(answer) {
+  return `Each person gets ${answer}.`;
+}
+
+function drawFairShareModel(doc, fonts, model, answerState, box, { showAnswer = false, compact = false } = {}) {
+  const geometry = buildFairShareModelGeometry(model, box, { compact });
+  const { sourceWidth, trayAreaX, trayAreaWidth, trays } = geometry;
 
   setFont(doc, fonts.regular, compact ? 8 : 9.5);
   doc.fillColor(pdfDesignTokens.colors.muted);
@@ -3522,12 +3623,12 @@ function drawFairShareModel(doc, fonts, model, answerState, box, { showAnswer = 
     muted: showAnswer
   });
 
-  const trays = [];
   for (let index = 0; index < model.sharerCount; index += 1) {
-    const row = Math.floor(index / trayColumns);
-    const column = index % trayColumns;
-    const trayX = trayAreaX + column * (trayWidth + trayGap);
-    const trayY = box.y + row * (trayHeight + trayGap);
+    const tray = trays[index];
+    const trayX = tray.x;
+    const trayY = tray.y;
+    const trayWidth = tray.width;
+    const trayHeight = tray.height;
     doc.save();
     doc.strokeColor(pdfDesignTokens.colors.lightRule).lineWidth(0.85);
     doc.roundedRect(trayX, trayY, trayWidth, trayHeight, 4).stroke();
@@ -3537,17 +3638,15 @@ function drawFairShareModel(doc, fonts, model, answerState, box, { showAnswer = 
     doc.restore();
     if (showAnswer) {
       const wholeCount = answerState.trayWholeObjects[index];
-      const tokensPerRow = Math.min(4, Math.max(1, wholeCount));
-      const wholeGeometry = buildDivisibleObjectGeometry(model, 0, 0, { compact });
-      const tokenGap = wholeGeometry.width + (compact ? 4 : 6);
-      const wholeAreaWidth = trayWidth - (compact ? 30 : 42);
-      const tokenStartX = trayX + 8 + wholeAreaWidth / 2 - ((tokensPerRow - 1) * tokenGap) / 2;
+      const objectRows = buildFairShareObjectRowsGeometry(model, tray, wholeCount, { compact });
       for (let tokenIndex = 0; tokenIndex < wholeCount; tokenIndex += 1) {
+        const rowIndex = Math.floor(tokenIndex / 4);
+        const columnIndex = tokenIndex % 4;
         drawDivisibleObjectShape(
           doc,
           model,
-          tokenStartX + (tokenIndex % tokensPerRow) * tokenGap,
-          trayY + (compact ? 28 : 31) + Math.floor(tokenIndex / tokensPerRow) * 17,
+          objectRows.rows[rowIndex].objects[columnIndex].centerX,
+          trayY + (compact ? 28 : 31) + rowIndex * 17,
           { compact }
         );
       }
@@ -3559,9 +3658,8 @@ function drawFairShareModel(doc, fonts, model, answerState, box, { showAnswer = 
         });
       }
     }
-    trays.push({ x: trayX, y: trayY, width: trayWidth, height: trayHeight });
   }
-  return { sourceWidth, trayAreaX, trayAreaWidth, trays };
+  return geometry;
 }
 
 function renderSharedFractionPages(doc, fonts, contentObject, pageState, layoutObject) {
@@ -3702,22 +3800,48 @@ function renderSharedFractionPages(doc, fonts, contentObject, pageState, layoutO
       drawChoiceTarget(doc, fonts, { x: x + cellWidth - 47, y: choiceY, label: "Right", selected: selected === "right" });
     });
   } else if (taskMode === "share_fairly") {
-    const rowHeight = (bottomContentY - startY) / 3;
+    const slotGap = answerKey ? Number(display.fairShareAnswerKeySlotGap || 0) : 0;
+    const slots = buildFairSharePageSlots(startY, bottomContentY, items.length, {
+      slotGap,
+      responseTarget: display.fairShareResponseTarget
+    });
     items.forEach((item, index) => {
-      const y = startY + index * rowHeight;
+      const slot = slots[index];
+      const y = slot.y;
       setFont(doc, fonts.bold, 11);
       doc.fillColor(pdfDesignTokens.colors.text);
-      doc.text(`${index + 1}.`, cb.x, y + 3, { width: 22, lineBreak: false });
+      doc.text(`${item.id || index + 1}.`, cb.x, y + 3, { width: 22, lineBreak: false });
       setFont(doc, fonts.regular, 11.5);
-      doc.text(item.prompt, cb.x + 24, y + 1, { width: cb.width - 24, lineBreak: false });
+      doc.text(item.prompt, cb.x + 24, slot.promptY, { width: cb.width - 24, lineBreak: false });
       drawFairShareModel(
         doc,
         fonts,
         item.fractionModel,
         item.answerState,
-        { x: cb.x + 4, y: y + 35, width: cb.width - 8, height: rowHeight - 45 },
+        { x: cb.x + 4, y: slot.modelBox.y, width: cb.width - 8, height: slot.modelBox.height },
         { showAnswer: answerKey }
       );
+      if (display.fairShareResponseTarget) {
+        const targetY = slot.responseY;
+        const labelX = cb.x + 24;
+        const lineX = labelX + 112;
+        const lineWidth = 42;
+        setFont(doc, fonts.regular, 10.5);
+        doc.fillColor(pdfDesignTokens.colors.text);
+        if (answerKey) {
+          const label = "Each person gets ";
+          const answerResponse = formatFairShareAnswerResponse(item.answerState.objectsPerPerson);
+          doc.text(label, labelX, targetY - 7, { width: 112, lineBreak: false });
+          const answerX = labelX + doc.widthOfString(label);
+          setFont(doc, fonts.bold, 11);
+          doc.text(answerResponse.slice(label.length), answerX, targetY - 8, { lineBreak: false });
+        } else {
+          doc.text("Each person gets", labelX, targetY - 7, { width: 110, lineBreak: false });
+          doc.save().strokeColor(pdfDesignTokens.colors.answerRule).lineWidth(0.8)
+            .moveTo(lineX, targetY + 4).lineTo(lineX + lineWidth, targetY + 4).stroke().restore();
+          doc.text(".", lineX + lineWidth + 2, targetY - 7, { width: 8, lineBreak: false });
+        }
+      }
     });
   } else {
     throw new Error(`Unsupported fraction renderer task '${taskMode || ""}'.`);
@@ -3743,7 +3867,31 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
   const bottomContentY = footerRuleY - footerBufferH;
 
   if (display.grade1FractionRenderer || display.sharedFractionRenderer) {
-    renderSharedFractionPages(doc, fonts, contentObject, pageState, layoutObject);
+    const fractionItemsPerPage = Number(display.fairShareItemsPerPage || 0);
+    if (fractionItemsPerPage > 0 && allItems.length > fractionItemsPerPage) {
+      const pages = [];
+      for (let index = 0; index < allItems.length; index += fractionItemsPerPage) {
+        pages.push(allItems.slice(index, index + fractionItemsPerPage));
+      }
+      pages.forEach((items, pageIndex) => {
+        if (pageIndex > 0) {
+          doc.addPage();
+          pageState.pageNum += 1;
+        }
+        renderSharedFractionPages(
+          doc,
+          fonts,
+          {
+            ...contentObject,
+            content: { ...(contentObject.content || {}), items }
+          },
+          pageState,
+          layoutObject
+        );
+      });
+    } else {
+      renderSharedFractionPages(doc, fonts, contentObject, pageState, layoutObject);
+    }
     return;
   }
 
@@ -4277,6 +4425,10 @@ module.exports = {
     drawFractionStripPrimitive,
     buildCompactWordProblemAnswerKeyGeometry,
     buildDivisibleObjectGeometry,
+    buildFairShareModelGeometry,
+    buildFairShareObjectRowsGeometry,
+    buildFairSharePageSlots,
+    formatFairShareAnswerResponse,
     drawDivisibleObjectShape,
     drawFairShareModel,
     buildGrade1DataResponseGeometry,

@@ -40,6 +40,7 @@ const generateFunctionTable = require("./functionTable");
 const { generateGrade1DataGraphProblem } = require("./grade1DataGraph");
 const { generateGrade1FractionProblem } = require("./grade1Fractions");
 const { generateGrade2ShadeEqualPartsProblem } = require("./grade2ShadeEqualParts");
+const { generateGrade2ShareFairlyTo10Problem } = require("./grade2ShareFairlyTo10");
 
 function getGenerator(activityType) {
   const generators = {
@@ -59,6 +60,7 @@ function getGenerator(activityType) {
     graph_application: generateGrade1DataGraphProblem,
     grade1_fraction: generateGrade1FractionProblem,
     grade2_shade_equal_parts: generateGrade2ShadeEqualPartsProblem,
+    grade2_share_fairly_to_10: generateGrade2ShareFairlyTo10Problem,
     match_data_to_graph: generateMatchDataToGraphProblem,
     graph_questions: generateGraphQuestionsProblem,
     interpret_data: generateInterpretDataProblem,

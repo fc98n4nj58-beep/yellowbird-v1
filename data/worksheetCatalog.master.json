@@ -2630,8 +2630,8 @@
     },
     {
       "id": "grade2_fraction_equivalence_fraction_word_problems",
-      "title": "Fraction Word Problems — Grade 2",
-      "shortTitle": "Fraction Word Problems",
+      "title": "Share Fairly to 10",
+      "shortTitle": "Share Fairly to 10",
       "subject": "Math",
       "grades": [
         "grade2"
@@ -2645,7 +2645,7 @@
       "activityTypes": [
         "fraction_word_problems"
       ],
-      "templateId": "equation_practice",
+      "templateId": "visual_model",
       "status": "generated",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
@@ -2653,11 +2653,12 @@
       "tags": [
         "grade 2",
         "fractions",
-        "fraction equivalence",
-        "fraction word problems"
+        "fair sharing",
+        "equal shares"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for fraction word problems.",
+      "studentInstruction": "Share the objects equally. Write how many each person gets.",
+      "description": "Students share countable object sets equally and state how many each person receives.",
       "sourceType": "generated"
     },
     {

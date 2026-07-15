@@ -18,6 +18,9 @@ const {
 const {
   validateGrade2ShadeEqualPartsWorksheet
 } = require("../engine/problemGenerators/grade2ShadeEqualParts");
+const {
+  validateGrade2ShareFairlyTo10Worksheet
+} = require("../engine/problemGenerators/grade2ShareFairlyTo10");
 
 const MASTER_CATALOG_PATH = path.join(__dirname, "../data/worksheetCatalog.master.json");
 
@@ -148,12 +151,14 @@ const GRADE2_NUMBER_LINE_IDENTIFY_ID = "grade2_place_value_representation_number
 const GRADE2_NUMBER_WORD_WRITE_ID = "grade2_place_value_representation_number_word_match";
 const GRADE2_EQUAL_GROUPS_ID = "grade2_multiplication_facts_equal_groups";
 const GRADE2_SHADE_EQUAL_PARTS_ID = "grade2_fraction_equivalence_shade_fraction_models";
+const GRADE2_SHARE_FAIRLY_TO_10_ID = "grade2_fraction_equivalence_fraction_word_problems";
 const GRADE2_CATEGORY_D_LOW_RISK_IDS = new Set([
   GRADE2_EQUATION_MATCH_ID,
   GRADE2_NUMBER_LINE_IDENTIFY_ID,
   GRADE2_NUMBER_WORD_WRITE_ID,
   GRADE2_EQUAL_GROUPS_ID,
-  GRADE2_SHADE_EQUAL_PARTS_ID
+  GRADE2_SHADE_EQUAL_PARTS_ID,
+  GRADE2_SHARE_FAIRLY_TO_10_ID
 ]);
 const GRADE1_DATA_READING_IDS = new Set([
   "grade1_data_display_graphing_read_graph",
@@ -306,6 +311,11 @@ function normalizeGrade2CategoryDLowRiskOptions(item, options = {}) {
 
   if (item.id === GRADE2_SHADE_EQUAL_PARTS_ID) {
     normalized.questionCount = 8;
+    normalized.includeExample = false;
+  }
+
+  if (item.id === GRADE2_SHARE_FAIRLY_TO_10_ID) {
+    normalized.questionCount = 4;
     normalized.includeExample = false;
   }
 
@@ -883,6 +893,8 @@ function generateWorksheetFromCatalogId(id, options = {}) {
   const generatorOptions = resolveCatalogWorksheetOptions(item, options);
   const activityType = item.id === GRADE2_SHADE_EQUAL_PARTS_ID
     ? "grade2_shade_equal_parts"
+    : item.id === GRADE2_SHARE_FAIRLY_TO_10_ID
+      ? "grade2_share_fairly_to_10"
     : GRADE1_FRACTION_ACTIVITY_MODES[item.id]
       ? "grade1_fraction"
       : GRADE1_DATA_ACTIVITY_MODES[item.id] || item.activityTypes?.[0] || generatorOptions.preferredActivityType || generatorOptions.activityType || null;
@@ -922,6 +934,7 @@ function generateWorksheetFromCatalogId(id, options = {}) {
     );
     validateGrade1FractionWorksheet(item.id, worksheet.problems);
     validateGrade2ShadeEqualPartsWorksheet(item.id, worksheet.problems);
+    validateGrade2ShareFairlyTo10Worksheet(item.id, worksheet.problems);
     return worksheet;
   } catch (err) {
     if (/No addition facts are available/.test(err.message)) {
@@ -1023,6 +1036,10 @@ function buildStudentFacingInstruction(item, fallback = "") {
 
  if (item.id === GRADE2_SHADE_EQUAL_PARTS_ID) {
   return "Shade the fraction shown for each model.";
+ }
+
+ if (item.id === GRADE2_SHARE_FAIRLY_TO_10_ID) {
+  return "Share the objects equally. Write how many each person gets.";
  }
 
  if (item.id === "grade1_fraction_equivalence_match_equivalent_fractions") {
@@ -1242,6 +1259,8 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
                   ? "Write Number Words to 200"
                   : item.id === GRADE2_SHADE_EQUAL_PARTS_ID
                     ? "Shade Equal Parts"
+                    : item.id === GRADE2_SHARE_FAIRLY_TO_10_ID
+                      ? "Share Fairly to 10"
               : item.id === "grade1_data_display_graphing_read_graph"
                 ? "Read the Graph"
                 : item.id === "grade1_data_display_graphing_interpret_data"
@@ -1874,6 +1893,31 @@ if (item.id === GRADE2_SHADE_EQUAL_PARTS_ID) {
     hideItemSeparators: true,
     separateWorkedModel: false,
     completedQuestionOne: false
+  };
+}
+
+if (item.id === GRADE2_SHARE_FAIRLY_TO_10_ID) {
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 1,
+    maxProblemsPerPage: 2
+  };
+  layout.worksheetType = "fraction_visual";
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    suppressExampleLabel: true,
+    fractionTaskMode: "share_fairly",
+    sharedFractionRenderer: true,
+    layoutVariant: "fair_share_rows",
+    visualColumns: 1,
+    equalHeightItems: true,
+    hideItemSeparators: true,
+    separateWorkedModel: false,
+    completedQuestionOne: false,
+    fairShareItemsPerPage: 2,
+    fairShareResponseTarget: true,
+    fairShareAnswerKeySlotGap: 18
   };
 }
 
