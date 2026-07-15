@@ -157,6 +157,12 @@ const GRADE2_BASE_TEN_BLOCKS_ID = "g2_base_ten_blocks_representation";
 const GRADE2_ADDITION_WITHIN_100_ID = "g2_addition_fluency_within_100";
 const GRADE2_MISSING_ADDENDS_WITHIN_100_ID = "g2_missing_addends_within_100";
 const GRADE2_SUBTRACTION_WITHIN_100_ID = "g2_subtraction_fluency_within_100";
+const GRADE2_ADDITION_WORD_PROBLEMS_WITHIN_100_ID = "g2_addition_word_problems_within_100";
+const GRADE2_MULTIPLICATION_WORD_PROBLEMS_ID = "grade2_multiplication_facts_word_problems";
+const GRADE2_CATEGORY_E_BATCH3_IMPLEMENTED_IDS = new Set([
+  GRADE2_ADDITION_WORD_PROBLEMS_WITHIN_100_ID,
+  GRADE2_MULTIPLICATION_WORD_PROBLEMS_ID
+]);
 const GRADE2_CATEGORY_E_BATCH2_IDS = new Set([
   GRADE2_ADDITION_WITHIN_100_ID,
   GRADE2_MISSING_ADDENDS_WITHIN_100_ID,
@@ -393,6 +399,37 @@ function normalizeGrade2CategoryEBatch2Options(item, options = {}) {
   }
   if (item.id === GRADE2_MISSING_ADDENDS_WITHIN_100_ID) {
     normalized.missingPosition = options.missingPosition || "mixed";
+  }
+
+  return normalized;
+}
+
+function normalizeGrade2CategoryEBatch3Options(item, options = {}) {
+  if (!GRADE2_CATEGORY_E_BATCH3_IMPLEMENTED_IDS.has(item.id)) return options;
+
+  const normalized = {
+    ...options,
+    questionCount: finiteNumber(options.questionCount, 12)
+  };
+
+  if (item.id === GRADE2_ADDITION_WORD_PROBLEMS_WITHIN_100_ID) {
+    normalized.minA = finiteNumber(options.minA, 1);
+    normalized.maxA = finiteNumber(options.maxA, 50);
+    normalized.minB = finiteNumber(options.minB, 1);
+    normalized.maxB = finiteNumber(options.maxB, 100);
+    normalized.maxTotal = finiteNumber(
+      options.maxTotal,
+      finiteNumber(options.maxA, 100)
+    );
+  }
+
+  if (item.id === GRADE2_MULTIPLICATION_WORD_PROBLEMS_ID) {
+    normalized.minFactorA = finiteNumber(options.minFactorA ?? options.minA, 2);
+    normalized.maxFactorA = finiteNumber(options.maxFactorA ?? options.maxA, 6);
+    normalized.minFactorB = finiteNumber(options.minFactorB ?? options.minB, 2);
+    normalized.maxFactorB = finiteNumber(options.maxFactorB ?? options.maxB, 6);
+    normalized.maxProduct = finiteNumber(options.maxProduct ?? options.maxTotal, 36);
+    normalized.balanceFactorValues = true;
   }
 
   return normalized;
@@ -771,7 +808,9 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalizeGrade2CategoryEBatch2Options(
+  return normalizeGrade2CategoryEBatch3Options(
+    item,
+  normalizeGrade2CategoryEBatch2Options(
     item,
   normalizeGrade2CategoryEBatch1Options(
     item,
@@ -801,7 +840,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
       )
     )
     )
-  ))));
+  )))));
 }
 
 const NON_CUSTOMIZATION_QUERY_KEYS = new Set([
@@ -1055,6 +1094,14 @@ function buildRangeNotice(item, options = {}) {
 
 function buildStudentFacingInstruction(item, fallback = "") {
  const activityType = item.activityTypes?.[0] || "";
+
+ if (item.id === GRADE2_ADDITION_WORD_PROBLEMS_WITHIN_100_ID) {
+  return "Solve each addition word problem. Show your thinking in the box.";
+ }
+
+ if (item.id === GRADE2_MULTIPLICATION_WORD_PROBLEMS_ID) {
+  return "Solve each equal-groups word problem. Show your thinking in the box.";
+ }
 
  if (item.id === "grade1_multiplication_facts_arrays") {
   return "Count the rows and columns. Complete the number sentence for each array.";
@@ -1365,6 +1412,10 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
                     ? "Missing Addends Within 100"
                   : item.id === GRADE2_SUBTRACTION_WITHIN_100_ID
                     ? "Subtraction Facts Within 100"
+                  : item.id === GRADE2_ADDITION_WORD_PROBLEMS_WITHIN_100_ID
+                    ? "Addition Word Problems Within 100"
+                  : item.id === GRADE2_MULTIPLICATION_WORD_PROBLEMS_ID
+                    ? "Equal Groups Word Problems"
                   : item.id === GRADE2_SHADE_EQUAL_PARTS_ID
                     ? "Shade Equal Parts"
                     : item.id === GRADE2_SHARE_FAIRLY_TO_10_ID
@@ -1472,6 +1523,22 @@ if (Number.isFinite(normalizedOptions.questionsPerPage) && normalizedOptions.que
   layout.template = {
     ...(layout.template || {}),
     maxProblemsPerPage: normalizedOptions.questionsPerPage
+  };
+}
+
+if (GRADE2_CATEGORY_E_BATCH3_IMPLEMENTED_IDS.has(item.id)) {
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 1,
+    maxProblemsPerPage: finiteNumber(normalizedOptions.questionsPerPage) || 3
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    compactWordProblemAnswerKey: true,
+    workSpaceBox: true,
+    equalHeightItems: true,
+    hideItemSeparators: true
   };
 }
 

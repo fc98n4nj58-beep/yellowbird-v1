@@ -86,9 +86,9 @@ function assertCatalogAndReconciliation() {
     path.join(ROOT, "docs/grade-2-architecture-reconciliation-preflight.md"),
     "utf8"
   );
-  const categoryALine = reconciliation.split("\n").find((line) => line.startsWith("- **A (30):**"));
+  const categoryALine = reconciliation.split("\n").find((line) => line.startsWith("- **A (35):**"));
   const categoryDLine = reconciliation.split("\n").find((line) => line.startsWith("- **D (0):**"));
-  const categoryGLine = reconciliation.split("\n").find((line) => line.startsWith("- **G (15):**"));
+  const categoryGLine = reconciliation.split("\n").find((line) => line.startsWith("- **G (17):**"));
   assert(categoryALine && categoryDLine && categoryGLine);
   assert(categoryALine.includes(ID));
   assert(!categoryDLine.includes(ID));

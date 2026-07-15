@@ -31,6 +31,8 @@ const PUBLIC_SKILL_LABEL_HIDDEN_IDS = new Set([
   "g2_addition_fluency_within_100",
   "g2_missing_addends_within_100",
   "g2_subtraction_fluency_within_100",
+  "g2_addition_word_problems_within_100",
+  "grade2_multiplication_facts_word_problems",
   "grade2_fraction_equivalence_shade_fraction_models",
   "grade2_fraction_equivalence_fraction_word_problems",
   "grade2_data_display_graphing_read_graph",
@@ -49,7 +51,9 @@ const GRADE2_CATEGORY_D_FOOTER_LABELS = Object.freeze({
   grade2_data_display_graphing_read_graph: "Data & Graphing",
   grade2_data_display_graphing_interpret_data: "Data & Graphing",
   grade2_data_display_graphing_complete_graph: "Data & Graphing",
-  grade2_data_display_graphing_match_data_to_graph: "Data & Graphing"
+  grade2_data_display_graphing_match_data_to_graph: "Data & Graphing",
+  g2_addition_word_problems_within_100: "Addition and Subtraction",
+  grade2_multiplication_facts_word_problems: "Multiplication"
 });
 
 const EARLY_MULTIPLICATION_FOOTER_IDS = new Set([
