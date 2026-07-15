@@ -39,6 +39,7 @@ const generateCompareFractions = require("./compareFractions");
 const generateFunctionTable = require("./functionTable");
 const { generateGrade1DataGraphProblem } = require("./grade1DataGraph");
 const { generateGrade1FractionProblem } = require("./grade1Fractions");
+const { generateGrade2ShadeEqualPartsProblem } = require("./grade2ShadeEqualParts");
 
 function getGenerator(activityType) {
   const generators = {
@@ -57,6 +58,7 @@ function getGenerator(activityType) {
     match_graph: generateGrade1DataGraphProblem,
     graph_application: generateGrade1DataGraphProblem,
     grade1_fraction: generateGrade1FractionProblem,
+    grade2_shade_equal_parts: generateGrade2ShadeEqualPartsProblem,
     match_data_to_graph: generateMatchDataToGraphProblem,
     graph_questions: generateGraphQuestionsProblem,
     interpret_data: generateInterpretDataProblem,

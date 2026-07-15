@@ -3349,10 +3349,17 @@ function matchChoiceStrokeWidth(choice, answerKey = false) {
   return answerKey && choice?.isCorrect ? 2 : 0.8;
 }
 
-function buildFractionStripGeometry({ x, y, width, height, partitionCount }) {
+function buildFractionStripGeometry({
+  x,
+  y,
+  width,
+  height,
+  partitionCount,
+  allowedPartitionCounts = GRADE1_FRACTION_ALLOWED_DENOMINATORS
+}) {
   const parts = Math.max(1, Number(partitionCount) || 1);
-  if (!GRADE1_FRACTION_ALLOWED_DENOMINATORS.includes(parts)) {
-    throw new Error(`Unsupported Grade 1 fraction partition count '${parts}'.`);
+  if (!allowedPartitionCounts.includes(parts)) {
+    throw new Error(`Unsupported fraction partition count '${parts}'.`);
   }
   const partWidth = width / parts;
   return Object.freeze({
@@ -3371,13 +3378,14 @@ function buildFractionStripGeometry({ x, y, width, height, partitionCount }) {
   });
 }
 
-function drawFractionStripPrimitive(doc, model, box, shadedParts = model?.shadedParts || 0) {
+function drawFractionStripPrimitive(doc, model, box, shadedParts = model?.shadedParts || 0, options = {}) {
   const geometry = buildFractionStripGeometry({
     x: box.x,
     y: box.y,
     width: box.width,
     height: box.height,
-    partitionCount: model.partitionCount
+    partitionCount: model.partitionCount,
+    allowedPartitionCounts: options.allowedPartitionCounts
   });
   const shadeCount = Math.max(0, Math.min(geometry.partitionCount, Number(shadedParts) || 0));
   doc.save();
@@ -3556,18 +3564,18 @@ function drawFairShareModel(doc, fonts, model, answerState, box, { showAnswer = 
   return { sourceWidth, trayAreaX, trayAreaWidth, trays };
 }
 
-function renderGrade1FractionPages(doc, fonts, contentObject, pageState, layoutObject) {
+function renderSharedFractionPages(doc, fonts, contentObject, pageState, layoutObject) {
   const meta = contentObject.meta || {};
   const items = contentObject.content?.items || [];
   const display = layoutObject.display || {};
-  const taskMode = display.grade1FractionTaskMode;
+  const taskMode = display.fractionTaskMode || display.grade1FractionTaskMode;
   const answerKey = Boolean(display.answerKey);
   const instruction = layoutObject.instruction || "";
   const expectedModelKind = taskMode === "share_fairly"
     ? GRADE1_FRACTION_RENDERER_VARIANTS.fair_share_set
     : GRADE1_FRACTION_RENDERER_VARIANTS.fraction_strip;
   if (!items.length || items.some((item) => item.fractionModel?.kind !== expectedModelKind)) {
-    throw new Error(`Grade 1 fraction task '${taskMode || ""}' is missing its '${expectedModelKind}' visual model.`);
+    throw new Error(`Fraction task '${taskMode || ""}' is missing its '${expectedModelKind}' visual model.`);
   }
   const cb = layout.page.contentBox;
   const footerRuleY = doc.page.height - layout.page.margins.bottom;
@@ -3616,7 +3624,8 @@ function renderGrade1FractionPages(doc, fonts, contentObject, pageState, layoutO
   if (taskMode === "shade_equal_parts") {
     const gap = 18;
     const cellWidth = (cb.width - gap) / 2;
-    const rowHeight = (bottomContentY - startY) / 3;
+    const rowCount = Math.ceil(items.length / 2);
+    const rowHeight = (bottomContentY - startY) / rowCount;
     items.forEach((item, index) => {
       const row = Math.floor(index / 2);
       const column = index % 2;
@@ -3632,7 +3641,8 @@ function renderGrade1FractionPages(doc, fonts, contentObject, pageState, layoutO
         doc,
         model,
         { x: x + (cellWidth - 176) / 2, y: y + 40, width: 176, height: 62 },
-        answerKey ? item.answerState.shadedParts : 0
+        answerKey ? item.answerState.shadedParts : 0,
+        { allowedPartitionCounts: display.fractionAllowedDenominators }
       );
     });
   } else if (taskMode === "half_two_fourths") {
@@ -3710,7 +3720,7 @@ function renderGrade1FractionPages(doc, fonts, contentObject, pageState, layoutO
       );
     });
   } else {
-    throw new Error(`Unsupported Grade 1 fraction renderer task '${taskMode || ""}'.`);
+    throw new Error(`Unsupported fraction renderer task '${taskMode || ""}'.`);
   }
 
   drawFooter(doc, fonts, pageState.pageNum, meta);
@@ -3732,8 +3742,8 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
   const footerBufferH = layout.zones?.footerBuffer?.height ?? 24;
   const bottomContentY = footerRuleY - footerBufferH;
 
-  if (display.grade1FractionRenderer) {
-    renderGrade1FractionPages(doc, fonts, contentObject, pageState, layoutObject);
+  if (display.grade1FractionRenderer || display.sharedFractionRenderer) {
+    renderSharedFractionPages(doc, fonts, contentObject, pageState, layoutObject);
     return;
   }
 

@@ -25,14 +25,16 @@ const PUBLIC_SKILL_LABEL_HIDDEN_IDS = new Set([
   "grade2_addition_subtraction_facts_equation_match",
   "grade2_place_value_representation_number_line_identify",
   "grade2_place_value_representation_number_word_match",
-  "grade2_multiplication_facts_equal_groups"
+  "grade2_multiplication_facts_equal_groups",
+  "grade2_fraction_equivalence_shade_fraction_models"
 ]);
 
 const GRADE2_CATEGORY_D_FOOTER_LABELS = Object.freeze({
   grade2_addition_subtraction_facts_equation_match: "Addition and Subtraction",
   grade2_place_value_representation_number_line_identify: "Number Representation",
   grade2_place_value_representation_number_word_match: "Number Representation",
-  grade2_multiplication_facts_equal_groups: "Multiplication"
+  grade2_multiplication_facts_equal_groups: "Multiplication",
+  grade2_fraction_equivalence_shade_fraction_models: "Fractions"
 });
 
 const EARLY_MULTIPLICATION_FOOTER_IDS = new Set([

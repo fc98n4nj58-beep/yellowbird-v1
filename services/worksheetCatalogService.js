@@ -15,6 +15,9 @@ const {
 const {
   validateGrade1FractionWorksheet
 } = require("../engine/problemGenerators/grade1Fractions");
+const {
+  validateGrade2ShadeEqualPartsWorksheet
+} = require("../engine/problemGenerators/grade2ShadeEqualParts");
 
 const MASTER_CATALOG_PATH = path.join(__dirname, "../data/worksheetCatalog.master.json");
 
@@ -144,11 +147,13 @@ const GRADE2_EQUATION_MATCH_ID = "grade2_addition_subtraction_facts_equation_mat
 const GRADE2_NUMBER_LINE_IDENTIFY_ID = "grade2_place_value_representation_number_line_identify";
 const GRADE2_NUMBER_WORD_WRITE_ID = "grade2_place_value_representation_number_word_match";
 const GRADE2_EQUAL_GROUPS_ID = "grade2_multiplication_facts_equal_groups";
+const GRADE2_SHADE_EQUAL_PARTS_ID = "grade2_fraction_equivalence_shade_fraction_models";
 const GRADE2_CATEGORY_D_LOW_RISK_IDS = new Set([
   GRADE2_EQUATION_MATCH_ID,
   GRADE2_NUMBER_LINE_IDENTIFY_ID,
   GRADE2_NUMBER_WORD_WRITE_ID,
-  GRADE2_EQUAL_GROUPS_ID
+  GRADE2_EQUAL_GROUPS_ID,
+  GRADE2_SHADE_EQUAL_PARTS_ID
 ]);
 const GRADE1_DATA_READING_IDS = new Set([
   "grade1_data_display_graphing_read_graph",
@@ -297,6 +302,11 @@ function normalizeGrade2CategoryDLowRiskOptions(item, options = {}) {
     normalized.responseMode = "multiplication_sentence";
     normalized.showQuestionSentence = false;
     normalized.questionCount = 8;
+  }
+
+  if (item.id === GRADE2_SHADE_EQUAL_PARTS_ID) {
+    normalized.questionCount = 8;
+    normalized.includeExample = false;
   }
 
   return normalized;
@@ -871,9 +881,11 @@ function generateWorksheetFromCatalogId(id, options = {}) {
   }
 
   const generatorOptions = resolveCatalogWorksheetOptions(item, options);
-  const activityType = GRADE1_FRACTION_ACTIVITY_MODES[item.id]
-    ? "grade1_fraction"
-    : GRADE1_DATA_ACTIVITY_MODES[item.id] || item.activityTypes?.[0] || generatorOptions.preferredActivityType || generatorOptions.activityType || null;
+  const activityType = item.id === GRADE2_SHADE_EQUAL_PARTS_ID
+    ? "grade2_shade_equal_parts"
+    : GRADE1_FRACTION_ACTIVITY_MODES[item.id]
+      ? "grade1_fraction"
+      : GRADE1_DATA_ACTIVITY_MODES[item.id] || item.activityTypes?.[0] || generatorOptions.preferredActivityType || generatorOptions.activityType || null;
   const defaultQuestionCount =
     activityType === "standard_form" && item.grades?.[0] === "grade2"
       ? 60
@@ -909,6 +921,7 @@ function generateWorksheetFromCatalogId(id, options = {}) {
       }
     );
     validateGrade1FractionWorksheet(item.id, worksheet.problems);
+    validateGrade2ShadeEqualPartsWorksheet(item.id, worksheet.problems);
     return worksheet;
   } catch (err) {
     if (/No addition facts are available/.test(err.message)) {
@@ -1006,6 +1019,10 @@ function buildStudentFacingInstruction(item, fallback = "") {
 
  if (item.id === "grade1_fraction_equivalence_shade_fraction_models") {
   return "Shade the equal parts to show each fraction.";
+ }
+
+ if (item.id === GRADE2_SHADE_EQUAL_PARTS_ID) {
+  return "Shade the fraction shown for each model.";
  }
 
  if (item.id === "grade1_fraction_equivalence_match_equivalent_fractions") {
@@ -1223,6 +1240,8 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
                 ? "Identify Numbers on a Number Line"
                 : item.id === GRADE2_NUMBER_WORD_WRITE_ID
                   ? "Write Number Words to 200"
+                  : item.id === GRADE2_SHADE_EQUAL_PARTS_ID
+                    ? "Shade Equal Parts"
               : item.id === "grade1_data_display_graphing_read_graph"
                 ? "Read the Graph"
                 : item.id === "grade1_data_display_graphing_interpret_data"
@@ -1832,6 +1851,29 @@ if (GRADE1_FRACTION_ACTIVITY_MODES[item.id]) {
     hideItemSeparators: taskMode !== "half_two_fourths",
     separateWorkedModel: ["shade_equal_parts", "share_fairly"].includes(taskMode),
     completedQuestionOne: taskMode === "compare_fair_shares" && Boolean(normalizedOptions.includeExample)
+  };
+}
+
+if (item.id === GRADE2_SHADE_EQUAL_PARTS_ID) {
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 2,
+    maxProblemsPerPage: 8
+  };
+  layout.worksheetType = "fraction_visual";
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    suppressExampleLabel: true,
+    fractionTaskMode: "shade_equal_parts",
+    sharedFractionRenderer: true,
+    fractionAllowedDenominators: [2, 3, 4, 6],
+    layoutVariant: "fraction_strip_grid",
+    visualColumns: 2,
+    equalHeightItems: true,
+    hideItemSeparators: true,
+    separateWorkedModel: false,
+    completedQuestionOne: false
   };
 }
 

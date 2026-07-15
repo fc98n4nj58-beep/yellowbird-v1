@@ -1958,8 +1958,8 @@
     },
     {
       "id": "grade2_fraction_equivalence_shade_fraction_models",
-      "title": "Shade Fraction Models — Grade 2",
-      "shortTitle": "Shade Fraction Models",
+      "title": "Shade Equal Parts",
+      "shortTitle": "Shade Equal Parts",
       "subject": "Math",
       "grades": [
         "grade2"
@@ -1973,7 +1973,7 @@
       "activityTypes": [
         "shade_fraction_models"
       ],
-      "templateId": "equation_practice",
+      "templateId": "visual_model",
       "status": "generated",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
@@ -1981,11 +1981,12 @@
       "tags": [
         "grade 2",
         "fractions",
-        "fraction equivalence",
-        "shade fraction models"
+        "equal parts",
+        "shade fractions"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for shade fraction models."
+      "studentInstruction": "Shade the fraction shown for each model.",
+      "description": "Students shade equal parts in rectangular fraction strips to represent named fractions."
     },
     {
       "id": "grade2_multiplication_facts_arrays",

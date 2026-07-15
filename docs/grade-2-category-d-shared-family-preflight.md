@@ -141,6 +141,8 @@ Symbolic Compare Fractions, Match Equivalent Fractions, and Fraction Number Line
 
 Recommendation: **GRADE 2 PARAMETER EXTENSION** through the existing `fraction_strip` model. Replace the array-return fallback with item-level structured truth: requested fraction, partition count, shaded answer state, same-whole identity, and deterministic duplicate signature. Use only halves, thirds, fourths, and sixths; initial targets may include 1/2, 1/3, 2/3, 1/4, 2/4, 3/4, 1/6, and 2/6 without asking for symbolic equivalence.
 
+Implementation completed on 2026-07-14 through an exact Grade 2 adapter over the shared `fraction_strip` model and renderer. The default is the approved eight-fraction set, two columns by four rows, rectangular strips only, one student page plus one key page, and no completed example. The focused 30-seed/isolation suite and two-page visual proof passed; `review/grade-2-shade-equal-parts/founder-review/g2_shade_equal_parts_default_student_and_key.pdf` is founder-approved. The record remains `generated` and unpromoted and is now reconciled in Category A. Share Fairly to 10 remains untouched in Category D.
+
 Proposed title: `Shade Equal Parts`. Instruction: `Shade the equal parts to show each fraction.` Default: eight strips, two columns by four rows, one student page and one key page. No completed example is recommended for the initial drawing task.
 
 ### Share Fairly to 10

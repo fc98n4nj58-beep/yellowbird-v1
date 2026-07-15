@@ -4,6 +4,8 @@
 
 This planning pass covers exactly `grade2_fraction_equivalence_shade_fraction_models` and `grade2_fraction_equivalence_fraction_word_problems`. Both records are `generated`, both are reconciliation Category D, and neither is promoted. The catalog remains Ready 104/104, Generated 213/213, Partial 5/5, Total 331, with the seven established `pattern_word_problems` gaps only. Grade 2 reconciliation remains A22 / B0 / C0 / D7 / E9 / F0 / G14, Total 52.
 
+Implementation checkpoint, 2026-07-14: Shade Equal Parts now uses an exact Grade 2 adapter over the shared `fraction_strip` model and renderer. It generates the approved eight unique fractions across denominators 2, 3, 4, and 6, uses a two-column by four-row rectangular-strip layout, keeps student strips unshaded, and derives key shading from the same structured numerator/denominator truth. Completed-example mode remains off. The focused 30-seed regression, Grade 1/Grade 3+ isolation checks, two-page PDF contract, and visual inspection passed. The sole founder proof is `review/grade-2-shade-equal-parts/founder-review/g2_shade_equal_parts_default_student_and_key.pdf`. Founder review is approved and the resource is reconciled in Category A. Status remains `generated`, and no promotion has occurred. Share Fairly to 10 remains untouched in Category D.
+
 The protected untracked paths present before this pass are `engine/catalog/`, `engine/visuals/index`, `engine/visuals/renderVisual.js`, `public/styles/images/`, and `review/`. They are unrelated and must remain untouched.
 
 ## Resource inventory
@@ -195,4 +197,4 @@ Scenario B moves one record D→A and the other D→G. Scenario C moves both D�
 
 ## Recommended next action
 
-Keep both resources active, generated, Category D, and unpromoted. Implement only Shade Equal Parts in the next controlled batch. Require its focused regression and two-page founder proof before beginning the separate Share Fairly to 10 extension. Do not reconcile either record to A until its own founder approval is recorded.
+Shade Equal Parts is founder-approved and reconciled in Category A while remaining `generated` and unpromoted. Keep Share Fairly to 10 active, generated, Category D, and untouched until its separate controlled implementation and founder-review cycle begins.

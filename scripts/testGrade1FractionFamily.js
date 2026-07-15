@@ -312,8 +312,7 @@ async function run() {
     "grade2_fraction_equivalence_compare_fractions",
     "grade2_fraction_equivalence_fraction_number_line",
     "grade2_fraction_equivalence_fraction_word_problems",
-    "grade2_fraction_equivalence_match_equivalent_fractions",
-    "grade2_fraction_equivalence_shade_fraction_models"
+    "grade2_fraction_equivalence_match_equivalent_fractions"
   ].forEach((id) => {
     const first = buildCatalogWorksheetRuntime(id, { worksheetSeed: "grade2-fraction-isolation" });
     const second = buildCatalogWorksheetRuntime(id, { worksheetSeed: "grade2-fraction-isolation" });
@@ -321,6 +320,15 @@ async function run() {
     assert(first.contentObject.content.items.every(({ fractionModel }) => !fractionModel));
     assert.deepStrictEqual(signature(first), signature(second));
   });
+
+  const grade2Shade = buildCatalogWorksheetRuntime(
+    "grade2_fraction_equivalence_shade_fraction_models",
+    { worksheetSeed: "grade2-fraction-isolation" }
+  );
+  assert.strictEqual(grade2Shade.layout.display.grade1FractionRenderer, undefined);
+  assert.strictEqual(grade2Shade.layout.display.sharedFractionRenderer, true);
+  assert.strictEqual(grade2Shade.contentObject.content.items.length, 8);
+  assert(grade2Shade.contentObject.content.items.every(({ fractionModel }) => fractionModel?.kind === "fraction_strip"));
 
   const rendererSource = fs.readFileSync(path.join(__dirname, "..", "renderers", "pdfRenderer.js"), "utf8");
   assert(!/compareAnswer|cross.?multiply/i.test(rendererSource));
