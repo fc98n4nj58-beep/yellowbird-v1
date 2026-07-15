@@ -14,9 +14,9 @@ This preflight covers exactly five Grade 2 records that entered planning in Cate
 - `grade2_data_display_graphing_match_data_to_graph`
 - `grade2_data_display_graphing_read_graph`
 
-All five remain catalog status `generated` and unpromoted. Read the Pictograph and Interpret the Pictograph are founder-approved and reconciled in Category A; Complete a Graph, Match Data to Graph, and Graph Questions remain Category D. The catalog remains Ready 104/104, Generated 213/213, Partial 5/5, Total 331. The seven established `pattern_word_problems` gaps are the only audit gaps. Grade 2 reconciliation is A26 / B0 / C0 / D3 / E9 / F0 / G14, Total 52.
+All five remain catalog status `generated` and unpromoted. Read the Pictograph and Interpret the Pictograph are founder-approved, committed, and reconciled in Category A. Graph Questions is formally deferred in Category G as a duplicate future mixed-review preset. Complete a Graph and Match Data to Graph remain Category D. The catalog remains Ready 104/104, Generated 213/213, Partial 5/5, Total 331. The seven established `pattern_word_problems` gaps are the only audit gaps. Grade 2 reconciliation is A26 / B0 / C0 / D2 / E9 / F0 / G15, Total 52.
 
-The planning decision is to launch one-to-one pictographs only, retain four distinct student actions, and recommend `Graph Questions` for later-phase deferral because it merely mixes the direct-reading and interpretation actions already owned by two stronger worksheets. The Graph Questions deferral remains a separate reconciliation action; no catalog promotion is authorized here.
+The launch decision is one-to-one pictographs only with four distinct student actions. `Graph Questions` is founder-approved for deferral because it merely mixes the direct-reading and interpretation actions already owned by two stronger worksheets. It remains in the catalog as an inactive future preset candidate; no implementation or promotion is authorized.
 
 ### Core pictograph reading implementation checkpoint, 2026-07-15
 
@@ -50,7 +50,7 @@ Both US Letter proofs contain one student page and one answer-key page. All four
 
 Founder legibility correction, 2026-07-15: the Grade 2 pictograph data circles and key circle now use the approved `#4b5563` 1.15-point outline instead of inheriting the pale graph-rule stroke. The opt-in is isolated to these two Grade 2 resources; Grade 1 styling remains unchanged. Symbols remain unfilled and retain their exact size, spacing, counts, and geometry. The two proof PDFs were regenerated without changing graph truth, questions, answers, layout, or pagination, then re-rendered for print-legibility inspection and approved.
 
-Founder approval is complete. Both catalog statuses remain `generated`, both records move from reconciliation Category D to Category A, and neither is promoted. Complete a Graph and Match Data to Graph remain untouched in Category D. Graph Questions remains an unimplemented proposed deferral in Category D pending a separate reconciliation decision.
+Founder approval is complete. Both catalog statuses remain `generated`, both records are reconciled in Category A, and neither is promoted. Graph Questions is now formally deferred from Category D to Category G without implementation, deletion, or catalog-status change. Complete a Graph and Match Data to Graph remain untouched in Category D.
 
 ## Pre-implementation resource inventory
 
@@ -193,7 +193,7 @@ Decision: **DEFER - DUPLICATE/CUSTOMIZATION PRESET**.
 
 It has no distinct student action beyond the retained Read and Interpret worksheets. Retaining an eight-question mixture would create a third shell over the same graph and question pools, increase founder proof and maintenance burden, and make resource selection less clear. A future teacher-selected `mixed review` preset could produce the same learning experience without maintaining a separate catalog record.
 
-This record remains Category D now. After founder approval of the deferral it should move to G, not be deleted. Reconsider only if teacher testing shows consistent demand for a named mixed-review worksheet that cannot be met by a simple future question-mix control.
+This record is formally deferred in Category G with classification **DUPLICATE — DEFER TO FUTURE MIXED-REVIEW PRESET**. It remains present with catalog status `generated`, unimplemented, and unpromoted. Reconsider only if teacher testing shows demand for mixed pictograph review, customization supports question-mix presets, a later review collection is intentionally designed, or the record receives a genuinely distinct task contract.
 
 ## Complete a Graph
 
@@ -359,13 +359,13 @@ No more than three implementation batches are needed.
 | 2 - Pictograph construction | `grade2_data_display_graphing_complete_graph` | Shared `complete_pictograph` task with Grade 2 missing counts | Four-row table; visible/target/missing counts; completion answer state | Existing 504 x 298 construction geometry | 30-seed row truth, exact missing counts, source/graph/key parity, geometry bounds; 1 proof | **MODERATE**; depends on Batch 1 graph model |
 | 3 - Graph selection | `grade2_data_display_graphing_match_data_to_graph` | Shared `match_graph` task with Grade 2 value/distractor rules | Stable choices, correct choice ID, one-category distractor metadata | Existing compact A/B pictographs and selection targets | 30-seed one-correct-choice, no duplicate options, plausible distractor, fit/page checks; 1 proof | **MODERATE**; depends on shared model and compact readability proof |
 
-Do not implement Graph Questions in any batch. Founder review should approve the family direction, the four active contracts, and the one deferral before Batch 1 begins.
+Do not implement Graph Questions in any batch. Founder approval of its duplicate-resource deferral is now recorded separately from catalog status and promotion.
 
 ## Recommended deferrals
 
 | Exact ID | Reason | Deferral type | Duration / trigger | Teacher testing | Reconciliation destination |
 | --- | --- | --- | --- | --- | --- |
-| `grade2_data_display_graphing_graph_questions` | Mixed direct and interpretation questions duplicate the two retained reading resources; no unique student action | Duplicate and future customization preset | Later-phase, potentially permanent. Reconsider only after launch if teachers consistently seek a named mixed review that cannot be served by a question-mix control | Yes, testing can reopen it | Remain D now; move to G only after founder approval of deferral |
+| `grade2_data_display_graphing_graph_questions` | Mixed direct and interpretation questions duplicate the two retained reading resources; no unique student action | Duplicate and future customization preset | Later-phase, potentially permanent. Reconsider only after launch if teachers consistently seek a named mixed review that cannot be served by a question-mix control | Yes, testing can reopen it | Category G by founder-approved deferral |
 
 No other whole record is recommended for deferral. Bar graphs, line plots, scaled pictographs, partial symbols, tally-table input, and public controls are deferred variants, not catalog dispositions for these five records.
 
@@ -373,7 +373,7 @@ No other whole record is recommended for deferral. Bar graphs, line plots, scale
 
 Eventual shared assertions:
 
-- exact five IDs are accounted for; all remain `generated`, the approved two are Category A, and the other three remain Category D;
+- exact five IDs are accounted for; all remain `generated`, Read and Interpret are Category A, Complete and Match are Category D, and Graph Questions is Category G;
 - exact public titles, instructions, footers, counts, and page totals;
 - no internal IDs, registry keys, or snake_case in printable output;
 - same-seed stability and different-seed variation across at least 30 seeds;
@@ -410,7 +410,7 @@ Existing regressions retained:
 
 Planning-pass results: the 100-topic registry validator and Grade 1 Batch 2 reading suite pass. The Grade 1 Batch 3 suite completes its graph-family assertions, then fails its stale catalog baseline assertion because it expects ready 103 while the authoritative current count is 104. This is a test-maintenance defect, not a graph-family defect; it is documented here and was not changed in this planning task.
 
-All six inspected data-specific JavaScript files pass syntax checks. The full worksheet audit passes Ready 104/104, Generated 213/213, and Partial 5/5 with zero failures; its only failures are the seven established planned `pattern_word_problems` gaps. `git diff --check` passes. The five Grade 2 records remain present exactly once and `generated`; Read and Interpret are Category A while Complete, Match, and Graph Questions remain Category D.
+All six inspected data-specific JavaScript files pass syntax checks. The full worksheet audit passes Ready 104/104, Generated 213/213, and Partial 5/5 with zero failures; its only failures are the seven established planned `pattern_word_problems` gaps. `git diff --check` passes. The five Grade 2 records remain present exactly once and `generated`; Read and Interpret are Category A, Complete and Match are Category D, and Graph Questions is Category G.
 
 ## Reconciliation scenarios
 
@@ -418,13 +418,13 @@ Category E remains 9 in every scenario and is shown so Total 52 is explicit.
 
 | Scenario | A | D | E | G | Total | Assumption |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| Current | 24 | 5 | 9 | 14 | 52 | No change |
+| Current | 26 | 2 | 9 | 15 | 52 | Read and Interpret approved; Graph Questions deferral approved |
 | A - all five implemented and founder-approved | 29 | 0 | 9 | 14 | 52 | No deferrals |
 | B - four active approved; Graph Questions deferral approved | 28 | 0 | 9 | 15 | 52 | Recommended destination |
 | C - only Batch 1 approved; Graph Questions deferral approved | 26 | 2 | 9 | 15 | Complete and Match remain D |
 | D - all five deferred | 24 | 0 | 9 | 19 | 52 | No implementation |
 
-If the founder approves Batch 1 but has not yet approved the Graph Questions deferral, the temporary state is A26 / D3 / E9 / G14 / Total52. The recommended Scenario C assumes both decisions are taken at the same family gate.
+The current state matches Scenario C: A26 / D2 / E9 / G15 / Total52. Complete and Match remain the only structured-data records in Category D.
 
 ## Risks
 
@@ -439,11 +439,4 @@ If the founder approves Batch 1 but has not yet approved the Graph Questions def
 
 ## Recommended next action
 
-Ask the founder to approve:
-
-1. one-to-one pictographs as the only launch graph direction;
-2. the four active contracts and no-completed-example decision;
-3. deferral of `grade2_data_display_graphing_graph_questions` as a duplicate/customization preset;
-4. Batch 1 as `Read the Pictograph` plus `Interpret the Pictograph`.
-
-After approval, authorize only Batch 1 implementation and its two default student-plus-key proofs. Do not update reconciliation or promotion state until implementation, focused validation, visual proof review, and a separate checkpoint are complete.
+Implement only `grade2_data_display_graphing_complete_graph` next through the shared construction family and a separate founder-proof gate. After Complete is resolved, consider `grade2_data_display_graphing_match_data_to_graph`. Keep Graph Questions inactive in Category G unless a documented reconsideration trigger creates a genuinely distinct role. Do not promote any generated record through this planning sequence.

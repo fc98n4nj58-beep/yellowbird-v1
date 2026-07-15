@@ -169,6 +169,8 @@ Implementation checkpoint, 2026-07-15: only `grade2_data_display_graphing_read_g
 
 Founder approval and reconciliation checkpoint, 2026-07-15: Read the Pictograph and Interpret the Pictograph are founder-approved after their Grade 2-only `#4b5563`, 1.15-point unfilled symbol correction. Size, spacing, counts, graph geometry, questions, and layout are unchanged. Both records move from Category D to Category A while remaining `generated` and unpromoted. Grade 2 reconciliation is A26 / D3 / G14 / Total52. Complete, Match, and Graph Questions remain untouched in Category D; the proposed Graph Questions deferral is not reconciled here.
 
+Duplicate-resource deferral checkpoint, 2026-07-15: `grade2_data_display_graphing_graph_questions` moves from Category D to Category G by founder-approved deferral because Read and Interpret already cover its launch actions. It remains present, `generated`, unimplemented, and unpromoted as a possible future mixed-review preset. Structured-data Category D now contains only Complete and Match; Complete is the next safest implementation. Grade 2 reconciliation is A26 / D2 / G15 / Total52.
+
 Exact resources and intended roles:
 
 | Resource | Intended structured role | Recommendation |
