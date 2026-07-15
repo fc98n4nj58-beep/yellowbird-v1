@@ -152,6 +152,8 @@ const GRADE2_NUMBER_WORD_WRITE_ID = "grade2_place_value_representation_number_wo
 const GRADE2_EQUAL_GROUPS_ID = "grade2_multiplication_facts_equal_groups";
 const GRADE2_SHADE_EQUAL_PARTS_ID = "grade2_fraction_equivalence_shade_fraction_models";
 const GRADE2_SHARE_FAIRLY_TO_10_ID = "grade2_fraction_equivalence_fraction_word_problems";
+const GRADE2_ARRAYS_ID = "grade2_multiplication_facts_arrays";
+const GRADE2_BASE_TEN_BLOCKS_ID = "g2_base_ten_blocks_representation";
 const GRADE2_CATEGORY_D_LOW_RISK_IDS = new Set([
   GRADE2_EQUATION_MATCH_ID,
   GRADE2_NUMBER_LINE_IDENTIFY_ID,
@@ -353,6 +355,17 @@ function normalizeGrade2PictographReadingOptions(item, options = {}) {
       : item.id === GRADE2_MATCHING_PICTOGRAPH_ID ? 2 : 6,
     includeExample: false
   };
+}
+
+function normalizeGrade2CategoryEBatch1Options(item, options = {}) {
+  if (![GRADE2_ARRAYS_ID, GRADE2_BASE_TEN_BLOCKS_ID].includes(item.id)) return options;
+
+  const normalized = { ...options, includeExample: false };
+  normalized.questionCount = finiteNumber(
+    normalized.questionCount,
+    item.id === GRADE2_ARRAYS_ID ? 8 : 10
+  );
+  return normalized;
 }
 
 function normalizeGrade1FractionOptions(item, options = {}) {
@@ -728,7 +741,9 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalizeGrade2PictographReadingOptions(
+  return normalizeGrade2CategoryEBatch1Options(
+    item,
+  normalizeGrade2PictographReadingOptions(
     item,
   normalizeGrade2CategoryDLowRiskOptions(
     item,
@@ -754,7 +769,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
       )
     )
     )
-  ));
+  )));
 }
 
 const NON_CUSTOMIZATION_QUERY_KEYS = new Set([
@@ -1101,6 +1116,10 @@ function buildStudentFacingInstruction(item, fallback = "") {
   return "Count the base ten blocks. Write the number.";
  }
 
+ if (item.id === GRADE2_BASE_TEN_BLOCKS_ID) {
+  return "Count the base ten blocks. Write the number.";
+ }
+
  if (item.id === "g1_ten_frame_addition_within_10") {
   return "Count the dots. Write the number.";
  }
@@ -1290,8 +1309,12 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
               ? "Equal or Not Equal?"
               : item.id === GRADE2_NUMBER_LINE_IDENTIFY_ID
                 ? "Identify Numbers on a Number Line"
-                : item.id === GRADE2_NUMBER_WORD_WRITE_ID
+                  : item.id === GRADE2_NUMBER_WORD_WRITE_ID
                   ? "Write Number Words to 200"
+                  : item.id === GRADE2_ARRAYS_ID
+                    ? "Arrays"
+                  : item.id === GRADE2_BASE_TEN_BLOCKS_ID
+                    ? "Base Ten Blocks"
                   : item.id === GRADE2_SHADE_EQUAL_PARTS_ID
                     ? "Shade Equal Parts"
                     : item.id === GRADE2_SHARE_FAIRLY_TO_10_ID
@@ -1365,6 +1388,20 @@ if (item.activityTypes?.[0] === "base_ten_blocks" && layout.display?.baseTenAlig
     visualVerticalAlign: item.id === "grade1_place_value_representation_base_ten_blocks"
       ? "topThird"
       : "center"
+  };
+}
+
+if (item.id === GRADE2_BASE_TEN_BLOCKS_ID) {
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 1,
+    maxProblemsPerPage: 10
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    hideItemPrompts: true,
+    hideSubtitle: true,
+    visualVerticalAlign: "center"
   };
 }
 

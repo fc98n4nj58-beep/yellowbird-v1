@@ -26,6 +26,8 @@ const PUBLIC_SKILL_LABEL_HIDDEN_IDS = new Set([
   "grade2_place_value_representation_number_line_identify",
   "grade2_place_value_representation_number_word_match",
   "grade2_multiplication_facts_equal_groups",
+  "grade2_multiplication_facts_arrays",
+  "g2_base_ten_blocks_representation",
   "grade2_fraction_equivalence_shade_fraction_models",
   "grade2_fraction_equivalence_fraction_word_problems",
   "grade2_data_display_graphing_read_graph",

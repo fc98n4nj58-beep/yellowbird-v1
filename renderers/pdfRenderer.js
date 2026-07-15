@@ -4478,6 +4478,7 @@ module.exports = {
   buildAnswerKeyItems,
   __test: {
     getVisualRegion,
+    measureArrayVisual,
     measureEqualGroupsVisual,
     measureNumberLineVisual,
     buildNumberLineAnswerTargetGeometry,
