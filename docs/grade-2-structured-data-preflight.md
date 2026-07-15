@@ -2,7 +2,17 @@
 
 Date: 2026-07-15
 
-Status: core pictograph reading batch founder-approved and reconciled; catalog status remains `generated`
+Status: pictograph reading and Finish the Pictograph founder-approved and reconciled; catalog statuses remain `generated`
+
+### Finish the Pictograph founder wording checkpoint, 2026-07-15
+
+`grade2_data_display_graphing_complete_graph` is implemented as a **GRADE 2 PARAMETER ADAPTER** over the approved Grade 1 pictograph construction family. The exact-ID path is `completeGraph.js -> grade2DataGraph.js -> shared topic and pictograph-data helpers -> existing normalization -> shared construction renderer -> preview/PDF -> answer key from the same structured truth`. Founder review clarified that this is a scaffolded finish-the-graph task, so the final title is now `Finish the Pictograph` and the instruction is `Use the table to draw the missing circles in the pictograph.` A fully blank construction graph remains a possible future customization state, not a separate launch resource. Founder recheck is approved. No renderer, graph truth, route, UI, curriculum-source, completed example, or renderer-side arithmetic changed.
+
+The adapter owns one four-category source table and pictograph, four unique values from 2 through 8, a one-circle key, explicit table/graph/completion rows, required and visible symbol counts, exactly two incomplete category IDs, missing counts 2 and 3, completed answer state, and deterministic signatures. Seeded selection varies topic, values, incomplete rows, and the assignment of the two missing counts. Each incomplete row retains at least one visible circle, and the answer key restores the exact source-table values.
+
+The public contract is `Finish the Pictograph`; `Use the table to draw the missing circles in the pictograph.`; and `Grade 2 • Math • Data & Graphing`. The Grade 2-only outlined symbols use `#4b5563` at 1.15 points while Grade 1 styling and construction truth remain unchanged. The focused 30-seed suite passes deterministic stability, meaningful variation, structured parity, Grade 1 and Grade 3+ isolation, text-fallback isolation for Match and Graph Questions, and exact two-page US Letter PDF output. Grade 1 reading and Grade 2 pictograph-reading regressions pass. The Grade 1 construction regression reaches its known stale Ready-count assertion only (`104 !== 103`) after its construction checks pass; that unrelated assertion remains unchanged. The 100-topic registry validates, and the catalog audit reports Ready 104/104, Generated 213/213, Partial 5/5, Total 331, with only the seven established planned `pattern_word_problems` gaps.
+
+The sole proof is `review/grade-2-complete-pictograph/founder-review/g2_complete_the_pictograph_default_student_and_key.pdf`. Its student and answer-key pages were rendered and visually inspected: the source table, end-of-row omissions, open drawing space, completed counts, key, public footer, and page boundaries are clear and aligned. The record remains `generated` and unpromoted and is reconciled from Category D to Category A after founder approval; reconciliation is A27 / D1 / G15 / Total52. Match Data to Graph remains untouched as the only Category D structured-data resource.
 
 ## Current state
 
@@ -14,7 +24,7 @@ This preflight covers exactly five Grade 2 records that entered planning in Cate
 - `grade2_data_display_graphing_match_data_to_graph`
 - `grade2_data_display_graphing_read_graph`
 
-All five remain catalog status `generated` and unpromoted. Read the Pictograph and Interpret the Pictograph are founder-approved, committed, and reconciled in Category A. Graph Questions is formally deferred in Category G as a duplicate future mixed-review preset. Complete a Graph and Match Data to Graph remain Category D. The catalog remains Ready 104/104, Generated 213/213, Partial 5/5, Total 331. The seven established `pattern_word_problems` gaps are the only audit gaps. Grade 2 reconciliation is A26 / B0 / C0 / D2 / E9 / F0 / G15, Total 52.
+All five remain catalog status `generated` and unpromoted. Read the Pictograph, Interpret the Pictograph, and Finish the Pictograph are founder-approved and reconciled in Category A. Graph Questions is formally deferred in Category G as a duplicate future mixed-review preset. Match Data to Graph remains the only Category D resource. The catalog remains Ready 104/104, Generated 213/213, Partial 5/5, Total 331. The seven established `pattern_word_problems` gaps are the only audit gaps. Grade 2 reconciliation is A27 / B0 / C0 / D1 / E9 / F0 / G15, Total 52.
 
 The launch decision is one-to-one pictographs only with four distinct student actions. `Graph Questions` is founder-approved for deferral because it merely mixes the direct-reading and interpretation actions already owned by two stronger worksheets. It remains in the catalog as an inactive future preset candidate; no implementation or promotion is authorized.
 
@@ -319,8 +329,8 @@ All active contracts use footer `Grade 2 • Math • Data & Graphing`, four cat
 
 ### `grade2_data_display_graphing_complete_graph`
 
-- Final title: `Complete the Pictograph`
-- Instruction: `Use the data table to complete the pictograph.`
+- Final title: `Finish the Pictograph`
+- Instruction: `Use the table to draw the missing circles in the pictograph.`
 - Graph type: one full-width one-to-one horizontal construction pictograph
 - Graph count: 1
 - Dataset: 4 categories; values 2-8; unique minimum and maximum; repeated value optional
@@ -373,7 +383,7 @@ No other whole record is recommended for deferral. Bar graphs, line plots, scale
 
 Eventual shared assertions:
 
-- exact five IDs are accounted for; all remain `generated`, Read and Interpret are Category A, Complete and Match are Category D, and Graph Questions is Category G;
+- exact five IDs are accounted for; all remain `generated`, Read, Interpret, and Finish are Category A, Match is Category D, and Graph Questions is Category G;
 - exact public titles, instructions, footers, counts, and page totals;
 - no internal IDs, registry keys, or snake_case in printable output;
 - same-seed stability and different-seed variation across at least 30 seeds;
@@ -410,7 +420,7 @@ Existing regressions retained:
 
 Planning-pass results: the 100-topic registry validator and Grade 1 Batch 2 reading suite pass. The Grade 1 Batch 3 suite completes its graph-family assertions, then fails its stale catalog baseline assertion because it expects ready 103 while the authoritative current count is 104. This is a test-maintenance defect, not a graph-family defect; it is documented here and was not changed in this planning task.
 
-All six inspected data-specific JavaScript files pass syntax checks. The full worksheet audit passes Ready 104/104, Generated 213/213, and Partial 5/5 with zero failures; its only failures are the seven established planned `pattern_word_problems` gaps. `git diff --check` passes. The five Grade 2 records remain present exactly once and `generated`; Read and Interpret are Category A, Complete and Match are Category D, and Graph Questions is Category G.
+All six inspected data-specific JavaScript files pass syntax checks. The full worksheet audit passes Ready 104/104, Generated 213/213, and Partial 5/5 with zero failures; its only failures are the seven established planned `pattern_word_problems` gaps. `git diff --check` passes. The five Grade 2 records remain present exactly once and `generated`; Read, Interpret, and Finish are Category A, Match is Category D, and Graph Questions is Category G.
 
 ## Reconciliation scenarios
 
@@ -422,9 +432,10 @@ Category E remains 9 in every scenario and is shown so Total 52 is explicit.
 | A - all five implemented and founder-approved | 29 | 0 | 9 | 14 | 52 | No deferrals |
 | B - four active approved; Graph Questions deferral approved | 28 | 0 | 9 | 15 | 52 | Recommended destination |
 | C - only Batch 1 approved; Graph Questions deferral approved | 26 | 2 | 9 | 15 | Complete and Match remain D |
+| D - Finish approved and reconciled | 27 | 1 | 9 | 15 | Match remains the only D resource |
 | D - all five deferred | 24 | 0 | 9 | 19 | 52 | No implementation |
 
-The current state matches Scenario C: A26 / D2 / E9 / G15 / Total52. Complete and Match remain the only structured-data records in Category D.
+The current state matches Scenario D: A27 / D1 / E9 / G15 / Total52. Match remains the only structured-data record in Category D.
 
 ## Risks
 
@@ -439,4 +450,4 @@ The current state matches Scenario C: A26 / D2 / E9 / G15 / Total52. Complete an
 
 ## Recommended next action
 
-Implement only `grade2_data_display_graphing_complete_graph` next through the shared construction family and a separate founder-proof gate. After Complete is resolved, consider `grade2_data_display_graphing_match_data_to_graph`. Keep Graph Questions inactive in Category G unless a documented reconsideration trigger creates a genuinely distinct role. Do not promote any generated record through this planning sequence.
+Consider `grade2_data_display_graphing_match_data_to_graph` next through a separate founder-proof gate. Keep Graph Questions inactive in Category G unless a documented reconsideration trigger creates a genuinely distinct role. Do not promote any generated record through this planning sequence.

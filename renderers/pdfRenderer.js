@@ -4139,7 +4139,7 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     startY += display.sharedDataScenario ? 18 : 28;
   }
 
-  if (display.grade1DataTaskMode === "complete_graph") {
+  if ((display.sharedDataTaskMode || display.grade1DataTaskMode) === "complete_graph") {
     startY = renderSharedDataScenario(startY);
     const task = allItems[0]?.graphTaskData;
     startY = renderDataTable(task.dataTable, startY);

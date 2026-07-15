@@ -2,10 +2,17 @@ const {
   isGrade1DataGraphWorksheet,
   generateGrade1DataGraphProblem
 } = require("./grade1DataGraph");
+const {
+  isGrade2CompletePictographWorksheet,
+  generateGrade2DataGraphProblem
+} = require("./grade2DataGraph");
 
 function generateCompleteGraphProblem(options = {}) {
   if (isGrade1DataGraphWorksheet(options)) {
     return generateGrade1DataGraphProblem(options);
+  }
+  if (isGrade2CompletePictographWorksheet(options)) {
+    return generateGrade2DataGraphProblem(options);
   }
   const random = options.random || Math.random;
   const categories = ["Cats", "Dogs", "Birds"];

@@ -1,5 +1,9 @@
 # Grade 2 Category D Shared-Family Preflight
 
+## Finish the Pictograph wording checkpoint, 2026-07-15
+
+`grade2_data_display_graphing_complete_graph` uses a narrow Grade 2 parameter adapter over the approved shared pictograph construction family. Founder clarified and approved the scaffolded action through the title `Finish the Pictograph` and instruction `Use the table to draw the missing circles in the pictograph.` Structured truth, the exact two-and-three-circle end omissions, renderer geometry, and answer state are unchanged. A fully blank graph remains a possible future customization state only. The resource remains `generated` and unpromoted and is reconciled from Category D to Category A. Reconciliation is A27 / D1 / G15 / Total52; Match Data to Graph is untouched and is the only remaining Category D resource.
+
 Date: 2026-07-14
 
 Status: Batch 1 and Equal Groups founder-approved and reconciled; catalog statuses remain `generated`
@@ -201,7 +205,7 @@ Proposed public contracts:
 | Read Graph | `Read the Pictograph` | `Use the pictograph to answer each question.` | 1 graph + 6 direct questions | Optional Q1, pending founder | 2 |
 | Interpret Data | `Compare the Data` | `Use the pictograph to compare the categories and answer each question.` | 1 graph + 6 comparison/mode questions | Optional Q1, pending founder | 2 |
 | Graph Questions | `Pictograph Questions` | `Use the pictograph to answer each question.` | 1 graph + 8 mixed questions | Optional Q1, pending founder | 2 |
-| Complete Graph | `Complete the Pictograph` | `Use the data table to complete the pictograph.` | 1 graph task; exactly 2 incomplete rows | none | 2 |
+| Complete Graph | `Finish the Pictograph` | `Use the table to draw the missing circles in the pictograph.` | 1 graph task; exactly 2 incomplete rows | none | 2 |
 | Match Data to Graph | `Choose the Matching Pictograph` | `Circle the pictograph that matches each data table.` | 2 items with 2 graph choices each | none | 2 |
 
 All five use `Grade 2 • Math • Data & Graphing`. No internal skill key, topic registry key, or snake_case may print. Bar graphs, line plots, two-way tally tables, scaled keys, written explanations, and public topic controls require later family preflights; none is silently added here.

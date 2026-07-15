@@ -169,6 +169,7 @@ const GRADE2_PICTOGRAPH_READING_IDS = new Set([
   "grade2_data_display_graphing_read_graph",
   "grade2_data_display_graphing_interpret_data"
 ]);
+const GRADE2_COMPLETE_PICTOGRAPH_ID = "grade2_data_display_graphing_complete_graph";
 const GRADE1_DATA_BATCH3_IDS = new Set([
   "grade1_data_display_graphing_complete_graph",
   "grade1_data_display_graphing_match_data_to_graph",
@@ -339,10 +340,10 @@ function normalizeGrade1DataReadingOptions(item, options = {}) {
 }
 
 function normalizeGrade2PictographReadingOptions(item, options = {}) {
-  if (!GRADE2_PICTOGRAPH_READING_IDS.has(item.id)) return options;
+  if (!GRADE2_PICTOGRAPH_READING_IDS.has(item.id) && item.id !== GRADE2_COMPLETE_PICTOGRAPH_ID) return options;
   return {
     ...options,
-    questionCount: 6,
+    questionCount: item.id === GRADE2_COMPLETE_PICTOGRAPH_ID ? 1 : 6,
     includeExample: false
   };
 }
@@ -1049,6 +1050,10 @@ function buildStudentFacingInstruction(item, fallback = "") {
   return "Use the pictograph to answer each question.";
  }
 
+ if (item.id === GRADE2_COMPLETE_PICTOGRAPH_ID) {
+  return "Use the table to draw the missing circles in the pictograph.";
+ }
+
  if (item.id === "grade1_fraction_equivalence_shade_fraction_models") {
   return "Shade the equal parts to show each fraction.";
  }
@@ -1288,8 +1293,10 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
                     ? "Graph Questions"
                     : item.id === "grade2_data_display_graphing_read_graph"
                       ? "Read the Pictograph"
-                      : item.id === "grade2_data_display_graphing_interpret_data"
-                        ? "Interpret the Pictograph"
+                    : item.id === "grade2_data_display_graphing_interpret_data"
+                      ? "Interpret the Pictograph"
+                      : item.id === GRADE2_COMPLETE_PICTOGRAPH_ID
+                        ? "Finish the Pictograph"
       : item.title);
 
  const layout = normalizeWorksheetLayout({
@@ -1853,6 +1860,42 @@ if (GRADE2_PICTOGRAPH_READING_IDS.has(item.id)) {
     sharedDataScenarioAlign: "left",
     sharedDataScenarioFullWidth: true,
     sharedDataScenarioMaxLines: 2
+  };
+}
+
+if (item.id === GRADE2_COMPLETE_PICTOGRAPH_ID) {
+  const graphData = layout.problems?.[0]?.graphData || null;
+  const constructionPictograph = {
+    width: 504,
+    height: 298,
+    headerHeight: 42,
+    bodyHeight: 256,
+    categoryHeight: 64,
+    labelWidth: 112,
+    symbolDiameter: 22,
+    symbolGap: 38,
+    symbolInset: 28,
+    placement: "after_scenario_and_data_table"
+  };
+  layout.template = { ...(layout.template || {}), columns: 1, maxProblemsPerPage: 1 };
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    suppressExampleLabel: true,
+    hideItemSeparators: true,
+    sharedDataTaskMode: "complete_graph",
+    sharedDataPictograph: true,
+    sharedDataGraph: graphData,
+    sharedDataGraphHeight: constructionPictograph.height,
+    constructionPictograph,
+    sharedDataSymbolStrokeColor: "#4b5563",
+    sharedDataSymbolStrokeWidth: 1.15,
+    sharedDataScenario: graphData?.scenario || "",
+    sharedDataScenarioPlacement: "between_instruction_and_graph",
+    sharedDataScenarioAlign: "left",
+    sharedDataScenarioFullWidth: true,
+    sharedDataScenarioMaxLines: 2,
+    sequentialColumnFill: true
   };
 }
 

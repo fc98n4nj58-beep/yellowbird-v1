@@ -6,13 +6,20 @@ const {
 
 const RESOURCE_TASKS = Object.freeze({
   grade2_data_display_graphing_read_graph: "read",
-  grade2_data_display_graphing_interpret_data: "interpret"
+  grade2_data_display_graphing_interpret_data: "interpret",
+  grade2_data_display_graphing_complete_graph: "complete"
 });
+
+const READING_TASKS = new Set(["read", "interpret"]);
 
 const VALUE_POOL = Object.freeze([2, 3, 4, 5, 6, 7, 8]);
 
 function isGrade2PictographReadingWorksheet(options = {}) {
-  return Boolean(RESOURCE_TASKS[options.worksheetId]);
+  return READING_TASKS.has(RESOURCE_TASKS[options.worksheetId]);
+}
+
+function isGrade2CompletePictographWorksheet(options = {}) {
+  return RESOURCE_TASKS[options.worksheetId] === "complete";
 }
 
 function injectedRandom(options = {}) {
@@ -162,6 +169,101 @@ function attachQuestionTruth(graphData, questions) {
   graphData.answerState = questions.map((question) => ({ ...question.answerState }));
 }
 
+function buildCompletePictographProblem(graphData, random) {
+  const missingThreeCandidates = shuffle(
+    graphData.categories.filter((category) => category.value >= 4),
+    random
+  );
+  const missingThree = missingThreeCandidates[0];
+  const missingTwo = shuffle(
+    graphData.categories.filter((category) => category.id !== missingThree.id && category.value >= 3),
+    random
+  )[0];
+  if (!missingThree || !missingTwo) {
+    throw new Error("Grade 2 complete pictograph requires safe rows for two and three omitted symbols.");
+  }
+
+  const missingByCategoryId = new Map([
+    [missingThree.id, 3],
+    [missingTwo.id, 2]
+  ]);
+  const tableRows = graphData.categories.map(({ id, label, value }) => ({ id, label, value }));
+  const graphRows = graphData.categories.map((category) => {
+    const missingCount = missingByCategoryId.get(category.id) || 0;
+    return {
+      categoryId: category.id,
+      label: category.label,
+      targetValue: category.value,
+      requiredSymbolCount: category.value,
+      visibleCount: category.value - missingCount,
+      visibleSymbolCount: category.value - missingCount,
+      missingCount,
+      omissionPlacement: missingCount > 0 ? "row_end" : null,
+      isIncomplete: missingCount > 0
+    };
+  });
+  const completionRows = graphRows.filter((row) => row.isIncomplete).map((row) => ({
+    categoryId: row.categoryId,
+    missingCount: row.missingCount,
+    omissionPlacement: row.omissionPlacement,
+    visibleSymbolCount: row.visibleSymbolCount,
+    requiredSymbolCount: row.requiredSymbolCount
+  }));
+  const missingCategoryIds = completionRows.map((row) => row.categoryId);
+  const missingCounts = completionRows.map((row) => row.missingCount);
+  const visibleSymbolCounts = graphRows.map((row) => row.visibleSymbolCount);
+  const requiredSymbolCounts = graphRows.map((row) => row.requiredSymbolCount);
+  const answerState = {
+    kind: "completed_pictograph",
+    categoryIds: graphRows.map((row) => row.categoryId),
+    symbolCounts: requiredSymbolCounts
+  };
+  const constructionSignature = [
+    "grade2_complete_pictograph",
+    graphData.datasetId,
+    ...graphRows.map((row) => `${row.categoryId}:${row.visibleSymbolCount}+${row.missingCount}`)
+  ].join(":");
+
+  Object.assign(graphData, {
+    tableRows,
+    graphRows,
+    completionRows,
+    missingCategoryIds,
+    missingCounts,
+    visibleSymbolCounts,
+    requiredSymbolCounts,
+    total: graphData.totalValue,
+    answerState,
+    constructionSignature
+  });
+
+  return {
+    type: "equation",
+    prompt: "",
+    answer: "Completed pictograph",
+    responseMode: "graph_drawing",
+    responseType: "drawing",
+    taskMode: "complete_graph",
+    graphData,
+    graphTaskData: {
+      kind: "complete_pictograph",
+      tableRows,
+      dataTable: tableRows,
+      graphRows,
+      rows: graphRows,
+      completionRows,
+      missingCategoryIds,
+      missingCounts,
+      visibleSymbolCounts,
+      requiredSymbolCounts,
+      answerState,
+      constructionSignature
+    },
+    answerState,
+    duplicateSignature: constructionSignature
+  };
+}
+
 function generateGrade2DataGraphProblem(options = {}) {
   const task = RESOURCE_TASKS[options.worksheetId];
   if (!task) {
@@ -182,8 +284,10 @@ function generateGrade2DataGraphProblem(options = {}) {
     const graphData = buildGrade2GraphData(topic, random);
     const questions = task === "read"
       ? buildReadQuestions(graphData, random)
-      : buildInterpretQuestions(graphData, random);
-    attachQuestionTruth(graphData, questions);
+      : task === "interpret"
+        ? buildInterpretQuestions(graphData, random)
+        : [buildCompletePictographProblem(graphData, random)];
+    if (READING_TASKS.has(task)) attachQuestionTruth(graphData, questions);
     generatorState.grade2DataGraphs[task] = { graphData, questions };
   }
 
@@ -196,8 +300,10 @@ module.exports = {
   RESOURCE_TASKS,
   VALUE_POOL,
   isGrade2PictographReadingWorksheet,
+  isGrade2CompletePictographWorksheet,
   buildGrade2GraphData,
   buildReadQuestions,
   buildInterpretQuestions,
+  buildCompletePictographProblem,
   generateGrade2DataGraphProblem
 };
