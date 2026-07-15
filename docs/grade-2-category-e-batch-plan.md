@@ -4,6 +4,38 @@ Date: 2026-07-15
 
 Scope: Category E batch plan plus implementation checkpoints authorized by later founder briefs. Catalog-status changes, promotion, and reconciliation changes remain outside this document.
 
+## Batch 2 founder-approved contract checkpoint, 2026-07-15
+
+Commit `0a1db99` standardized adjacent Grade 2 Category C addition/subtraction resources, but did not implement any of the exact Batch 2 IDs. No later committed production change superseded the original catalog/runtime paths for `g2_addition_fluency_within_100`, `g2_missing_addends_within_100`, `g2_subtraction_fluency_within_100`, or `grade2_addition_subtraction_facts_related_subtraction` before the current unstaged work.
+
+The authoritative committed defaults for the three within-100 resources are 12 questions, four columns, a 60-question page capacity, one student page plus one answer-key page, the shared short-numeric answer target, and no completed example. Twelve-question founder proofs therefore preserve the established density; they are not a diagnostic override or regression. The committed defect is narrower: default arithmetic remains in the easy recipe range instead of visibly exercising values beyond 20, and public presentation exposes stale catalog wording/internal footer labels.
+
+None of the three exact Grade 2 IDs is registered in the teacher-customization family registry. The shared raw catalog runtime nevertheless accepts `questionCount`, `questionsPerPage`, range operands (`minA`, `maxA`, `minB`, `maxB`, and addition/missing-addend `maxTotal`), number selection (`selectedNumbers`/`onlyNumbers`), `worksheetSeed`, and the `includeExample` / `completedExample` / `example` aliases. Missing-addend position is not functional in committed HEAD; the current worktree adds `first`, `second`, and `mixed`. There is no exact-ID public contract for operation mode, text size, layout mode, or answer format. `includeAnswerKey` remains a PDF-render option rather than an exact-ID generator option.
+
+The unstaged range adapters, structured missing-addend/subtraction routing, public titles/instructions/footers, seeded truth, pagination, and shared answer-target geometry are narrow fixes rather than duplicated completed work. Completed-example compatibility is restored without changing the default: each supported alias now produces one completed example plus the requested 12 student questions. Addition retains weighted selected-number emphasis; Missing Addends and Subtraction restore strict source-operand restriction for `selectedNumbers` / `onlyNumbers`, with explicit no-candidate errors for impossible selections. Focused checks cover counts 1, 12, 20, and 75, 30-question pagination, all example aliases, both selection aliases, missing-position modes, answer-key parity, and cross-grade isolation.
+
+The 12-question default and within-100 corrections remain authoritative. Founder recheck is complete. Related Subtraction remains ordinary subtraction with no source fact or derived related response; its approved decision is **DEFER — DUPLICATES SUBTRACTION FLUENCY**, moving it from E to G without changing its catalog record or implementation. This committed Batch 2 checkpoint reconciles the three implemented resources from E to A and Related Subtraction from E to G. Reconciliation is A33 / D0 / E3 / G16 / Total52.
+
+## Batch 2 implementation checkpoint, 2026-07-15
+
+Batch 1 was committed in `8fba97067d79029ad3a13931201f9b33f8e8ce98`. Batch 2 implements three established fluency-family resources through narrow Grade 2 within-100 adapters:
+
+- `g2_addition_fluency_within_100`: `Addition Facts Within 100`; `Solve each addition fact.`; sums capped at 100 through the shared addition-fact generator.
+- `g2_missing_addends_within_100`: `Missing Addends Within 100`; `Write the missing number in each equation.`; totals capped at 100 with balanced first- and second-addend blanks through the established missing-addend family.
+- `g2_subtraction_fluency_within_100`: `Subtraction Facts Within 100`; `Solve each subtraction fact.`; nonnegative differences with minuends capped at 100 through the established subtraction-fact family.
+
+All three retain 12 default questions, the shared four-column fluency layout and short numeric answer target, one student page plus one answer-key page, catalog status `ready`, and the public footer `Grade 2 • Math • Addition and Subtraction`. The focused suite passes 30 deterministic seeds per resource, zero same-seed failures, meaningful different-seed variation, within-100 arithmetic truth, values beyond 20, missing-position balance, preview/PDF parity, student/key parity, exact two-page PDFs, and Grade 1/Grade 3+ isolation. Grade 1 fluency, Grade 2 addition/subtraction, shared answer-target/pagination, and addition-customization regressions pass; the worksheet audit remains Ready 104/104, Generated 213/213, Partial 5/5, Total331, with only the seven established planned gaps.
+
+Founder proofs:
+
+- `review/grade-2-category-e-batch-2/founder-review/g2_addition_facts_within_100_default_student_and_key.pdf`
+- `review/grade-2-category-e-batch-2/founder-review/g2_missing_addends_within_100_default_student_and_key.pdf`
+- `review/grade-2-category-e-batch-2/founder-review/g2_subtraction_facts_within_100_default_student_and_key.pdf`
+
+Founder review is complete. `grade2_addition_subtraction_facts_related_subtraction` remains technically unchanged and receives the approved decision **DEFER — DUPLICATES SUBTRACTION FLUENCY**: its current page is a set of ordinary subtraction equations with no source addition equation, derived related fact, or visible relationship mechanism. Reconsider only when a distinct source-fact and related-response contract is founder-approved.
+
+Batch 2 is founder-approved and committed through this checkpoint. Reconciliation moves from A30 / D0 / E7 / G15 / Total52 to A33 / D0 / E3 / G16 / Total52. Catalog statuses remain unchanged.
+
 ## Batch 1 implementation checkpoint, 2026-07-15
 
 Batch 1 is implemented and founder-approved. `grade2_multiplication_facts_arrays` now defaults to exactly eight structured array questions in the existing two-column multiplication-sentence family. Its final public title is `Arrays`, its instruction remains `Use each array to write a multiplication equation.`, and its footer is `Grade 2 • Math • Multiplication & Division`. Standard 2.4-point dot radii, row-by-column truth, `a × b = c` response targets, seeded determinism, and student/key parity are unchanged. The resulting proof is one student page plus one answer-key page.

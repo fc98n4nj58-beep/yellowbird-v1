@@ -4,6 +4,7 @@ const {
 } = require("./grade1FluencyComparison");
 
 const GRADE1_MISSING_ADDENDS_ID = "g1_missing_addends_within_20";
+const GRADE2_MISSING_ADDENDS_WITHIN_100_ID = "g2_missing_addends_within_100";
 const GRADE2_BALANCED_ASSESSMENT_IDS = new Set([
   "grade2_addition_subtraction_facts_missing_addend",
   "g2_missing_addends_within_20_quick_check",
@@ -65,8 +66,11 @@ function getBalancedAssessmentFact(options = {}) {
 }
 
 function generateMissingAddendProblem(options = {}) {
-  if (options.worksheetId === GRADE1_MISSING_ADDENDS_ID) {
-    return generateMissingAddendFact(options);
+  if ([GRADE1_MISSING_ADDENDS_ID, GRADE2_MISSING_ADDENDS_WITHIN_100_ID].includes(options.worksheetId)) {
+    return generateMissingAddendFact({
+      ...options,
+      strictSelectedOperands: options.worksheetId === GRADE2_MISSING_ADDENDS_WITHIN_100_ID
+    });
   }
 
   if (GRADE2_BALANCED_ASSESSMENT_IDS.has(options.worksheetId)) {

@@ -154,6 +154,14 @@ const GRADE2_SHADE_EQUAL_PARTS_ID = "grade2_fraction_equivalence_shade_fraction_
 const GRADE2_SHARE_FAIRLY_TO_10_ID = "grade2_fraction_equivalence_fraction_word_problems";
 const GRADE2_ARRAYS_ID = "grade2_multiplication_facts_arrays";
 const GRADE2_BASE_TEN_BLOCKS_ID = "g2_base_ten_blocks_representation";
+const GRADE2_ADDITION_WITHIN_100_ID = "g2_addition_fluency_within_100";
+const GRADE2_MISSING_ADDENDS_WITHIN_100_ID = "g2_missing_addends_within_100";
+const GRADE2_SUBTRACTION_WITHIN_100_ID = "g2_subtraction_fluency_within_100";
+const GRADE2_CATEGORY_E_BATCH2_IDS = new Set([
+  GRADE2_ADDITION_WITHIN_100_ID,
+  GRADE2_MISSING_ADDENDS_WITHIN_100_ID,
+  GRADE2_SUBTRACTION_WITHIN_100_ID
+]);
 const GRADE2_CATEGORY_D_LOW_RISK_IDS = new Set([
   GRADE2_EQUATION_MATCH_ID,
   GRADE2_NUMBER_LINE_IDENTIFY_ID,
@@ -365,6 +373,28 @@ function normalizeGrade2CategoryEBatch1Options(item, options = {}) {
     normalized.questionCount,
     item.id === GRADE2_ARRAYS_ID ? 8 : 10
   );
+  return normalized;
+}
+
+function normalizeGrade2CategoryEBatch2Options(item, options = {}) {
+  if (!GRADE2_CATEGORY_E_BATCH2_IDS.has(item.id)) return options;
+
+  const normalized = {
+    ...options,
+    questionCount: finiteNumber(options.questionCount, 12),
+    minA: finiteNumber(options.minA, 0),
+    maxA: finiteNumber(options.maxA, 100),
+    minB: finiteNumber(options.minB, 0),
+    maxB: finiteNumber(options.maxB, 100)
+  };
+
+  if (item.id === GRADE2_ADDITION_WITHIN_100_ID || item.id === GRADE2_MISSING_ADDENDS_WITHIN_100_ID) {
+    normalized.maxTotal = finiteNumber(options.maxTotal, 100);
+  }
+  if (item.id === GRADE2_MISSING_ADDENDS_WITHIN_100_ID) {
+    normalized.missingPosition = options.missingPosition || "mixed";
+  }
+
   return normalized;
 }
 
@@ -741,7 +771,9 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalizeGrade2CategoryEBatch1Options(
+  return normalizeGrade2CategoryEBatch2Options(
+    item,
+  normalizeGrade2CategoryEBatch1Options(
     item,
   normalizeGrade2PictographReadingOptions(
     item,
@@ -769,7 +801,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
       )
     )
     )
-  )));
+  ))));
 }
 
 const NON_CUSTOMIZATION_QUERY_KEYS = new Set([
@@ -1120,6 +1152,18 @@ function buildStudentFacingInstruction(item, fallback = "") {
   return "Count the base ten blocks. Write the number.";
  }
 
+ if (item.id === GRADE2_ADDITION_WITHIN_100_ID) {
+  return "Solve each addition fact.";
+ }
+
+ if (item.id === GRADE2_MISSING_ADDENDS_WITHIN_100_ID) {
+  return "Write the missing number in each equation.";
+ }
+
+ if (item.id === GRADE2_SUBTRACTION_WITHIN_100_ID) {
+  return "Solve each subtraction fact.";
+ }
+
  if (item.id === "g1_ten_frame_addition_within_10") {
   return "Count the dots. Write the number.";
  }
@@ -1315,6 +1359,12 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
                     ? "Arrays"
                   : item.id === GRADE2_BASE_TEN_BLOCKS_ID
                     ? "Base Ten Blocks"
+                  : item.id === GRADE2_ADDITION_WITHIN_100_ID
+                    ? "Addition Facts Within 100"
+                  : item.id === GRADE2_MISSING_ADDENDS_WITHIN_100_ID
+                    ? "Missing Addends Within 100"
+                  : item.id === GRADE2_SUBTRACTION_WITHIN_100_ID
+                    ? "Subtraction Facts Within 100"
                   : item.id === GRADE2_SHADE_EQUAL_PARTS_ID
                     ? "Shade Equal Parts"
                     : item.id === GRADE2_SHARE_FAIRLY_TO_10_ID

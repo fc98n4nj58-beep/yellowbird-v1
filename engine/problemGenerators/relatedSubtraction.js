@@ -4,10 +4,14 @@ const {
 } = require("./grade1FluencyComparison");
 
 const GRADE1_SUBTRACTION_FACTS_ID = "g1_subtraction_facts_within_20";
+const GRADE2_SUBTRACTION_WITHIN_100_ID = "g2_subtraction_fluency_within_100";
 
 function generateRelatedSubtractionProblem(options = {}) {
-  if (options.worksheetId === GRADE1_SUBTRACTION_FACTS_ID) {
-    return generateSubtractionFact(options);
+  if ([GRADE1_SUBTRACTION_FACTS_ID, GRADE2_SUBTRACTION_WITHIN_100_ID].includes(options.worksheetId)) {
+    return generateSubtractionFact({
+      ...options,
+      strictSelectedOperands: options.worksheetId === GRADE2_SUBTRACTION_WITHIN_100_ID
+    });
   }
 
   return generateArithmeticProblem({

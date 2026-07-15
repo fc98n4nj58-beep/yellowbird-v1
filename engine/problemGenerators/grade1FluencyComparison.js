@@ -157,10 +157,12 @@ function getSequenceState(options, key, kind, builder) {
 function buildSubtractionCandidates(options = {}) {
   const { min, max } = normalizeRangeOptions(options);
   const selected = selectedSetFor(options);
+  const strictSelectedOperands = Boolean(options.strictSelectedOperands && selected.size);
   const candidates = [];
 
   for (let minuend = min; minuend <= max; minuend += 1) {
     for (let subtrahend = min; subtrahend <= max; subtrahend += 1) {
+      if (strictSelectedOperands && (!selected.has(minuend) || !selected.has(subtrahend))) continue;
       const difference = minuend - subtrahend;
       if (difference < min || difference > max) continue;
       candidates.push({
@@ -182,6 +184,7 @@ function getSubtractionState(options = {}) {
     kind: "subtraction",
     min,
     max,
+    strictSelectedOperands: Boolean(options.strictSelectedOperands),
     selectedValues: parseSelectedNumbers(options),
     questionCount: finiteInteger(options.questionCount ?? options.studentQuestionCount, 1)
   });
@@ -216,12 +219,14 @@ function generateSubtractionFact(options = {}) {
 function buildMissingAddendCandidates(options = {}) {
   const { min, max } = normalizeRangeOptions(options);
   const selected = selectedSetFor(options);
+  const strictSelectedOperands = Boolean(options.strictSelectedOperands && selected.size);
   const mode = normalizeMissingPosition(options.missingPosition ?? options.missingAddendPosition);
   const positions = mode === "mixed" ? ["first_addend", "second_addend"] : [mode];
   const candidates = [];
 
   for (let firstAddend = min; firstAddend <= max; firstAddend += 1) {
     for (let secondAddend = min; secondAddend <= max; secondAddend += 1) {
+      if (strictSelectedOperands && (!selected.has(firstAddend) || !selected.has(secondAddend))) continue;
       const total = firstAddend + secondAddend;
       if (total < min || total > max) continue;
 
@@ -253,6 +258,7 @@ function getMissingAddendState(options = {}) {
     kind: "missing_addend",
     min,
     max,
+    strictSelectedOperands: Boolean(options.strictSelectedOperands),
     missingPosition,
     selectedValues: parseSelectedNumbers(options),
     questionCount: finiteInteger(options.questionCount ?? options.studentQuestionCount, 1)

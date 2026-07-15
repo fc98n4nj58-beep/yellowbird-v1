@@ -28,6 +28,9 @@ const PUBLIC_SKILL_LABEL_HIDDEN_IDS = new Set([
   "grade2_multiplication_facts_equal_groups",
   "grade2_multiplication_facts_arrays",
   "g2_base_ten_blocks_representation",
+  "g2_addition_fluency_within_100",
+  "g2_missing_addends_within_100",
+  "g2_subtraction_fluency_within_100",
   "grade2_fraction_equivalence_shade_fraction_models",
   "grade2_fraction_equivalence_fraction_word_problems",
   "grade2_data_display_graphing_read_graph",
@@ -70,6 +73,12 @@ const GRADE2_ADDITION_SUBTRACTION_CATEGORY_C_IDS = new Set([
   "grade2_addition_subtraction_word_problems_subtraction_word_problem"
 ]);
 
+const GRADE2_WITHIN_100_FLUENCY_IDS = new Set([
+  "g2_addition_fluency_within_100",
+  "g2_missing_addends_within_100",
+  "g2_subtraction_fluency_within_100"
+]);
+
 function finiteOptionalNumber(value) {
   if (value === undefined || value === null || value === "") return null;
   const n = Number(value);
@@ -79,6 +88,7 @@ function finiteOptionalNumber(value) {
 function publicSkillLabel(item) {
   if (GRADE2_COMPARISON_FOOTER_IDS.has(item?.id)) return "";
   if (GRADE2_ADDITION_SUBTRACTION_CATEGORY_C_IDS.has(item?.id)) return "";
+  if (GRADE2_WITHIN_100_FLUENCY_IDS.has(item?.id)) return "";
   if (PUBLIC_SKILL_LABEL_HIDDEN_IDS.has(item?.id)) return "";
   if (item?.skillKey === "patterning_and_algebra") return "";
   return item?.skillKey || "";
@@ -90,6 +100,9 @@ function publicDomainLabel(item) {
   }
   if (GRADE2_COMPARISON_FOOTER_IDS.has(item?.id)) return "Place Value";
   if (GRADE2_ADDITION_SUBTRACTION_CATEGORY_C_IDS.has(item?.id)) {
+    return "Addition and Subtraction";
+  }
+  if (GRADE2_WITHIN_100_FLUENCY_IDS.has(item?.id)) {
     return "Addition and Subtraction";
   }
   if (EARLY_MULTIPLICATION_FOOTER_IDS.has(item?.id)) {
