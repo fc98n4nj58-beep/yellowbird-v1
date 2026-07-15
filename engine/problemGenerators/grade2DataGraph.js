@@ -7,7 +7,8 @@ const {
 const RESOURCE_TASKS = Object.freeze({
   grade2_data_display_graphing_read_graph: "read",
   grade2_data_display_graphing_interpret_data: "interpret",
-  grade2_data_display_graphing_complete_graph: "complete"
+  grade2_data_display_graphing_complete_graph: "complete",
+  grade2_data_display_graphing_match_data_to_graph: "match"
 });
 
 const READING_TASKS = new Set(["read", "interpret"]);
@@ -20,6 +21,10 @@ function isGrade2PictographReadingWorksheet(options = {}) {
 
 function isGrade2CompletePictographWorksheet(options = {}) {
   return RESOURCE_TASKS[options.worksheetId] === "complete";
+}
+
+function isGrade2MatchingPictographWorksheet(options = {}) {
+  return RESOURCE_TASKS[options.worksheetId] === "match";
 }
 
 function injectedRandom(options = {}) {
@@ -264,6 +269,86 @@ function buildCompletePictographProblem(graphData, random) {
   };
 }
 
+function buildMatchingPictographProblem(graphData, random, correctChoiceId) {
+  const changedIndex = Math.floor(random() * graphData.categories.length);
+  const changedCategory = graphData.categories[changedIndex];
+  const delta = changedCategory.value === 2
+    ? 1
+    : changedCategory.value === 8
+      ? -1
+      : random() < 0.5 ? -1 : 1;
+  const distractorValue = changedCategory.value + delta;
+  const tableRows = graphData.categories.map(({ id, label, value }) => ({ id, label, value }));
+  const distractorRows = tableRows.map((row, index) => ({
+    ...row,
+    value: index === changedIndex ? distractorValue : row.value
+  }));
+  const correctFirst = correctChoiceId === "A";
+  const choices = [
+    { id: "A", isCorrect: correctFirst, categories: correctFirst ? tableRows : distractorRows },
+    { id: "B", isCorrect: !correctFirst, categories: correctFirst ? distractorRows : tableRows }
+  ];
+  const answerState = {
+    kind: "pictograph_choice",
+    correctChoiceId,
+    changedCategoryId: changedCategory.id,
+    originalValue: changedCategory.value,
+    distractorValue
+  };
+  const matchingSignature = [
+    "grade2_matching_pictograph",
+    graphData.datasetId,
+    changedCategory.id,
+    `${changedCategory.value}${delta > 0 ? "+1" : "-1"}`,
+    correctChoiceId
+  ].join(":");
+
+  Object.assign(graphData, {
+    tableRows,
+    correctGraphRows: tableRows,
+    distractorGraphRows: distractorRows,
+    answerState,
+    matchingSignature
+  });
+
+  return {
+    type: "equation",
+    prompt: "",
+    answer: correctChoiceId,
+    responseMode: "graph_choice",
+    responseType: "choice",
+    taskMode: "match_graph",
+    graphData,
+    graphTaskData: {
+      kind: "match_graph",
+      tableRows,
+      dataTable: tableRows,
+      correctGraph: { categories: tableRows },
+      distractorGraph: { categories: distractorRows },
+      choices,
+      changedCategoryId: changedCategory.id,
+      originalValue: changedCategory.value,
+      distractorValue,
+      delta,
+      correctChoiceId,
+      keyValue: graphData.keyValue,
+      scale: graphData.scale,
+      answerState,
+      matchingSignature,
+      distractor: {
+        kind: delta > 0 ? "one_extra" : "one_missing",
+        categoryId: changedCategory.id,
+        categoryIndex: changedIndex,
+        originalValue: changedCategory.value,
+        distractorValue,
+        delta
+      }
+    },
+    answerState,
+    duplicateSignature: matchingSignature
+  };
+}
+
 function generateGrade2DataGraphProblem(options = {}) {
   const task = RESOURCE_TASKS[options.worksheetId];
   if (!task) {
@@ -274,6 +359,25 @@ function generateGrade2DataGraphProblem(options = {}) {
   const generatorState = options.generatorState || {};
   generatorState.grade2DataGraphs = generatorState.grade2DataGraphs || {};
   generatorState.grade2GraphTopicSelection = generatorState.grade2GraphTopicSelection || {};
+
+  if (task === "match") {
+    const matchIndex = generatorState.grade2GraphMatchIndex || 0;
+    if (matchIndex >= 2) throw new Error("No unused Grade 2 matching pictograph items remain.");
+    const topic = selectGraphTopic({
+      worksheetSeed: `${options.worksheetSeed || "yellowbird-default"}:match:${matchIndex}`,
+      graphTopicId: matchIndex === 0 ? options.graphTopicId : null,
+      selectionState: generatorState.grade2GraphTopicSelection
+    });
+    const graphData = buildGrade2GraphData(topic, random);
+    if (!generatorState.grade2MatchFirstCorrectChoiceId) {
+      generatorState.grade2MatchFirstCorrectChoiceId = random() < 0.5 ? "A" : "B";
+    }
+    const correctChoiceId = matchIndex === 0
+      ? generatorState.grade2MatchFirstCorrectChoiceId
+      : generatorState.grade2MatchFirstCorrectChoiceId === "A" ? "B" : "A";
+    generatorState.grade2GraphMatchIndex = matchIndex + 1;
+    return buildMatchingPictographProblem(graphData, random, correctChoiceId);
+  }
 
   if (!generatorState.grade2DataGraphs[task]) {
     const topic = selectGraphTopic({
@@ -301,9 +405,11 @@ module.exports = {
   VALUE_POOL,
   isGrade2PictographReadingWorksheet,
   isGrade2CompletePictographWorksheet,
+  isGrade2MatchingPictographWorksheet,
   buildGrade2GraphData,
   buildReadQuestions,
   buildInterpretQuestions,
   buildCompletePictographProblem,
+  buildMatchingPictographProblem,
   generateGrade2DataGraphProblem
 };

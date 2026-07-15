@@ -4,6 +4,16 @@ Date: 2026-07-15
 
 Status: pictograph reading and Finish the Pictograph founder-approved and reconciled; catalog statuses remain `generated`
 
+### Choose the Matching Pictograph implementation checkpoint, 2026-07-15
+
+`grade2_data_display_graphing_match_data_to_graph` now uses a **GRADE 2 PARAMETER ADAPTER** over the approved Grade 1 compact A/B pictograph-choice family. The exact-ID path is `matchDataToGraph.js -> grade2DataGraph.js -> shared topic and pictograph-data helpers -> existing normalization -> shared compact match renderer -> preview/PDF -> answer key from the same structured truth`. No new renderer, route, UI, curriculum source, completed example, or customization control was added.
+
+Each of the two seeded items owns a complete four-row table, correct graph rows, distractor graph rows, two stable choices, changed category ID, original and distractor values, ±1 delta, correct choice ID, key/scale, answer state, and deterministic signature before rendering. The distractor preserves all four labels and their order, changes exactly one value while keeping it within 2-8, and cannot duplicate the table. The two-item worksheet guarantees one correct A and one correct B while seeded generation varies which appears first, both topics/datasets, changed category, delta direction, and values.
+
+The public contract is `Choose the Matching Pictograph`; `Use the table. Circle A or B to show which pictograph matches the data.`; and `Grade 2 • Math • Data & Graphing`. Founder correction replaces the earlier whole-pictograph circling wording so the instruction now names the actual A/B response. A shared measured-glyph helper optically centres both letters inside normal and emphasized selection circles without changing marker diameter, center, stroke, graph spacing, or answer-key emphasis. Grade 2 data and key circles use the approved unfilled `#4b5563`, 1.15-point outlines; Grade 1 defaults remain unchanged. The focused 30-seed suite passes same-seed stability, meaningful variation, exact one-category distractors, table/choice/key parity, measured A/B centring, Grade 1 and Grade 3+ isolation, Read/Interpret/Finish regressions, and exact two-page US Letter output. Founder recheck is approved.
+
+The sole proof is `review/grade-2-matching-pictograph/founder-review/g2_choose_the_matching_pictograph_default_student_and_key.pdf`. Both pages were rendered and visually inspected: two compact tables, four A/B graph choices, one-extra/one-missing distractors, response targets, answer-key emphasis, labels, keys, public footer, and page boundaries are clear and aligned. Founder review is approved. The record remains `generated` and unpromoted and is reconciled from Category D to Category A; reconciliation is A28 / D0 / G15 / Total52.
+
 ### Finish the Pictograph founder wording checkpoint, 2026-07-15
 
 `grade2_data_display_graphing_complete_graph` is implemented as a **GRADE 2 PARAMETER ADAPTER** over the approved Grade 1 pictograph construction family. The exact-ID path is `completeGraph.js -> grade2DataGraph.js -> shared topic and pictograph-data helpers -> existing normalization -> shared construction renderer -> preview/PDF -> answer key from the same structured truth`. Founder review clarified that this is a scaffolded finish-the-graph task, so the final title is now `Finish the Pictograph` and the instruction is `Use the table to draw the missing circles in the pictograph.` A fully blank construction graph remains a possible future customization state, not a separate launch resource. Founder recheck is approved. No renderer, graph truth, route, UI, curriculum-source, completed example, or renderer-side arithmetic changed.
@@ -24,7 +34,7 @@ This preflight covers exactly five Grade 2 records that entered planning in Cate
 - `grade2_data_display_graphing_match_data_to_graph`
 - `grade2_data_display_graphing_read_graph`
 
-All five remain catalog status `generated` and unpromoted. Read the Pictograph, Interpret the Pictograph, and Finish the Pictograph are founder-approved and reconciled in Category A. Graph Questions is formally deferred in Category G as a duplicate future mixed-review preset. Match Data to Graph remains the only Category D resource. The catalog remains Ready 104/104, Generated 213/213, Partial 5/5, Total 331. The seven established `pattern_word_problems` gaps are the only audit gaps. Grade 2 reconciliation is A27 / B0 / C0 / D1 / E9 / F0 / G15, Total 52.
+All five remain catalog status `generated` and unpromoted. Read the Pictograph, Interpret the Pictograph, Finish the Pictograph, and Choose the Matching Pictograph are founder-approved and reconciled in Category A. Graph Questions is formally deferred in Category G as a duplicate future mixed-review preset. Category D is closed. The catalog remains Ready 104/104, Generated 213/213, Partial 5/5, Total 331. The seven established `pattern_word_problems` gaps are the only audit gaps. Grade 2 reconciliation is A28 / B0 / C0 / D0 / E9 / F0 / G15, Total 52.
 
 The launch decision is one-to-one pictographs only with four distinct student actions. `Graph Questions` is founder-approved for deferral because it merely mixes the direct-reading and interpretation actions already owned by two stronger worksheets. It remains in the catalog as an inactive future preset candidate; no implementation or promotion is authorized.
 
@@ -435,7 +445,7 @@ Category E remains 9 in every scenario and is shown so Total 52 is explicit.
 | D - Finish approved and reconciled | 27 | 1 | 9 | 15 | Match remains the only D resource |
 | D - all five deferred | 24 | 0 | 9 | 19 | 52 | No implementation |
 
-The current state matches Scenario D: A27 / D1 / E9 / G15 / Total52. Match remains the only structured-data record in Category D.
+The current state is A28 / D0 / E9 / G15 / Total52. Choose the Matching Pictograph is founder-approved and reconciled in Category A, closing Category D.
 
 ## Risks
 

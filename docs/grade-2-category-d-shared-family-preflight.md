@@ -1,5 +1,9 @@
 # Grade 2 Category D Shared-Family Preflight
 
+## Choose the Matching Pictograph checkpoint, 2026-07-15
+
+`grade2_data_display_graphing_match_data_to_graph` now uses a narrow Grade 2 adapter over the approved compact A/B pictograph-choice family. Each of two seeded items has one complete four-row table, exactly one matching graph, and one controlled distractor that preserves labels/order and changes exactly one 2-8 value by ±1. The final instruction is `Use the table. Circle A or B to show which pictograph matches the data.` A shared measured-glyph helper now centres A and B optically inside both normal and emphasized selection circles without changing their geometry or stroke. The worksheet guarantees one correct A and one correct B and uses the approved Grade 2 circle stroke for data and key symbols. The two-page founder proof and 30-seed/isolation suite pass. Founder recheck is approved; the resource remains `generated` and unpromoted and is reconciled from Category D to Category A. Reconciliation is A28 / D0 / G15 / Total52, closing Grade 2 Category D.
+
 ## Finish the Pictograph wording checkpoint, 2026-07-15
 
 `grade2_data_display_graphing_complete_graph` uses a narrow Grade 2 parameter adapter over the approved shared pictograph construction family. Founder clarified and approved the scaffolded action through the title `Finish the Pictograph` and instruction `Use the table to draw the missing circles in the pictograph.` Structured truth, the exact two-and-three-circle end omissions, renderer geometry, and answer state are unchanged. A fully blank graph remains a possible future customization state only. The resource remains `generated` and unpromoted and is reconciled from Category D to Category A. Reconciliation is A27 / D1 / G15 / Total52; Match Data to Graph is untouched and is the only remaining Category D resource.

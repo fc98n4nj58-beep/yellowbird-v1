@@ -121,11 +121,14 @@ function assertIsolation() {
   assert.strictEqual(grade3.normalizedContentObject.content.items.length, 12);
   assert(grade3.normalizedContentObject.content.items.every((problem) => problem.graphData === null));
 
-  for (const id of ["grade2_data_display_graphing_match_data_to_graph", "grade2_data_display_graphing_graph_questions"]) {
+  for (const id of ["grade2_data_display_graphing_graph_questions"]) {
     const runtime = buildCatalogWorksheetRuntime(id, { worksheetSeed: "g2-complete-isolation" });
     assert.strictEqual(runtime.normalizedContentObject.content.items.length, 12);
     assert(runtime.normalizedContentObject.content.items.every((problem) => problem.graphData === null));
   }
+  const match = buildCatalogWorksheetRuntime("grade2_data_display_graphing_match_data_to_graph", { worksheetSeed: "g2-complete-isolation" });
+  assert.strictEqual(match.normalizedContentObject.content.items.length, 2);
+  assert(match.normalizedContentObject.content.items.every((problem) => problem.taskMode === "match_graph"));
   const read = buildCatalogWorksheetRuntime("grade2_data_display_graphing_read_graph", { worksheetSeed: "g2-complete-isolation" });
   assert.strictEqual(read.normalizedContentObject.content.items.length, 6);
   assert(read.normalizedContentObject.content.items.every((problem) => problem.taskMode === "read_pictograph"));
@@ -139,11 +142,12 @@ function assertCatalogBoundary() {
   assert.strictEqual(master.filter((record) => record.id === RESOURCE_ID).length, 1);
   assert.strictEqual(master.filter((record) => record.status === "ready").length, 104);
   const reconciliation = fs.readFileSync("docs/grade-2-architecture-reconciliation-preflight.md", "utf8");
-  const categoryA = reconciliation.match(/\*\*A \(27\):\*\*[^\n]+/)?.[0] || "";
-  const categoryD = reconciliation.match(/\*\*D \(1\):\*\*[^\n]+/)?.[0] || "";
+  const categoryA = reconciliation.match(/\*\*A \(28\):\*\*[^\n]+/)?.[0] || "";
+  const categoryD = reconciliation.match(/\*\*D \(0\):\*\*[^\n]+/)?.[0] || "";
   assert(categoryA.includes(RESOURCE_ID));
   assert(!categoryD.includes(RESOURCE_ID));
-  assert(categoryD.includes("grade2_data_display_graphing_match_data_to_graph"));
+  assert(categoryA.includes("grade2_data_display_graphing_match_data_to_graph"));
+  assert(categoryD.includes("none"));
 }
 
 async function run() {

@@ -30,7 +30,8 @@ const PUBLIC_SKILL_LABEL_HIDDEN_IDS = new Set([
   "grade2_fraction_equivalence_fraction_word_problems",
   "grade2_data_display_graphing_read_graph",
   "grade2_data_display_graphing_interpret_data",
-  "grade2_data_display_graphing_complete_graph"
+  "grade2_data_display_graphing_complete_graph",
+  "grade2_data_display_graphing_match_data_to_graph"
 ]);
 
 const GRADE2_CATEGORY_D_FOOTER_LABELS = Object.freeze({
@@ -42,7 +43,8 @@ const GRADE2_CATEGORY_D_FOOTER_LABELS = Object.freeze({
   grade2_fraction_equivalence_fraction_word_problems: "Fractions",
   grade2_data_display_graphing_read_graph: "Data & Graphing",
   grade2_data_display_graphing_interpret_data: "Data & Graphing",
-  grade2_data_display_graphing_complete_graph: "Data & Graphing"
+  grade2_data_display_graphing_complete_graph: "Data & Graphing",
+  grade2_data_display_graphing_match_data_to_graph: "Data & Graphing"
 });
 
 const EARLY_MULTIPLICATION_FOOTER_IDS = new Set([

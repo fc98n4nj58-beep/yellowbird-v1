@@ -151,6 +151,7 @@ Acceptance criteria:
 - drawn targets are preferred over raw underscores when safer;
 - boxes are avoided unless the task benefits from them;
 - answer targets align in student and answer-key versions.
+- letters, numbers, and symbols inside circles or other compact answer targets are optically centred from measured text geometry rather than approximate baseline offsets.
 
 ## Page Density And Pagination
 

@@ -3353,6 +3353,51 @@ function matchChoiceStrokeWidth(choice, answerKey = false) {
   return answerKey && choice?.isCorrect ? 2 : 0.8;
 }
 
+function measureCircularLabelGeometry(doc, label, centerX, centerY) {
+  const text = String(label || "");
+  const font = doc?._font?.font;
+  const fontSize = Number(doc?._fontSize) || 0;
+  const unitsPerEm = Number(font?.unitsPerEm) || 1000;
+  if (!font || !text || fontSize <= 0) {
+    throw new Error("Circular label geometry requires active font metrics and nonempty text.");
+  }
+  const run = font.layout(text);
+  let cursorX = 0;
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  run.glyphs.forEach((glyph, index) => {
+    const position = run.positions[index];
+    const bounds = glyph.bbox;
+    const glyphX = cursorX + Number(position.xOffset || 0);
+    const glyphY = Number(position.yOffset || 0);
+    minX = Math.min(minX, glyphX + bounds.minX);
+    maxX = Math.max(maxX, glyphX + bounds.maxX);
+    minY = Math.min(minY, glyphY + bounds.minY);
+    maxY = Math.max(maxY, glyphY + bounds.maxY);
+    cursorX += Number(position.xAdvance || glyph.advanceWidth || 0);
+  });
+  const scale = fontSize / unitsPerEm;
+  const textX = Number(centerX) - ((minX + maxX) / 2) * scale;
+  const baselineY = Number(centerY) + ((minY + maxY) / 2) * scale;
+  const inkBounds = Object.freeze({
+    left: textX + minX * scale,
+    right: textX + maxX * scale,
+    top: baselineY - maxY * scale,
+    bottom: baselineY - minY * scale
+  });
+  return Object.freeze({
+    text,
+    textX,
+    baselineY,
+    measuredTextWidth: doc.widthOfString(text),
+    inkBounds,
+    inkCenterX: (inkBounds.left + inkBounds.right) / 2,
+    inkCenterY: (inkBounds.top + inkBounds.bottom) / 2
+  });
+}
+
 function buildFractionStripGeometry({
   x,
   y,
@@ -4063,7 +4108,8 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     doc.text(graph.scenario, x, y + 17, { width, lineBreak: false });
     let nextY = renderDataTable(task.dataTable, y + 34, { compact: true });
     doc.save();
-    doc.strokeColor(pdfDesignTokens.colors.text).lineWidth(0.8);
+    doc.strokeColor(display.sharedDataSymbolStrokeColor || pdfDesignTokens.colors.text)
+      .lineWidth(display.sharedDataSymbolStrokeWidth ?? 0.8);
     doc.circle(x + 8, nextY + 5, 5).stroke();
     setFont(doc, fonts.regular, 8.5);
     doc.fillColor(pdfDesignTokens.colors.text);
@@ -4081,7 +4127,11 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
       doc.circle(targetX, targetY, GRADE1_DATA_MATCH_SELECTION_TARGET_DIAMETER / 2).stroke();
       setFont(doc, fonts.bold || fonts.regular, 10);
       doc.fillColor(pdfDesignTokens.colors.text);
-      doc.text(choice.id, targetX - 5, targetY - 5.5, { width: 10, align: "center", lineBreak: false });
+      const labelGeometry = measureCircularLabelGeometry(doc, choice.id, targetX, targetY);
+      doc.text(choice.id, labelGeometry.textX, labelGeometry.baselineY, {
+        baseline: 0,
+        lineBreak: false
+      });
       doc.restore();
       renderSharedDataGraph(nextY + 22, {
         graph: { ...graph, categories: choice.categories },
@@ -4160,7 +4210,7 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     return;
   }
 
-  if (display.grade1DataTaskMode === "match_graph") {
+  if ((display.sharedDataTaskMode || display.grade1DataTaskMode) === "match_graph") {
     allItems.forEach((item, index) => {
       startY = renderMatchItem(item, index + 1, startY) + (index < allItems.length - 1 ? 14 : 0);
     });
@@ -4436,6 +4486,7 @@ module.exports = {
     buildSharedDataScenarioGeometry,
     buildConstructionGraphCategories,
     matchChoiceStrokeWidth,
+    measureCircularLabelGeometry,
     buildFractionStripGeometry,
     drawFractionStripPrimitive,
     buildCompactWordProblemAnswerKeyGeometry,

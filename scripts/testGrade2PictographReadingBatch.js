@@ -26,7 +26,6 @@ const RESOURCES = Object.freeze([
 ]);
 
 const OUT_OF_SCOPE_IDS = Object.freeze([
-  "grade2_data_display_graphing_match_data_to_graph",
   "grade2_data_display_graphing_graph_questions"
 ]);
 const EXPECTED_FOOTER = "Grade 2 • Math • Data & Graphing";
@@ -272,8 +271,8 @@ function assertCatalogAndReconciliationState() {
   });
 
   const reconciliation = fs.readFileSync("docs/grade-2-architecture-reconciliation-preflight.md", "utf8");
-  const categoryA = reconciliation.match(/\*\*A \(27\):\*\*[^\n]+/)?.[0] || "";
-  const categoryD = reconciliation.match(/\*\*D \(1\):\*\*[^\n]+/)?.[0] || "";
+  const categoryA = reconciliation.match(/\*\*A \(28\):\*\*[^\n]+/)?.[0] || "";
+  const categoryD = reconciliation.match(/\*\*D \(0\):\*\*[^\n]+/)?.[0] || "";
   const categoryG = reconciliation.match(/\*\*G \(15\):\*\*[^\n]+/)?.[0] || "";
   RESOURCES.forEach((resource) => {
     assert(categoryA.includes(resource.id));
@@ -281,7 +280,8 @@ function assertCatalogAndReconciliationState() {
   });
   assert(categoryA.includes("grade2_data_display_graphing_complete_graph"));
   assert(!categoryD.includes("grade2_data_display_graphing_complete_graph"));
-  assert(categoryD.includes("grade2_data_display_graphing_match_data_to_graph"));
+  assert(categoryA.includes("grade2_data_display_graphing_match_data_to_graph"));
+  assert(categoryD.includes("none"));
   assert(!categoryD.includes("grade2_data_display_graphing_graph_questions"));
   assert(categoryG.includes("grade2_data_display_graphing_graph_questions"));
 }
@@ -323,6 +323,14 @@ function assertIsolation() {
   assert.strictEqual(complete.normalizedContentObject.content.items.length, 1);
   assert.strictEqual(complete.normalizedContentObject.content.items[0].taskMode, "complete_graph");
   assert(complete.normalizedContentObject.content.items[0].graphTaskData);
+
+  const match = buildCatalogWorksheetRuntime(
+    "grade2_data_display_graphing_match_data_to_graph",
+    { worksheetSeed: "grade2-pictograph-reading-isolation" }
+  );
+  assert.strictEqual(match.normalizedContentObject.content.items.length, 2);
+  assert(match.normalizedContentObject.content.items.every((problem) => problem.taskMode === "match_graph"));
+  assert(match.normalizedContentObject.content.items.every((problem) => problem.graphTaskData?.choices?.length === 2));
 
   const activeAdapter = fs.readFileSync("engine/problemGenerators/grade2DataGraph.js", "utf8");
   assert(!activeAdapter.includes("Math.random"));
