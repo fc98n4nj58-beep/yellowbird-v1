@@ -74,9 +74,13 @@ function selectGraphTopic(options = {}) {
   return selected;
 }
 
-function buildGraphData(topic, random = Math.random) {
-  const values = shuffle(BASE_VALUES, random);
-  return {
+function buildPictographData(topic, values, options = {}) {
+  const categories = topic.categories.map((label, index) => ({
+    label,
+    value: values[index],
+    categoryLanguage: topic.categoryLanguage[index]
+  }));
+  const graphData = {
     kind: "one_to_one_pictograph",
     topicId: topic.id,
     topicFamily: topic.topicFamily,
@@ -90,18 +94,42 @@ function buildGraphData(topic, random = Math.random) {
     collectionAction: topic.collectionAction,
     purpose: topic.purpose,
     supportsCategoryApplicationLanguage: topic.supportsCategoryApplicationLanguage,
-    readingLevel: topic.readingLevel,
+    readingLevel: options.readingLevel || topic.readingLevel,
     keyLabel: topic.keyLabel,
     keyText: topic.keyText,
     symbol: "circle",
     symbolValue: 1,
     colorRequired: false,
-    categories: topic.categories.map((label, index) => ({
-      label,
-      value: values[index],
-      categoryLanguage: topic.categoryLanguage[index]
-    }))
+    categories
   };
+
+  if (!options.includeStructuredAliases) return graphData;
+
+  const structuredCategories = categories.map((category, index) => ({
+    ...category,
+    id: `${topic.id}:category-${index + 1}`
+  }));
+  const structuredValues = structuredCategories.map((category) => category.value);
+
+  return {
+    ...graphData,
+    graphType: "pictograph",
+    modelType: "one_to_one_pictograph",
+    datasetId: `${options.datasetPrefix || "pictograph"}:${topic.id}:${structuredValues.join("-")}`,
+    sourceText: topic.dataSource,
+    values: structuredValues,
+    keyValue: 1,
+    scale: 1,
+    partialSymbols: false,
+    minimumValue: Math.min(...structuredValues),
+    maximumValue: Math.max(...structuredValues),
+    totalValue: structuredValues.reduce((sum, value) => sum + value, 0),
+    categories: structuredCategories
+  };
+}
+
+function buildGraphData(topic, random = Math.random) {
+  return buildPictographData(topic, shuffle(BASE_VALUES, random));
 }
 
 function categoryWithValue(graphData, value) {
@@ -486,8 +514,10 @@ module.exports = {
   GRAPH_APPLICATION_LANGUAGE,
   categoryNounApplicationPrompt,
   stableHash,
+  shuffle,
   rankGraphTopics,
   selectGraphTopic,
+  buildPictographData,
   buildGraphData,
   buildReadQuestions,
   buildInterpretQuestions,

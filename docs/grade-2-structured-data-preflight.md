@@ -2,11 +2,11 @@
 
 Date: 2026-07-15
 
-Status: planning complete; founder contract approval and implementation remain pending
+Status: core pictograph reading batch founder-approved and reconciled; catalog status remains `generated`
 
 ## Current state
 
-This preflight covers exactly five Grade 2 Category D records:
+This preflight covers exactly five Grade 2 records that entered planning in Category D:
 
 - `grade2_data_display_graphing_complete_graph`
 - `grade2_data_display_graphing_graph_questions`
@@ -14,15 +14,49 @@ This preflight covers exactly five Grade 2 Category D records:
 - `grade2_data_display_graphing_match_data_to_graph`
 - `grade2_data_display_graphing_read_graph`
 
-All five remain catalog status `generated`, reconciliation Category D, unpromoted, and uncommitted by this task. The catalog remains Ready 104/104, Generated 213/213, Partial 5/5, Total 331. The seven established `pattern_word_problems` gaps are the only audit gaps. Grade 2 reconciliation remains A24 / B0 / C0 / D5 / E9 / F0 / G14, Total 52.
+All five remain catalog status `generated` and unpromoted. Read the Pictograph and Interpret the Pictograph are founder-approved and reconciled in Category A; Complete a Graph, Match Data to Graph, and Graph Questions remain Category D. The catalog remains Ready 104/104, Generated 213/213, Partial 5/5, Total 331. The seven established `pattern_word_problems` gaps are the only audit gaps. Grade 2 reconciliation is A26 / B0 / C0 / D3 / E9 / F0 / G14, Total 52.
 
-The planning decision is to launch one-to-one pictographs only, retain four distinct student actions, and recommend `Graph Questions` for later-phase deferral because it merely mixes the direct-reading and interpretation actions already owned by two stronger worksheets. No catalog or reconciliation change is authorized here.
+The planning decision is to launch one-to-one pictographs only, retain four distinct student actions, and recommend `Graph Questions` for later-phase deferral because it merely mixes the direct-reading and interpretation actions already owned by two stronger worksheets. The Graph Questions deferral remains a separate reconciliation action; no catalog promotion is authorized here.
 
-## Resource inventory
+### Core pictograph reading implementation checkpoint, 2026-07-15
 
-All current outputs contain 12 generic prose items, six items on each of two student pages followed by two answer-key pages. Every current dataset is fixed; a seed changes only prompt order for four resources and does not change their data. `Interpret Data` bypasses the injected random function and is not same-seed stable.
+The approved planning checkpoint was committed as `54b893464035965eeaaff5d7128bc8d08f5a12ad` (`docs: add grade 2 structured data preflight`) before implementation began.
 
-| Exact ID | Current title | Status | Current fixed dataset | Current count | Current output state | Runtime owner |
+Only these two retained Batch 1 resources are implemented:
+
+- `grade2_data_display_graphing_read_graph`
+- `grade2_data_display_graphing_interpret_data`
+
+The active path is:
+
+`catalog -> worksheetCatalogService -> readGraph.js / interpretData.js exact-ID gate -> grade2DataGraph.js -> shared Grade 1 topic selection and pictograph-data builder -> existing normalization -> shared pictograph renderer -> preview/PDF -> answer key from the same item truth`
+
+`grade2DataGraph.js` requires injected seeded randomness and owns the selected topic, four unique category values, graph metadata, exact question types, referenced category IDs, answers, answer state, and duplicate signatures before rendering. It wraps the approved Grade 1 topic-selection and pictograph-data helpers. The Grade 1 builder keeps its established defaults; the shared renderer gains only a grade-neutral response-line flag and a testable symbol-count helper. No route, UI, curriculum source, new renderer, or renderer-side arithmetic was added.
+
+Both resources now use exactly four categories, four unique integer values from 2 through 8, one outlined circle per item, key value and scale 1, no partial symbols, one full pictograph, six questions, one student page, one matching key page, the footer `Grade 2 • Math • Data & Graphing`, and no completed example.
+
+`Read the Pictograph` uses six direct category-value questions only. All four categories appear; two categories repeat once with alternate direct-reading wording, so the distribution is 2/2/1/1 and no category dominates. Every response is numeric and equals the referenced category value.
+
+`Interpret the Pictograph` uses exactly one most, one least, one more-difference, one fewer-difference, one two-category combined-total, and one all-category total question. Values are unique so most and least are unambiguous; named pairs are ordered so differences are non-negative; every arithmetic answer is stored before rendering.
+
+The active Grade 2 path no longer reaches the direct `Math.random` call in the legacy `interpretData.js` fallback. Thirty deterministic seeds per resource pass same-seed stability with zero failures and meaningful different-seed variation. Structured graph truth, exact question truth, answer-key identity, preview/PDF shared runtime, Grade 1 isolation, Grade 3+ isolation, and exact two-page output pass the focused suite at `scripts/testGrade2PictographReadingBatch.js`.
+
+Founder proofs:
+
+- `review/grade-2-pictograph-reading/founder-review/g2_read_the_pictograph_default_student_and_key.pdf`
+- `review/grade-2-pictograph-reading/founder-review/g2_interpret_the_pictograph_default_student_and_key.pdf`
+
+Both US Letter proofs contain one student page and one answer-key page. All four pages were visually inspected: titles, instructions, graph titles, scenarios, labels, outlined symbols, visible one-unit keys, six question rows, response targets, answers, public footers, and page boundaries are clean and aligned. Both proofs are founder-approved.
+
+Founder legibility correction, 2026-07-15: the Grade 2 pictograph data circles and key circle now use the approved `#4b5563` 1.15-point outline instead of inheriting the pale graph-rule stroke. The opt-in is isolated to these two Grade 2 resources; Grade 1 styling remains unchanged. Symbols remain unfilled and retain their exact size, spacing, counts, and geometry. The two proof PDFs were regenerated without changing graph truth, questions, answers, layout, or pagination, then re-rendered for print-legibility inspection and approved.
+
+Founder approval is complete. Both catalog statuses remain `generated`, both records move from reconciliation Category D to Category A, and neither is promoted. Complete a Graph and Match Data to Graph remain untouched in Category D. Graph Questions remains an unimplemented proposed deferral in Category D pending a separate reconciliation decision.
+
+## Pre-implementation resource inventory
+
+At the planning scan, all five outputs contained 12 generic prose items, six items on each of two student pages followed by two answer-key pages. Every dataset was fixed; a seed changed only prompt order for four resources and did not change their data. `Interpret Data` bypassed the injected random function and was not same-seed stable. The implementation checkpoint above supersedes those baseline findings for Read and Interpret only.
+
+| Exact ID | Baseline title | Status | Baseline fixed dataset | Baseline count | Baseline output state | Baseline runtime owner |
 | --- | --- | --- | --- | ---: | --- | --- |
 | `grade2_data_display_graphing_read_graph` | `Read a Graph - Grade 2` | `generated` | Apples 6, Bananas 4, Oranges 8 | 12 prompts; 3 unique | Four-page prose worksheet; no graph; repeated direct lookups | `readGraph.js` legacy fallback |
 | `grade2_data_display_graphing_interpret_data` | `Interpret Data - Grade 2` | `generated` | Soccer 12, Basketball 9, Baseball 6 | 12 prompts; 3 unique | Four-page prose worksheet; no graph; most/least/difference only | `interpretData.js` legacy fallback |
@@ -339,7 +373,7 @@ No other whole record is recommended for deferral. Bar graphs, line plots, scale
 
 Eventual shared assertions:
 
-- exact five IDs are accounted for; active IDs remain `generated` and Category D until founder approval;
+- exact five IDs are accounted for; all remain `generated`, the approved two are Category A, and the other three remain Category D;
 - exact public titles, instructions, footers, counts, and page totals;
 - no internal IDs, registry keys, or snake_case in printable output;
 - same-seed stability and different-seed variation across at least 30 seeds;
@@ -376,7 +410,7 @@ Existing regressions retained:
 
 Planning-pass results: the 100-topic registry validator and Grade 1 Batch 2 reading suite pass. The Grade 1 Batch 3 suite completes its graph-family assertions, then fails its stale catalog baseline assertion because it expects ready 103 while the authoritative current count is 104. This is a test-maintenance defect, not a graph-family defect; it is documented here and was not changed in this planning task.
 
-All six inspected data-specific JavaScript files pass syntax checks. The full worksheet audit passes Ready 104/104, Generated 213/213, and Partial 5/5 with zero failures; its only failures are the seven established planned `pattern_word_problems` gaps. `git diff --check` passes. The five Grade 2 records remain present exactly once, `generated`, and Category D.
+All six inspected data-specific JavaScript files pass syntax checks. The full worksheet audit passes Ready 104/104, Generated 213/213, and Partial 5/5 with zero failures; its only failures are the seven established planned `pattern_word_problems` gaps. `git diff --check` passes. The five Grade 2 records remain present exactly once and `generated`; Read and Interpret are Category A while Complete, Match, and Graph Questions remain Category D.
 
 ## Reconciliation scenarios
 

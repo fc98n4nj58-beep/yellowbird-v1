@@ -165,6 +165,10 @@ Proposed title: `Share Fairly to 10`. Instruction: `Share the objects equally. D
 
 The focused decision now lives in `docs/grade-2-structured-data-preflight.md` and supersedes the earlier five-resource keep-all proposal for these exact data records. The launch-safe direction is one-to-one pictographs only. `Read a Graph`, `Interpret Data`, `Complete a Graph`, and `Match Data to Graph` remain active candidates through the shared Grade 1 graph truth and renderer family; `Graph Questions` is recommended for later-phase deferral as a duplicate/customization preset. All five remain `generated`, Category D, unpromoted, and unreconciled pending founder approval. No production or test change is authorized by this checkpoint.
 
+Implementation checkpoint, 2026-07-15: only `grade2_data_display_graphing_read_graph` and `grade2_data_display_graphing_interpret_data` now use the shared structured one-to-one pictograph family. Their focused 30-seed suite and two default two-page founder proofs pass. Complete, Match, and Graph Questions remain untouched. All five remain `generated` and unpromoted.
+
+Founder approval and reconciliation checkpoint, 2026-07-15: Read the Pictograph and Interpret the Pictograph are founder-approved after their Grade 2-only `#4b5563`, 1.15-point unfilled symbol correction. Size, spacing, counts, graph geometry, questions, and layout are unchanged. Both records move from Category D to Category A while remaining `generated` and unpromoted. Grade 2 reconciliation is A26 / D3 / G14 / Total52. Complete, Match, and Graph Questions remain untouched in Category D; the proposed Graph Questions deferral is not reconciled here.
+
 Exact resources and intended roles:
 
 | Resource | Intended structured role | Recommendation |

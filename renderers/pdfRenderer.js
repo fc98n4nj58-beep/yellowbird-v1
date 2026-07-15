@@ -140,6 +140,10 @@ function buildAnswerKeyItems(items) {
   }));
 }
 
+function sharedDataSymbolCount(value) {
+  return Math.max(0, Math.min(8, Number(value) || 0));
+}
+
 function promptWithoutEquals(prompt) {
   return safeStr(prompt).replace(/\s*=\s*$/, "").trim();
 }
@@ -2270,7 +2274,7 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
   if (!visual?.kind && display.writingLine) {
     const lineHeight = layout.typography.body?.lineHeight || 16;
     const isGrade1DataResponseLine = Boolean(
-      display.grade1DataResponseLines &&
+      (display.sharedDataResponseLines || display.grade1DataResponseLines) &&
       question.responseMode === "graph_short_answer"
     );
     const lineWidth = display.shortWritingLine
@@ -3948,6 +3952,8 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     const height = geometry.height;
     const rowTop = geometry.body.top;
     const labelWidth = config.labelWidth || 104;
+    const symbolStrokeColor = config.symbolStrokeColor || display.sharedDataSymbolStrokeColor || pdfDesignTokens.colors.lightRule;
+    const symbolStrokeWidth = config.symbolStrokeWidth ?? display.sharedDataSymbolStrokeWidth ?? 0.8;
 
     doc.save();
     doc.lineWidth(0.8);
@@ -3970,7 +3976,11 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
       if (config.showKey !== false) {
         const keyX = x + width - 126;
         const keyY = geometry.header.centerY;
+        doc.save();
+        doc.strokeColor(symbolStrokeColor);
+        doc.lineWidth(symbolStrokeWidth);
         doc.circle(keyX, keyY, config.compact ? 5 : 7).stroke();
+        doc.restore();
         setFont(doc, fonts.regular, config.compact ? 8.5 : 10);
         const keyText = String(graph.keyText || "= 1 unit");
         const keyTextHeight = doc.heightOfString(keyText, { width: 94, lineBreak: false });
@@ -4001,13 +4011,17 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
         lineBreak: false
       });
 
-      const count = Math.max(0, Math.min(8, Number(category.value) || 0));
+      const count = sharedDataSymbolCount(category.value);
       const symbolStartX = x + labelWidth + (config.symbolInset ?? (config.compact ? 14 : 24));
       const symbolGap = config.symbolGap ?? (config.compact ? 18 : 31);
       const symbolRadius = (config.symbolDiameter ?? (config.compact ? 10 : 16)) / 2;
+      doc.save();
+      doc.strokeColor(symbolStrokeColor);
+      doc.lineWidth(symbolStrokeWidth);
       for (let symbolIndex = 0; symbolIndex < count; symbolIndex += 1) {
         doc.circle(symbolStartX + symbolIndex * symbolGap, centerY, symbolRadius).stroke();
       }
+      doc.restore();
     });
 
     doc.restore();
@@ -4418,6 +4432,7 @@ module.exports = {
     measureNumberLineVisual,
     buildNumberLineAnswerTargetGeometry,
     buildSharedDataPictographGeometry,
+    sharedDataSymbolCount,
     buildSharedDataScenarioGeometry,
     buildConstructionGraphCategories,
     matchChoiceStrokeWidth,

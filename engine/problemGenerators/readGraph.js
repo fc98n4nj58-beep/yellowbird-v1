@@ -2,10 +2,18 @@ const {
   isGrade1DataGraphWorksheet,
   generateGrade1DataGraphProblem
 } = require("./grade1DataGraph");
+const {
+  isGrade2PictographReadingWorksheet,
+  generateGrade2DataGraphProblem
+} = require("./grade2DataGraph");
 
 function generateReadGraphProblem(options = {}) {
   if (isGrade1DataGraphWorksheet(options)) {
     return generateGrade1DataGraphProblem(options);
+  }
+
+  if (isGrade2PictographReadingWorksheet(options)) {
+    return generateGrade2DataGraphProblem(options);
   }
 
   const random = options.random || Math.random;

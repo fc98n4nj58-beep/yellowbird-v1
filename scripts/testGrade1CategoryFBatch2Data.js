@@ -587,7 +587,7 @@ function assertDeterminismAndNoMutation() {
   });
 }
 
-function assertBatch3StatusAndGrade2Isolation() {
+function assertBatch3StatusAndGrade2Boundary() {
   BATCH3_IDS.forEach((id) => {
     const item = getAnyWorksheetCatalogById(id);
     assert(item);
@@ -601,12 +601,23 @@ function assertBatch3StatusAndGrade2Isolation() {
       worksheetSeed: `batch2-grade2-${resource.task}`,
       questionCount: 2
     });
-    assert.strictEqual(runtime.layout.display?.sharedDataPictograph, undefined);
-    assert.strictEqual(runtime.layout.display?.sharedDataGraph, undefined);
-    runtime.contentObject.content.items.forEach((item) => {
-      assert.strictEqual(item.graphData, null);
-      assert.strictEqual(item.graphQuestionType, null);
-    });
+    if (["read", "interpret"].includes(resource.task)) {
+      assert.strictEqual(runtime.item.status, "generated");
+      assert.strictEqual(runtime.layout.display?.sharedDataPictograph, true);
+      assert.strictEqual(runtime.layout.display?.sharedDataGraph?.kind, "one_to_one_pictograph");
+      assert.strictEqual(runtime.contentObject.content.items.length, 6);
+      runtime.contentObject.content.items.forEach((item) => {
+        assert(item.graphData);
+        assert(item.graphQuestionType);
+      });
+    } else {
+      assert.strictEqual(runtime.layout.display?.sharedDataPictograph, undefined);
+      assert.strictEqual(runtime.layout.display?.sharedDataGraph, undefined);
+      runtime.contentObject.content.items.forEach((item) => {
+        assert.strictEqual(item.graphData, null);
+        assert.strictEqual(item.graphQuestionType, null);
+      });
+    }
   });
 }
 
@@ -651,7 +662,7 @@ async function run() {
   assertResourceContracts();
   assertCompletedExamples();
   assertDeterminismAndNoMutation();
-  assertBatch3StatusAndGrade2Isolation();
+  assertBatch3StatusAndGrade2Boundary();
   await assertPdfAndAnswerKeyParity();
   console.log("Grade 1 Category F Batch 2 data checks passed; same-seed failures: 0.");
 }

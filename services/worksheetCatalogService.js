@@ -165,6 +165,10 @@ const GRADE1_DATA_READING_IDS = new Set([
   "grade1_data_display_graphing_interpret_data",
   "grade1_data_display_graphing_graph_questions"
 ]);
+const GRADE2_PICTOGRAPH_READING_IDS = new Set([
+  "grade2_data_display_graphing_read_graph",
+  "grade2_data_display_graphing_interpret_data"
+]);
 const GRADE1_DATA_BATCH3_IDS = new Set([
   "grade1_data_display_graphing_complete_graph",
   "grade1_data_display_graphing_match_data_to_graph",
@@ -331,6 +335,15 @@ function normalizeGrade1DataReadingOptions(item, options = {}) {
       item.id !== "grade1_data_display_graphing_graph_word_problems"
       ? false
       : options.includeExample
+  };
+}
+
+function normalizeGrade2PictographReadingOptions(item, options = {}) {
+  if (!GRADE2_PICTOGRAPH_READING_IDS.has(item.id)) return options;
+  return {
+    ...options,
+    questionCount: 6,
+    includeExample: false
   };
 }
 
@@ -707,7 +720,9 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalizeGrade2CategoryDLowRiskOptions(
+  return normalizeGrade2PictographReadingOptions(
+    item,
+  normalizeGrade2CategoryDLowRiskOptions(
     item,
     normalizeGrade1FractionOptions(
     item,
@@ -731,7 +746,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
       )
     )
     )
-  );
+  ));
 }
 
 const NON_CUSTOMIZATION_QUERY_KEYS = new Set([
@@ -1030,6 +1045,10 @@ function buildStudentFacingInstruction(item, fallback = "") {
   return "Use the graph to answer each question.";
  }
 
+ if (GRADE2_PICTOGRAPH_READING_IDS.has(item.id)) {
+  return "Use the pictograph to answer each question.";
+ }
+
  if (item.id === "grade1_fraction_equivalence_shade_fraction_models") {
   return "Shade the equal parts to show each fraction.";
  }
@@ -1267,6 +1286,10 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
                   ? "Compare the Data"
                   : item.id === "grade1_data_display_graphing_graph_questions"
                     ? "Graph Questions"
+                    : item.id === "grade2_data_display_graphing_read_graph"
+                      ? "Read the Pictograph"
+                      : item.id === "grade2_data_display_graphing_interpret_data"
+                        ? "Interpret the Pictograph"
       : item.title);
 
  const layout = normalizeWorksheetLayout({
@@ -1786,6 +1809,45 @@ if (GRADE1_DATA_READING_IDS.has(item.id)) {
     sharedDataPictograph: true,
     sharedDataGraph: graphData,
     sharedDataGraphHeight: 218,
+    sharedDataScenario: graphData?.scenario || "",
+    sharedDataScenarioPlacement: "between_instruction_and_graph",
+    sharedDataScenarioAlign: "left",
+    sharedDataScenarioFullWidth: true,
+    sharedDataScenarioMaxLines: 2
+  };
+}
+
+if (GRADE2_PICTOGRAPH_READING_IDS.has(item.id)) {
+  const questionCount = 6;
+  const graphData = layout.problems?.[0]?.graphData || null;
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 2,
+    maxProblemsPerPage: questionCount
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    suppressExampleLabel: true,
+    hideItemSeparators: true,
+    writingLine: true,
+    answerLineBelowPrompt: true,
+    sharedDataResponseLines: true,
+    dataResponseLineInset: 44,
+    dataResponsePromptGap: 28,
+    dataResponseLineWidths: {
+      number: 64,
+      category: 136,
+      yes_no: 84
+    },
+    equalHeightItems: true,
+    denseGridRows: 3,
+    sequentialColumnFill: true,
+    sharedDataPictograph: true,
+    sharedDataGraph: graphData,
+    sharedDataGraphHeight: 218,
+    sharedDataSymbolStrokeColor: "#4b5563",
+    sharedDataSymbolStrokeWidth: 1.15,
     sharedDataScenario: graphData?.scenario || "",
     sharedDataScenarioPlacement: "between_instruction_and_graph",
     sharedDataScenarioAlign: "left",
