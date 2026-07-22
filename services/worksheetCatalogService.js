@@ -224,6 +224,12 @@ const GRADE2_NUMERIC_PATTERN_TITLES = Object.freeze({
   grade2_patterning_and_algebra_missing_value_pattern: "Missing Value Pattern"
 });
 
+const GRADE3_NUMERIC_PATTERN_TITLES = Object.freeze({
+  grade3_patterning_and_algebra_extend_pattern: "Extend the Pattern",
+  grade3_patterning_and_algebra_identify_pattern_rule: "Identify the Pattern Rule",
+  grade3_patterning_and_algebra_missing_value_pattern: "Find the Missing Number"
+});
+
 const GRADE2_NUMERIC_PATTERN_IDS = new Set(
   Object.keys(GRADE2_NUMERIC_PATTERN_TITLES)
 );
@@ -1382,7 +1388,7 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
   instructionText = "Write the numeral for each number word.";
  }
 
-  const title = GRADE2_NUMERIC_PATTERN_TITLES[item.id] || (isReverseNumberWordMode
+  const title = GRADE2_NUMERIC_PATTERN_TITLES[item.id] || GRADE3_NUMERIC_PATTERN_TITLES[item.id] || (isReverseNumberWordMode
   ? "Write the Numeral to 50"
   : item.id === "grade1_multiplication_facts_arrays"
     ? "Arrays"
