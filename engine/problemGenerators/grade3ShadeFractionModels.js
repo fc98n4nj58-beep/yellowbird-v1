@@ -1,7 +1,19 @@
 const RESOURCE_ID = "grade3_fraction_equivalence_shade_fraction_models";
+const GRADE4_RESOURCE_ID = "grade4_fraction_equivalence_shade_fraction_models";
 const TASK_MODE = "shade_equal_parts";
 const DEFAULT_QUESTION_COUNT = 8;
 const SAFE_DENOMINATORS = Object.freeze([2, 3, 4, 5, 6, 8]);
+const GRADE4_SAFE_DENOMINATORS = Object.freeze([2, 3, 4, 5, 6, 8, 10, 12]);
+
+function resourceProfile(resourceId) {
+  if (resourceId === RESOURCE_ID) {
+    return { gradeLabel: "Grade 3", denominators: SAFE_DENOMINATORS, signaturePrefix: "grade3_fraction:shade", wholeSizeId: "grade3-standard-strip", wholeIdPrefix: "grade3-shade" };
+  }
+  if (resourceId === GRADE4_RESOURCE_ID) {
+    return { gradeLabel: "Grade 4", denominators: GRADE4_SAFE_DENOMINATORS, signaturePrefix: "grade4_fraction:shade", wholeSizeId: "grade4-standard-strip", wholeIdPrefix: "grade4-shade" };
+  }
+  return null;
+}
 
 function finiteNumber(value, fallback = null) {
   if (value === undefined || value === null || value === "") return fallback;
@@ -76,11 +88,11 @@ function balancedFractionOrder(values, random) {
   return ordered;
 }
 
-function buildStrip(denominator, wholeId) {
+function buildStrip(denominator, wholeId, profile) {
   return {
     kind: "fraction_strip",
     wholeId,
-    wholeSizeId: "grade3-standard-strip",
+    wholeSizeId: profile.wholeSizeId,
     wholeWidthUnits: 1,
     wholeHeightUnits: 1,
     partitionCount: denominator,
@@ -88,12 +100,12 @@ function buildStrip(denominator, wholeId) {
   };
 }
 
-function buildCandidates(options = {}) {
+function buildCandidates(options = {}, profile = resourceProfile(options.worksheetId || RESOURCE_ID)) {
   const modelTypes = [options.modelType, options.modelSet]
     .flatMap((value) => Array.isArray(value) ? value : value ? [value] : [])
     .map((value) => String(value).trim().toLowerCase());
   if (modelTypes.some((value) => !["strip", "fraction_strip"].includes(value))) {
-    throw new Error("Grade 3 Shade the Fraction supports the fraction-strip model only.");
+    throw new Error(`${profile.gradeLabel} Shade the Fraction supports the fraction-strip model only.`);
   }
 
   const selectedFractions = fractionList(options.selectedFractions || options.fractions);
@@ -102,9 +114,9 @@ function buildCandidates(options = {}) {
   );
   const denominators = requestedDenominators.length
     ? requestedDenominators
-    : SAFE_DENOMINATORS;
-  if (denominators.some((value) => !SAFE_DENOMINATORS.includes(value))) {
-    throw new Error(`Grade 3 Shade the Fraction supports denominators ${SAFE_DENOMINATORS.join(", ")} only.`);
+    : profile.denominators;
+  if (denominators.some((value) => !profile.denominators.includes(value))) {
+    throw new Error(`${profile.gradeLabel} Shade the Fraction supports denominators ${profile.denominators.join(", ")} only.`);
   }
 
   const selectedNumerators = numberList(options.selectedNumerators || options.numerators);
@@ -120,7 +132,7 @@ function buildCandidates(options = {}) {
     });
 
   const candidates = source.filter(({ numerator, denominator }) => (
-    SAFE_DENOMINATORS.includes(denominator) &&
+    profile.denominators.includes(denominator) &&
     denominators.includes(denominator) &&
     Number.isInteger(numerator) &&
     numerator >= minNumerator &&
@@ -133,14 +145,14 @@ function buildCandidates(options = {}) {
     fraction
   ])).values()];
   if (!unique.length) {
-    throw new Error("No proper Grade 3 shade-fraction targets match the selected contract.");
+    throw new Error(`No proper ${profile.gradeLabel} shade-fraction targets match the selected contract.`);
   }
   return unique;
 }
 
-function buildItem(target, index, includeWorkedModel = false) {
+function buildItem(target, index, includeWorkedModel = false, profile = resourceProfile(RESOURCE_ID)) {
   const symbol = `${target.numerator}/${target.denominator}`;
-  const model = buildStrip(target.denominator, `grade3-shade-${index + 1}`);
+  const model = buildStrip(target.denominator, `${profile.wholeIdPrefix}-${index + 1}`, profile);
   const requestedFraction = { ...target, symbol };
   const fractionModel = {
     kind: "fraction_strip",
@@ -177,24 +189,34 @@ function buildItem(target, index, includeWorkedModel = false) {
           answerState: { shadedParts: target.numerator }
         }
       : null,
-    answerState: { shadedParts: target.numerator },
+    answerState: profile.gradeLabel === "Grade 4"
+      ? {
+          numerator: target.numerator,
+          denominator: target.denominator,
+          partitionCount: target.denominator,
+          shadeCount: target.numerator,
+          modelType: "strip",
+          studentShadedParts: 0,
+          answerKeyShadedParts: target.numerator,
+          shadedParts: target.numerator
+        }
+      : { shadedParts: target.numerator },
     visual: { kind: "fraction_strip", data: fractionModel },
-    duplicateSignature: `grade3_fraction:shade:${symbol}`
+    duplicateSignature: `${profile.signaturePrefix}:${symbol}`
   };
 }
 
 function generateGrade3ShadeFractionProblem(options = {}) {
-  if (options.worksheetId !== RESOURCE_ID) {
-    throw new Error(`Unsupported Grade 3 shade worksheet '${options.worksheetId || ""}'.`);
-  }
+  const profile = resourceProfile(options.worksheetId);
+  if (!profile) throw new Error(`Unsupported shared shade worksheet '${options.worksheetId || ""}'.`);
   const generatorState = options.generatorState || {};
   if (!generatorState.grade3ShadeFractionModels) {
     const random = typeof options.random === "function" ? options.random : () => 0.5;
     const requestedCount = Math.max(1, Math.round(finiteNumber(options.questionCount, DEFAULT_QUESTION_COUNT)));
-    const candidates = buildCandidates(options);
+    const candidates = buildCandidates(options, profile);
     if (candidates.length < requestedCount) {
       throw new Error(
-        `Grade 3 Shade the Fraction needs ${requestedCount} unique fractions; the selected contract provides ${candidates.length}.`
+        `${profile.gradeLabel} Shade the Fraction needs ${requestedCount} unique fractions; the selected contract provides ${candidates.length}.`
       );
     }
     generatorState.grade3ShadeFractionModels = {
@@ -205,15 +227,16 @@ function generateGrade3ShadeFractionProblem(options = {}) {
   const state = generatorState.grade3ShadeFractionModels;
   const target = state.items.shift();
   if (!target) throw new Error("No unused Grade 3 shade-fraction targets remain.");
-  const item = buildItem(target, state.index, Boolean(options.includeExample) && state.index === 0);
+  const item = buildItem(target, state.index, Boolean(options.includeExample) && state.index === 0, profile);
   state.index += 1;
   return item;
 }
 
 function validateGrade3ShadeFractionWorksheet(worksheetId, problems = []) {
-  if (worksheetId !== RESOURCE_ID) return true;
+  const profile = resourceProfile(worksheetId);
+  if (!profile) return true;
   if (!Array.isArray(problems) || !problems.length) {
-    throw new Error("Grade 3 Shade the Fraction requires structured items.");
+    throw new Error(`${profile.gradeLabel} Shade the Fraction requires structured items.`);
   }
   const signatures = new Set();
   problems.forEach((problem, index) => {
@@ -226,10 +249,10 @@ function validateGrade3ShadeFractionWorksheet(worksheetId, problems = []) {
       problem.taskMode !== TASK_MODE ||
       problem.responseTarget !== "shaded_parts"
     ) {
-      throw new Error(`Grade 3 Shade the Fraction item ${index + 1} is missing structured visual truth.`);
+      throw new Error(`${profile.gradeLabel} Shade the Fraction item ${index + 1} is missing structured visual truth.`);
     }
     if (
-      !SAFE_DENOMINATORS.includes(truth.denominator) ||
+      !profile.denominators.includes(truth.denominator) ||
       !Number.isInteger(truth.numerator) ||
       truth.numerator < 1 ||
       truth.numerator >= truth.denominator ||
@@ -237,13 +260,17 @@ function validateGrade3ShadeFractionWorksheet(worksheetId, problems = []) {
       truth.shadeCount !== truth.numerator ||
       model?.partitionCount !== truth.denominator ||
       model?.shadedParts !== 0 ||
-      problem.answerState?.shadedParts !== truth.numerator ||
+      (worksheetId === GRADE4_RESOURCE_ID
+        ? problem.answerState?.answerKeyShadedParts !== truth.numerator ||
+          problem.answerState?.shadedParts !== truth.numerator ||
+          problem.answerState?.studentShadedParts !== 0
+        : problem.answerState?.shadedParts !== truth.numerator) ||
       problem.answer !== `${truth.numerator}/${truth.denominator}`
     ) {
-      throw new Error(`Grade 3 Shade the Fraction item ${index + 1} has inconsistent fraction truth.`);
+      throw new Error(`${profile.gradeLabel} Shade the Fraction item ${index + 1} has inconsistent fraction truth.`);
     }
     if (signatures.has(problem.duplicateSignature)) {
-      throw new Error(`Grade 3 Shade the Fraction item ${index + 1} repeats a fraction signature.`);
+      throw new Error(`${profile.gradeLabel} Shade the Fraction item ${index + 1} repeats a fraction signature.`);
     }
     signatures.add(problem.duplicateSignature);
   });
@@ -252,9 +279,11 @@ function validateGrade3ShadeFractionWorksheet(worksheetId, problems = []) {
 
 module.exports = {
   RESOURCE_ID,
+  GRADE4_RESOURCE_ID,
   TASK_MODE,
   DEFAULT_QUESTION_COUNT,
   SAFE_DENOMINATORS,
+  GRADE4_SAFE_DENOMINATORS,
   buildCandidates,
   generateGrade3ShadeFractionProblem,
   validateGrade3ShadeFractionWorksheet

@@ -1,6 +1,23 @@
 const RESOURCE_ID = "grade3_fraction_equivalence_compare_fractions";
+const GRADE4_RESOURCE_ID = "grade4_fraction_equivalence_compare_fractions";
 const SAFE_DENOMINATORS = Object.freeze([2, 3, 4, 5, 6, 8]);
+const GRADE4_SAFE_DENOMINATORS = Object.freeze([2, 3, 4, 5, 6, 8, 10, 12]);
 const DENOMINATOR_ERROR = "Grade 3 fractions support denominators 2, 3, 4, 5, 6, and 8 only.";
+
+function resourceProfile(resourceId) {
+  if (resourceId === RESOURCE_ID) {
+    return { gradeLabel: "Grade 3", denominators: SAFE_DENOMINATORS, denominatorError: DENOMINATOR_ERROR, signaturePrefix: "grade3_fraction_compare" };
+  }
+  if (resourceId === GRADE4_RESOURCE_ID) {
+    return {
+      gradeLabel: "Grade 4",
+      denominators: GRADE4_SAFE_DENOMINATORS,
+      denominatorError: "Grade 4 Compare Fractions supports denominators 2, 3, 4, 5, 6, 8, 10, and 12 only.",
+      signaturePrefix: "grade4_fraction_compare"
+    };
+  }
+  return null;
+}
 
 function finiteInteger(value, fallback) {
   const number = Number(value);
@@ -39,12 +56,12 @@ function rawList(...values) {
   });
 }
 
-function resolveDenominators(options = {}) {
+function resolveDenominators(options = {}, profile) {
   const requested = rawList(options.selectedDenominators, options.denominators, options.allowedDenominators);
-  if (!requested.length) return [...SAFE_DENOMINATORS];
+  if (!requested.length) return [...profile.denominators];
   const denominators = requested.map((value) => Number(value));
-  if (denominators.some((value) => !Number.isInteger(value) || !SAFE_DENOMINATORS.includes(value))) {
-    throw new Error(DENOMINATOR_ERROR);
+  if (denominators.some((value) => !Number.isInteger(value) || !profile.denominators.includes(value))) {
+    throw new Error(profile.denominatorError);
   }
   return [...new Set(denominators)];
 }
@@ -79,23 +96,23 @@ function reducedFraction(fraction) {
   return `${fraction.numerator / divisor}/${fraction.denominator / divisor}`;
 }
 
-function buildFractions(options = {}) {
+function buildFractions(options = {}, profile) {
   const selectedFractions = normalizeFractionList(options.selectedFractions, options.fractions);
   if (selectedFractions.length) {
     const unique = new Map();
     selectedFractions.forEach((fraction) => {
-      if (!SAFE_DENOMINATORS.includes(fraction.denominator)) {
-        throw new Error(DENOMINATOR_ERROR);
+      if (!profile.denominators.includes(fraction.denominator)) {
+        throw new Error(profile.denominatorError);
       }
       if (fraction.denominator < 2 || fraction.numerator < 1 || fraction.numerator >= fraction.denominator) {
-        throw new Error("Grade 3 Compare Fractions supports proper fractions only.");
+        throw new Error(`${profile.gradeLabel} Compare Fractions supports proper fractions only.`);
       }
       unique.set(fractionKey(fraction), fraction);
     });
     return [...unique.values()];
   }
 
-  const denominators = resolveDenominators(options);
+  const denominators = resolveDenominators(options, profile);
   const selectedNumerators = normalizeNumberList(options.selectedNumerators, options.numerators);
   const minNumerator = Math.max(1, finiteInteger(options.minNumerator, 1));
   const maxNumerator = Math.max(minNumerator, finiteInteger(options.maxNumerator, 7));
@@ -110,13 +127,13 @@ function buildFractions(options = {}) {
   });
 
   if (fractions.length < 2) {
-    throw new Error("Grade 3 Compare Fractions needs at least two valid proper fractions.");
+    throw new Error(`${profile.gradeLabel} Compare Fractions needs at least two valid proper fractions.`);
   }
   return fractions;
 }
 
-function buildPairPools(options = {}) {
-  const fractions = buildFractions(options);
+function buildPairPools(options = {}, profile) {
+  const fractions = buildFractions(options, profile);
   const equal = [];
   const unequal = [];
 
@@ -145,10 +162,10 @@ function orient(candidate, symbol) {
   };
 }
 
-function buildPool(options = {}) {
+function buildPool(options = {}, profile) {
   const random = options.random || Math.random;
   const count = Math.max(1, finiteInteger(options.questionCount, 12));
-  const pools = buildPairPools(options);
+  const pools = buildPairPools(options, profile);
   const numericEqualPairs = Number(options.equalPairs);
   const equalTarget = options.includeEqualPairs === false
     ? 0
@@ -160,7 +177,7 @@ function buildPool(options = {}) {
   const greaterTarget = unequalTarget - lessTarget;
 
   if (pools.equal.length < equalTarget || pools.unequal.length < unequalTarget) {
-    throw new Error("The selected Grade 3 fraction set does not provide enough unique comparison pairs.");
+    throw new Error(`The selected ${profile.gradeLabel} fraction set does not provide enough unique comparison pairs.`);
   }
 
   const equal = shuffle(pools.equal, random).slice(0, equalTarget).map((candidate) => orient(candidate, "="));
@@ -179,12 +196,11 @@ function buildPool(options = {}) {
 }
 
 function generateGrade3CompareFractionsProblem(options = {}) {
-  if (options.worksheetId !== RESOURCE_ID) {
-    throw new Error("The Grade 3 Compare Fractions adapter is resource-scoped.");
-  }
+  const profile = resourceProfile(options.worksheetId);
+  if (!profile) throw new Error("The shared Compare Fractions adapter is resource-scoped.");
   const state = options.generatorState || {};
   if (!state.grade3CompareFractionsPool) {
-    state.grade3CompareFractionsPool = buildPool(options);
+    state.grade3CompareFractionsPool = buildPool(options, profile);
     state.grade3CompareFractionsIndex = 0;
   }
   const candidate = state.grade3CompareFractionsPool[state.grade3CompareFractionsIndex++];
@@ -209,31 +225,46 @@ function generateGrade3CompareFractionsProblem(options = {}) {
     equalityState: candidate.symbol === "=",
     responseTarget: "comparison_symbol",
     responseValues: [left.numerator, left.denominator, right.numerator, right.denominator],
-    duplicateSignature: `grade3_fraction_compare:${canonicalPair}`,
-    answerState: { symbol: candidate.symbol, leftCrossProduct: candidate.leftProduct, rightCrossProduct: candidate.rightProduct }
+    duplicateSignature: `${profile.signaturePrefix}:${canonicalPair}`,
+    answerState: options.worksheetId === GRADE4_RESOURCE_ID
+      ? {
+          leftNumerator: left.numerator,
+          leftDenominator: left.denominator,
+          rightNumerator: right.numerator,
+          rightDenominator: right.denominator,
+          leftCrossProduct: candidate.leftProduct,
+          rightCrossProduct: candidate.rightProduct,
+          normalizedLeftFraction: reducedFraction(left),
+          normalizedRightFraction: reducedFraction(right),
+          symbol: candidate.symbol,
+          equalityState: candidate.symbol === "="
+        }
+      : { symbol: candidate.symbol, leftCrossProduct: candidate.leftProduct, rightCrossProduct: candidate.rightProduct }
   };
 }
 
 function validateGrade3CompareFractionsWorksheet(resourceId, problems = []) {
-  if (resourceId !== RESOURCE_ID) return;
-  if (!problems.length) throw new Error("Grade 3 Compare Fractions generated no problems.");
+  const profile = resourceProfile(resourceId);
+  if (!profile) return;
+  if (!problems.length) throw new Error(`${profile.gradeLabel} Compare Fractions generated no problems.`);
   const signatures = new Set();
   problems.forEach((problem) => {
     const required = [problem.leftNumerator, problem.leftDenominator, problem.rightNumerator, problem.rightDenominator];
-    if (!required.every(Number.isInteger)) throw new Error("Grade 3 Compare Fractions lost structured fraction truth.");
-    if (problem.leftNumerator < 1 || problem.leftNumerator >= problem.leftDenominator ||
+    if (!required.every(Number.isInteger)) throw new Error(`${profile.gradeLabel} Compare Fractions lost structured fraction truth.`);
+    if (!profile.denominators.includes(problem.leftDenominator) || !profile.denominators.includes(problem.rightDenominator) ||
+        problem.leftNumerator < 1 || problem.leftNumerator >= problem.leftDenominator ||
         problem.rightNumerator < 1 || problem.rightNumerator >= problem.rightDenominator) {
-      throw new Error("Grade 3 Compare Fractions requires proper fractions.");
+      throw new Error(`${profile.gradeLabel} Compare Fractions requires proper fractions.`);
     }
     const leftProduct = problem.leftNumerator * problem.rightDenominator;
     const rightProduct = problem.rightNumerator * problem.leftDenominator;
     const symbol = leftProduct < rightProduct ? "<" : leftProduct > rightProduct ? ">" : "=";
     if (problem.leftCrossProduct !== leftProduct || problem.rightCrossProduct !== rightProduct ||
         problem.expectedSymbol !== symbol || problem.answer !== symbol) {
-      throw new Error("Grade 3 Compare Fractions comparison truth is inconsistent.");
+      throw new Error(`${profile.gradeLabel} Compare Fractions comparison truth is inconsistent.`);
     }
     if (!problem.duplicateSignature || signatures.has(problem.duplicateSignature)) {
-      throw new Error("Grade 3 Compare Fractions contains a duplicate pair.");
+      throw new Error(`${profile.gradeLabel} Compare Fractions contains a duplicate pair.`);
     }
     signatures.add(problem.duplicateSignature);
   });
@@ -241,7 +272,9 @@ function validateGrade3CompareFractionsWorksheet(resourceId, problems = []) {
 
 module.exports = {
   RESOURCE_ID,
+  GRADE4_RESOURCE_ID,
   SAFE_DENOMINATORS,
+  GRADE4_SAFE_DENOMINATORS,
   generateGrade3CompareFractionsProblem,
   validateGrade3CompareFractionsWorksheet
 };

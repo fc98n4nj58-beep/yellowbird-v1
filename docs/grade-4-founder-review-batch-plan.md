@@ -2,7 +2,7 @@
 
 Date: 2026-07-22
 
-Status: Batch 1 founder-approved and closed; later batches remain proposed. Grade 4 remains open and lifecycle statuses remain unchanged.
+Status: Batches 1 and 2 are founder-approved and closed; later batches remain proposed. Grade 4 remains open and lifecycle statuses remain unchanged.
 
 ## Planning rules
 
@@ -32,7 +32,7 @@ Status: Batch 1 founder-approved and closed; later batches remain proposed. Grad
 ### B2 — Grade 4 Fraction Relationships and Models
 
 - Exact IDs: `grade4_fraction_equivalence_compare_fractions`; `grade4_fraction_equivalence_fraction_number_line`; `grade4_fraction_equivalence_shade_fraction_models`.
-- Proposed categories: D3.
+- Disposition: founder-approved; all three moved D to A. Split, blocked or deferred: none.
 - Completed-work finding: current full-practice compare is under-structured; number-line and shade generators use an incompatible array-returning signature and normalize to blank tasks. Grade 3 has approved structured implementations for all three roles.
 - Implementation lane: extend the Grade 3 exact cross-product, fraction-strip and full-width number-line families with Grade 4-specific denominator/improper-fraction policy; no new primitive.
 - Shared family: `grade3CompareFractions.js`, `grade3FractionNumberLine.js`, `grade3ShadeFractionModels.js`; equation, fraction-strip and number-line renderers.
@@ -160,6 +160,46 @@ All three use `Grade 4 • Math • Patterning & Algebra`, full-width rows, mixe
 
 Applied founder-approved movement: each of the three exact IDs moved E to A, producing A14 / D10 / E1 / G23 / Total48. No other Grade 4 category changed.
 
+## Batch 2 founder-review checkpoint
+
+Status: founder-approved and closed. Catalog lifecycle statuses remain unchanged.
+
+Approved: `grade4_fraction_equivalence_compare_fractions`, `grade4_fraction_equivalence_fraction_number_line`, and `grade4_fraction_equivalence_shade_fraction_models`. Split, blocked or deferred: none.
+
+### Completed-work and shared-family findings
+
+- All three resources were classified **SHARED-FAMILY EXTENSION NEEDED**. Compare Fractions previously had only lower-structure same-denominator practice. The number-line and shade records used incompatible legacy array-returning generators and normalized into blank tasks. None was complete, reconciliation-only, duplicated, or dependent on new architecture.
+- Grade 3 Batch 6 supplied the approved exact-integer comparison and full-width 0-to-1 number-line contracts. Grade 3 Batch 5 supplied the approved fraction-strip model and answer-key shading contract. Grade 1 and Grade 2 supplied the established fraction-family isolation and equal-parts regressions.
+- The shared Grade 3 generator modules now select an exact resource profile. Grade 3 defaults remain unchanged; Grade 4 adds only resource-scoped denominator pools, duplicate namespaces, answer-state fields, copy, defaults and strict runtime validation. Existing fraction equation, number-line and fraction-strip renderers remain display-only. No new renderer, primitive, visual system, lifecycle movement or public customization family was introduced.
+
+### Review contracts and public copy
+
+| Resource | Title | Instruction | Default | Safe boundary verified |
+| --- | --- | --- | --- | --- |
+| `grade4_fraction_equivalence_compare_fractions` | Compare Fractions | Write >, <, or = to compare each pair of fractions. | 12 questions; denominators 2, 3, 4, 5, 6, 8, 10, 12; four `<`, four `>`, four `=` | 24 questions over two student pages; 12 per page; eight equal pairs |
+| `grade4_fraction_equivalence_fraction_number_line` | Fractions on a Number Line | Write the fraction shown by the point on each number line. | 6 questions; 0-to-1 lines; denominators 2, 3, 4, 5, 6, 8, 10; interior targets | 12 questions over two student pages; tenths, endpoints and an additional completed example |
+| `grade4_fraction_equivalence_shade_fraction_models` | Shade the Fraction | Shade each model to show the fraction. | 8 questions; fraction strips; denominators 2, 3, 4, 5, 6, 8, 10, 12; proper fractions | 8 questions plus an additional completed example; readable twelfth partitions |
+
+All three use `Grade 4 • Math • Fractions`, include one student answer-key counterpart, and produce two-page default PDFs. Compare Fractions uses exact integer cross-products and reversal-safe duplicate prevention. Number-line truth stores the partition count, target index, displayed labels and endpoint policy; interior answers retain the partition denominator. Shade truth stores the requested numerator/denominator and separate student/key shaded-part counts.
+
+### Variables and adversarial validation
+
+- **Shared controls preserved:** deterministic worksheet seed; `questionCount`; `questionsPerPage`; `selectedDenominators`/`denominators`/`allowedDenominators`; `selectedFractions`/`fractions`; `includeExample`/`completedExample`/`example`; and PDF answer-key inclusion.
+- **Compare and shade controls:** `selectedNumerators`/`numerators`; `minNumerator`/`minimumNumerator`; `maxNumerator`/`maximumNumerator`. Compare additionally supports `includeEqualPairs` and `equalPairs`. Shade supports strip-only `modelType`/`modelSet` and shade-task aliases.
+- **Number-line controls:** `allowEndpointTargets`/`allowEndpoints`/`endpointPolicy`; identify-marked-fraction task aliases. Whole-number interval and independent numerator controls are deliberately unsupported for this 0-to-1 contract.
+- Empty, duplicate, unsupported, mixed-valid/invalid or conflicting denominator, fraction, numerator, equality, endpoint and example aliases throw. Decimal or non-integer values, zero or negative denominators, improper/default endpoint fractions, insufficient comparison pools, reversed numerator ranges, unsupported modes/models, caller-supplied shading state, irrelevant family controls and unsafe page density also throw. Explicit selections never silently fall back to a safe default.
+
+### Structured truth, tests and proofs
+
+- `scripts/testGrade4StructuredFractionsBatch2.js`: 30 deterministic seeds per resource; same-seed failures 0; different-seed variation; exact 4/4/4 comparison balance; integer cross-products; reversal-safe uniqueness; partition/index/label truth; student/key shading parity; raw variable aliases; completed examples; maximum safe counts; adversarial rejection; Grade 3 default isolation; and default PDFs 2/2/2 all pass.
+- Related regressions pass: Grade 3 Fraction Batch 6; Grade 3 Concrete Visual Batch 5; Grade 1 Fraction Family; Grade 2 Shade Equal Parts; Grade 4 Numeric Patterning Batch 1; Grade 4 reconciliation preflight; and the worksheet customization registry. Syntax checks and `git diff --check` pass.
+- Catalog audit remains Ready 104/104, Generated 213/213, Partial 5/5, Total331, with the seven established planned `pattern_word_problems` gaps only. Lifecycle statuses remain Compare Fractions `ready`, Fractions on a Number Line `generated`, and Shade the Fraction `generated`.
+- Founder defaults: `review/grade-4-structured-fractions-batch-2/founder-review/01_compare_fractions.pdf`, `02_fractions_on_a_number_line.pdf`, `03_shade_the_fraction.pdf`.
+- Stress proofs: `review/grade-4-structured-fractions-batch-2/stress/01_compare_denominator_12_equal_density.pdf`, `02_compare_maximum_safe_count.pdf`, `03_number_line_denominator_10.pdf`, `04_number_line_endpoints_and_example.pdf`, `05_shade_denominator_12.pdf`, `06_shade_completed_example.pdf`.
+- All 22 proof pages were rendered and visually inspected. Fractions, symbols, answer lines, labels, endpoint markers, tenths, twelfths, example panels and key shading remain readable, aligned and unclipped; student/key truth and pagination are intact.
+
+Applied founder-approved movement: exactly these three resources moved D to A, producing A17 / D7 / E1 / G23 / Total48. Grade 4 remains open; no lifecycle status changed.
+
 ## A resources held as complete
 
 - Compact assessment/review: `g4_compare_fractions_quick_check`, `g4_compare_fractions_exit_ticket`, `g4_pattern_rule_quick_check`, `g4_multiplication_word_problem_quick_check`.
@@ -198,8 +238,8 @@ Every proposed G ID has a documented reconsideration trigger. Founder approval o
 ## Reconciliation scenarios
 
 - Pre-Batch 1 baseline: A11 / D10 / E4 / G23 / Total48.
-- Current after Batch 1 closeout: A14 / D10 / E1 / G23 / Total48.
-- After B2 approval: A17 / D7 / E1 / G23 / Total48.
+- After Batch 1 closeout: A14 / D10 / E1 / G23 / Total48.
+- Current after Batch 2 closeout: A17 / D7 / E1 / G23 / Total48.
 - After B3 approval: A20 / D4 / E1 / G23 / Total48.
 - After B4 approval: A23 / D2 / E0 / G23 / Total48.
 - After B5 approval: A25 / D0 / E0 / G23 / Total48.
@@ -211,7 +251,6 @@ These are planning scenarios, not applied movements. A final Grade 4 reconciliat
 - Approve or revise the proposed A11/D10/E4/G23 baseline.
 - Confirm the five duplicate anchor choices, especially which Equal Groups ID should survive.
 - Confirm that Grade 4 data displays are deferred rather than forcing a new bar-graph system.
-- Confirm full-practice Compare Fractions remains distinct from Quick Check/Exit Ticket.
 - Approve the B5 bounded function-table layout before implementation.
 - Confirm no Grade 4 Base Ten thousands model is required for launch.
 

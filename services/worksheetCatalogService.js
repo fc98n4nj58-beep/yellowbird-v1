@@ -320,6 +320,14 @@ const GRADE3_SHADE_FRACTION_ID = "grade3_fraction_equivalence_shade_fraction_mod
 const GRADE3_NUMBER_LINE_IDENTIFY_ID = "grade3_place_value_representation_number_line_identify";
 const GRADE3_COMPARE_FRACTIONS_ID = "grade3_fraction_equivalence_compare_fractions";
 const GRADE3_FRACTION_NUMBER_LINE_ID = "grade3_fraction_equivalence_fraction_number_line";
+const GRADE4_COMPARE_FRACTIONS_ID = "grade4_fraction_equivalence_compare_fractions";
+const GRADE4_FRACTION_NUMBER_LINE_ID = "grade4_fraction_equivalence_fraction_number_line";
+const GRADE4_SHADE_FRACTION_ID = "grade4_fraction_equivalence_shade_fraction_models";
+const GRADE4_STRUCTURED_FRACTION_IDS = new Set([
+  GRADE4_COMPARE_FRACTIONS_ID,
+  GRADE4_FRACTION_NUMBER_LINE_ID,
+  GRADE4_SHADE_FRACTION_ID
+]);
 const GRADE3_FRACTION_BATCH6_IMPLEMENTED_IDS = new Set([
   GRADE3_COMPARE_FRACTIONS_ID,
   GRADE3_FRACTION_NUMBER_LINE_ID
@@ -476,6 +484,12 @@ const GRADE3_CONCRETE_VISUAL_TITLES = Object.freeze({
 const GRADE3_FRACTION_BATCH6_TITLES = Object.freeze({
   [GRADE3_COMPARE_FRACTIONS_ID]: "Compare Fractions",
   [GRADE3_FRACTION_NUMBER_LINE_ID]: "Fractions on a Number Line"
+});
+
+const GRADE4_STRUCTURED_FRACTION_TITLES = Object.freeze({
+  [GRADE4_COMPARE_FRACTIONS_ID]: "Compare Fractions",
+  [GRADE4_FRACTION_NUMBER_LINE_ID]: "Fractions on a Number Line",
+  [GRADE4_SHADE_FRACTION_ID]: "Shade the Fraction"
 });
 
 const GRADE3_DATA_BATCH7_TITLES = Object.freeze({
@@ -868,6 +882,254 @@ function normalizeGrade3FractionBatch6Options(item, options = {}) {
     normalized.questionsPerPage = Math.max(1, Math.min(6, Math.round(finiteNumber(options.questionsPerPage, 6))));
     normalized.allowEndpointTargets = parseBoolean(options.allowEndpointTargets, false);
     normalized.taskMode = String(options.taskMode || "identify").trim().toLowerCase();
+  }
+  return normalized;
+}
+
+function grade4FractionExplicitEntries(options, aliases) {
+  return aliases
+    .filter((alias) => Object.prototype.hasOwnProperty.call(options, alias))
+    .map((alias) => ({ alias, value: options[alias] }));
+}
+
+function grade4FractionInteger(value, label, minimum, maximum) {
+  const number = Number(value);
+  if (!Number.isInteger(number) || number < minimum || number > maximum) {
+    throw new Error(`Grade 4 structured fractions ${label} must be a whole number from ${minimum} through ${maximum}.`);
+  }
+  return number;
+}
+
+function grade4FractionBoolean(value, label) {
+  if (typeof value === "boolean") return value;
+  const normalized = String(value).trim().toLowerCase();
+  if (["1", "true", "yes", "on"].includes(normalized)) return true;
+  if (["0", "false", "no", "off"].includes(normalized)) return false;
+  throw new Error(`Grade 4 structured fractions ${label} must be true or false.`);
+}
+
+function grade4FractionRawList(value, label) {
+  const values = Array.isArray(value)
+    ? value
+    : typeof value === "string" ? value.split(/[\s,|]+/) : value == null ? [] : [value];
+  if (!values.length || values.some((entry) => entry === "" || entry === null || entry === undefined)) {
+    throw new Error(`Grade 4 structured fractions ${label} must not be empty.`);
+  }
+  return values;
+}
+
+function grade4FractionIntegerAliasList(options, aliases, label, minimum, maximum) {
+  const entries = grade4FractionExplicitEntries(options, aliases);
+  if (!entries.length) return null;
+  const lists = entries.map(({ value }) => grade4FractionRawList(value, label)
+    .map((entry) => grade4FractionInteger(entry, label, minimum, maximum)));
+  lists.forEach((list) => {
+    if (new Set(list).size !== list.length) throw new Error(`Grade 4 structured fractions ${label} values must be unique.`);
+  });
+  const signatures = lists.map((list) => [...list].sort((a, b) => a - b).join(","));
+  if (new Set(signatures).size !== 1) throw new Error(`Grade 4 structured fractions ${label} aliases must agree.`);
+  return lists[0];
+}
+
+function grade4FractionParse(value, label) {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    return {
+      numerator: grade4FractionInteger(value.numerator, `${label} numerator`, 0, 12),
+      denominator: grade4FractionInteger(value.denominator, `${label} denominator`, 1, 12)
+    };
+  }
+  const match = String(value).trim().match(/^(\d+)\s*\/\s*(\d+)$/);
+  if (!match) throw new Error(`Grade 4 structured fractions ${label} must use numerator/denominator format.`);
+  return {
+    numerator: grade4FractionInteger(match[1], `${label} numerator`, 0, 12),
+    denominator: grade4FractionInteger(match[2], `${label} denominator`, 1, 12)
+  };
+}
+
+function grade4FractionAliasFractions(options) {
+  const entries = grade4FractionExplicitEntries(options, ["selectedFractions", "fractions"]);
+  if (!entries.length) return null;
+  const lists = entries.map(({ value }) => {
+    const raw = Array.isArray(value)
+      ? value
+      : typeof value === "string" ? value.split(/[,|]+/).map((entry) => entry.trim()) : value == null ? [] : [value];
+    if (!raw.length || raw.some((entry) => entry === "" || entry === null || entry === undefined)) {
+      throw new Error("Grade 4 structured fractions selected fractions must not be empty.");
+    }
+    return raw.map((entry) => grade4FractionParse(entry, "selected fraction"));
+  });
+  lists.forEach((list) => {
+    const signatures = list.map(({ numerator, denominator }) => `${numerator}/${denominator}`);
+    if (new Set(signatures).size !== signatures.length) {
+      throw new Error("Grade 4 structured fractions selected fractions must be unique.");
+    }
+  });
+  const signatures = lists.map((list) => list.map(({ numerator, denominator }) => `${numerator}/${denominator}`).sort().join(","));
+  if (new Set(signatures).size !== 1) throw new Error("Grade 4 structured fractions selected-fraction aliases must agree.");
+  return lists[0];
+}
+
+function grade4FractionAliasScalar(options, aliases, label, normalize) {
+  const entries = grade4FractionExplicitEntries(options, aliases);
+  if (!entries.length) return null;
+  const values = entries.map(({ value }) => normalize(value));
+  if (new Set(values.map((value) => JSON.stringify(value))).size !== 1) {
+    throw new Error(`Grade 4 structured fractions ${label} aliases must agree.`);
+  }
+  return values[0];
+}
+
+function validateGrade4StructuredFractionRawOptions(item, options = {}) {
+  if (!GRADE4_STRUCTURED_FRACTION_IDS.has(item.id)) return;
+  const isCompare = item.id === GRADE4_COMPARE_FRACTIONS_ID;
+  const isLine = item.id === GRADE4_FRACTION_NUMBER_LINE_ID;
+  const isShade = item.id === GRADE4_SHADE_FRACTION_ID;
+  const safeDenominators = isLine ? [2, 3, 4, 5, 6, 8, 10] : [2, 3, 4, 5, 6, 8, 10, 12];
+  const defaultCount = isCompare ? 12 : isLine ? 6 : 8;
+  const maxCount = isCompare ? 24 : isLine ? 12 : 8;
+  const maxPerPage = defaultCount;
+
+  const questionCount = grade4FractionAliasScalar(options, ["questionCount"], "question count", (value) => grade4FractionInteger(value, "question count", 1, maxCount)) ?? defaultCount;
+  const questionsPerPage = grade4FractionAliasScalar(options, ["questionsPerPage"], "questions per page", (value) => grade4FractionInteger(value, "questions per page", 1, maxPerPage)) ?? defaultCount;
+  const includeExample = grade4FractionAliasScalar(
+    options,
+    ["includeExample", "completedExample", "example"],
+    "completed-example",
+    (value) => grade4FractionBoolean(value, "completed-example option")
+  ) ?? false;
+  if (questionCount + (includeExample ? 1 : 0) > questionsPerPage * 2) {
+    throw new Error("Grade 4 structured fraction density must fit within two student pages.");
+  }
+
+  const denominators = grade4FractionIntegerAliasList(
+    options,
+    ["selectedDenominators", "denominators", "allowedDenominators"],
+    "selected denominator",
+    2,
+    12
+  );
+  if (denominators?.some((denominator) => !safeDenominators.includes(denominator))) {
+    throw new Error(`Grade 4 structured fractions support denominators ${safeDenominators.join(", ")} for this resource.`);
+  }
+
+  const endpointAliasValue = isLine
+    ? grade4FractionAliasScalar(options, ["allowEndpointTargets", "allowEndpoints"], "endpoint policy", (value) => grade4FractionBoolean(value, "endpoint policy"))
+    : null;
+  const endpointsAllowed = isLine && (endpointAliasValue ?? String(options.endpointPolicy || "").trim().toLowerCase() === "allowed");
+  const fractions = grade4FractionAliasFractions(options);
+  fractions?.forEach(({ numerator, denominator }) => {
+    if (!safeDenominators.includes(denominator) || (denominators && !denominators.includes(denominator))) {
+      throw new Error("Grade 4 structured fraction selections must use an allowed denominator.");
+    }
+    const minimumNumerator = endpointsAllowed ? 0 : 1;
+    const maximumNumerator = endpointsAllowed ? denominator : denominator - 1;
+    if (numerator < minimumNumerator || numerator > maximumNumerator) {
+      throw new Error("Grade 4 structured fraction selections must satisfy the proper-fraction and endpoint contract.");
+    }
+  });
+
+  const numeratorKeys = ["selectedNumerators", "numerators", "minNumerator", "minimumNumerator", "maxNumerator", "maximumNumerator"];
+  if (isLine && numeratorKeys.some((key) => Object.prototype.hasOwnProperty.call(options, key))) {
+    throw new Error("Grade 4 fraction-number-line numerator ranges are unsupported; use selected fractions.");
+  }
+  const selectedNumerators = isLine ? null : grade4FractionIntegerAliasList(options, ["selectedNumerators", "numerators"], "selected numerator", 1, 11);
+  const minNumerator = isLine ? 1 : grade4FractionAliasScalar(options, ["minNumerator", "minimumNumerator"], "minimum numerator", (value) => grade4FractionInteger(value, "minimum numerator", 1, 11)) ?? 1;
+  const maxNumerator = isLine ? 11 : grade4FractionAliasScalar(options, ["maxNumerator", "maximumNumerator"], "maximum numerator", (value) => grade4FractionInteger(value, "maximum numerator", 1, 11)) ?? 11;
+  if (!isLine && minNumerator > maxNumerator) throw new Error("Grade 4 structured fraction minimum numerator must not exceed maximum numerator.");
+  if (selectedNumerators?.some((numerator) => numerator < minNumerator || numerator > maxNumerator)) {
+    throw new Error("Grade 4 structured fraction selected numerators must stay inside the numerator range.");
+  }
+
+  const equalityKeys = ["includeEqualPairs", "equalPairs"];
+  if (!isCompare && equalityKeys.some((key) => Object.prototype.hasOwnProperty.call(options, key))) {
+    throw new Error("Grade 4 equal-pair controls are supported only by Compare Fractions.");
+  }
+  if (isCompare) {
+    const includeEqualPairs = grade4FractionAliasScalar(options, ["includeEqualPairs"], "equal-pair option", (value) => grade4FractionBoolean(value, "equal-pair option"));
+    const equalPairs = grade4FractionAliasScalar(options, ["equalPairs"], "equal-pair count", (value) => grade4FractionInteger(value, "equal-pair count", 0, questionCount));
+    if (includeEqualPairs === false && equalPairs > 0) throw new Error("Grade 4 Compare Fractions equal-pair controls conflict.");
+  }
+
+  const endpointKeys = ["allowEndpointTargets", "allowEndpoints", "endpointPolicy"];
+  if (!isLine && endpointKeys.some((key) => Object.prototype.hasOwnProperty.call(options, key))) {
+    throw new Error("Grade 4 endpoint controls are supported only by Fractions on a Number Line.");
+  }
+  if (isLine) {
+    grade4FractionAliasScalar(options, ["allowEndpointTargets", "allowEndpoints"], "endpoint policy", (value) => grade4FractionBoolean(value, "endpoint policy"));
+    if (options.endpointPolicy !== undefined && !["interior_only", "allowed"].includes(String(options.endpointPolicy).trim().toLowerCase())) {
+      throw new Error("Grade 4 fraction-number-line endpoint policy must be interior_only or allowed.");
+    }
+    if (options.endpointPolicy !== undefined && endpointAliasValue !== null) {
+      const policyAllowsEndpoints = String(options.endpointPolicy).trim().toLowerCase() === "allowed";
+      if (policyAllowsEndpoints !== endpointAliasValue) {
+        throw new Error("Grade 4 fraction-number-line endpoint aliases conflict.");
+      }
+    }
+    const mode = String(options.taskMode || "identify_marked_fraction").trim().toLowerCase();
+    if (!["identify", "identify_marked_fraction"].includes(mode)) {
+      throw new Error("Grade 4 Fractions on a Number Line supports identify-marked-fraction mode only.");
+    }
+    if (["wholeStart", "wholeEnd", "minimumWhole", "maximumWhole", "minValue", "maxValue", "interval"].some((key) => Object.prototype.hasOwnProperty.call(options, key))) {
+      throw new Error("Grade 4 Fractions on a Number Line does not support whole-number interval controls.");
+    }
+  } else if (Object.prototype.hasOwnProperty.call(options, "taskMode")) {
+    const allowed = isShade ? ["shade", "shade_equal_parts"] : [];
+    if (!allowed.includes(String(options.taskMode).trim().toLowerCase())) {
+      throw new Error("Grade 4 structured fraction task mode is unsupported for this resource.");
+    }
+  }
+
+  const modelKeys = ["modelType", "modelSet"];
+  if (!isShade && modelKeys.some((key) => Object.prototype.hasOwnProperty.call(options, key))) {
+    throw new Error("Grade 4 model controls are supported only by Shade the Fraction.");
+  }
+  if (isShade) {
+    grade4FractionAliasScalar(options, modelKeys, "model type", (value) => {
+      const model = String(value).trim().toLowerCase();
+      if (!["strip", "fraction_strip"].includes(model)) throw new Error("Grade 4 Shade the Fraction supports fraction strips only.");
+      return "strip";
+    });
+    if (["shadedParts", "shadeCount", "studentShadedParts", "answerKeyShadedParts"].some((key) => Object.prototype.hasOwnProperty.call(options, key))) {
+      throw new Error("Grade 4 Shade the Fraction derives student and answer-key shading from structured fraction truth.");
+    }
+  }
+}
+
+function normalizeGrade4StructuredFractionOptions(item, options = {}) {
+  if (!GRADE4_STRUCTURED_FRACTION_IDS.has(item.id)) return options;
+  const isCompare = item.id === GRADE4_COMPARE_FRACTIONS_ID;
+  const isLine = item.id === GRADE4_FRACTION_NUMBER_LINE_ID;
+  const defaultCount = isCompare ? 12 : isLine ? 6 : 8;
+  const safeDenominators = isLine ? [2, 3, 4, 5, 6, 8, 10] : [2, 3, 4, 5, 6, 8, 10, 12];
+  const denominators = grade4FractionIntegerAliasList(options, ["selectedDenominators", "denominators", "allowedDenominators"], "selected denominator", 2, 12);
+  const includeExample = grade4FractionAliasScalar(options, ["includeExample", "completedExample", "example"], "completed-example", (value) => grade4FractionBoolean(value, "completed-example option")) ?? false;
+  const normalized = {
+    ...options,
+    questionCount: options.questionCount === undefined ? defaultCount : Number(options.questionCount),
+    questionsPerPage: options.questionsPerPage === undefined ? defaultCount : Number(options.questionsPerPage),
+    selectedDenominators: denominators || safeDenominators,
+    allowedDenominators: denominators || safeDenominators,
+    includeExample
+  };
+  if (isCompare) {
+    normalized.selectedNumerators = grade4FractionIntegerAliasList(options, ["selectedNumerators", "numerators"], "selected numerator", 1, 11) || [];
+    normalized.minNumerator = grade4FractionAliasScalar(options, ["minNumerator", "minimumNumerator"], "minimum numerator", (value) => Number(value)) ?? 1;
+    normalized.maxNumerator = grade4FractionAliasScalar(options, ["maxNumerator", "maximumNumerator"], "maximum numerator", (value) => Number(value)) ?? 11;
+    normalized.includeEqualPairs = options.equalPairs !== undefined
+      ? true
+      : options.includeEqualPairs === undefined ? true : grade4FractionBoolean(options.includeEqualPairs, "equal-pair option");
+    normalized.equalPairs = options.equalPairs === undefined ? 4 : Number(options.equalPairs);
+  } else if (isLine) {
+    const endpointAlias = options.allowEndpointTargets ?? options.allowEndpoints;
+    const endpointPolicy = String(options.endpointPolicy || "").trim().toLowerCase();
+    normalized.allowEndpointTargets = endpointAlias === undefined ? endpointPolicy === "allowed" : grade4FractionBoolean(endpointAlias, "endpoint policy");
+    normalized.taskMode = "identify_marked_fraction";
+  } else {
+    normalized.selectedNumerators = grade4FractionIntegerAliasList(options, ["selectedNumerators", "numerators"], "selected numerator", 1, 11) || [];
+    normalized.minNumerator = grade4FractionAliasScalar(options, ["minNumerator", "minimumNumerator"], "minimum numerator", (value) => Number(value)) ?? 1;
+    normalized.maxNumerator = grade4FractionAliasScalar(options, ["maxNumerator", "maximumNumerator"], "maximum numerator", (value) => Number(value)) ?? 11;
+    normalized.modelType = "strip";
+    normalized.taskMode = "shade_equal_parts";
   }
   return normalized;
 }
@@ -1423,6 +1685,7 @@ function normalizeGrade4NumericPatterningOptions(item, options = {}) {
 
 function normalizeCatalogWorksheetOptions(item, options = {}) {
   validateGrade4NumericPatternRawOptions(item, options);
+  validateGrade4StructuredFractionRawOptions(item, options);
   if (item.id === GRADE3_BASE_TEN_ID) {
     validateGrade3BaseTenRawOptions(options);
   }
@@ -1593,7 +1856,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalizeGrade4NumericPatterningOptions(item, normalizeGrade3DataBatch7Options(
+  return normalizeGrade4StructuredFractionOptions(item, normalizeGrade4NumericPatterningOptions(item, normalizeGrade3DataBatch7Options(
     item,
   normalizeGrade3FractionBatch6Options(
     item,
@@ -1639,7 +1902,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
       )
     )
     )
-  ))))))))));
+  )))))))))));
 }
 
 const NON_CUSTOMIZATION_QUERY_KEYS = new Set([
@@ -1801,11 +2064,11 @@ function generateWorksheetFromCatalogId(id, options = {}) {
   const generatorOptions = resolveCatalogWorksheetOptions(item, options);
   const activityType = GRADE3_DATA_BATCH7_IDS.has(item.id)
     ? "grade3_data_displays"
-    : item.id === GRADE3_COMPARE_FRACTIONS_ID
+    : [GRADE3_COMPARE_FRACTIONS_ID, GRADE4_COMPARE_FRACTIONS_ID].includes(item.id)
     ? "grade3_compare_fractions"
-    : item.id === GRADE3_FRACTION_NUMBER_LINE_ID
+    : [GRADE3_FRACTION_NUMBER_LINE_ID, GRADE4_FRACTION_NUMBER_LINE_ID].includes(item.id)
       ? "grade3_fraction_number_line"
-    : item.id === GRADE3_SHADE_FRACTION_ID
+    : [GRADE3_SHADE_FRACTION_ID, GRADE4_SHADE_FRACTION_ID].includes(item.id)
     ? "grade3_shade_fraction_models"
     : item.id === GRADE2_SHADE_EQUAL_PARTS_ID
     ? "grade2_shade_equal_parts"
@@ -1911,7 +2174,7 @@ function buildStudentFacingInstruction(item, fallback = "") {
   return "Share the dots equally. Complete the division equation.";
  }
 
- if (item.id === GRADE3_SHADE_FRACTION_ID) {
+ if ([GRADE3_SHADE_FRACTION_ID, GRADE4_SHADE_FRACTION_ID].includes(item.id)) {
   return "Shade each model to show the fraction.";
  }
 
@@ -1919,11 +2182,11 @@ function buildStudentFacingInstruction(item, fallback = "") {
   return "Write the number shown by the point on each number line.";
  }
 
- if (item.id === GRADE3_COMPARE_FRACTIONS_ID) {
+ if ([GRADE3_COMPARE_FRACTIONS_ID, GRADE4_COMPARE_FRACTIONS_ID].includes(item.id)) {
   return "Write >, <, or = to compare each pair of fractions.";
  }
 
- if (item.id === GRADE3_FRACTION_NUMBER_LINE_ID) {
+ if ([GRADE3_FRACTION_NUMBER_LINE_ID, GRADE4_FRACTION_NUMBER_LINE_ID].includes(item.id)) {
   return "Write the fraction shown by the point on each number line.";
  }
 
@@ -2290,6 +2553,7 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
   GRADE3_STORY_PROBLEM_TITLES[item.id] ||
   GRADE3_CONCRETE_VISUAL_TITLES[item.id] ||
   GRADE3_FRACTION_BATCH6_TITLES[item.id] ||
+  GRADE4_STRUCTURED_FRACTION_TITLES[item.id] ||
   GRADE3_DATA_BATCH7_TITLES[item.id] ||
   (item.id === GRADE3_NUMBER_WORD_ID
     ? isReverseNumberWordMode ? "Write the Numeral" : "Write Number Words"
@@ -2966,7 +3230,7 @@ if ([GRADE2_NUMBER_LINE_IDENTIFY_ID, GRADE3_NUMBER_LINE_IDENTIFY_ID].includes(it
   };
 }
 
-if (item.id === GRADE3_COMPARE_FRACTIONS_ID) {
+if ([GRADE3_COMPARE_FRACTIONS_ID, GRADE4_COMPARE_FRACTIONS_ID].includes(item.id)) {
   layout.template = {
     ...(layout.template || {}),
     columns: 2,
@@ -2987,7 +3251,7 @@ if (item.id === GRADE3_COMPARE_FRACTIONS_ID) {
   };
 }
 
-if (item.id === GRADE3_FRACTION_NUMBER_LINE_ID) {
+if ([GRADE3_FRACTION_NUMBER_LINE_ID, GRADE4_FRACTION_NUMBER_LINE_ID].includes(item.id)) {
   layout.template = {
     ...(layout.template || {}),
     columns: 1,
@@ -3327,7 +3591,7 @@ if (item.id === GRADE2_SHADE_EQUAL_PARTS_ID) {
   };
 }
 
-if (item.id === GRADE3_SHADE_FRACTION_ID) {
+if ([GRADE3_SHADE_FRACTION_ID, GRADE4_SHADE_FRACTION_ID].includes(item.id)) {
   layout.template = {
     ...(layout.template || {}),
     columns: 2,
@@ -3340,7 +3604,9 @@ if (item.id === GRADE3_SHADE_FRACTION_ID) {
     suppressExampleLabel: true,
     fractionTaskMode: "shade_equal_parts",
     sharedFractionRenderer: true,
-    fractionAllowedDenominators: [2, 3, 4, 5, 6, 8],
+    fractionAllowedDenominators: item.id === GRADE4_SHADE_FRACTION_ID
+      ? [2, 3, 4, 5, 6, 8, 10, 12]
+      : [2, 3, 4, 5, 6, 8],
     layoutVariant: "fraction_strip_grid",
     visualColumns: 2,
     equalHeightItems: true,
