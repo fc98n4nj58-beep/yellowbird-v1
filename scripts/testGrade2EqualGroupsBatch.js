@@ -204,10 +204,12 @@ function assertGradeIsolation() {
   assert.strictEqual(equalSharing.layout.header.title, "Equal Sharing Division");
   assert.strictEqual(equalSharing.layout.display.divisionModel, true);
   assert.strictEqual(equalSharing.layout.display.equalSharingTaskMode, "distribute");
-  assert.strictEqual(equalSharing.contentObject.content.items.length, 12);
+  assert.strictEqual(equalSharing.contentObject.content.items.length, 8);
   equalSharing.contentObject.content.items.forEach((item) => {
     assert.strictEqual(item.visual.kind, "equal_sharing");
     assert.strictEqual(item.responseMode, "division_sentence");
+    assert.strictEqual(item.responseTarget, "items_per_group");
+    assert.strictEqual(item.total, item.groups * item.itemsPerGroup);
     assert.strictEqual(item.responseValues[0] / item.responseValues[1], item.responseValues[2]);
   });
 }

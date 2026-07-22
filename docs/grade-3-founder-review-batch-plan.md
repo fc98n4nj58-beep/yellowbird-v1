@@ -2,7 +2,7 @@
 
 Date: 2026-07-22
 
-Status: canonical 53-resource review ledger. Grade 3 Batches 1-4 are founder-approved and closed. Catalog lifecycle status remains separate.
+Status: canonical 53-resource review ledger. Grade 3 Batches 1-5 are founder-approved and closed. Catalog lifecycle status remains separate.
 
 ## Grade 2 closeout checkpoint
 
@@ -24,7 +24,7 @@ The `Status / rec.` column records the reconciliation state, where `UR` means **
 - E: narrow copy/default/layout correction remains.
 - G: duplicate, customization-only, planned-gap, or defer candidate.
 
-The pre-Batch-1 scenario was A12 / D13 / E13 / G15 / Total53. Batch 1 moved E3 -> A3; Batch 2 moved E3 -> A3 and Base Ten Blocks E1 -> D1; Batch 3 moved E4 -> A4; founder-approved Batch 4 moves D3 -> A3. The current reconciliation is A25 / D11 / E2 / G15 / Total53. Catalog lifecycle status must not be substituted for reconciliation category A.
+The pre-Batch-1 scenario was A12 / D13 / E13 / G15 / Total53. Batch 1 moved E3 -> A3; Batch 2 moved E3 -> A3 and Base Ten Blocks E1 -> D1; Batch 3 moved E4 -> A4; Batch 4 moved D3 -> A3; founder-approved Batch 5 moves D3 -> A3. The current reconciliation is A28 / D8 / E2 / G15 / Total53. Catalog lifecycle status must not be substituted for reconciliation category A.
 
 ## Contract and evidence codes
 
@@ -82,7 +82,7 @@ Internal footer slugs and unnecessary `— Grade 3` suffixes are real pre-proof 
 | `g3_compare_3_digit_numbers_quick_check` | Compare 3-Digit Numbers Quick Check | ready / UR | `be08da5` | `compareNumbers.js`; Quick Check renderer | 6 / 2 pages; 100-999 | CC / VC / E6 | none; approved Grade 3 compact comparison | ALREADY COMPLETE / none / hold / — / none / A |
 | `g3_complete_a_graph` | Grade 3 Data Questions | ready / UR | `003584d` | `completeGraph.js`; equation-practice text layout | 12 / 3 pages; values about 0-10 | CD / VD / E1 | title/task says graph but output is text-data questions; Grade 2 structured pictographs | NEW ARCHITECTURE NEEDED / Full / structured data decision / B7 / 1 / D |
 | `g3_equal_groups_multiplication` | Equal Groups for Multiplication | ready / UR | `003584d` | `equalGroups.js`; model interpretation | 12 / 3 pages; factors 2-6, product <=36 | CM / VM / E3 | no current truth defect; approved arrays/equal-groups family | ALREADY COMPLETE / none / hold / — / none / A |
-| `g3_equal_sharing_division` | Equal Sharing Division | partial / UR | `3f81c22` | `equalGroups.js`; model interpretation | — (12, 3/page current); factors 2-6 | CM / VM / E3 | multiplication-owned equal-groups path needs explicit division truth and response contract; Grade 2 Share Fairly / equal groups | SHARED-FAMILY EXTENSION NEEDED / Standard / verify-only then adapter / B5 / 1 / D |
+| `g3_equal_sharing_division` | Equal Sharing Division | partial / A | committed in this closeout | `equalGroups.js`; shared equal-sharing visual model | 8 / 6 pages; groups/items 2-6, total <=36 | CM / VM / focused B5 | founder-approved exact division, quotient, group-model and completed answer-state truth | FOUNDER-APPROVED / complete / hold / B5 / approved / A |
 | `g3_expanded_form_to_standard_form_exit_ticket` | Expanded Form to Standard Form Exit Ticket | ready / UR | `69fc4b1` | `standardForm.js`; Exit Ticket renderer | 3 / 2 pages; 100-999 | CC / VC / E6 | none; approved compact standard form | ALREADY COMPLETE / none / hold / — / none / A |
 | `g3_expanded_form_to_standard_form_quick_check` | Expanded Form to Standard Form Quick Check | ready / UR | `4db2993` | `standardForm.js`; Quick Check renderer | 6 / 2 pages; 100-999 | CC / VC / E6 | none; approved compact standard form | ALREADY COMPLETE / none / hold / — / none / A |
 | `g3_fact_families_multiplication_division` | Multiplication and Division Fact Families | ready / UR | `84c8702` | `factFamily.js`; matching | 12 / 3 pages; factors 1-10 | CM / VM / E1 | prior duplicate-prompt polish accepted; approved fact-family resource | ALREADY COMPLETE / none / hold / — / none / A |
@@ -114,7 +114,7 @@ Internal footer slugs and unnecessary `— Grade 3` suffixes are real pre-proof 
 | `grade3_fraction_equivalence_fraction_number_line` | Fraction Number Line — Grade 3 | generated / UR | `003584d` | `fractionNumberLine.js`; equation-practice | — (12 current) | CF / VF / E0 | current response is not a dependable structured number-line visual | NEW ARCHITECTURE NEEDED / Standard / structured model or defer / B6 / 1 / D |
 | `grade3_fraction_equivalence_fraction_word_problems` | Fraction Word Problems — Grade 3 | generated / UR | `7d372b9` | no registered `fraction_word_problems` generator; equation-practice | — (0 items) | CF / VF / E0 | zero items and no approved Grade 3 fraction-story truth | NEW ARCHITECTURE NEEDED / Standard / define distinct role or defer / B6 / 1 / D |
 | `grade3_fraction_equivalence_match_equivalent_fractions` | Match Equivalent Fractions — Grade 3 | ready / UR | `23dfc06` | `matchEquivalentFractions.js`; equation-practice | 12 / 2 pages; equivalent pairs | CF / VF / E1 | accepted prompt repetition plus stale title/footer; nearest approved Grade 3 compare-fraction resource | NARROW CORRECTION NEEDED / Fast / copy/variety only / B6 / 1 / E |
-| `grade3_fraction_equivalence_shade_fraction_models` | Shade Fraction Models — Grade 3 | generated / UR | `d41a04d` | `shadeFractionModels.js`; equation-practice | — (12 current) | CF / VF / E0 | current generic path lacks the structured drawable/key model proven in Grade 2 | SHARED-FAMILY EXTENSION NEEDED / Standard / Grade 3 structured visual adapter / B5 / 1 / D |
+| `grade3_fraction_equivalence_shade_fraction_models` | Shade the Fraction | generated / A | committed in this closeout | `grade3ShadeFractionModels.js`; shared fraction-strip model | 8 / 2 pages; denominators 2, 3, 4, 5, 6, 8 | CF / VF / focused B5 | founder-approved proper-fraction strip and exact shaded answer-state truth | FOUNDER-APPROVED / complete / hold / B5 / approved / A |
 | `grade3_multiplication_facts_arrays` | Arrays — Grade 3 | generated / UR | `8fba970` | `array.js`; model interpretation | — (10 current); factors 2-6 | CM / VM / E3 | duplicate of ready `g3_multiplication_arrays`; docs explicitly defer overlap | DUPLICATE — DEFER / none / do not implement / — / none / G |
 | `grade3_multiplication_facts_equal_groups` | Equal Groups — Grade 3 | ready / UR | `3f81c22` | `equalGroups.js`; model interpretation | 12 / 3 pages; factors 2-6 | CM / VM / E3 | prior founder/shared-family proof is current | ALREADY COMPLETE / none / hold / — / none / A |
 | `grade3_multiplication_facts_missing_factor` | Missing Factors — Grade 3 | generated / UR | `ddd9338` | `missingFactor.js`; fluency grid | — (60 current); factors 1-10 | CM / VM / E4 | duplicate of ready `g3_missing_factors` | DUPLICATE — DEFER / none / do not implement / — / none / G |
@@ -128,7 +128,7 @@ Internal footer slugs and unnecessary `— Grade 3` suffixes are real pre-proof 
 | `grade3_place_value_representation_base_ten_blocks` | Base Ten Blocks — Grade 3 | ready / D | committed in this closeout | `baseTenBlocks.js`; visual model | 10 / 2 pages; current values 10-99 | CV / VV / E1 | 3-digit requests decompose 345 as 34 tens + 5 ones with no hundreds block; selected-number inputs are bypassed | SHARED-FAMILY EXTENSION NEEDED / Standard / future hundreds-truth preflight; no implementation / B2 split / none / D |
 | `grade3_place_value_representation_compare_numbers` | Compare Numbers — Grade 3 | generated / UR | `be08da5` | `compareNumbers.js`; fluency grid | — (12 current); 3-digit values | CV / VV / E0 | explicitly held because Quick Check and Exit Ticket already cover this skill | DUPLICATE — DEFER / none / no worksheet implementation / — / none / G |
 | `grade3_place_value_representation_expanded_form` | Expanded Form | ready / A | committed in this closeout | `expandedForm.js`; compact representation | 45 / 2 pages; 100-999 | CV / VV / E5 | founder-approved public title/footer; truth/layout unchanged | FOUNDER-APPROVED / complete / hold / B2 / approved / A |
-| `grade3_place_value_representation_number_line_identify` | Number Line — Grade 3 | generated / UR | `df1ae38` | `numberLineIdentify.js`; visual model | — (10 current, 5/page); current small line | CV / VV / E0 | current default does not express an approved Grade 3 number-line range/interval contract | SHARED-FAMILY EXTENSION NEEDED / Standard / Grade 3 parameter adapter / B5 / 1 / D |
+| `grade3_place_value_representation_number_line_identify` | Identify Numbers on a Number Line | generated / A | committed in this closeout | `numberLineIdentify.js`; shared full-width number-line model | 6 / 2 pages; 100-1000, intervals 10/25/50/100 | CV / VV / focused B5 | founder-approved target-index, interval, endpoint and displayed-label truth | FOUNDER-APPROVED / complete / hold / B5 / approved / A |
 | `grade3_place_value_representation_number_word_match` | Write Number Words | ready / A | committed in this closeout | `numberWordMatch.js`; existing number-word writing layout | 12 / 2 pages; 100-999 | CV / VV / E1 | founder-approved writing task, title, instruction and footer | FOUNDER-APPROVED / complete / hold / B2 / approved / A |
 | `grade3_place_value_representation_standard_form` | Standard Form | ready / A | committed in this closeout | `standardForm.js`; compact representation | 45 / 2 pages; 100-999 | CV / VV / E5 | founder-approved public title/footer; current default is 2 pages | FOUNDER-APPROVED / complete / hold / B2 / approved / A |
 
@@ -268,19 +268,22 @@ No Grade 3 customization family is publicly registered. A raw runtime input is n
 - Correction round completed on 2026-07-21: language-only revisions were applied to `g3_add_question_first`, `g3_missing_second_question`, `g3_missing_second_complete`, `g3_sub_checked_out`, `g3_sub_difference`, and `g3_sub_remaining`. Machine-like `What number of`, `remaining number of`, `that are still there`, `A collection should have`, `should ... get to increase`, and `Find the number of` forms were replaced with direct Grade 3 classroom language. The two pronoun-bearing revisions use `does he`, `does she`, and `do they` agreement. No arithmetic, range, count, density, layout, renderer, variable, status or reconciliation contract changed.
 - Correction tests retain the full 30-seed suite and reject all six disallowed wording patterns across generated prompts, directly exercise the revised addition and missing-addend templates with `he`, `she`, and `they`, and reject unresolved or mismatched pronoun forms. The three corrected default proofs in the same founder-review location were founder-approved on 2026-07-22; no further correction round is required.
 - Closeout: all three exact IDs are founder-approved with no split resources. Defaults remain 12 / 12 / 12 questions and 6 / 6 / 6 pages; Missing Addends remains balanced 6 first-addend / 6 second-addend unknowns; all documented variables and aliases remain preserved. Focused and direct Grade 2/Grade 3 regressions pass against the corrected packet.
-- Lifecycle/reconciliation: all three catalog records remain `generated`; no promotion, demotion or Grade 3 public customization registration occurred. Movement applied: D3 -> A3; current reconciliation is A25 / D11 / E2 / G15 / Total53.
+- Lifecycle/reconciliation: all three catalog records remain `generated`; no promotion, demotion or Grade 3 public customization registration occurred. Movement applied: D3 -> A3; the post-Batch-4 checkpoint was A25 / D11 / E2 / G15 / Total53.
 - Stop if a proposed context is not age-neutral, arithmetic truth cannot be derived first, or page count/work space no longer matches the contract.
 
 ### B5 — Concrete Visual Extensions
 
 - Exact IDs: `g3_equal_sharing_division`; `grade3_fraction_equivalence_shade_fraction_models`; `grade3_place_value_representation_number_line_identify`.
-- Shared correction type: structured visual truth through existing model/visual layouts; no new visual system is assumed.
-- Preserve: `VM`, `VF` and `VV` raw contracts where genuinely consumed; question count, seed, response truth and answer-key mirroring.
-- Safe future controls: task-specific count/range/factor choices only after each adapter proves preview/PDF/key parity. Keep renderer geometry and low-level visual controls hidden.
-- Lane/files/tests: Standard; likely three exact adapters/generators, existing model renderer/layout, focused per-resource assertions and a combined proof generator.
-- Proof burden: three default PDFs in one packet.
-- Movement: D3 -> A3; projected A28 / D8 / E2 / G15 / Total53.
-- Stop and move an ID to Full Review if it needs a new renderer, new icon/art system or a response structure the existing model layout cannot express.
+- Capability gate: passed for all three IDs. Equal Sharing reuses the shared equal-sharing renderer, Shade the Fraction reuses the shared fraction-strip renderer, and Number Line reuses the shared full-width number-line renderer. No new renderer, icon/art system or hidden fallback is required; no resource is split or blocked.
+- Structured truth: Equal Sharing stores total, groups, quotient, items per group and completed group state; Shade the Fraction stores numerator, denominator, part count, shade count and shaded answer state; Number Line stores bounds, interval, tick count, target index/value, endpoint policy and displayed labels. Student/key parity is derived from the same item truth.
+- Public defaults: 8 equal-sharing questions at 3 per student/key page (6 pages); 8 proper-fraction strips in two columns (2 pages); 6 full-width number lines (2 pages). Titles, instructions and footers are public-safe and exact; catalog statuses remain `partial`, `generated`, `generated`.
+- Variables preserved: deterministic seed and supported question-count/pagination inputs; equal-sharing group/item ranges, selected values and example aliases; fraction selections/denominators/numerators and example aliases; number-line bounds, intervals, selected targets, endpoint policy and example aliases. Renderer geometry remains hidden and no Grade 3 public customization registration was added.
+- Tests/proofs: combined focused test covers 30 seeds per resource, same-seed determinism, structured truth, answer-key parity, duplicate prevention, geometry, variables, examples and Grade 1/2 isolation. Direct equal-groups, fraction and number-line regressions pass. Three default PDFs are visually inspected in `review/grade-3-concrete-visual-batch-5/founder-review/`.
+- Founder closeout: all three IDs were founder-approved on 2026-07-22 with no correction round and no split or blocked resources. Existing shared renderers were sufficient. Equal Sharing remains at three questions per page after the pre-approval collision detection; the approved fraction denominator set is 2, 3, 4, 5, 6 and 8; the approved number-line interval set is 10, 25, 50 and 100 with endpoint targets supported.
+- Proof packet: three protected default PDFs in one combined packet. Defaults remain 8 / 8 / 6 questions and 6 / 2 / 2 total PDF pages.
+- Lifecycle/reconciliation: statuses remain `partial`, `generated`, `generated`; no promotion, demotion or Grade 3 public customization registration occurred. Movement applied: D3 -> A3; final reconciliation is A28 / D8 / E2 / G15 / Total53.
+- Commit record: committed in this closeout; git history is the authoritative commit identifier. No push occurs.
+- Stop condition remains: move an ID to Full Review if founder feedback requires a new renderer, icon/art system or response structure outside these proven shared models.
 
 ### B6 — Fraction Relationships and Applications
 
@@ -329,9 +332,9 @@ Do not send obvious copy, repetition, centring, metadata, variable or layout reg
 
 - Grade 2 closeout verified at the expected commit and totals.
 - Exactly 53 Grade 3 IDs recorded once in the canonical ledger: 26 ready, 25 generated, one partial, one planned.
-- Catalog status and reconciliation are separate; the current reconciliation is A25 / D11 / E2 / G15 / Total53.
+- Catalog status and reconciliation are separate; the current reconciliation is A28 / D8 / E2 / G15 / Total53.
 - Every row has a completed-work classification, risk/action, variable code, evidence, nearest-family finding and projected result.
 - Variables and aliases are inventoried by active family with status, public-registry state, normalization/runtime behavior and safe-candidate guidance.
-- Twenty-five reconciled-A resources are excluded from further implementation; fifteen duplicate/defer candidates are excluded from implementation.
-- Batches 1, 2, 3 and 4 are founder-approved and closed. Batch 4 has no split resource; the three later proposed batches contain only unresolved resources and remain grouped by shared implementation or correction type.
-- Batch 4 is the only Grade 3 implementation and reconciliation movement in this closeout. Protected paths remain outside the commit, all three lifecycle statuses remain `generated`, no public customization family is registered, and no push occurs.
+- Twenty-eight reconciled-A resources are excluded from further implementation; fifteen duplicate/defer candidates are excluded from implementation.
+- Batches 1, 2, 3, 4 and 5 are founder-approved and closed. Batch 5 has no split or blocked resource; the two later proposed batches contain only unresolved resources and remain grouped by shared implementation or correction type.
+- Batch 5 is the only Grade 3 implementation and reconciliation movement in this closeout. Protected paths remain outside the commit, lifecycle statuses remain `partial`, `generated`, `generated`, no public customization family is registered, and no push occurs.

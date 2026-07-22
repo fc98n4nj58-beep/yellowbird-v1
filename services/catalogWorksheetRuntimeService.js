@@ -102,6 +102,12 @@ const GRADE3_STORY_PROBLEM_IDS = new Set([
   "grade3_addition_subtraction_word_problems_subtraction_word_problem"
 ]);
 
+const GRADE3_CONCRETE_VISUAL_FOOTERS = Object.freeze({
+  g3_equal_sharing_division: "Multiplication and Division",
+  grade3_fraction_equivalence_shade_fraction_models: "Fractions",
+  grade3_place_value_representation_number_line_identify: "Place Value"
+});
+
 function finiteOptionalNumber(value) {
   if (value === undefined || value === null || value === "") return null;
   const n = Number(value);
@@ -109,6 +115,7 @@ function finiteOptionalNumber(value) {
 }
 
 function publicSkillLabel(item) {
+  if (GRADE3_CONCRETE_VISUAL_FOOTERS[item?.id]) return "";
   if (GRADE2_COMPARISON_FOOTER_IDS.has(item?.id)) return "";
   if (GRADE2_ADDITION_SUBTRACTION_CATEGORY_C_IDS.has(item?.id)) return "";
   if (GRADE2_WITHIN_100_FLUENCY_IDS.has(item?.id)) return "";
@@ -121,6 +128,9 @@ function publicSkillLabel(item) {
 }
 
 function publicDomainLabel(item) {
+  if (GRADE3_CONCRETE_VISUAL_FOOTERS[item?.id]) {
+    return GRADE3_CONCRETE_VISUAL_FOOTERS[item.id];
+  }
   if (GRADE2_CATEGORY_D_FOOTER_LABELS[item?.id]) {
     return GRADE2_CATEGORY_D_FOOTER_LABELS[item.id];
   }
@@ -193,6 +203,23 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         operation: p.operation || null,
         product: finiteOptionalNumber(p.product),
         quotient: finiteOptionalNumber(p.quotient),
+        groups: finiteOptionalNumber(p.groups),
+        itemsPerGroup: finiteOptionalNumber(p.itemsPerGroup),
+        responseTarget: p.responseTarget || null,
+        modelGrouping: Array.isArray(p.modelGrouping) ? p.modelGrouping.map(Number) : null,
+        numerator: finiteOptionalNumber(p.numerator),
+        denominator: finiteOptionalNumber(p.denominator),
+        partCount: finiteOptionalNumber(p.partCount),
+        shadeCount: finiteOptionalNumber(p.shadeCount),
+        modelType: p.modelType || null,
+        minValue: finiteOptionalNumber(p.minValue),
+        maxValue: finiteOptionalNumber(p.maxValue),
+        interval: finiteOptionalNumber(p.interval),
+        tickCount: finiteOptionalNumber(p.tickCount),
+        targetValue: finiteOptionalNumber(p.targetValue),
+        targetIndex: finiteOptionalNumber(p.targetIndex),
+        endpointPolicy: p.endpointPolicy || null,
+        displayedLabels: Array.isArray(p.displayedLabels) ? p.displayedLabels.map(Number) : null,
         modelKey: p.modelKey || null,
         orientation: p.orientation || null,
         value: finiteOptionalNumber(p.value),

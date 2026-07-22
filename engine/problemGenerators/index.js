@@ -41,6 +41,7 @@ const { generateGrade1DataGraphProblem } = require("./grade1DataGraph");
 const { generateGrade1FractionProblem } = require("./grade1Fractions");
 const { generateGrade2ShadeEqualPartsProblem } = require("./grade2ShadeEqualParts");
 const { generateGrade2ShareFairlyTo10Problem } = require("./grade2ShareFairlyTo10");
+const { generateGrade3ShadeFractionProblem } = require("./grade3ShadeFractionModels");
 
 function getGenerator(activityType) {
   const generators = {
@@ -61,6 +62,7 @@ function getGenerator(activityType) {
     grade1_fraction: generateGrade1FractionProblem,
     grade2_shade_equal_parts: generateGrade2ShadeEqualPartsProblem,
     grade2_share_fairly_to_10: generateGrade2ShareFairlyTo10Problem,
+    grade3_shade_fraction_models: generateGrade3ShadeFractionProblem,
     match_data_to_graph: generateMatchDataToGraphProblem,
     graph_questions: generateGraphQuestionsProblem,
     interpret_data: generateInterpretDataProblem,

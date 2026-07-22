@@ -1,4 +1,7 @@
-const { nextMultiplicationModelFactorPair } = require("./multiplicationModelFactors");
+const {
+  buildPairPool,
+  nextMultiplicationModelFactorPair
+} = require("./multiplicationModelFactors");
 const { MULTIPLICATION_SYMBOL } = require("./multiplicationModelConstants");
 
 function isDivisionFacing(options = {}) {
@@ -67,6 +70,20 @@ function generateEqualGroupsProblem(options = {}) {
     };
   }
 
+  if (String(options.worksheetId || "").toLowerCase() === "g3_equal_sharing_division") {
+    const generatorState = options.generatorState || {};
+    if (!generatorState.grade3EqualSharingContractChecked) {
+      const pool = buildPairPool(options, "equal_sharing");
+      const requestedCount = Math.max(1, Number(options.questionCount || 8));
+      if (pool.length < requestedCount) {
+        throw new Error(
+          `Grade 3 Equal Sharing Division needs ${requestedCount} unique groupings; the selected factor contract provides ${pool.length}.`
+        );
+      }
+      generatorState.grade3EqualSharingContractChecked = true;
+    }
+  }
+
   const pair = nextMultiplicationModelFactorPair(options, "equal_sharing");
   const groups = pair.factorA;
   const itemsPerGroup = pair.factorB;
@@ -82,6 +99,7 @@ function generateEqualGroupsProblem(options = {}) {
       : "",
     answer: itemsPerGroup,
     responseMode: "division_sentence",
+    responseTarget: "items_per_group",
     responseValues: [total, groups, itemsPerGroup],
     taskMode,
     equationSupport,
@@ -90,7 +108,11 @@ function generateEqualGroupsProblem(options = {}) {
     b: groups,
     op: "/",
     product: total,
+    total,
+    groups,
+    itemsPerGroup,
     quotient: itemsPerGroup,
+    modelGrouping: Array.from({ length: groups }, () => itemsPerGroup),
     modelKey: pair.duplicateKey,
     orientation: "total_groups",
     visual: {

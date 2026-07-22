@@ -8,6 +8,8 @@ function finiteNumber(value, fallback) {
 }
 
 const GRADE2_NUMBER_LINE_IDENTIFY_ID = "grade2_place_value_representation_number_line_identify";
+const GRADE3_NUMBER_LINE_IDENTIFY_ID = "grade3_place_value_representation_number_line_identify";
+const GRADE3_SAFE_INTERVALS = Object.freeze([10, 25, 50, 100]);
 
 function shuffle(values, random = Math.random) {
   const result = [...values];
@@ -16,6 +18,19 @@ function shuffle(values, random = Math.random) {
     [result[index], result[swapIndex]] = [result[swapIndex], result[index]];
   }
   return result;
+}
+
+function numberList(value) {
+  const raw = Array.isArray(value)
+    ? value
+    : typeof value === "string"
+      ? value.split(",")
+      : [];
+  return [...new Set(raw
+    .map(Number)
+    .filter(Number.isFinite)
+    .map(Math.round)
+  )];
 }
 
 function buildGrade2NumberLinePool(options = {}) {
@@ -113,9 +128,152 @@ function generateGrade2NumberLineIdentifyProblem(options = {}) {
   };
 }
 
+function buildGrade3NumberLinePool(options = {}) {
+  const random = options.random || Math.random;
+  const minValue = Math.max(0, Math.round(finiteNumber(options.minValue ?? options.minA, 100)));
+  const maxValue = Math.min(1000, Math.max(minValue + 100, Math.round(finiteNumber(options.maxValue ?? options.maxA, 1000))));
+  const tickCount = 10;
+  const requestedIntervals = numberList(
+    options.allowedIntervals || options.intervals || options.selectedIntervals
+  );
+  const intervals = (requestedIntervals.length ? requestedIntervals : GRADE3_SAFE_INTERVALS)
+    .filter((interval) => GRADE3_SAFE_INTERVALS.includes(interval));
+  if (!intervals.length || (requestedIntervals.length && intervals.length !== requestedIntervals.length)) {
+    throw new Error(`Grade 3 number lines support intervals ${GRADE3_SAFE_INTERVALS.join(", ")} only.`);
+  }
+  const selectedTargets = numberList(options.selectedNumbers || options.onlyNumbers);
+  const allowEndpointTargets = options.allowEndpointTargets !== false;
+  const targetIndexes = Array.from(
+    { length: allowEndpointTargets ? tickCount + 1 : tickCount - 1 },
+    (_, index) => index + (allowEndpointTargets ? 0 : 1)
+  );
+  const candidates = [];
+
+  intervals.forEach((interval) => {
+    const firstStart = Math.ceil(minValue / interval) * interval;
+    const lastStart = Math.floor((maxValue - tickCount * interval) / interval) * interval;
+    for (let start = firstStart; start <= lastStart; start += interval) {
+      targetIndexes.forEach((targetIndex) => {
+        const targetValue = start + targetIndex * interval;
+        if (selectedTargets.length && !selectedTargets.includes(targetValue)) return;
+        candidates.push({
+          start,
+          end: start + tickCount * interval,
+          interval,
+          tickCount,
+          targetIndex,
+          targetValue,
+          signature: `${start}:${interval}:${targetIndex}`
+        });
+      });
+    }
+  });
+  if (!candidates.length) {
+    throw new Error("No Grade 3 number-line items match the selected range, interval, endpoint, and target contract.");
+  }
+
+  const requestedCount = Math.max(1, Math.round(finiteNumber(options.questionCount, 6)));
+  if (candidates.length < requestedCount) {
+    throw new Error(
+      `Grade 3 number lines need ${requestedCount} unique models; the selected contract provides ${candidates.length}.`
+    );
+  }
+  const remaining = shuffle(candidates, random);
+  const result = [];
+  const intervalCounts = new Map();
+  const targetCounts = new Map();
+  for (let position = 0; position < requestedCount; position += 1) {
+    const preferredIndex = allowEndpointTargets && position === 0
+      ? 0
+      : allowEndpointTargets && position === 1
+        ? tickCount
+        : null;
+    let eligible = preferredIndex === null
+      ? remaining.filter((candidate) => candidate.targetIndex > 0 && candidate.targetIndex < tickCount)
+      : remaining.filter((candidate) => candidate.targetIndex === preferredIndex);
+    if (!eligible.length) eligible = remaining;
+    let bestScore = Infinity;
+    eligible.forEach((candidate) => {
+      const score =
+        (intervalCounts.get(candidate.interval) || 0) * 3 +
+        (targetCounts.get(candidate.targetValue) || 0);
+      if (score < bestScore) bestScore = score;
+    });
+    const best = eligible.filter((candidate) => (
+      (intervalCounts.get(candidate.interval) || 0) * 3 +
+      (targetCounts.get(candidate.targetValue) || 0) === bestScore
+    ));
+    const selected = best[Math.floor(random() * best.length)];
+    result.push(selected);
+    remaining.splice(remaining.findIndex(({ signature }) => signature === selected.signature), 1);
+    intervalCounts.set(selected.interval, (intervalCounts.get(selected.interval) || 0) + 1);
+    targetCounts.set(selected.targetValue, (targetCounts.get(selected.targetValue) || 0) + 1);
+  }
+  return result;
+}
+
+function generateGrade3NumberLineIdentifyProblem(options = {}) {
+  const generatorState = options.generatorState || {};
+  const key = JSON.stringify({
+    minValue: options.minValue ?? options.minA ?? 100,
+    maxValue: options.maxValue ?? options.maxA ?? 1000,
+    allowedIntervals: options.allowedIntervals || options.intervals || options.selectedIntervals || GRADE3_SAFE_INTERVALS,
+    allowEndpointTargets: options.allowEndpointTargets !== false,
+    selectedNumbers: options.selectedNumbers || options.onlyNumbers || [],
+    questionCount: options.questionCount || 6
+  });
+  if (!generatorState.grade3NumberLinePools) generatorState.grade3NumberLinePools = {};
+  if (!generatorState.grade3NumberLinePools[key]?.length) {
+    generatorState.grade3NumberLinePools[key] = buildGrade3NumberLinePool(options);
+  }
+  const item = generatorState.grade3NumberLinePools[key].shift();
+  if (!item) throw new Error("No Grade 3 number-line identification items are available.");
+  const displayedLabels = Array.from(
+    { length: item.tickCount + 1 },
+    (_, index) => item.start + index * item.interval
+  );
+  return {
+    type: "equation",
+    prompt: "",
+    answer: item.targetValue,
+    value: item.targetValue,
+    targetValue: item.targetValue,
+    responseMode: "shortNumeral",
+    responseTarget: "number_line_value",
+    responseValues: [item.targetValue],
+    minValue: item.start,
+    maxValue: item.end,
+    interval: item.interval,
+    tickCount: item.tickCount,
+    targetIndex: item.targetIndex,
+    endpointPolicy: options.allowEndpointTargets === false ? "interior_only" : "endpoints_allowed",
+    displayedLabels,
+    duplicateSignature: `grade3_number_line_identify:${item.signature}`,
+    visual: {
+      kind: "number_line",
+      data: {
+        min: item.start,
+        max: item.end,
+        start: item.start,
+        end: item.end,
+        interval: item.interval,
+        tickCount: item.tickCount,
+        labelEvery: 1,
+        targetIndex: item.targetIndex,
+        highlight: item.targetValue,
+        value: item.targetValue,
+        hideValueLabel: true
+      }
+    }
+  };
+}
+
 function generateNumberLineIdentifyProblem(options = {}) {
   if (options.worksheetId === GRADE2_NUMBER_LINE_IDENTIFY_ID) {
     return generateGrade2NumberLineIdentifyProblem(options);
+  }
+  if (options.worksheetId === GRADE3_NUMBER_LINE_IDENTIFY_ID) {
+    return generateGrade3NumberLineIdentifyProblem(options);
   }
   const random = options.random || Math.random;
   const hasExplicitMax =
@@ -157,3 +315,5 @@ function generateNumberLineIdentifyProblem(options = {}) {
 
 module.exports = generateNumberLineIdentifyProblem;
 module.exports.buildGrade2NumberLinePool = buildGrade2NumberLinePool;
+module.exports.buildGrade3NumberLinePool = buildGrade3NumberLinePool;
+module.exports.GRADE3_SAFE_INTERVALS = GRADE3_SAFE_INTERVALS;

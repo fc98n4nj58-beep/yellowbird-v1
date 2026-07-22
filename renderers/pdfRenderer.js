@@ -90,6 +90,23 @@ function buildAnswerKeyItems(items) {
     b: it.b,
     op: it.op,
     quotient: finiteOptionalNumber(it.quotient),
+    groups: finiteOptionalNumber(it.groups),
+    itemsPerGroup: finiteOptionalNumber(it.itemsPerGroup),
+    responseTarget: it.responseTarget || null,
+    modelGrouping: Array.isArray(it.modelGrouping) ? it.modelGrouping.map(Number) : null,
+    numerator: finiteOptionalNumber(it.numerator),
+    denominator: finiteOptionalNumber(it.denominator),
+    partCount: finiteOptionalNumber(it.partCount),
+    shadeCount: finiteOptionalNumber(it.shadeCount),
+    modelType: it.modelType || null,
+    minValue: finiteOptionalNumber(it.minValue),
+    maxValue: finiteOptionalNumber(it.maxValue),
+    interval: finiteOptionalNumber(it.interval),
+    tickCount: finiteOptionalNumber(it.tickCount),
+    targetValue: finiteOptionalNumber(it.targetValue),
+    targetIndex: finiteOptionalNumber(it.targetIndex),
+    endpointPolicy: it.endpointPolicy || null,
+    displayedLabels: Array.isArray(it.displayedLabels) ? it.displayedLabels.map(Number) : null,
     isExample: Boolean(it.isExample),
     value: finiteOptionalNumber(it.value),
     numberWord: it.numberWord || null,
@@ -575,6 +592,7 @@ function drawEqualSharingPrimitive(doc, x, y, opts = {}) {
   const groupGap = Number(opts.groupGap || MULTIPLICATION_MODEL_DOT.groupGap);
   const sourceGroupGap = Number(opts.sourceGroupGap || 18);
   const dotRadius = Number(opts.dotRadius || MULTIPLICATION_MODEL_DOT.radius);
+  const showDistributedAnswer = Boolean(opts.showDistributedAnswer);
   const sourceRows = Math.ceil(total / sourceCols);
   const groupWidth = Number(opts.groupWidth || 52);
   const groupHeight = Number(opts.groupHeight || 50);
@@ -615,6 +633,21 @@ function drawEqualSharingPrimitive(doc, x, y, opts = {}) {
     const groupX = groupsX + col * (groupWidth + groupGap);
     const groupY = groupsTop + row * (groupHeight + groupGap);
     doc.roundedRect(groupX, groupY, groupWidth, groupHeight, 6).stroke();
+    if (showDistributedAnswer) {
+      const itemRows = Math.ceil(itemsPerGroup / itemCols);
+      const usedWidth = itemCols * cellSize + Math.max(0, itemCols - 1) * gap;
+      const usedHeight = itemRows * cellSize + Math.max(0, itemRows - 1) * gap;
+      const itemStartX = groupX + Math.max(groupPad, (groupWidth - usedWidth) / 2);
+      const itemStartY = groupY + Math.max(groupPad, (groupHeight - usedHeight) / 2);
+      for (let item = 0; item < itemsPerGroup; item += 1) {
+        const itemCol = item % itemCols;
+        const itemRow = Math.floor(item / itemCols);
+        drawDot(
+          itemStartX + itemCol * (cellSize + gap) + cellSize / 2,
+          itemStartY + itemRow * (cellSize + gap) + cellSize / 2
+        );
+      }
+    }
   }
 
   doc.restore();
@@ -1363,10 +1396,17 @@ function renderDivisionModelCell(doc, question, layoutBox, fonts = {}, display =
   const modelHeight = Math.max(16, responseY - modelTop - 14);
   const modelX = x + labelWidth;
   const modelWidth = Math.max(80, width - labelWidth);
-  const measured = measureVisual(visual, modelWidth, modelHeight);
+  const visualForRender = {
+    ...visual,
+    data: {
+      ...(visual.data || {}),
+      showDistributedAnswer: Boolean(display.answerKey || isExample)
+    }
+  };
+  const measured = measureVisual(visualForRender, modelWidth, modelHeight);
 
   if (measured) {
-    renderVisualByKind(doc, visual, {
+    renderVisualByKind(doc, visualForRender, {
       x: modelX,
       y: modelTop
     }, measured);
@@ -3713,7 +3753,7 @@ function drawFairShareModel(doc, fonts, model, answerState, box, { showAnswer = 
 
 function renderSharedFractionPages(doc, fonts, contentObject, pageState, layoutObject) {
   const meta = contentObject.meta || {};
-  const items = contentObject.content?.items || [];
+  const allItems = contentObject.content?.items || [];
   const display = layoutObject.display || {};
   const taskMode = display.fractionTaskMode || display.grade1FractionTaskMode;
   const answerKey = Boolean(display.answerKey);
@@ -3721,7 +3761,7 @@ function renderSharedFractionPages(doc, fonts, contentObject, pageState, layoutO
   const expectedModelKind = taskMode === "share_fairly"
     ? GRADE1_FRACTION_RENDERER_VARIANTS.fair_share_set
     : GRADE1_FRACTION_RENDERER_VARIANTS.fraction_strip;
-  if (!items.length || items.some((item) => item.fractionModel?.kind !== expectedModelKind)) {
+  if (!allItems.length || allItems.some((item) => item.fractionModel?.kind !== expectedModelKind)) {
     throw new Error(`Fraction task '${taskMode || ""}' is missing its '${expectedModelKind}' visual model.`);
   }
   const cb = layout.page.contentBox;
@@ -3734,7 +3774,10 @@ function renderSharedFractionPages(doc, fonts, contentObject, pageState, layoutO
   doc.text(instruction, cb.x, startY - 12, { width: cb.width, align: "left" });
   startY += 30;
 
-  const worked = items.find((item) => item.fractionWorkedModel)?.fractionWorkedModel || null;
+  const worked = allItems.find((item) => item.fractionWorkedModel)?.fractionWorkedModel || null;
+  const items = display.separateWorkedModel
+    ? allItems.filter((item) => !item.isExample)
+    : allItems;
   if (worked && display.separateWorkedModel) {
     const workedHeight = taskMode === "share_fairly" ? 104 : 76;
     doc.save();
@@ -3750,7 +3793,8 @@ function renderSharedFractionPages(doc, fonts, contentObject, pageState, layoutO
         doc,
         worked.model,
         { x: cb.x + 230, y: startY + 15, width: 210, height: 44 },
-        worked.answerState.shadedParts
+        worked.answerState.shadedParts,
+        { allowedPartitionCounts: display.fractionAllowedDenominators }
       );
     } else {
       setFont(doc, fonts.regular, 9.5);
@@ -4480,6 +4524,7 @@ module.exports = {
     getVisualRegion,
     measureArrayVisual,
     measureEqualGroupsVisual,
+    measureEqualSharingVisual,
     measureNumberLineVisual,
     buildNumberLineAnswerTargetGeometry,
     buildSharedDataPictographGeometry,

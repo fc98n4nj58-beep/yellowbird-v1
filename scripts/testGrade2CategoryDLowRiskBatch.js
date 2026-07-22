@@ -266,8 +266,10 @@ function assertRouteAndGradeIsolation() {
     "grade3_place_value_representation_number_line_identify",
     { worksheetSeed: "g3-number-line-isolation", questionCount: 4 }
   );
-  assert.strictEqual(Boolean(grade3Line.layout.display.numberLineFullContentWidth), false);
-  assert(grade3Line.normalizedContentObject.content.items.every((item) => item.prompt === "What number is marked on the number line?"));
+  assert.strictEqual(Boolean(grade3Line.layout.display.numberLineFullContentWidth), true);
+  assert(grade3Line.normalizedContentObject.content.items.every((item) => item.prompt === ""));
+  assert(grade3Line.normalizedContentObject.content.items.every((item) => item.responseTarget === "number_line_value"));
+  assert(grade3Line.normalizedContentObject.content.items.every((item) => item.targetValue >= 100 && item.targetValue <= 1000));
 
   const grade3Equation = buildCatalogWorksheetRuntime(
     "grade3_addition_subtraction_facts_equation_match",

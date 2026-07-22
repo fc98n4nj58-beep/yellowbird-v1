@@ -168,9 +168,10 @@ async function run() {
   const grade3 = buildCatalogWorksheetRuntime("grade3_fraction_equivalence_shade_fraction_models", {
     worksheetSeed: "grade3-shade-isolation"
   });
-  assert.strictEqual(grade3.layout.display.sharedFractionRenderer, undefined);
+  assert.strictEqual(grade3.layout.display.sharedFractionRenderer, true);
   assert.strictEqual(grade3.layout.display.grade1FractionRenderer, undefined);
-  assert(grade3.contentObject.content.items.every(({ fractionModel }) => !fractionModel));
+  assert.deepStrictEqual(grade3.layout.display.fractionAllowedDenominators, [2, 3, 4, 5, 6, 8]);
+  assert(grade3.contentObject.content.items.every(({ fractionModel }) => fractionModel?.modelType === "strip"));
 
   const shareFairly = getAnyWorksheetCatalogById("grade2_fraction_equivalence_fraction_word_problems");
   assert.strictEqual(shareFairly.title, "Share Fairly to 10");
@@ -185,8 +186,8 @@ async function run() {
     "utf8"
   );
   assert(reconciliation.includes(`\`${RESOURCE_ID}\``));
-  assert(reconciliation.includes("**A (24):**"));
-  assert(reconciliation.includes("**D (5):**"));
+  assert(reconciliation.includes("**A (35):**"));
+  assert(reconciliation.includes("**D (0):**"));
 
   const generatorSource = fs.readFileSync(
     path.join(__dirname, "..", "engine", "problemGenerators", "grade2ShadeEqualParts.js"),

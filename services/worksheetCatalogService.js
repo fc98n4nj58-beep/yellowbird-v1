@@ -21,6 +21,9 @@ const {
 const {
   validateGrade2ShareFairlyTo10Worksheet
 } = require("../engine/problemGenerators/grade2ShareFairlyTo10");
+const {
+  validateGrade3ShadeFractionWorksheet
+} = require("../engine/problemGenerators/grade3ShadeFractionModels");
 
 const MASTER_CATALOG_PATH = path.join(__dirname, "../data/worksheetCatalog.master.json");
 
@@ -164,6 +167,14 @@ const GRADE3_MISSING_ADDEND_ID = "grade3_addition_subtraction_facts_missing_adde
 const GRADE3_ADDITION_WORD_PROBLEMS_ID = "grade3_addition_subtraction_word_problems_addition_word_problem";
 const GRADE3_MISSING_ADDEND_WORD_PROBLEMS_ID = "grade3_addition_subtraction_word_problems_missing_addend_word_problem";
 const GRADE3_SUBTRACTION_WORD_PROBLEMS_ID = "grade3_addition_subtraction_word_problems_subtraction_word_problem";
+const GRADE3_EQUAL_SHARING_ID = "g3_equal_sharing_division";
+const GRADE3_SHADE_FRACTION_ID = "grade3_fraction_equivalence_shade_fraction_models";
+const GRADE3_NUMBER_LINE_IDENTIFY_ID = "grade3_place_value_representation_number_line_identify";
+const GRADE3_CONCRETE_VISUAL_IDS = new Set([
+  GRADE3_EQUAL_SHARING_ID,
+  GRADE3_SHADE_FRACTION_ID,
+  GRADE3_NUMBER_LINE_IDENTIFY_ID
+]);
 const GRADE2_ADDITION_WITHIN_100_ID = "g2_addition_fluency_within_100";
 const GRADE2_MISSING_ADDENDS_WITHIN_100_ID = "g2_missing_addends_within_100";
 const GRADE2_SUBTRACTION_WITHIN_100_ID = "g2_subtraction_fluency_within_100";
@@ -269,6 +280,12 @@ const GRADE3_STORY_PROBLEM_TITLES = Object.freeze({
 });
 
 const GRADE3_STORY_PROBLEM_IDS = new Set(Object.keys(GRADE3_STORY_PROBLEM_TITLES));
+
+const GRADE3_CONCRETE_VISUAL_TITLES = Object.freeze({
+  [GRADE3_EQUAL_SHARING_ID]: "Equal Sharing Division",
+  [GRADE3_SHADE_FRACTION_ID]: "Shade the Fraction",
+  [GRADE3_NUMBER_LINE_IDENTIFY_ID]: "Identify Numbers on a Number Line"
+});
 
 const GRADE2_NUMERIC_PATTERN_IDS = new Set(
   Object.keys(GRADE2_NUMERIC_PATTERN_TITLES)
@@ -528,6 +545,57 @@ function normalizeGrade3StoryProblemOptions(item, options = {}) {
       options.missingPartPosition ||
       options.unknownPosition ||
       "mixed";
+  }
+
+  return normalized;
+}
+
+function normalizeGrade3ConcreteVisualOptions(item, options = {}) {
+  if (!GRADE3_CONCRETE_VISUAL_IDS.has(item.id)) return options;
+  const normalized = { ...options };
+
+  if (item.id === GRADE3_EQUAL_SHARING_ID) {
+    const requestedTaskMode = String(options.taskMode || "distribute").trim().toLowerCase();
+    if (requestedTaskMode !== "distribute") {
+      throw new Error("Grade 3 Equal Sharing Division supports share-into-groups mode only.");
+    }
+    normalized.questionCount = Math.max(1, Math.round(finiteNumber(options.questionCount, 8)));
+    normalized.questionsPerPage = Math.max(1, Math.min(3, Math.round(finiteNumber(options.questionsPerPage, 3))));
+    normalized.minGroups = Math.max(2, Math.round(finiteNumber(options.minGroups ?? options.minFactorA ?? options.minA, 2)));
+    normalized.maxGroups = Math.min(6, Math.max(normalized.minGroups, Math.round(finiteNumber(options.maxGroups ?? options.maxFactorA ?? options.maxA, 6))));
+    normalized.minItemsPerGroup = Math.max(2, Math.round(finiteNumber(options.minItemsPerGroup ?? options.minFactorB ?? options.minB, 2)));
+    normalized.maxItemsPerGroup = Math.min(6, Math.max(normalized.minItemsPerGroup, Math.round(finiteNumber(options.maxItemsPerGroup ?? options.maxFactorB ?? options.maxB, 6))));
+    normalized.maxProduct = Math.min(36, Math.max(4, finiteNumber(options.maxProduct ?? options.maxTotal, 36)));
+    normalized.maxTotal = normalized.maxProduct;
+    normalized.taskMode = "distribute";
+    normalized.responseMode = "division_sentence";
+    normalized.equationSupport = String(options.equationSupport || "blanks").trim().toLowerCase() === "independent"
+      ? "independent"
+      : "blanks";
+    normalized.showQuestionSentence = parseBoolean(options.showQuestionSentence, true);
+    normalized.balanceFactorValues = true;
+  }
+
+  if (item.id === GRADE3_SHADE_FRACTION_ID) {
+    normalized.questionCount = Math.max(1, Math.min(8, Math.round(finiteNumber(options.questionCount, 8))));
+    if (Number.isFinite(Number(options.questionCount)) && Number(options.questionCount) > 8) {
+      throw new Error("Grade 3 Shade the Fraction supports at most 8 student questions per worksheet.");
+    }
+    normalized.questionsPerPage = normalized.questionCount;
+    normalized.modelType = options.modelType || "strip";
+  }
+
+  if (item.id === GRADE3_NUMBER_LINE_IDENTIFY_ID) {
+    normalized.questionCount = Math.max(1, Math.round(finiteNumber(options.questionCount, 6)));
+    normalized.questionsPerPage = Math.max(1, Math.min(6, Math.round(finiteNumber(options.questionsPerPage, 6))));
+    normalized.minValue = Math.max(0, Math.round(finiteNumber(options.minValue ?? options.minA, 100)));
+    normalized.maxValue = Math.min(1000, Math.max(normalized.minValue + 100, Math.round(finiteNumber(options.maxValue ?? options.maxA, 1000))));
+    normalized.allowedIntervals = parseNumberList(
+      options.allowedIntervals || options.intervals || options.selectedIntervals
+    ).map(Math.round);
+    if (!normalized.allowedIntervals.length) normalized.allowedIntervals = [10, 25, 50, 100];
+    normalized.allowEndpointTargets = parseBoolean(options.allowEndpointTargets, true);
+    normalized.selectedNumbers = parseNumberList(options.selectedNumbers || options.onlyNumbers).map(Math.round);
   }
 
   return normalized;
@@ -931,7 +999,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
 
   normalized.showQuestionSentence = parseBoolean(
     normalized.showQuestionSentence,
-    false
+    item.id === GRADE3_EQUAL_SHARING_ID
   );
 
   const responseMode = String(normalized.responseMode || "").trim().toLowerCase();
@@ -959,7 +1027,9 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalizeGrade3StoryProblemOptions(
+  return normalizeGrade3ConcreteVisualOptions(
+    item,
+  normalizeGrade3StoryProblemOptions(
     item,
   normalizeGrade2CategoryEBatch3Options(
     item,
@@ -999,7 +1069,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
       )
     )
     )
-  ))))));
+  )))))));
 }
 
 const NON_CUSTOMIZATION_QUERY_KEYS = new Set([
@@ -1159,7 +1229,9 @@ function generateWorksheetFromCatalogId(id, options = {}) {
   }
 
   const generatorOptions = resolveCatalogWorksheetOptions(item, options);
-  const activityType = item.id === GRADE2_SHADE_EQUAL_PARTS_ID
+  const activityType = item.id === GRADE3_SHADE_FRACTION_ID
+    ? "grade3_shade_fraction_models"
+    : item.id === GRADE2_SHADE_EQUAL_PARTS_ID
     ? "grade2_shade_equal_parts"
     : item.id === GRADE2_SHARE_FAIRLY_TO_10_ID
       ? "grade2_share_fairly_to_10"
@@ -1203,6 +1275,7 @@ function generateWorksheetFromCatalogId(id, options = {}) {
     validateGrade1FractionWorksheet(item.id, worksheet.problems);
     validateGrade2ShadeEqualPartsWorksheet(item.id, worksheet.problems);
     validateGrade2ShareFairlyTo10Worksheet(item.id, worksheet.problems);
+    validateGrade3ShadeFractionWorksheet(item.id, worksheet.problems);
     return worksheet;
   } catch (err) {
     if (/No addition facts are available/.test(err.message)) {
@@ -1253,6 +1326,18 @@ function buildRangeNotice(item, options = {}) {
 
 function buildStudentFacingInstruction(item, fallback = "") {
  const activityType = item.activityTypes?.[0] || "";
+
+ if (item.id === GRADE3_EQUAL_SHARING_ID) {
+  return "Share the dots equally. Complete the division equation.";
+ }
+
+ if (item.id === GRADE3_SHADE_FRACTION_ID) {
+  return "Shade each model to show the fraction.";
+ }
+
+ if (item.id === GRADE3_NUMBER_LINE_IDENTIFY_ID) {
+  return "Write the number shown by the point on each number line.";
+ }
 
  if (item.id === GRADE3_ADDITION_WORD_PROBLEMS_ID) {
   return "Solve each addition word problem. Show your thinking in the box.";
@@ -1578,6 +1663,7 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
   GRADE3_PLACE_VALUE_TITLES[item.id] ||
   GRADE3_ADDITION_SUBTRACTION_BATCH3_TITLES[item.id] ||
   GRADE3_STORY_PROBLEM_TITLES[item.id] ||
+  GRADE3_CONCRETE_VISUAL_TITLES[item.id] ||
   (item.id === GRADE3_NUMBER_WORD_ID
     ? isReverseNumberWordMode ? "Write the Numeral" : "Write Number Words"
     : isReverseNumberWordMode
@@ -1964,9 +2050,11 @@ if (
     ? "write the division equation"
     : "complete the division equation";
 
-  layout.instruction = showQuestionSentence
-    ? `Read each description. ${action} and ${response}.`
-    : `${action} and ${response}.`;
+  layout.instruction = item.id === GRADE3_EQUAL_SHARING_ID
+    ? "Share the dots equally. Complete the division equation."
+    : showQuestionSentence
+      ? `Read each description. ${action} and ${response}.`
+      : `${action} and ${response}.`;
   layout.template = {
     ...(layout.template || {}),
     columns: 1,
@@ -1980,7 +2068,9 @@ if (
     divisionEquationIndependent: equationSupport === "independent",
     equalSharingTaskMode: taskMode,
     equalHeightItems: true,
-    hideItemSeparators: false
+    hideItemSeparators: false,
+    hideSubtitle: item.id === GRADE3_EQUAL_SHARING_ID,
+    suppressExampleLabel: item.id === GRADE3_EQUAL_SHARING_ID
   };
 }
 
@@ -2201,11 +2291,11 @@ if ([GRADE3_FACT_FLUENCY_ID, GRADE3_MISSING_ADDEND_ID].includes(item.id)) {
   };
 }
 
-if (item.id === GRADE2_NUMBER_LINE_IDENTIFY_ID) {
+if ([GRADE2_NUMBER_LINE_IDENTIFY_ID, GRADE3_NUMBER_LINE_IDENTIFY_ID].includes(item.id)) {
   layout.template = {
     ...(layout.template || {}),
     columns: 1,
-    maxProblemsPerPage: 6
+    maxProblemsPerPage: finiteNumber(normalizedOptions.questionsPerPage) || 6
   };
   layout.display = {
     ...(layout.display || {}),
@@ -2449,6 +2539,29 @@ if (item.id === GRADE2_SHADE_EQUAL_PARTS_ID) {
     equalHeightItems: true,
     hideItemSeparators: true,
     separateWorkedModel: false,
+    completedQuestionOne: false
+  };
+}
+
+if (item.id === GRADE3_SHADE_FRACTION_ID) {
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 2,
+    maxProblemsPerPage: 8
+  };
+  layout.worksheetType = "fraction_visual";
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    suppressExampleLabel: true,
+    fractionTaskMode: "shade_equal_parts",
+    sharedFractionRenderer: true,
+    fractionAllowedDenominators: [2, 3, 4, 5, 6, 8],
+    layoutVariant: "fraction_strip_grid",
+    visualColumns: 2,
+    equalHeightItems: true,
+    hideItemSeparators: true,
+    separateWorkedModel: Boolean(normalizedOptions.includeExample),
     completedQuestionOne: false
   };
 }

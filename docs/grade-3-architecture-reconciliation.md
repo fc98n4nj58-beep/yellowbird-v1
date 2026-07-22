@@ -2,17 +2,47 @@
 
 Date: 2026-07-22
 
-Status: current Grade 3 reconciliation source of truth after founder-approved Batch 4. Catalog lifecycle status and reconciliation category are separate concepts.
+Status: current Grade 3 reconciliation source of truth after founder-approved Batch 5. Catalog lifecycle status and reconciliation category are separate concepts.
 
 ## Current totals
 
-- A: 25
-- D: 11
+- A: 28
+- D: 8
 - E: 2
 - G: 15
 - Total: 53
 
-The totals reconcile exactly: 25 + 11 + 2 + 15 = 53.
+The totals reconcile exactly: 28 + 8 + 2 + 15 = 53.
+
+## Founder-approved Batch 5 movement
+
+Applied movement: D3 -> A3.
+
+| Resource ID | Founder-approved title | Catalog status | Reconciliation | Approved default |
+| --- | --- | --- | --- | --- |
+| `g3_equal_sharing_division` | Equal Sharing Division | `partial` | A | 8 questions; groups and items per group 2-6; totals no greater than 36; 6 pages |
+| `grade3_fraction_equivalence_shade_fraction_models` | Shade the Fraction | `generated` | A | 8 proper-fraction strip models; denominators 2, 3, 4, 5, 6 and 8; 2 pages |
+| `grade3_place_value_representation_number_line_identify` | Identify Numbers on a Number Line | `generated` | A | 6 full-width number lines; values 100-1,000; intervals 10, 25, 50 and 100; 2 pages |
+
+Founder approval date: 2026-07-22. No correction round was required and no resource was split or blocked.
+
+Approved instructions are:
+
+- `Share the dots equally. Complete the division equation.`
+- `Shade each model to show the fraction.`
+- `Write the number shown by the point on each number line.`
+
+Approved footers are `Grade 3 • Math • Multiplication and Division`, `Grade 3 • Math • Fractions` and `Grade 3 • Math • Place Value` respectively.
+
+Protected founder proofs: `review/grade-3-concrete-visual-batch-5/founder-review/`.
+
+The renderer-capability gate passed for all three exact IDs. Equal Sharing uses the existing shared equal-sharing visual model, with visible source dots, empty student containers and completed key containers. Shade the Fraction uses equal-part fraction strips, with unshaded student models and key shading equal to the numerator. Number Line uses the existing full-width model with ten intervals, hidden target labels, aligned response lines and exact restored key values. Student/key parity is derived from each stored structured-truth record rather than reconstructed from rendered marks.
+
+Equal Sharing preserves exact total, groups, items-per-group, quotient, distribute task mode, response values and grouping state; its approved density is three questions per page after the pre-approval collision check. Shade the Fraction preserves numerator, denominator, part/shade counts, strip model, answer state and duplicate signature. Number Line preserves bounds, interval, tick count, target index/value, endpoint policy, displayed labels, response and visual data; endpoint targets remain supported.
+
+All documented selectors, ranges, pagination inputs, completed-example aliases, deterministic seed and answer-key inputs remain raw-runtime-only where supported. The catalog records remain `partial`, `generated` and `generated`; no lifecycle promotion or demotion occurred. No Grade 3 public customization family was registered.
+
+Commit record: committed in this closeout; git history is the authoritative commit identifier.
 
 ## Founder-approved Batch 4 movement
 
@@ -114,6 +144,6 @@ Commit record: committed in this closeout; git history is the authoritative comm
 
 ## Remaining classifications
 
-The canonical 53-resource row-level inventory remains `docs/grade-3-founder-review-batch-plan.md`. Apart from the three Batch 4 rows moved from D to A above, every resource retains the reviewed A, D, E or G classification recorded in the final column of that ledger. No other row moved during this closeout.
+The canonical 53-resource row-level inventory remains `docs/grade-3-founder-review-batch-plan.md`. Apart from the three Batch 5 rows moved from D to A above, every resource retains the reviewed A, D, E or G classification recorded in the final column of that ledger. No other row moved during this closeout.
 
 Commit record: committed in this closeout; git history is the authoritative commit identifier.
