@@ -1,18 +1,42 @@
 # Grade 3 Architecture Reconciliation
 
-Date: 2026-07-21
+Date: 2026-07-22
 
-Status: current Grade 3 reconciliation source of truth after founder-approved Batch 3. Catalog lifecycle status and reconciliation category are separate concepts.
+Status: current Grade 3 reconciliation source of truth after founder-approved Batch 4. Catalog lifecycle status and reconciliation category are separate concepts.
 
 ## Current totals
 
-- A: 22
-- D: 14
+- A: 25
+- D: 11
 - E: 2
 - G: 15
 - Total: 53
 
-The totals reconcile exactly: 22 + 14 + 2 + 15 = 53.
+The totals reconcile exactly: 25 + 11 + 2 + 15 = 53.
+
+## Founder-approved Batch 4 movement
+
+Applied movement: D3 -> A3.
+
+| Resource ID | Founder-approved title | Catalog status | Reconciliation | Approved default |
+| --- | --- | --- | --- | --- |
+| `grade3_addition_subtraction_word_problems_addition_word_problem` | Addition Word Problems | `generated` | A | 12 questions; addends 10-90; totals within 100; 6 pages |
+| `grade3_addition_subtraction_word_problems_missing_addend_word_problem` | Missing Addend Word Problems | `generated` | A | 12 questions; 6 first-addend and 6 second-addend unknowns; totals within 100; 6 pages |
+| `grade3_addition_subtraction_word_problems_subtraction_word_problem` | Subtraction Word Problems | `generated` | A | 12 questions; minuends 20-100; non-negative differences; 6 pages |
+
+Founder approval date: 2026-07-22.
+
+Approved shared footer: `Grade 3 • Math • Addition and Subtraction`.
+
+Protected founder proofs: `review/grade-3-story-problems-batch-4/founder-review/`.
+
+All three resources preserve arithmetic-first structured truth, student/key parity, four student pages with three full-width work-box questions per page, two compact answer-key pages, curated names and objects, seeded determinism, range and selection inputs, context and object selectors, completed-example aliases and pagination controls. Missing Addends preserves explicit missing-position truth and the 6/6 default balance.
+
+The founder-approved correction round revised exactly `g3_add_question_first`, `g3_missing_second_question`, `g3_missing_second_complete`, `g3_sub_checked_out`, `g3_sub_difference` and `g3_sub_remaining`. The approved prompts use direct classroom language with correct `he`, `she` and `they` agreement and exclude the six rejected machine-like forms recorded in the Batch 4 test.
+
+All three catalog records remain `generated`; no lifecycle promotion occurred. No Grade 3 public customization family was registered. The founder-approved proof packet requires no further correction round.
+
+Commit record: committed in this closeout; git history is the authoritative commit identifier.
 
 ## Founder-approved Batch 3 movement
 
@@ -90,6 +114,6 @@ Commit record: committed in this closeout; git history is the authoritative comm
 
 ## Remaining classifications
 
-The canonical 53-resource row-level inventory remains `docs/grade-3-founder-review-batch-plan.md`. Apart from the four Batch 3 rows moved from E to A above, every resource retains the reviewed A, D, E or G classification recorded in the final column of that ledger. No other row moved during this closeout.
+The canonical 53-resource row-level inventory remains `docs/grade-3-founder-review-batch-plan.md`. Apart from the three Batch 4 rows moved from D to A above, every resource retains the reviewed A, D, E or G classification recorded in the final column of that ledger. No other row moved during this closeout.
 
 Commit record: committed in this closeout; git history is the authoritative commit identifier.

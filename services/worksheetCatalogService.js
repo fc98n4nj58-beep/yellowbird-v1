@@ -161,6 +161,9 @@ const GRADE3_EQUATION_MATCH_ID = "grade3_addition_subtraction_facts_equation_mat
 const GRADE3_FACT_FAMILY_ID = "grade3_addition_subtraction_facts_fact_family";
 const GRADE3_FACT_FLUENCY_ID = "grade3_addition_subtraction_facts_fact_fluency";
 const GRADE3_MISSING_ADDEND_ID = "grade3_addition_subtraction_facts_missing_addend";
+const GRADE3_ADDITION_WORD_PROBLEMS_ID = "grade3_addition_subtraction_word_problems_addition_word_problem";
+const GRADE3_MISSING_ADDEND_WORD_PROBLEMS_ID = "grade3_addition_subtraction_word_problems_missing_addend_word_problem";
+const GRADE3_SUBTRACTION_WORD_PROBLEMS_ID = "grade3_addition_subtraction_word_problems_subtraction_word_problem";
 const GRADE2_ADDITION_WITHIN_100_ID = "g2_addition_fluency_within_100";
 const GRADE2_MISSING_ADDENDS_WITHIN_100_ID = "g2_missing_addends_within_100";
 const GRADE2_SUBTRACTION_WITHIN_100_ID = "g2_subtraction_fluency_within_100";
@@ -258,6 +261,14 @@ const GRADE3_ADDITION_SUBTRACTION_BATCH3_TITLES = Object.freeze({
 const GRADE3_ADDITION_SUBTRACTION_BATCH3_IDS = new Set(
   Object.keys(GRADE3_ADDITION_SUBTRACTION_BATCH3_TITLES)
 );
+
+const GRADE3_STORY_PROBLEM_TITLES = Object.freeze({
+  [GRADE3_ADDITION_WORD_PROBLEMS_ID]: "Addition Word Problems",
+  [GRADE3_MISSING_ADDEND_WORD_PROBLEMS_ID]: "Missing Addend Word Problems",
+  [GRADE3_SUBTRACTION_WORD_PROBLEMS_ID]: "Subtraction Word Problems"
+});
+
+const GRADE3_STORY_PROBLEM_IDS = new Set(Object.keys(GRADE3_STORY_PROBLEM_TITLES));
 
 const GRADE2_NUMERIC_PATTERN_IDS = new Set(
   Object.keys(GRADE2_NUMERIC_PATTERN_TITLES)
@@ -483,6 +494,40 @@ function normalizeGrade3AdditionSubtractionBatch3Options(item, options = {}) {
     normalized.maxB = Math.max(normalized.minB, finiteNumber(options.maxB, 100));
     normalized.maxTotal = finiteNumber(options.maxTotal, 100);
     normalized.missingPosition = options.missingPosition || options.missingAddendPosition || "mixed";
+  }
+
+  return normalized;
+}
+
+function normalizeGrade3StoryProblemOptions(item, options = {}) {
+  if (!GRADE3_STORY_PROBLEM_IDS.has(item.id)) return options;
+
+  const normalized = {
+    ...options,
+    questionCount: finiteNumber(options.questionCount, 12),
+    maxTotal: Math.min(100, finiteNumber(options.maxTotal, 100))
+  };
+
+  if (item.id === GRADE3_SUBTRACTION_WORD_PROBLEMS_ID) {
+    normalized.minA = finiteNumber(options.minA, 20);
+    normalized.maxA = Math.min(100, Math.max(normalized.minA, finiteNumber(options.maxA, 100)));
+    normalized.minB = finiteNumber(options.minB, 1);
+    normalized.maxB = Math.min(99, Math.max(normalized.minB, finiteNumber(options.maxB, 90)));
+    normalized.naturalTakeAwayLanguage = parseBoolean(options.naturalTakeAwayLanguage, true);
+  } else {
+    normalized.minA = finiteNumber(options.minA, 10);
+    normalized.maxA = Math.min(90, Math.max(normalized.minA, finiteNumber(options.maxA, 90)));
+    normalized.minB = finiteNumber(options.minB, 10);
+    normalized.maxB = Math.min(90, Math.max(normalized.minB, finiteNumber(options.maxB, 90)));
+  }
+
+  if (item.id === GRADE3_MISSING_ADDEND_WORD_PROBLEMS_ID) {
+    normalized.missingPosition =
+      options.missingPosition ||
+      options.missingAddendPosition ||
+      options.missingPartPosition ||
+      options.unknownPosition ||
+      "mixed";
   }
 
   return normalized;
@@ -914,7 +959,9 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalizeGrade2CategoryEBatch3Options(
+  return normalizeGrade3StoryProblemOptions(
+    item,
+  normalizeGrade2CategoryEBatch3Options(
     item,
   normalizeGrade2CategoryEBatch2Options(
     item,
@@ -952,7 +999,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
       )
     )
     )
-  )))));
+  ))))));
 }
 
 const NON_CUSTOMIZATION_QUERY_KEYS = new Set([
@@ -1206,6 +1253,18 @@ function buildRangeNotice(item, options = {}) {
 
 function buildStudentFacingInstruction(item, fallback = "") {
  const activityType = item.activityTypes?.[0] || "";
+
+ if (item.id === GRADE3_ADDITION_WORD_PROBLEMS_ID) {
+  return "Solve each addition word problem. Show your thinking in the box.";
+ }
+
+ if (item.id === GRADE3_MISSING_ADDEND_WORD_PROBLEMS_ID) {
+  return "Solve each missing-addend word problem. Show your thinking in the box.";
+ }
+
+ if (item.id === GRADE3_SUBTRACTION_WORD_PROBLEMS_ID) {
+  return "Solve each subtraction word problem. Show your thinking in the box.";
+ }
 
  if (item.id === GRADE2_ADDITION_WORD_PROBLEMS_WITHIN_100_ID) {
   return "Solve each addition word problem. Show your thinking in the box.";
@@ -1518,6 +1577,7 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
   GRADE3_NUMERIC_PATTERN_TITLES[item.id] ||
   GRADE3_PLACE_VALUE_TITLES[item.id] ||
   GRADE3_ADDITION_SUBTRACTION_BATCH3_TITLES[item.id] ||
+  GRADE3_STORY_PROBLEM_TITLES[item.id] ||
   (item.id === GRADE3_NUMBER_WORD_ID
     ? isReverseNumberWordMode ? "Write the Numeral" : "Write Number Words"
     : isReverseNumberWordMode
@@ -1665,6 +1725,22 @@ if (Number.isFinite(normalizedOptions.questionsPerPage) && normalizedOptions.que
 }
 
 if (GRADE2_CATEGORY_E_BATCH3_IMPLEMENTED_IDS.has(item.id)) {
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 1,
+    maxProblemsPerPage: finiteNumber(normalizedOptions.questionsPerPage) || 3
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    compactWordProblemAnswerKey: true,
+    workSpaceBox: true,
+    equalHeightItems: true,
+    hideItemSeparators: true
+  };
+}
+
+if (GRADE3_STORY_PROBLEM_IDS.has(item.id)) {
   layout.template = {
     ...(layout.template || {}),
     columns: 1,

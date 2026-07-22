@@ -96,6 +96,12 @@ const GRADE3_ADDITION_SUBTRACTION_BATCH3_IDS = new Set([
   "grade3_addition_subtraction_facts_missing_addend"
 ]);
 
+const GRADE3_STORY_PROBLEM_IDS = new Set([
+  "grade3_addition_subtraction_word_problems_addition_word_problem",
+  "grade3_addition_subtraction_word_problems_missing_addend_word_problem",
+  "grade3_addition_subtraction_word_problems_subtraction_word_problem"
+]);
+
 function finiteOptionalNumber(value) {
   if (value === undefined || value === null || value === "") return null;
   const n = Number(value);
@@ -108,6 +114,7 @@ function publicSkillLabel(item) {
   if (GRADE2_WITHIN_100_FLUENCY_IDS.has(item?.id)) return "";
   if (GRADE3_PLACE_VALUE_BATCH2_IDS.has(item?.id)) return "";
   if (GRADE3_ADDITION_SUBTRACTION_BATCH3_IDS.has(item?.id)) return "";
+  if (GRADE3_STORY_PROBLEM_IDS.has(item?.id)) return "";
   if (PUBLIC_SKILL_LABEL_HIDDEN_IDS.has(item?.id)) return "";
   if (item?.skillKey === "patterning_and_algebra") return "";
   return item?.skillKey || "";
@@ -125,6 +132,9 @@ function publicDomainLabel(item) {
     return "Addition and Subtraction";
   }
   if (GRADE3_ADDITION_SUBTRACTION_BATCH3_IDS.has(item?.id)) {
+    return "Addition and Subtraction";
+  }
+  if (GRADE3_STORY_PROBLEM_IDS.has(item?.id)) {
     return "Addition and Subtraction";
   }
   if (EARLY_MULTIPLICATION_FOOTER_IDS.has(item?.id)) {

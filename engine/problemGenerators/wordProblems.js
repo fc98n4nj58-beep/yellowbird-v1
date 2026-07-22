@@ -6,6 +6,36 @@ const {
 
 const GRADE2_ADDITION_WORD_PROBLEMS_ID = "g2_addition_word_problems_within_100";
 const GRADE2_MULTIPLICATION_WORD_PROBLEMS_ID = "grade2_multiplication_facts_word_problems";
+const GRADE3_ADDITION_WORD_PROBLEMS_ID = "grade3_addition_subtraction_word_problems_addition_word_problem";
+const GRADE3_MISSING_ADDEND_WORD_PROBLEMS_ID = "grade3_addition_subtraction_word_problems_missing_addend_word_problem";
+const GRADE3_SUBTRACTION_WORD_PROBLEMS_ID = "grade3_addition_subtraction_word_problems_subtraction_word_problem";
+const GRADE3_STORY_PROBLEM_IDS = new Set([
+  GRADE3_ADDITION_WORD_PROBLEMS_ID,
+  GRADE3_MISSING_ADDEND_WORD_PROBLEMS_ID,
+  GRADE3_SUBTRACTION_WORD_PROBLEMS_ID
+]);
+
+const GRADE3_STORY_NAMES = Object.freeze([
+  { id: "maya", name: "Maya", pronoun: "she" },
+  { id: "leo", name: "Leo", pronoun: "he" },
+  { id: "ava", name: "Ava", pronoun: "she" },
+  { id: "noah", name: "Noah", pronoun: "he" },
+  { id: "ivy", name: "Ivy", pronoun: "she" },
+  { id: "sam", name: "Sam", pronoun: "they" },
+  { id: "emma", name: "Emma", pronoun: "she" },
+  { id: "liam", name: "Liam", pronoun: "he" }
+]);
+
+const GRADE3_STORY_OBJECTS = Object.freeze([
+  { id: "books", item: "book" },
+  { id: "pencils", item: "pencil" },
+  { id: "beads", item: "bead" },
+  { id: "stickers", item: "sticker" },
+  { id: "cards", item: "card" },
+  { id: "shells", item: "shell" },
+  { id: "markers", item: "marker" },
+  { id: "buttons", item: "button" }
+]);
 
 function randInt(min, max, random = Math.random) {
   return Math.floor(random() * (max - min + 1)) + min;
@@ -116,6 +146,142 @@ function selectedContextValues(options = {}) {
     .flatMap((value) => Array.isArray(value) ? value : typeof value === "string" ? value.split(",") : [])
     .map((value) => String(value).trim().toLowerCase())
     .filter(Boolean);
+}
+
+function normalizedTextList(...values) {
+  return values
+    .flatMap((value) => Array.isArray(value) ? value : typeof value === "string" ? value.split(",") : [])
+    .map((value) => String(value).trim().toLowerCase())
+    .filter(Boolean);
+}
+
+function filterGrade3StoryEntries(entries, selected, keys, label) {
+  if (!selected.length) return entries;
+  const filtered = entries.filter((entry) => selected.some((value) => (
+    keys.some((key) => String(entry[key] || "").toLowerCase() === value)
+  )));
+  if (!filtered.length) {
+    throw new Error(`No Grade 3 word-problem ${label} match: ${selected.join(", ")}.`);
+  }
+  return filtered;
+}
+
+function grade3StoryPools(options = {}) {
+  const selectedContexts = normalizedTextList(options.selectedContexts, options.contexts);
+  const selectedObjects = normalizedTextList(options.selectedObjects, options.onlyObjects);
+  let names = GRADE3_STORY_NAMES;
+  let objects = GRADE3_STORY_OBJECTS;
+  if (selectedContexts.length) {
+    const matchingNames = names.filter((entry) => selectedContexts.some((value) => (
+      [entry.id, entry.name].some((part) => String(part || "").toLowerCase() === value)
+    )));
+    const matchingObjects = objects.filter((entry) => selectedContexts.some((value) => (
+      [entry.id, entry.item].some((part) => String(part || "").toLowerCase() === value)
+    )));
+    if (!matchingNames.length && !matchingObjects.length) {
+      throw new Error(`No Grade 3 word-problem contexts match: ${selectedContexts.join(", ")}.`);
+    }
+    if (matchingNames.length) names = matchingNames;
+    if (matchingObjects.length) objects = matchingObjects;
+  }
+  return {
+    names,
+    objects: filterGrade3StoryEntries(
+      objects,
+      selectedObjects,
+      ["id", "item"],
+      "objects"
+    )
+  };
+}
+
+function pickGrade3StoryContext(names, objects, random, stateKey, options = {}) {
+  const generatorState = options.generatorState || {};
+  if (!generatorState.grade3StoryContexts) generatorState.grade3StoryContexts = {};
+  const state = generatorState.grade3StoryContexts[stateKey] || {
+    nameCounts: new Map(),
+    objectCounts: new Map(),
+    usedPairs: new Set(),
+    recentNames: [],
+    recentObjects: []
+  };
+  generatorState.grade3StoryContexts[stateKey] = state;
+  const requestedCount = Math.max(1, Number(options.questionCount || 12));
+  const maxNameUses = Math.max(2, Math.ceil(requestedCount / names.length));
+  const maxObjectUses = Math.max(2, Math.ceil(requestedCount / objects.length));
+  let candidates = [];
+
+  names.forEach((name) => {
+    objects.forEach((object) => {
+      const pairKey = `${name.id}:${object.id}`;
+      if (state.usedPairs.has(pairKey)) return;
+      if ((state.nameCounts.get(name.id) || 0) >= maxNameUses) return;
+      if ((state.objectCounts.get(object.id) || 0) >= maxObjectUses) return;
+      candidates.push({ name, object, pairKey });
+    });
+  });
+
+  if (!candidates.length) {
+    throw new Error("No unique Grade 3 word-problem name/object pairs remain for the selected context contract.");
+  }
+
+  const outsideRecentWindow = candidates.filter(({ name, object }) => (
+    !state.recentNames.includes(name.id) && !state.recentObjects.includes(object.id)
+  ));
+  if (outsideRecentWindow.length) candidates = outsideRecentWindow;
+  const lowestScore = Math.min(...candidates.map(({ name, object }) => (
+    (state.nameCounts.get(name.id) || 0) + (state.objectCounts.get(object.id) || 0)
+  )));
+  candidates = candidates.filter(({ name, object }) => (
+    (state.nameCounts.get(name.id) || 0) + (state.objectCounts.get(object.id) || 0) === lowestScore
+  ));
+  const selected = pick(candidates, random);
+  state.usedPairs.add(selected.pairKey);
+  state.nameCounts.set(selected.name.id, (state.nameCounts.get(selected.name.id) || 0) + 1);
+  state.objectCounts.set(selected.object.id, (state.objectCounts.get(selected.object.id) || 0) + 1);
+  state.recentNames = [...state.recentNames, selected.name.id].slice(-2);
+  state.recentObjects = [...state.recentObjects, selected.object.id].slice(-2);
+  return { ...selected.name, ...selected.object, id: selected.pairKey };
+}
+
+function grade3AddendCandidates(options = {}) {
+  const selected = normalizeNumberList(options.selectedNumbers || options.onlyNumbers);
+  const minA = Math.max(0, Math.round(finiteNumber(options.minA, 10)));
+  const maxA = Math.max(minA, Math.round(finiteNumber(options.maxA, 90)));
+  const minB = Math.max(0, Math.round(finiteNumber(options.minB, 10)));
+  const maxB = Math.max(minB, Math.round(finiteNumber(options.maxB, 90)));
+  const maxTotal = Math.max(2, Math.min(100, Math.round(finiteNumber(options.maxTotal, 100))));
+  const aValues = selected.length ? selected : Array.from({ length: maxA - minA + 1 }, (_, i) => minA + i);
+  const bValues = selected.length ? selected : Array.from({ length: maxB - minB + 1 }, (_, i) => minB + i);
+  const candidates = [];
+  aValues.forEach((a) => bValues.forEach((b) => {
+    if (a >= 0 && b >= 0 && a + b <= maxTotal) candidates.push({ a, b, total: a + b });
+  }));
+  if (!candidates.length) {
+    throw new Error("No Grade 3 word-problem addition relationships are available for the selected number contract.");
+  }
+  return candidates;
+}
+
+function grade3SubtractionCandidates(options = {}) {
+  const selected = normalizeNumberList(options.selectedNumbers || options.onlyNumbers);
+  const minA = Math.max(1, Math.round(finiteNumber(options.minA, 20)));
+  const maxTotal = Math.max(minA, Math.min(100, Math.round(finiteNumber(options.maxTotal, 100))));
+  const maxA = Math.min(maxTotal, Math.max(minA, Math.round(finiteNumber(options.maxA, 100))));
+  const minB = Math.max(0, Math.round(finiteNumber(options.minB, 1)));
+  const maxB = Math.max(minB, Math.round(finiteNumber(options.maxB, 90)));
+  const starts = selected.length ? selected : Array.from({ length: maxA - minA + 1 }, (_, i) => minA + i);
+  const takenValues = selected.length ? selected : Array.from({ length: maxB - minB + 1 }, (_, i) => minB + i);
+  const candidates = [];
+  starts.forEach((minuend) => takenValues.forEach((subtrahend) => {
+    if (minuend >= minA && minuend <= maxA && subtrahend >= 0 && subtrahend < minuend) {
+      candidates.push({ minuend, subtrahend, difference: minuend - subtrahend });
+    }
+  }));
+  if (!candidates.length) {
+    throw new Error("No Grade 3 subtraction word-problem relationships are available for the selected number contract.");
+  }
+  return candidates;
 }
 
 function pickBalancedAdditionContext(names, objects, random, options = {}) {
@@ -291,7 +457,266 @@ function pickUniqueProblem(options, buildProblem) {
   return fallbackProblem;
 }
 
+function generateGrade3AdditionWordProblem(options = {}) {
+  const random = options.random || Math.random;
+  const candidates = grade3AddendCandidates(options);
+  const { names, objects } = grade3StoryPools(options);
+  const templates = [
+    {
+      id: "g3_add_start_more",
+      build: ({ context, a, b, aItems, bItems, items }) =>
+        `${context.name} has ${a} ${aItems}. Later, ${context.name} gets ${b} more ${bItems}. How many ${items} does ${context.name} have altogether?`
+    },
+    {
+      id: "g3_add_two_times",
+      build: ({ context, a, b, aItems, bItems, items }) =>
+        `${context.name} collects ${a} ${aItems} in the morning and ${b} more ${bItems} in the afternoon. How many ${items} does ${context.name} collect in all?`
+    },
+    {
+      id: "g3_add_join_sets",
+      build: ({ context, a, b, aItems, bItems, items }) =>
+        `${context.name} has one set with ${a} ${aItems} and another set with ${b} ${bItems}. How many ${items} are in the two sets altogether?`
+    },
+    {
+      id: "g3_add_added_to_table",
+      build: ({ context, a, b, aItems, bItems, items }) =>
+        `A table holds ${a} ${aItems}. ${context.name} adds ${b} more ${bItems}. How many ${items} are on the table now?`
+    },
+    {
+      id: "g3_add_question_first",
+      build: ({ context, a, b, aItems, items, questionAux }) =>
+        `${context.name} combines ${a} ${aItems} with ${b} more. How many ${items} ${questionAux} ${context.pronoun} have altogether?`
+    },
+    {
+      id: "g3_add_collection_grows",
+      build: ({ context, a, b, aItems, bItems, items, addVerb }) =>
+        `${context.name} starts a collection with ${a} ${aItems}. ${capitalizeFirst(context.pronoun)} ${addVerb} ${b} ${bItems}. How many ${items} are in the collection now?`
+    },
+    {
+      id: "g3_add_count_both",
+      build: ({ context, a, b, aItems, bItems, items }) =>
+        `${context.name} counts ${a} ${aItems} in one container and ${b} ${bItems} in another. What is the total number of ${items}?`
+    },
+    {
+      id: "g3_add_new_total",
+      build: ({ context, a, b, aItems, bItems, items }) =>
+        `${context.name} already has ${a} ${aItems} and receives ${b} more ${bItems}. What is ${context.name}'s new total of ${items}?`
+    }
+  ];
+  const values = pickUniqueProblem(options, () => {
+    const candidate = pick(candidates, random);
+    return {
+      ...candidate,
+      key: getProblemKey("grade3_addition_word_problem", candidate.a, candidate.b, candidate.total)
+    };
+  });
+  const context = pickGrade3StoryContext(names, objects, random, "addition", options);
+  const template = pickVariedTemplate(templates, random, "grade3Addition", options);
+  const aItems = pluralize(values.a, context.item);
+  const bItems = pluralize(values.b, context.item);
+  const items = pluralNoun(context.item);
+  const addVerb = context.pronoun === "they" ? "add" : "adds";
+  const questionAux = context.pronoun === "they" ? "do" : "does";
+  return {
+    prompt: template.build({ context, ...values, aItems, bItems, items, addVerb, questionAux }),
+    answer: values.total,
+    a: values.a,
+    b: values.b,
+    op: "+",
+    operation: "addition",
+    firstAddend: values.a,
+    secondAddend: values.b,
+    total: values.total,
+    contextId: context.id,
+    templateId: template.id
+  };
+}
+
+function normalizeGrade3MissingPosition(options = {}) {
+  const raw = String(
+    options.missingPosition ||
+    options.missingAddendPosition ||
+    options.missingPartPosition ||
+    options.unknownPosition ||
+    "mixed"
+  ).trim().toLowerCase().replace(/[ -]+/g, "_");
+  if (["first", "first_addend", "start", "starting_amount"].includes(raw)) return "first";
+  if (["second", "second_addend", "change", "missing_part"].includes(raw)) return "second";
+  return "mixed";
+}
+
+function nextGrade3MissingPosition(options = {}) {
+  const requested = normalizeGrade3MissingPosition(options);
+  if (requested !== "mixed") return requested;
+  const state = options.generatorState || {};
+  const index = Number(state.grade3MissingAddendPositionIndex || 0);
+  state.grade3MissingAddendPositionIndex = index + 1;
+  return index % 2 === 0 ? "first" : "second";
+}
+
+function generateGrade3MissingAddendWordProblem(options = {}) {
+  const random = options.random || Math.random;
+  const candidates = grade3AddendCandidates(options);
+  const { names, objects } = grade3StoryPools(options);
+  const missingPosition = nextGrade3MissingPosition(options);
+  const firstTemplates = [
+    {
+      id: "g3_missing_first_then_more",
+      build: ({ context, b, total, bItems, items }) =>
+        `${context.name} had some ${items}. After getting ${b} more ${bItems}, ${context.name} had ${total} ${items}. How many ${items} did ${context.name} have at first?`
+    },
+    {
+      id: "g3_missing_first_added",
+      build: ({ context, b, total, bItems, items }) =>
+        `${context.name} added ${b} ${bItems} to a collection. The collection now has ${total} ${items}. How many ${items} were in the collection before?`
+    },
+    {
+      id: "g3_missing_first_question",
+      build: ({ context, b, total, bItems, items }) =>
+        `How many ${items} did ${context.name} start with if ${b} more ${bItems} made a total of ${total}?`
+    },
+    {
+      id: "g3_missing_first_received",
+      build: ({ context, b, total, bItems, items }) =>
+        `${context.name} received ${b} ${bItems} and then had ${total} ${items} altogether. What was the starting number of ${items}?`
+    }
+  ];
+  const secondTemplates = [
+    {
+      id: "g3_missing_second_goal",
+      build: ({ context, a, total, aItems, items }) =>
+        `${context.name} has ${a} ${aItems} and wants ${total} ${items} in all. How many more ${items} does ${context.name} need?`
+    },
+    {
+      id: "g3_missing_second_needed",
+      build: ({ context, a, total, aItems, items }) =>
+        `${context.name} needs ${total} ${items} for a project. ${context.name} already has ${a} ${aItems}. How many more ${items} are needed?`
+    },
+    {
+      id: "g3_missing_second_question",
+      build: ({ context, a, total, aItems, items, questionAux }) =>
+        `${context.name} has ${a} ${aItems}. How many more ${items} ${questionAux} ${context.pronoun} need to have ${total} altogether?`
+    },
+    {
+      id: "g3_missing_second_complete",
+      build: ({ context, a, total, aItems, items }) =>
+        `The collection needs ${total} ${items} altogether. ${context.name} has put in ${a} ${aItems} so far. How many more ${items} are needed?`
+    }
+  ];
+  const values = pickUniqueProblem(options, () => {
+    const candidate = pick(candidates, random);
+    const answer = missingPosition === "first" ? candidate.a : candidate.b;
+    return {
+      ...candidate,
+      answer,
+      key: getProblemKey(`grade3_missing_${missingPosition}`, candidate.a, candidate.b, answer)
+    };
+  });
+  const context = pickGrade3StoryContext(names, objects, random, "missingAddend", options);
+  const templates = missingPosition === "first" ? firstTemplates : secondTemplates;
+  const template = pickVariedTemplate(templates, random, "grade3MissingAddend", options);
+  const aItems = pluralize(values.a, context.item);
+  const bItems = pluralize(values.b, context.item);
+  const items = pluralNoun(context.item);
+  const questionAux = context.pronoun === "they" ? "do" : "does";
+  return {
+    prompt: template.build({ context, ...values, aItems, bItems, items, questionAux }),
+    answer: values.answer,
+    a: values.a,
+    b: values.b,
+    op: "+",
+    operation: "missing_addend",
+    firstAddend: values.a,
+    secondAddend: values.b,
+    total: values.total,
+    missingPosition,
+    missingValue: values.answer,
+    contextId: context.id,
+    templateId: template.id
+  };
+}
+
+function generateGrade3SubtractionWordProblem(options = {}) {
+  const random = options.random || Math.random;
+  const candidates = grade3SubtractionCandidates(options);
+  const { names, objects } = grade3StoryPools(options);
+  const naturalTakeAwayLanguage = Boolean(options.naturalTakeAwayLanguage);
+  const templates = [
+    {
+      id: "g3_sub_start_take",
+      build: ({ context, minuend, subtrahend, startItems, takenItems, items, takeVerb }) =>
+        `${context.name} has ${minuend} ${startItems}. ${capitalizeFirst(context.pronoun)} ${takeVerb} ${subtrahend} ${takenItems}. How many ${items} are left?`
+    },
+    {
+      id: "g3_sub_after",
+      build: ({ context, minuend, subtrahend, startItems, takenItems, items }) =>
+        `${context.name} starts with ${minuend} ${startItems}. After giving away ${subtrahend} ${takenItems}, how many ${items} does ${context.name} have left?`
+    },
+    {
+      id: "g3_sub_removed",
+      build: ({ context, minuend, subtrahend, startItems, takenItems, items }) =>
+        `A collection holds ${minuend} ${startItems}. ${context.name} removes ${subtrahend} ${takenItems}. How many ${items} remain?`
+    },
+    {
+      id: "g3_sub_question_first",
+      build: ({ context, minuend, subtrahend, startItems, takenItems, items }) =>
+        `How many ${items} are left when ${context.name} takes ${subtrahend} ${takenItems} from ${minuend} ${startItems}?`
+    },
+    {
+      id: "g3_sub_checked_out",
+      build: ({ context, minuend, subtrahend, startItems, takenItems, items }) =>
+        `${context.name} counts ${minuend} ${startItems}. Then ${subtrahend} ${takenItems} are taken away. How many ${items} remain?`
+    },
+    {
+      id: "g3_sub_used",
+      build: ({ context, minuend, subtrahend, startItems, takenItems, items }) =>
+        `A project begins with ${minuend} ${startItems}. ${context.name} uses ${subtrahend} ${takenItems}. How many ${items} have not been used?`
+    },
+    {
+      id: "g3_sub_difference",
+      build: ({ context, minuend, subtrahend, startItems, takenItems, items }) =>
+        `${context.name} had ${minuend} ${startItems} and gave away ${subtrahend} ${takenItems}. How many ${items} are left?`
+    },
+    {
+      id: "g3_sub_remaining",
+      build: ({ context, minuend, subtrahend, startItems, takenItems, items }) =>
+        `${context.name} takes ${subtrahend} ${takenItems} from a set of ${minuend}. How many ${items} remain?`
+    }
+  ];
+  const values = pickUniqueProblem(options, () => {
+    const candidate = pick(candidates, random);
+    return {
+      ...candidate,
+      key: getProblemKey("grade3_subtraction_word_problem", candidate.minuend, candidate.subtrahend, candidate.difference)
+    };
+  });
+  const context = pickGrade3StoryContext(names, objects, random, "subtraction", options);
+  const template = pickVariedTemplate(templates, random, "grade3Subtraction", options);
+  const startItems = pluralize(values.minuend, context.item);
+  const takenItems = pluralize(values.subtrahend, context.item);
+  const items = pluralNoun(context.item);
+  const takeVerb = naturalTakeAwayLanguage
+    ? context.pronoun === "they" ? "give away" : "gives away"
+    : context.pronoun === "they" ? "use" : "uses";
+  return {
+    prompt: template.build({ context, ...values, startItems, takenItems, items, takeVerb }),
+    answer: values.difference,
+    a: values.minuend,
+    b: values.subtrahend,
+    op: "-",
+    operation: "subtraction",
+    minuend: values.minuend,
+    subtrahend: values.subtrahend,
+    difference: values.difference,
+    contextId: context.id,
+    templateId: template.id
+  };
+}
+
 function generateAdditionWordProblem(options = {}) {
+  if (options.worksheetId === GRADE3_ADDITION_WORD_PROBLEMS_ID) {
+    return generateGrade3AdditionWordProblem(options);
+  }
   const random = options.random || Math.random;
   const candidates = additionCandidates(options);
   const baseContexts = [
@@ -504,6 +929,9 @@ function generateMultiplicationWordProblem(options = {}) {
 }
 
 function generateSubtractionWordProblem(options = {}) {
+  if (options.worksheetId === GRADE3_SUBTRACTION_WORD_PROBLEMS_ID) {
+    return generateGrade3SubtractionWordProblem(options);
+  }
   const random = options.random || Math.random;
   const maxTotal = getMaxTotal(options);
   const naturalTakeAwayLanguage = Boolean(options.naturalTakeAwayLanguage);
@@ -557,6 +985,9 @@ function generateSubtractionWordProblem(options = {}) {
 }
 
 function generateMissingAddendWordProblem(options = {}) {
+  if (options.worksheetId === GRADE3_MISSING_ADDEND_WORD_PROBLEMS_ID) {
+    return generateGrade3MissingAddendWordProblem(options);
+  }
   const random = options.random || Math.random;
   const maxTotal = getMaxTotal(options);
   const contexts = [
@@ -610,6 +1041,16 @@ function generateMissingAddendWordProblem(options = {}) {
 
 function generateWordProblem(options = {}) {
   const context = getContext(options);
+
+  if (GRADE3_STORY_PROBLEM_IDS.has(options.worksheetId)) {
+    if (options.worksheetId === GRADE3_ADDITION_WORD_PROBLEMS_ID) {
+      return generateGrade3AdditionWordProblem(options);
+    }
+    if (options.worksheetId === GRADE3_MISSING_ADDEND_WORD_PROBLEMS_ID) {
+      return generateGrade3MissingAddendWordProblem(options);
+    }
+    return generateGrade3SubtractionWordProblem(options);
+  }
 
   if (context.includes("subtraction_word_problem")) {
     return generateSubtractionWordProblem(options);

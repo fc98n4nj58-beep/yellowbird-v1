@@ -226,7 +226,7 @@ function assertGradeIsolation() {
   assert.strictEqual(Boolean(grade1Fact.item.generatorOptions?.requireDistinctAddends), false);
   assert.strictEqual(Boolean(grade3Fact.item.generatorOptions?.requireDistinctAddends), false);
   assert.strictEqual(Boolean(grade1Word.layout.display.compactWordProblemAnswerKey), false);
-  assert.strictEqual(Boolean(grade3Word.layout.display.compactWordProblemAnswerKey), false);
+  assert.strictEqual(Boolean(grade3Word.layout.display.compactWordProblemAnswerKey), true);
   assert.strictEqual(Boolean(grade1Word.item.generatorOptions?.naturalTakeAwayLanguage), false);
   assert.strictEqual(Boolean(grade3Word.item.generatorOptions?.naturalTakeAwayLanguage), false);
 }
