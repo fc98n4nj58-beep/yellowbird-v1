@@ -251,10 +251,10 @@ async function run() {
     path.join(__dirname, "..", "docs", "grade-2-architecture-reconciliation-preflight.md"),
     "utf8"
   );
-  assert(reconciliation.includes("**A (24):**"));
-  assert(reconciliation.includes("**D (5):**"));
-  const categoryALine = reconciliation.split("\n").find((line) => line.startsWith("- **A (24):**"));
-  const categoryDLine = reconciliation.split("\n").find((line) => line.startsWith("- **D (5):**"));
+  assert(reconciliation.includes("**A (35):**"));
+  assert(reconciliation.includes("**D (0):**"));
+  const categoryALine = reconciliation.split("\n").find((line) => line.startsWith("- **A (35):**"));
+  const categoryDLine = reconciliation.split("\n").find((line) => line.startsWith("- **D (0):**"));
   assert(categoryALine && categoryALine.includes(`\`${RESOURCE_ID}\``));
   assert(categoryDLine && !categoryDLine.includes(`\`${RESOURCE_ID}\``));
 

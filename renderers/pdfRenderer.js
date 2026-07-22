@@ -107,6 +107,22 @@ function buildAnswerKeyItems(items) {
     targetIndex: finiteOptionalNumber(it.targetIndex),
     endpointPolicy: it.endpointPolicy || null,
     displayedLabels: Array.isArray(it.displayedLabels) ? it.displayedLabels.map(Number) : null,
+    displayedFractionLabels: Array.isArray(it.displayedFractionLabels) ? it.displayedFractionLabels.map(String) : null,
+    wholeStart: finiteOptionalNumber(it.wholeStart),
+    wholeEnd: finiteOptionalNumber(it.wholeEnd),
+    intervalCount: finiteOptionalNumber(it.intervalCount),
+    targetNumerator: finiteOptionalNumber(it.targetNumerator),
+    targetDenominator: finiteOptionalNumber(it.targetDenominator),
+    simplifiedDisplayFraction: it.simplifiedDisplayFraction || null,
+    leftNumerator: finiteOptionalNumber(it.leftNumerator),
+    leftDenominator: finiteOptionalNumber(it.leftDenominator),
+    rightNumerator: finiteOptionalNumber(it.rightNumerator),
+    rightDenominator: finiteOptionalNumber(it.rightDenominator),
+    leftCrossProduct: finiteOptionalNumber(it.leftCrossProduct),
+    rightCrossProduct: finiteOptionalNumber(it.rightCrossProduct),
+    normalizedLeftFraction: it.normalizedLeftFraction || null,
+    normalizedRightFraction: it.normalizedRightFraction || null,
+    equalityState: typeof it.equalityState === "boolean" ? it.equalityState : null,
     isExample: Boolean(it.isExample),
     value: finiteOptionalNumber(it.value),
     numberWord: it.numberWord || null,
@@ -311,7 +327,7 @@ function drawNumberLinePrimitive(doc, x, y, opts = {}) {
 
   const width = Number(opts.width || 180);
   const height = Number(opts.height || 34);
-  const interval = Math.max(1, Number(opts.interval || 1));
+  const interval = Math.max(Number.EPSILON, Number(opts.interval || 1));
 
   const lineY = y + height * (isAdditionModel ? 0.7 : 0.55);
   const startX = x;
@@ -344,21 +360,27 @@ doc.lineWidth(1);
     doc.lineTo(tickX, lineY + 5);
     doc.stroke();
 
-    const isTargetValue = tickValue === value;
+    const explicitTargetIndex = Number.isFinite(Number(opts.targetIndex)) ? Number(opts.targetIndex) : null;
+    const isTargetValue = explicitTargetIndex === null
+      ? Math.abs(tickValue - value) < Number.EPSILON * 16
+      : i === explicitTargetIndex;
     const isAdditionStart = isAdditionModel && tickValue === additionStart;
     const shouldLabel = i === 0 || i === steps || i % labelEvery === 0 || isTargetValue || isAdditionStart;
 
     if (shouldLabel && !(hideValueLabel && isTargetValue)) {
-      const insetEndpointLabel = isAdditionModel && (i === 0 || i === steps);
+      const fractionLabels = Array.isArray(opts.fractionLabels) ? opts.fractionLabels : null;
+      const labelText = fractionLabels && fractionLabels[i] != null ? String(fractionLabels[i]) : String(tickValue);
+      const insetEndpointLabel = (isAdditionModel || fractionLabels) && (i === 0 || i === steps);
+      const labelWidth = fractionLabels ? 36 : 18;
       const labelX = insetEndpointLabel
-        ? (i === 0 ? tickX : tickX - 18)
-        : tickX - 9;
+        ? (i === 0 ? tickX : tickX - labelWidth)
+        : tickX - labelWidth / 2;
       const labelAlign = insetEndpointLabel
         ? (i === 0 ? "left" : "right")
         : "center";
-      doc.fontSize(8);
-      doc.text(String(tickValue), labelX, lineY + 8, {
-        width: 18,
+      doc.fontSize(fractionLabels ? 7.5 : 8);
+      doc.text(labelText, labelX, lineY + 8, {
+        width: labelWidth,
         align: labelAlign
       });
     }

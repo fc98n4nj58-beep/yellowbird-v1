@@ -105,7 +105,9 @@ const GRADE3_STORY_PROBLEM_IDS = new Set([
 const GRADE3_CONCRETE_VISUAL_FOOTERS = Object.freeze({
   g3_equal_sharing_division: "Multiplication and Division",
   grade3_fraction_equivalence_shade_fraction_models: "Fractions",
-  grade3_place_value_representation_number_line_identify: "Place Value"
+  grade3_place_value_representation_number_line_identify: "Place Value",
+  grade3_fraction_equivalence_compare_fractions: "Fractions",
+  grade3_fraction_equivalence_fraction_number_line: "Fractions"
 });
 
 function finiteOptionalNumber(value) {
@@ -220,6 +222,22 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         targetIndex: finiteOptionalNumber(p.targetIndex),
         endpointPolicy: p.endpointPolicy || null,
         displayedLabels: Array.isArray(p.displayedLabels) ? p.displayedLabels.map(Number) : null,
+        displayedFractionLabels: Array.isArray(p.displayedFractionLabels) ? p.displayedFractionLabels.map(String) : null,
+        wholeStart: finiteOptionalNumber(p.wholeStart),
+        wholeEnd: finiteOptionalNumber(p.wholeEnd),
+        intervalCount: finiteOptionalNumber(p.intervalCount),
+        targetNumerator: finiteOptionalNumber(p.targetNumerator),
+        targetDenominator: finiteOptionalNumber(p.targetDenominator),
+        simplifiedDisplayFraction: p.simplifiedDisplayFraction || null,
+        leftNumerator: finiteOptionalNumber(p.leftNumerator),
+        leftDenominator: finiteOptionalNumber(p.leftDenominator),
+        rightNumerator: finiteOptionalNumber(p.rightNumerator),
+        rightDenominator: finiteOptionalNumber(p.rightDenominator),
+        leftCrossProduct: finiteOptionalNumber(p.leftCrossProduct),
+        rightCrossProduct: finiteOptionalNumber(p.rightCrossProduct),
+        normalizedLeftFraction: p.normalizedLeftFraction || null,
+        normalizedRightFraction: p.normalizedRightFraction || null,
+        equalityState: typeof p.equalityState === "boolean" ? p.equalityState : null,
         modelKey: p.modelKey || null,
         orientation: p.orientation || null,
         value: finiteOptionalNumber(p.value),

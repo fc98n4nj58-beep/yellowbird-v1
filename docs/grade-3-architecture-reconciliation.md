@@ -2,17 +2,42 @@
 
 Date: 2026-07-22
 
-Status: current Grade 3 reconciliation source of truth after founder-approved Batch 5. Catalog lifecycle status and reconciliation category are separate concepts.
+Status: current Grade 3 reconciliation source of truth after founder-approved Batch 6. Catalog lifecycle status and reconciliation category are separate concepts.
 
 ## Current totals
 
-- A: 28
-- D: 8
-- E: 2
-- G: 15
+- A: 30
+- D: 6
+- E: 1
+- G: 16
 - Total: 53
 
-The totals reconcile exactly: 28 + 8 + 2 + 15 = 53.
+The totals reconcile exactly: 30 + 6 + 1 + 16 = 53.
+
+## Founder-approved Batch 6 movement
+
+Applied movement: E1 -> A1, D1 -> A1 and D1 -> G1.
+
+| Resource ID | Disposition | Catalog status | Reconciliation | Approved default or rationale |
+| --- | --- | --- | --- | --- |
+| `grade3_fraction_equivalence_compare_fractions` | founder-approved | `ready` | A | 12 proper-fraction comparisons; four `<`, four `>` and four `=`; denominators 2, 3, 4, 5, 6 and 8; 2 pages |
+| `grade3_fraction_equivalence_fraction_number_line` | founder-approved | `generated` | A | 6 full-width 0-to-1 lines; denominators 2, 3, 4, 5, 6 and 8; partition-denominator answers; 2 pages |
+| `grade3_fraction_equivalence_fraction_word_problems` | founder-approved deferral | `generated` | G | no distinct approved role; reconsider only after one curriculum-safe fraction-application lane is defined |
+| `grade3_fraction_equivalence_match_equivalent_fractions` | split and unresolved | `ready` | E | current equation-completion task is not true matching; separate matching-set architecture required |
+
+Founder approval date: 2026-07-22.
+
+Approved public copy is `Compare Fractions`; `Write >, <, or = to compare each pair of fractions.` and `Fractions on a Number Line`; `Write the fraction shown by the point on each number line.` Both use the footer `Grade 3 • Math • Fractions`.
+
+Compare Fractions owns exact integer cross-product truth, balanced comparison symbols, reversal-safe duplicate prevention and student/key parity. Fraction Number Line owns exact partition, tick, target-index, numerator/denominator, label, endpoint and answer truth; partition-denominator answers remain unsimplified. Both preserve deterministic seeds and their documented raw-runtime variables.
+
+Founder review identified a narrow validation defect: unsupported denominator inputs could be filtered away before fallback, and explicit comparison fractions could bypass the safe denominator contract. The corrected path rejects unsupported or mixed selections in full, validates every explicit fraction, preserves valid denominator subsets and endpoint inputs, and rejects duplicate number-line targets. Invalid-input coverage was added. The approved default proofs remained page-for-page raster-identical after correction, and all affected regressions exit successfully.
+
+Protected founder proofs: `review/grade-3-fraction-batch-6/founder-review/`. No proof is committed.
+
+Catalog lifecycle statuses remain `ready`, `generated`, `generated` and `ready` for Compare, Number Line, Fraction Word Problems and Match respectively. No promotion, demotion or Grade 3 public customization registration occurred.
+
+Commit record: committed in this closeout; git history is the authoritative commit identifier.
 
 ## Founder-approved Batch 5 movement
 
@@ -144,6 +169,6 @@ Commit record: committed in this closeout; git history is the authoritative comm
 
 ## Remaining classifications
 
-The canonical 53-resource row-level inventory remains `docs/grade-3-founder-review-batch-plan.md`. Apart from the three Batch 5 rows moved from D to A above, every resource retains the reviewed A, D, E or G classification recorded in the final column of that ledger. No other row moved during this closeout.
+The canonical 53-resource row-level inventory remains `docs/grade-3-founder-review-batch-plan.md`. Batch 6 changed exactly Compare Fractions E -> A, Fraction Number Line D -> A and Fraction Word Problems D -> G. Match Equivalent Fractions remains E, and every other resource retains its prior A, D, E or G category.
 
 Commit record: committed in this closeout; git history is the authoritative commit identifier.
