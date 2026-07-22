@@ -157,6 +157,10 @@ const GRADE2_BASE_TEN_BLOCKS_ID = "g2_base_ten_blocks_representation";
 const GRADE3_EXPANDED_FORM_ID = "grade3_place_value_representation_expanded_form";
 const GRADE3_NUMBER_WORD_ID = "grade3_place_value_representation_number_word_match";
 const GRADE3_STANDARD_FORM_ID = "grade3_place_value_representation_standard_form";
+const GRADE3_EQUATION_MATCH_ID = "grade3_addition_subtraction_facts_equation_match";
+const GRADE3_FACT_FAMILY_ID = "grade3_addition_subtraction_facts_fact_family";
+const GRADE3_FACT_FLUENCY_ID = "grade3_addition_subtraction_facts_fact_fluency";
+const GRADE3_MISSING_ADDEND_ID = "grade3_addition_subtraction_facts_missing_addend";
 const GRADE2_ADDITION_WITHIN_100_ID = "g2_addition_fluency_within_100";
 const GRADE2_MISSING_ADDENDS_WITHIN_100_ID = "g2_missing_addends_within_100";
 const GRADE2_SUBTRACTION_WITHIN_100_ID = "g2_subtraction_fluency_within_100";
@@ -243,6 +247,17 @@ const GRADE3_PLACE_VALUE_BATCH2_IDS = new Set([
   GRADE3_NUMBER_WORD_ID,
   GRADE3_STANDARD_FORM_ID
 ]);
+
+const GRADE3_ADDITION_SUBTRACTION_BATCH3_TITLES = Object.freeze({
+  [GRADE3_EQUATION_MATCH_ID]: "Equal or Not Equal?",
+  [GRADE3_FACT_FAMILY_ID]: "Addition and Subtraction Fact Families",
+  [GRADE3_FACT_FLUENCY_ID]: "Addition and Subtraction Facts",
+  [GRADE3_MISSING_ADDEND_ID]: "Missing Addends"
+});
+
+const GRADE3_ADDITION_SUBTRACTION_BATCH3_IDS = new Set(
+  Object.keys(GRADE3_ADDITION_SUBTRACTION_BATCH3_TITLES)
+);
 
 const GRADE2_NUMERIC_PATTERN_IDS = new Set(
   Object.keys(GRADE2_NUMERIC_PATTERN_TITLES)
@@ -415,6 +430,60 @@ function normalizeGrade3PlaceValueBatch2Options(item, options = {}) {
   normalized.maxA = Math.max(normalized.minA, finiteNumber(normalized.maxA, 999));
   normalized.numberWordMode = mode === "word_to_numeral" ? "word_to_numeral" : "numeral_to_word";
   normalized.promptStyle = normalized.promptStyle || normalized.promptType || "number_only";
+
+  return normalized;
+}
+
+function normalizeGrade3AdditionSubtractionBatch3Options(item, options = {}) {
+  if (!GRADE3_ADDITION_SUBTRACTION_BATCH3_IDS.has(item.id)) return options;
+
+  const normalized = { ...options };
+  normalized.includeExample = parseBoolean(
+    options.includeExample ?? options.completedExample ?? options.example,
+    false
+  );
+
+  if (item.id === GRADE3_EQUATION_MATCH_ID) {
+    normalized.questionCount = finiteNumber(options.questionCount, 12);
+    normalized.minimumResult = Math.max(0, finiteNumber(options.minimumResult, 0));
+    normalized.maximumResult = Math.min(
+      100,
+      Math.max(normalized.minimumResult + 1, finiteNumber(options.maximumResult ?? options.maxTotal, 100))
+    );
+    if (Number.isFinite(Number(options.equalPairs)) && Number(options.equalPairs) > 1) {
+      normalized.includeEqualPairs = true;
+    }
+  }
+
+  if (item.id === GRADE3_FACT_FAMILY_ID) {
+    normalized.questionCount = finiteNumber(options.questionCount, 12);
+    normalized.minA = finiteNumber(options.minA, 1);
+    normalized.maxA = Math.max(normalized.minA, finiteNumber(options.maxA, 50));
+    normalized.minB = finiteNumber(options.minB, 1);
+    normalized.maxB = Math.max(normalized.minB, finiteNumber(options.maxB, 50));
+    normalized.maxTotal = finiteNumber(options.maxTotal, 100);
+    normalized.requireDistinctAddends = parseBoolean(options.requireDistinctAddends, true);
+  }
+
+  if (item.id === GRADE3_FACT_FLUENCY_ID) {
+    normalized.questionCount = finiteNumber(options.questionCount, 24);
+    normalized.minA = finiteNumber(options.minA, 0);
+    normalized.maxA = Math.max(normalized.minA, finiteNumber(options.maxA, 100));
+    normalized.minB = finiteNumber(options.minB, 0);
+    normalized.maxB = Math.max(normalized.minB, finiteNumber(options.maxB, 100));
+    normalized.maxTotal = finiteNumber(options.maxTotal, 100);
+    normalized.operation = options.operation || options.mode || "mixed";
+  }
+
+  if (item.id === GRADE3_MISSING_ADDEND_ID) {
+    normalized.questionCount = finiteNumber(options.questionCount, 24);
+    normalized.minA = finiteNumber(options.minA, 0);
+    normalized.maxA = Math.max(normalized.minA, finiteNumber(options.maxA, 100));
+    normalized.minB = finiteNumber(options.minB, 0);
+    normalized.maxB = Math.max(normalized.minB, finiteNumber(options.maxB, 100));
+    normalized.maxTotal = finiteNumber(options.maxTotal, 100);
+    normalized.missingPosition = options.missingPosition || options.missingAddendPosition || "mixed";
+  }
 
   return normalized;
 }
@@ -871,7 +940,10 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
               item,
               normalizeGrade1FluencyComparisonOptions(
                 item,
-                normalizeGrade3PlaceValueBatch2Options(item, normalized)
+                normalizeGrade3PlaceValueBatch2Options(
+                  item,
+                  normalizeGrade3AdditionSubtractionBatch3Options(item, normalized)
+                )
               )
             )
           )
@@ -1167,6 +1239,22 @@ function buildStudentFacingInstruction(item, fallback = "") {
   return "Solve both sides. Write = if they have the same value. Write ≠ if they have different values.";
  }
 
+ if (item.id === GRADE3_EQUATION_MATCH_ID) {
+  return "Solve both sides. Write = if they have the same value. Write ≠ if they have different values.";
+ }
+
+ if (item.id === GRADE3_FACT_FAMILY_ID) {
+  return "Use the numbers in each group to complete the related addition and subtraction facts.";
+ }
+
+ if (item.id === GRADE3_FACT_FLUENCY_ID) {
+  return "Solve each addition or subtraction fact.";
+ }
+
+ if (item.id === GRADE3_MISSING_ADDEND_ID) {
+  return "Write the missing number in each equation.";
+ }
+
  if (item.id === GRADE2_NUMBER_LINE_IDENTIFY_ID) {
   return "Write the number marked on each number line.";
  }
@@ -1429,6 +1517,7 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
   const title = GRADE2_NUMERIC_PATTERN_TITLES[item.id] ||
   GRADE3_NUMERIC_PATTERN_TITLES[item.id] ||
   GRADE3_PLACE_VALUE_TITLES[item.id] ||
+  GRADE3_ADDITION_SUBTRACTION_BATCH3_TITLES[item.id] ||
   (item.id === GRADE3_NUMBER_WORD_ID
     ? isReverseNumberWordMode ? "Write the Numeral" : "Write Number Words"
     : isReverseNumberWordMode
@@ -1976,6 +2065,62 @@ if (item.id === GRADE2_EQUATION_MATCH_ID) {
     standardAnswerLineWidth: 34,
     equalHeightItems: true,
     denseGridRows: 6,
+    sequentialColumnFill: true
+  };
+}
+
+if (item.id === GRADE3_EQUATION_MATCH_ID) {
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 2,
+    maxProblemsPerPage: finiteNumber(normalizedOptions.questionsPerPage) || 12
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    suppressExampleLabel: true,
+    hideItemSeparators: true,
+    standardShortAnswerTarget: true,
+    answerTargetVariant: "comparisonSymbol",
+    standardAnswerLineWidth: 34,
+    equalHeightItems: true,
+    denseGridRows: 6,
+    sequentialColumnFill: true
+  };
+}
+
+if (item.id === GRADE3_FACT_FAMILY_ID) {
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 2,
+    maxProblemsPerPage: finiteNumber(normalizedOptions.questionsPerPage) || 12
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    factFamilyGrid: true,
+    hideSubtitle: true,
+    hideItemSeparators: true,
+    equalHeightItems: true,
+    denseGridRows: 6,
+    sequentialColumnFill: true
+  };
+}
+
+if ([GRADE3_FACT_FLUENCY_ID, GRADE3_MISSING_ADDEND_ID].includes(item.id)) {
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 3,
+    maxProblemsPerPage: finiteNumber(normalizedOptions.questionsPerPage) || 24
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    hideItemSeparators: true,
+    answerTargetVariant: "shortNumeric",
+    standardShortAnswerTarget: true,
+    standardAnswerLineWidth: 42,
+    equalHeightItems: true,
+    denseGridRows: 8,
     sequentialColumnFill: true
   };
 }

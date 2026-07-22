@@ -2,6 +2,19 @@ function randInt(min, max, random = Math.random) {
   return Math.floor(random() * (max - min + 1)) + min;
 }
 
+const GRADE3_FACT_FAMILY_ID = "grade3_addition_subtraction_facts_fact_family";
+
+function selectedValues(options = {}, min, max) {
+  const raw = Array.isArray(options.selectedNumbers)
+    ? options.selectedNumbers
+    : typeof options.onlyNumbers === "string"
+      ? options.onlyNumbers.split(",")
+      : [];
+  return [...new Set(raw
+    .map((value) => Number(value))
+    .filter((value) => Number.isFinite(value) && value >= min && value <= max))];
+}
+
 function generateFactFamilyProblem(options = {}) {
   const random = options.random || Math.random;
   const usedProblemKeys = options.usedProblemKeys || new Set();
@@ -17,11 +30,21 @@ function generateFactFamilyProblem(options = {}) {
     minB = 0,
     maxB = 10
   } = options;
+  const selectedA = options.worksheetId === GRADE3_FACT_FAMILY_ID
+    ? selectedValues(options, minA, maxA)
+    : [];
+  const selectedB = options.worksheetId === GRADE3_FACT_FAMILY_ID
+    ? selectedValues(options, minB, maxB)
+    : [];
   let fallbackProblem = null;
 
   for (let attempt = 0; attempt < 80; attempt++) {
-    let a = randInt(minA, maxA, random);
-    let b = randInt(minB, maxB, random);
+    let a = selectedA.length
+      ? selectedA[Math.floor(random() * selectedA.length)]
+      : randInt(minA, maxA, random);
+    let b = selectedB.length
+      ? selectedB[Math.floor(random() * selectedB.length)]
+      : randInt(minB, maxB, random);
 
     if (operation === "multiplication_division") {
       a = Math.max(1, a);

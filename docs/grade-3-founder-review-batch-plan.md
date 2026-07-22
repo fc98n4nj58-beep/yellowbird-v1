@@ -2,7 +2,7 @@
 
 Date: 2026-07-21
 
-Status: canonical 53-resource review ledger. Grade 3 Batch 2 was founder-approved and closed on 2026-07-21; catalog lifecycle status remains separate.
+Status: canonical 53-resource review ledger. Grade 3 Batch 3 was founder-approved and closed on 2026-07-21; catalog lifecycle status remains separate.
 
 ## Grade 2 closeout checkpoint
 
@@ -24,7 +24,7 @@ The `Status / rec.` column records the reconciliation state, where `UR` means **
 - E: narrow copy/default/layout correction remains.
 - G: duplicate, customization-only, planned-gap, or defer candidate.
 
-The pre-Batch-1 scenario was A12 / D13 / E13 / G15 / Total53. Batch 1 moved E3 -> A3. Founder-approved Batch 2 moves E3 -> A3 and Base Ten Blocks E1 -> D1, producing the current reconciliation A18 / D14 / E6 / G15 / Total53. Catalog `ready` status must not be substituted for reconciliation category A.
+The pre-Batch-1 scenario was A12 / D13 / E13 / G15 / Total53. Batch 1 moved E3 -> A3; Batch 2 moved E3 -> A3 and Base Ten Blocks E1 -> D1; founder-approved Batch 3 moves E4 -> A4. The current reconciliation is A22 / D14 / E2 / G15 / Total53. Catalog lifecycle status must not be substituted for reconciliation category A.
 
 ## Contract and evidence codes
 
@@ -94,10 +94,10 @@ Internal footer slugs and unnecessary `— Grade 3` suffixes are real pre-proof 
 | `g3_multiplication_facts` | Multiplication Facts | ready / UR | `168da63` | `multiplicationBasic.js`; fluency grid | 60 / 3 pages; factors 0-10 | CM / VM / E4 | no current blocker; approved multiplication-fluency family | ALREADY COMPLETE / none / hold / — / none / A |
 | `g3_place_value_hundreds_tens_ones_quick_check` | Hundreds, Tens, and Ones Quick Check | ready / UR | `0b0d498` | `expandedForm.js`; Quick Check renderer | 6 / 2 pages; 100-999 | CC / VC / E6 | none; approved compact place value | ALREADY COMPLETE / none / hold / — / none / A |
 | `g3_read_a_graph` | Read Data and Answer Questions | ready / UR | `168da63` | `readGraph.js`; equation-practice text layout | 12 / 3 pages; small counts | CD / VD / E1 | text questions do not share a durable visible graph model; Grade 2 Read Pictograph | NEW ARCHITECTURE NEEDED / Full / shared structured display / B7 / 1 / D |
-| `grade3_addition_subtraction_facts_equation_match` | Equation Match — Grade 3 | generated / UR | `df1ae38` | `equationMatch.js`; matching | — (12 current); results about 0-31 | CAS / VA / E0 | stale title/footer and unapproved Grade 3 balance/range; Grade 2 Equal or Not Equal | NARROW CORRECTION NEEDED / Fast / Grade 3 adapter / B3 / 1 / E |
-| `grade3_addition_subtraction_facts_fact_family` | Fact Families — Grade 3 | generated / UR | `0a1db99` | `factFamily.js`; matching | — (12 current); generic fact range | CAS / VA / E0 | public copy and Grade 3 operation/range contract unapproved; Grade 2 Fact Families | NARROW CORRECTION NEEDED / Fast / parameter adapter / B3 / 1 / E |
-| `grade3_addition_subtraction_facts_fact_fluency` | Fact Fluency — Grade 3 | generated / UR | `3783fd4` | `factFluency.js`; equation-practice | — (12 current); 0-20 | CAS / VA / E0 | current range is too shallow and density/title contract is unapproved; Grade 2 within-100 fluency | NARROW CORRECTION NEEDED / Fast / Grade 3 range/default adapter / B3 / 1 / E |
-| `grade3_addition_subtraction_facts_missing_addend` | Missing Addends — Grade 3 | generated / UR | `003584d` | `missingAddend.js`; fluency grid | — (12 current); totals <=20 | CAS / VA / E0 | range too shallow; missing-position control not publicly validated; Grade 2 Missing Addends Within 100 | NARROW CORRECTION NEEDED / Fast / Grade 3 range/balance adapter / B3 / 1 / E |
+| `grade3_addition_subtraction_facts_equation_match` | Equal or Not Equal? | generated / A | committed in this closeout | `equationMatch.js`; matching | 12 / 2 pages; results 0-100 | CAS / VA / focused B3 | founder-approved exact relational comparison path with balanced truth | FOUNDER-APPROVED / complete / hold / B3 / approved / A |
+| `grade3_addition_subtraction_facts_fact_family` | Addition and Subtraction Fact Families | generated / A | committed in this closeout | `factFamily.js`; fact-family grid | 12 / 2 pages; totals <=100 | CAS / VA / focused B3 | founder-approved two-column family truth, distinct defaults and selected numbers | FOUNDER-APPROVED / complete / hold / B3 / approved / A |
+| `grade3_addition_subtraction_facts_fact_fluency` | Addition and Subtraction Facts | generated / A | committed in this closeout | `factFluency.js`; equation-practice | 24 / 2 pages; non-negative results <=100 | CAS / VA / focused B3 | founder-approved balanced mixed-operation sequence and density | FOUNDER-APPROVED / complete / hold / B3 / approved / A |
+| `grade3_addition_subtraction_facts_missing_addend` | Missing Addends | generated / A | committed in this closeout | `missingAddend.js`; fluency grid | 24 / 2 pages; totals <=100 | CAS / VA / focused B3 | founder-approved balanced positions and side-specific range truth | FOUNDER-APPROVED / complete / hold / B3 / approved / A |
 | `grade3_addition_subtraction_facts_related_subtraction` | Related Subtraction — Grade 3 | generated / UR | `3783fd4` | `relatedSubtraction.js`; fluency grid | — (12 current); <=20 | CAS / VA / E0 | output is ordinary subtraction, not a visible related-fact task; Grade 2 approved deferral | DUPLICATE — DEFER / none / future relationship preset only / — / none / G |
 | `grade3_addition_subtraction_facts_ten_frame` | Ten Frame Practice — Grade 3 | generated / UR | `003584d` | `tenFrame.js`; visual model | — (10 current); 0-10 | CAS / VU / E0 | lower-grade representation adds little Grade 3 launch value; approved Grade 1 ten-frame family | DUPLICATE — DEFER / none / customization/intervention only / — / none / G |
 | `grade3_addition_subtraction_facts_word_problems` | Word Problems — Grade 3 | generated / UR | `003584d` | `wordProblems.js`; word-problem layout | — (12 current); <=20 | CAS / VW / E0 | generic shell duplicates the three operation-specific resources | DUPLICATE — DEFER / none / mixed-review preset only / — / none / G |
@@ -207,16 +207,50 @@ All supported controls remain raw-runtime only; no Grade 3 family is publicly re
 - No Grade 3 public customization family was registered.
 - Commit record: committed in this closeout; git history is the authoritative commit identifier.
 
-### B3 — Addition/Subtraction Fact Relationships
+### B3 — Addition/Subtraction Fact Relationships (founder-approved and closed)
 
 - Exact IDs: `grade3_addition_subtraction_facts_equation_match`; `grade3_addition_subtraction_facts_fact_family`; `grade3_addition_subtraction_facts_fact_fluency`; `grade3_addition_subtraction_facts_missing_addend`.
 - Shared family: existing Grade 2-approved fact/relation generators and matching/fluency layouts; `VA` contract.
-- Preserve: exact count, selected-number restrictions where consumed, missing/equality truth, deterministic generation and key parity.
-- Safe future controls: count, Grade 3 range, selected numbers and a tested missing-position choice. Keep generator-specific diagnostics and unsupported global aliases hidden.
-- Lane/files/tests: Fast; Grade 3 adapters in runtime/catalog service, focused four-resource suite and proof generator; regress Grade 2 fact/relation families.
-- Proof burden: four default PDFs in one packet.
-- Movement: E4 -> A4; projected A22 / D14 / E2 / G15 / Total53.
+- Implemented IDs: all four exact IDs above; no resource was split.
+- Completed-work finding: all four catalog records remained `generated` and the reported defects were active. Equation Match was inactive relational truth rather than copy-only debt; Fact Fluency was addition-only because its Grade 3 ID contains `addition`; Missing Addends fixed every blank in the first position. Existing generators and renderers were sufficient for exact adapters.
+- Public defaults: Equation Match 12 items, balanced 6/6, results 0-100; Fact Families 12 groups, four facts, distinct addends and totals <=100; Fact Fluency 24 mixed facts, balanced 12/12 and non-negative results <=100; Missing Addends 24 items, balanced positions and totals <=100. All four default PDFs remain two pages including the answer key.
+- Range/density gate: 100 is the tested safe ceiling for this foundational mental-math family. The 12/12/24/24 counts render without smaller text, truncation, hidden overflow or weakened response targets. Fact Families uses two columns so all four equations and three-digit key values retain dependable separation. Values to 1,000 remain teacher/future scope, not a default.
+- Preserve: exact count, side-specific ranges, total/result caps, selected-number restrictions, operation/mode choices, fact-family direction, missing-position aliases, completed examples, deterministic generation and key parity.
+- Public registration: none. All controls remain raw-runtime only.
+- Lane/files/tests: exact Grade 3 adapters in the existing runtime/catalog services and problem generators, one focused four-resource suite, directly affected Grade 1/2 regressions and one proof generator.
+- Proof burden: four default PDFs in `review/grade-3-addition-subtraction-batch-3/founder-review/`; no stress proof was needed after focused override and pagination coverage.
+- Movement applied: E4 -> A4; current A22 / D14 / E2 / G15 / Total53.
 - Stop if the proposed range makes the existing density or answer targets unsafe.
+
+#### B3 variable checkpoint — founder-approved
+
+No Grade 3 customization family is publicly registered. A raw runtime input is not a public teacher control.
+
+| Input | Aliases | Default / valid behavior | Normalization and generator consumption | Preview / PDF / key | Status / coverage |
+| --- | --- | --- | --- | --- | --- |
+| `questionCount` | — | 12 Equation/Family; 24 Fluency/Missing; positive integer | exact B3 normalizer; existing worksheet builder | exact generated count; examples remain additional | PRESERVED / RAW RUNTIME ONLY / focused |
+| `questionsPerPage` | — | 12 or 24 family default; positive override | global numeric normalization and exact layout adapter | preview layout and student/key pagination share value | PRESERVED / RAW RUNTIME ONLY / focused |
+| `minimumResult`, `maximumResult` | `maxTotal` as Equation maximum fallback | 0-100 default; ordered range | Equation Match adapter and relational candidate pool | both expression values and key symbol stay in range | PRESERVED / RAW RUNTIME ONLY / focused |
+| `includeEqualPairs` | `equalPairs` | balanced by default; false removes equal pairs; numeric `equalPairs` fixes the count | global boolean normalization plus Grade 3 balanced pool | symbol target and key mirror exact truth | PRESERVED / RAW RUNTIME ONLY / focused |
+| `minA`, `maxA`, `minB`, `maxB`, `maxTotal` | — | Fact Family 1-50 sides; Fluency/Missing 0-100 sides; totals/results <=100 | exact B3 normalization; each generator consumes side ranges and cap | preview/PDF/key use identical arithmetic | PRESERVED / RAW RUNTIME ONLY / focused |
+| `selectedNumbers` | `onlyNumbers` | integer list; restricts consumed operand pools | global list normalization; Family, Fluency and Missing generators consume it | same restricted facts in preview/PDF/key | PRESERVED / RAW RUNTIME ONLY / focused |
+| `operation` | `mode`; Fact Family also `factFamilyOperation`, `factFamilyMode` | Fluency mixed default or addition/subtraction; Family all/addition-only/subtraction-only | exact/default adapter and existing family modes | title describes default mix; overrides retain mathematical truth | PRESERVED / RAW RUNTIME ONLY / focused |
+| `requireDistinctAddends` | — | true by default for Grade 3 Fact Families | exact boolean normalization and existing family generator | four related facts remain valid in preview/PDF/key | PRESERVED / RAW RUNTIME ONLY / focused |
+| `missingPosition` | `missingAddendPosition` | mixed default; first/second aliases supported | exact adapter and balanced missing-addend sequence | target position and key value remain paired | PRESERVED / RAW RUNTIME ONLY / focused |
+| `includeExample` | `completedExample`, `example` | false; true adds one completed item | global and exact boolean normalization; worksheet builder adds one | preview/PDF/key count and example marking agree | PRESERVED / RAW RUNTIME ONLY / focused |
+| `worksheetSeed` | — | deterministic string | shared seeded random path | same seed produces identical truth | PRESERVED / RAW RUNTIME ONLY / focused |
+| `includeAnswerKey` | — | renderer option; default true | render-time choice, not arithmetic generation | toggles key page without changing student truth | PRESERVED / RAW RUNTIME ONLY / focused |
+
+#### B3 closeout checkpoint — founder-approved and locally committed
+
+- Focused coverage verifies exact titles, instructions, footer, 12/12/24/24 defaults, 0-100 truth, balanced comparison states, balanced operation/blank positions, all four fact-family equations, selected operands, side-specific ranges, mode aliases, completed-example aliases, deterministic seeds, two-page defaults, preview/PDF/key parity and Grade 1/2 isolation.
+- Grade 1 Fluency/Comparison, Grade 2 Addition/Subtraction Category C, corrected Grade 2 Category D Low-Risk and corrected Grade 2 Category E Batch 2 regressions pass. The two Grade 2 suites received reconciliation-only maintenance to the approved A35 / D0 / E0 / G17 / Total52 source of truth; their runtime assertions remain unchanged.
+- Catalog audit remains Ready 104/104, Generated 213/213, Partial 5/5, Total331, with only the seven established planned `pattern_word_problems` gaps.
+- Four default letter-size proofs were generated and all eight pages were raster-inspected. The initial three-column Fact Families key was too tight; the final two-column student/key layout has clear separation. Final proofs have no clipping, overlap, cramped targets or footer pressure.
+- Founder verdict on 2026-07-21: `GRADE 3 BATCH 3 FOUNDER-APPROVED — FOUR RESOURCES`; no correction round was required and no resource was split.
+- The four records remain `generated`; no lifecycle promotion or demotion occurred. No Grade 3 public customization family was registered.
+- Final reconciliation is A22 / D14 / E2 / G15 / Total53.
+- Commit record: committed in this closeout; git history is the authoritative commit identifier.
 
 ### B4 — Grade 3 Addition/Subtraction Story Problems
 
@@ -287,9 +321,9 @@ Do not send obvious copy, repetition, centring, metadata, variable or layout reg
 
 - Grade 2 closeout verified at the expected commit and totals.
 - Exactly 53 Grade 3 IDs recorded once in the canonical ledger: 26 ready, 25 generated, one partial, one planned.
-- Catalog status and reconciliation are separate; the current reconciliation is A18 / D14 / E6 / G15 / Total53.
+- Catalog status and reconciliation are separate; the current reconciliation is A22 / D14 / E2 / G15 / Total53.
 - Every row has a completed-work classification, risk/action, variable code, evidence, nearest-family finding and projected result.
 - Variables and aliases are inventoried by active family with status, public-registry state, normalization/runtime behavior and safe-candidate guidance.
-- Eighteen reconciled-A resources are excluded from further implementation; fifteen duplicate/defer candidates are excluded from implementation.
-- Batches 1 and 2 are closed; the five remaining proposed batches contain only unresolved resources, none exceeds five resources, and all are grouped by shared implementation or correction type.
-- Batch 2 is the only Grade 3 implementation and reconciliation movement in this closeout. Protected paths remain outside the commit, and no push occurs.
+- Twenty-two reconciled-A resources are excluded from further implementation; fifteen duplicate/defer candidates are excluded from implementation.
+- Batches 1, 2 and 3 are closed; the four remaining proposed batches contain only unresolved resources, none exceeds five resources, and all are grouped by shared implementation or correction type.
+- Batch 3 is the only Grade 3 implementation and reconciliation movement in this closeout. Protected paths remain outside the commit, and no push occurs.

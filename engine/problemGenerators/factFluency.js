@@ -44,6 +44,115 @@ function parseSelectedNumbers(options = {}) {
   )].sort((a, b) => a - b);
 }
 
+const GRADE3_FACT_FLUENCY_ID = "grade3_addition_subtraction_facts_fact_fluency";
+
+function normalizeOperationMode(options = {}) {
+  const value = String(options.operation || options.mode || "mixed").trim().toLowerCase();
+  if (["addition", "add", "+", "addition_only", "addition-only"].includes(value)) return "addition";
+  if (["subtraction", "subtract", "-", "subtraction_only", "subtraction-only"].includes(value)) return "subtraction";
+  return "mixed";
+}
+
+function buildGrade3FactCandidates(options = {}) {
+  const minA = finiteInteger(options.minA, 0);
+  const maxA = Math.max(minA, finiteInteger(options.maxA, 100));
+  const minB = finiteInteger(options.minB, 0);
+  const maxB = Math.max(minB, finiteInteger(options.maxB, 100));
+  const maxTotal = finiteInteger(options.maxTotal, 100);
+  const selected = parseSelectedNumbers(options);
+  const selectedSet = new Set(selected);
+  const strictSelected = selected.length > 0;
+  const additions = [];
+  const subtractions = [];
+  const seenAdditions = new Set();
+
+  for (let a = minA; a <= maxA; a += 1) {
+    for (let b = minB; b <= maxB; b += 1) {
+      if (strictSelected && (!selectedSet.has(a) || !selectedSet.has(b))) continue;
+      if (a + b <= maxTotal) {
+        const key = `${Math.min(a, b)}:${Math.max(a, b)}`;
+        if (!seenAdditions.has(key)) {
+          seenAdditions.add(key);
+          additions.push({ a, b, op: "+", answer: a + b, operation: "addition" });
+        }
+      }
+      if (a >= b && a <= maxTotal) {
+        subtractions.push({ a, b, op: "-", answer: a - b, operation: "subtraction" });
+      }
+    }
+  }
+
+  return { additions, subtractions, selected };
+}
+
+function buildGrade3FactSequence(options = {}) {
+  const random = options.random || Math.random;
+  const count = Math.max(1, finiteInteger(options.questionCount, 24));
+  const mode = normalizeOperationMode(options);
+  const candidates = buildGrade3FactCandidates(options);
+  const additionTarget = mode === "subtraction" ? 0 : mode === "addition" ? count : Math.ceil(count / 2);
+  const subtractionTarget = count - additionTarget;
+
+  function take(source, target, label) {
+    if (!source.length && target) throw new Error(`No Grade 3 ${label} facts are available for the selected range.`);
+    const shuffled = shuffleCopy(source, random);
+    const result = [];
+    let index = 0;
+    while (result.length < target) {
+      result.push(shuffled[index % shuffled.length]);
+      index += 1;
+    }
+    return result;
+  }
+
+  const additions = take(candidates.additions, additionTarget, "addition");
+  const subtractions = take(candidates.subtractions, subtractionTarget, "subtraction");
+  const facts = [];
+  while (additions.length || subtractions.length) {
+    const preferred = facts.length % 2 === 0 ? additions : subtractions;
+    const alternate = preferred === additions ? subtractions : additions;
+    facts.push((preferred.length ? preferred : alternate).shift());
+  }
+
+  return { index: 0, mode, facts };
+}
+
+function getGrade3FactSequence(options = {}) {
+  const state = options.generatorState || {};
+  const key = JSON.stringify({
+    minA: options.minA,
+    maxA: options.maxA,
+    minB: options.minB,
+    maxB: options.maxB,
+    maxTotal: options.maxTotal,
+    selectedNumbers: parseSelectedNumbers(options),
+    operation: normalizeOperationMode(options),
+    questionCount: options.questionCount
+  });
+  if (!state.grade3FactFluencySequences) state.grade3FactFluencySequences = {};
+  if (!state.grade3FactFluencySequences[key]) {
+    state.grade3FactFluencySequences[key] = buildGrade3FactSequence(options);
+  }
+  return state.grade3FactFluencySequences[key];
+}
+
+function generateGrade3FactFluencyProblem(options = {}) {
+  const state = getGrade3FactSequence(options);
+  const fact = state.facts[state.index % state.facts.length];
+  state.index += 1;
+  return {
+    type: "equation",
+    prompt: `${fact.a} ${fact.op} ${fact.b} = __`,
+    answer: fact.answer,
+    a: fact.a,
+    b: fact.b,
+    op: fact.op,
+    operation: fact.operation,
+    responseValues: [fact.answer],
+    duplicateSignature: `grade3_fact_fluency:${fact.op}:${fact.a}:${fact.b}`
+  };
+}
+
 function shuffleCopy(items, random) {
   const shuffled = [...items];
 
@@ -182,6 +291,10 @@ function generateCustomizedAdditionProblem(options = {}) {
 }
 
 function generateFactFluencyProblem(options = {}) {
+  if (options.worksheetId === GRADE3_FACT_FLUENCY_ID) {
+    return generateGrade3FactFluencyProblem(options);
+  }
+
   const random = options.random || Math.random;
   const usedProblemKeys = options.usedProblemKeys || new Set();
 

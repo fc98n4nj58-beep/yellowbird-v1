@@ -236,10 +236,11 @@ function assertCatalogParityAndCounts() {
     path.join(ROOT, "docs/grade-2-architecture-reconciliation-preflight.md"),
     "utf8"
   );
-  const categoryALine = reconciliation.split("\n").find((line) => line.startsWith("- **A (22):**"));
-  const categoryDLine = reconciliation.split("\n").find((line) => line.startsWith("- **D (7):**"));
+  const categoryALine = reconciliation.split("\n").find((line) => line.startsWith("- **A (35):**"));
+  const categoryDLine = reconciliation.split("\n").find((line) => line.startsWith("- **D (0):**"));
   assert(categoryALine);
   assert(categoryDLine);
+  assert(categoryDLine.includes("none"));
   Object.values(IDS).forEach((id) => {
     assert(categoryALine.includes(id), `${id} must be reconciled in Category A.`);
     assert(!categoryDLine.includes(id), `${id} must no longer remain in Category D.`);
@@ -272,8 +273,8 @@ function assertRouteAndGradeIsolation() {
     "grade3_addition_subtraction_facts_equation_match",
     { worksheetSeed: "g3-relational-isolation", questionCount: 4 }
   );
-  assert(grade3Equation.normalizedContentObject.content.items.every((item) => item.responseMode === null));
-  assert(grade3Equation.normalizedContentObject.content.items.every((item) => /^\d+ [+-] \d+ = __$/.test(item.prompt)));
+  assert(grade3Equation.normalizedContentObject.content.items.every((item) => item.responseMode === "equation_equivalence"));
+  assert(grade3Equation.normalizedContentObject.content.items.every((item) => /^\d+ [+-] \d+\s+___\s+\d+ [+-] \d+$/.test(item.prompt)));
 
   const grade1Words = buildCatalogWorksheetRuntime(
     "g1_number_word_match_to_50",

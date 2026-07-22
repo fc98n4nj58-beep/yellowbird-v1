@@ -342,11 +342,11 @@ function assertCatalogReconciliationAndIsolation() {
   assert.strictEqual(master.length, 331);
 
   const reconciliation = fs.readFileSync("docs/grade-2-architecture-reconciliation-preflight.md", "utf8");
-  const categoryA = reconciliation.match(/\*\*A \(33\):\*\*[^\n]+/)?.[0] || "";
+  const categoryA = reconciliation.match(/\*\*A \(35\):\*\*[^\n]+/)?.[0] || "";
   const categoryD = reconciliation.match(/\*\*D \(0\):\*\*[^\n]+/)?.[0] || "";
-  const categoryE = reconciliation.match(/\*\*E \(3\):\*\*[^\n]+/)?.[0] || "";
-  const categoryG = reconciliation.match(/\*\*G \(16\):\*\*[^\n]+/)?.[0] || "";
-  assert(categoryA && categoryD.includes("none") && categoryE && categoryG);
+  const categoryE = reconciliation.match(/\*\*E \(0\):\*\*[^\n]+/)?.[0] || "";
+  const categoryG = reconciliation.match(/\*\*G \(17\):\*\*[^\n]+/)?.[0] || "";
+  assert(categoryA && categoryD.includes("none") && categoryE.includes("none") && categoryG);
   [IDS.addition, IDS.missing, IDS.subtraction].forEach((id) => {
     assert(categoryA.includes(id));
     assert(!categoryE.includes(id));

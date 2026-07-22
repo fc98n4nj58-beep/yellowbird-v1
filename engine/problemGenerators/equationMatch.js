@@ -2,6 +2,7 @@ const generateArithmeticProblem = require("../engines/arithmeticEngine");
 
 const GRADE1_EQUATION_MATCH_ID = "grade1_addition_subtraction_facts_equation_match";
 const GRADE2_EQUATION_MATCH_ID = "grade2_addition_subtraction_facts_equation_match";
+const GRADE3_EQUATION_MATCH_ID = "grade3_addition_subtraction_facts_equation_match";
 
 function finiteInteger(value, fallback) {
   const number = Number(value);
@@ -166,6 +167,47 @@ function buildGrade2Candidates(options = {}) {
   return { equal, notEqual, minimumResult, maximumResult };
 }
 
+function buildGrade3Candidates(options = {}) {
+  return buildRelationalCandidates(options, {
+    resultCap: 100,
+    minimumOperand: 1,
+    maximumAddend: 99,
+    maximumMinuend: 100,
+    maximumSubtrahend: 99,
+    canonicalAddition: true
+  });
+}
+
+function buildGrade3BalancedPool(options = {}) {
+  const random = options.random || Math.random;
+  const candidates = buildGrade3Candidates(options);
+  const count = Math.max(1, finiteInteger(options.questionCount, 12));
+  const requestedEqualPairs = typeof options.equalPairs === "number" ||
+    (typeof options.equalPairs === "string" && /^\d+$/.test(options.equalPairs.trim()))
+    ? Number(options.equalPairs)
+    : NaN;
+  const equalTarget = options.includeEqualPairs === false
+    ? 0
+    : Number.isFinite(requestedEqualPairs)
+      ? Math.max(0, Math.min(count, Math.round(requestedEqualPairs)))
+      : Math.ceil(count / 2);
+  const notEqualTarget = count - equalTarget;
+  const equal = shuffle(candidates.equal, random).slice(0, equalTarget);
+  const notEqual = shuffle(candidates.notEqual, random).slice(0, notEqualTarget);
+
+  if (equal.length !== equalTarget || notEqual.length !== notEqualTarget) {
+    throw new Error("Insufficient Grade 3 equation-match variety for the requested range.");
+  }
+
+  const pool = [];
+  while (equal.length || notEqual.length) {
+    const preferred = pool.length % 2 === 0 ? equal : notEqual;
+    const alternate = preferred === equal ? notEqual : equal;
+    pool.push((preferred.length ? preferred : alternate).shift());
+  }
+  return { ...candidates, pool };
+}
+
 function buildGrade2BalancedPool(options = {}) {
   const random = options.random || Math.random;
   const candidates = buildGrade2Candidates(options);
@@ -288,12 +330,24 @@ function generateGrade2EquationMatch(options = {}) {
   });
 }
 
+function generateGrade3EquationMatch(options = {}) {
+  return generateRelationalEquationMatch(options, {
+    candidateBuilder: buildGrade3Candidates,
+    poolBuilder: buildGrade3BalancedPool,
+    poolPrefix: "grade3-equation-match",
+    gradeLabel: "Grade 3"
+  });
+}
+
 function generateEquationMatchProblem(options = {}) {
   if (options.worksheetId === GRADE1_EQUATION_MATCH_ID) {
     return generateGrade1EquationMatch(options);
   }
   if (options.worksheetId === GRADE2_EQUATION_MATCH_ID) {
     return generateGrade2EquationMatch(options);
+  }
+  if (options.worksheetId === GRADE3_EQUATION_MATCH_ID) {
+    return generateGrade3EquationMatch(options);
   }
 
   const random = options.random || Math.random;
@@ -315,3 +369,5 @@ module.exports = generateEquationMatchProblem;
 module.exports.buildGrade1Candidates = buildGrade1Candidates;
 module.exports.buildGrade2Candidates = buildGrade2Candidates;
 module.exports.buildGrade2BalancedPool = buildGrade2BalancedPool;
+module.exports.buildGrade3Candidates = buildGrade3Candidates;
+module.exports.buildGrade3BalancedPool = buildGrade3BalancedPool;

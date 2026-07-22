@@ -2,17 +2,40 @@
 
 Date: 2026-07-21
 
-Status: current Grade 3 reconciliation source of truth after founder-approved Batch 2. Catalog lifecycle status and reconciliation category are separate concepts.
+Status: current Grade 3 reconciliation source of truth after founder-approved Batch 3. Catalog lifecycle status and reconciliation category are separate concepts.
 
 ## Current totals
 
-- A: 18
+- A: 22
 - D: 14
-- E: 6
+- E: 2
 - G: 15
 - Total: 53
 
-The totals reconcile exactly: 18 + 14 + 6 + 15 = 53.
+The totals reconcile exactly: 22 + 14 + 2 + 15 = 53.
+
+## Founder-approved Batch 3 movement
+
+Applied movement: E4 -> A4.
+
+| Resource ID | Founder-approved title | Catalog status | Reconciliation | Approved default |
+| --- | --- | --- | --- | --- |
+| `grade3_addition_subtraction_facts_equation_match` | Equal or Not Equal? | `generated` | A | 12 questions; 6 equal and 6 not equal; results within 100; 2 pages |
+| `grade3_addition_subtraction_facts_fact_family` | Addition and Subtraction Fact Families | `generated` | A | 12 groups; 2 columns; distinct addends; totals within 100; 2 pages |
+| `grade3_addition_subtraction_facts_fact_fluency` | Addition and Subtraction Facts | `generated` | A | 24 questions; 12 addition and 12 non-negative subtraction; results within 100; 2 pages |
+| `grade3_addition_subtraction_facts_missing_addend` | Missing Addends | `generated` | A | 24 questions; balanced missing positions; totals within 100; 2 pages |
+
+Founder approval date: 2026-07-21.
+
+Approved shared footer: `Grade 3 • Math • Addition and Subtraction`.
+
+Protected founder proofs: `review/grade-3-addition-subtraction-batch-3/founder-review/`.
+
+The closeout records four exact generator corrections: genuine Grade 3 relational pairs, Grade 3-scoped selected-number fact families, exact mixed-operation fluency, and balanced side-specific missing-addend truth. Grade 1, Grade 2 and generic fallback paths remain isolated.
+
+The four catalog records remain `generated`; no lifecycle promotion occurred. No Grade 3 public customization family was registered. The stale reconciliation-only assertions in the Grade 2 Category D Low-Risk and Category E Batch 2 suites were updated to the approved Grade 2 A35 / D0 / E0 / G17 / Total52 source of truth, with runtime assertions preserved.
+
+Commit record: committed in this closeout; git history is the authoritative commit identifier.
 
 ## Founder-approved Batch 2 movement
 
@@ -67,6 +90,6 @@ Commit record: committed in this closeout; git history is the authoritative comm
 
 ## Remaining classifications
 
-The canonical 53-resource row-level inventory remains `docs/grade-3-founder-review-batch-plan.md`. Apart from the three Batch 2 rows moved from E to A and Base Ten Blocks moved from E to D above, every resource retains the reviewed A, D, E or G classification recorded in the final column of that ledger. No other row moved during this closeout.
+The canonical 53-resource row-level inventory remains `docs/grade-3-founder-review-batch-plan.md`. Apart from the four Batch 3 rows moved from E to A above, every resource retains the reviewed A, D, E or G classification recorded in the final column of that ledger. No other row moved during this closeout.
 
 Commit record: committed in this closeout; git history is the authoritative commit identifier.
