@@ -83,6 +83,12 @@ const GRADE2_WITHIN_100_FLUENCY_IDS = new Set([
   "g2_subtraction_fluency_within_100"
 ]);
 
+const GRADE3_PLACE_VALUE_BATCH2_IDS = new Set([
+  "grade3_place_value_representation_expanded_form",
+  "grade3_place_value_representation_number_word_match",
+  "grade3_place_value_representation_standard_form"
+]);
+
 function finiteOptionalNumber(value) {
   if (value === undefined || value === null || value === "") return null;
   const n = Number(value);
@@ -93,6 +99,7 @@ function publicSkillLabel(item) {
   if (GRADE2_COMPARISON_FOOTER_IDS.has(item?.id)) return "";
   if (GRADE2_ADDITION_SUBTRACTION_CATEGORY_C_IDS.has(item?.id)) return "";
   if (GRADE2_WITHIN_100_FLUENCY_IDS.has(item?.id)) return "";
+  if (GRADE3_PLACE_VALUE_BATCH2_IDS.has(item?.id)) return "";
   if (PUBLIC_SKILL_LABEL_HIDDEN_IDS.has(item?.id)) return "";
   if (item?.skillKey === "patterning_and_algebra") return "";
   return item?.skillKey || "";

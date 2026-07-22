@@ -2,7 +2,7 @@
 
 Date: 2026-07-21
 
-Status: canonical 53-resource review ledger. Grade 3 Batch 1 was founder-approved on 2026-07-21 and reconciled through `docs/grade-3-architecture-reconciliation.md`; catalog lifecycle status remains separate.
+Status: canonical 53-resource review ledger. Grade 3 Batch 2 was founder-approved and closed on 2026-07-21; catalog lifecycle status remains separate.
 
 ## Grade 2 closeout checkpoint
 
@@ -17,14 +17,14 @@ Status: canonical 53-resource review ledger. Grade 3 Batch 1 was founder-approve
 
 The master catalog contains **53 exact Grade 3 records**: 26 `ready`, 25 `generated`, one `partial`, and one `planned`. The canonical ledger below contains 53 rows and 53 unique IDs. Catalog lifecycle status is not reconciliation status.
 
-The `Status / rec.` column records the original pre-closeout inventory state, where `UR` meant **unreconciled**. The final category in each row is the reviewed row-level classification used by `docs/grade-3-architecture-reconciliation.md`; Batch 1 is the only movement applied during this closeout:
+The `Status / rec.` column records the reconciliation state, where `UR` means **unreconciled**. The final category in each row is the reviewed row-level classification used by `docs/grade-3-architecture-reconciliation.md`:
 
 - A: complete and should be reconciled as approved/healthy after founder confirmation.
 - D: shared-family or structured-truth work remains.
 - E: narrow copy/default/layout correction remains.
 - G: duplicate, customization-only, planned-gap, or defer candidate.
 
-The pre-Batch-1 scenario was A12 / D13 / E13 / G15 / Total53. The founder-approved Batch 1 movement E3 -> A3 produces the current reconciliation A15 / D13 / E10 / G15 / Total53. Catalog `ready` status must not be substituted for reconciliation category A.
+The pre-Batch-1 scenario was A12 / D13 / E13 / G15 / Total53. Batch 1 moved E3 -> A3. Founder-approved Batch 2 moves E3 -> A3 and Base Ten Blocks E1 -> D1, producing the current reconciliation A18 / D14 / E6 / G15 / Total53. Catalog `ready` status must not be substituted for reconciliation category A.
 
 ## Contract and evidence codes
 
@@ -125,12 +125,12 @@ Internal footer slugs and unnecessary `— Grade 3` suffixes are real pre-proof 
 | `grade3_patterning_and_algebra_identify_pattern_rule` | Identify the Pattern Rule | ready / A | committed in this closeout | `numericPatternRules.js` via `identifyPatternRule.js`; task layout | 12 / 4 pages; add/subtract rules | CP / VP / E2 | founder-approved public copy; mathematics/layout unchanged | FOUNDER-APPROVED / complete / hold / B1 / approved / A |
 | `grade3_patterning_and_algebra_missing_value_pattern` | Find the Missing Number | ready / A | committed in this closeout | `numericPatternRules.js` via `missingValuePattern.js`; task layout | 12 / 2 pages; add/subtract rules | CP / VP / E2 | founder-approved public copy; mathematics/layout unchanged | FOUNDER-APPROVED / complete / hold / B1 / approved / A |
 | `grade3_patterning_and_algebra_pattern_word_problems` | Pattern Word Problems — Grade 3 | planned / UR | `003584d` | no registered generator; equation-practice | — (0; audit gap) | CP / VP / E0 | one of seven established planned gaps; no distinct launch contract | DUPLICATE — DEFER / none / future founder preflight only / — / none / G |
-| `grade3_place_value_representation_base_ten_blocks` | Base Ten Blocks — Grade 3 | ready / UR | `8fba970` | `baseTenBlocks.js`; visual model | 10 / 2 pages; current values <=95 | CV / VV / E1 | current range/copy is lighter than an honest Grade 3 hundreds contract | NARROW CORRECTION NEEDED / Fast / verify 3-digit model support before range change / B2 / 1 / E |
+| `grade3_place_value_representation_base_ten_blocks` | Base Ten Blocks — Grade 3 | ready / D | committed in this closeout | `baseTenBlocks.js`; visual model | 10 / 2 pages; current values 10-99 | CV / VV / E1 | 3-digit requests decompose 345 as 34 tens + 5 ones with no hundreds block; selected-number inputs are bypassed | SHARED-FAMILY EXTENSION NEEDED / Standard / future hundreds-truth preflight; no implementation / B2 split / none / D |
 | `grade3_place_value_representation_compare_numbers` | Compare Numbers — Grade 3 | generated / UR | `be08da5` | `compareNumbers.js`; fluency grid | — (12 current); 3-digit values | CV / VV / E0 | explicitly held because Quick Check and Exit Ticket already cover this skill | DUPLICATE — DEFER / none / no worksheet implementation / — / none / G |
-| `grade3_place_value_representation_expanded_form` | Expanded Form — Grade 3 | ready / UR | `819dc18` | `expandedForm.js`; compact representation | 45 / 2 pages; 100-999 | CV / VV / E5 | truth/layout complete; stale suffix/footer metadata | NARROW CORRECTION NEEDED / Fast / copy-only / B2 / 1 / E |
+| `grade3_place_value_representation_expanded_form` | Expanded Form | ready / A | committed in this closeout | `expandedForm.js`; compact representation | 45 / 2 pages; 100-999 | CV / VV / E5 | founder-approved public title/footer; truth/layout unchanged | FOUNDER-APPROVED / complete / hold / B2 / approved / A |
 | `grade3_place_value_representation_number_line_identify` | Number Line — Grade 3 | generated / UR | `df1ae38` | `numberLineIdentify.js`; visual model | — (10 current, 5/page); current small line | CV / VV / E0 | current default does not express an approved Grade 3 number-line range/interval contract | SHARED-FAMILY EXTENSION NEEDED / Standard / Grade 3 parameter adapter / B5 / 1 / D |
-| `grade3_place_value_representation_number_word_match` | Number Word Match — Grade 3 | ready / UR | `bebd307` | `numberWordMatch.js`; matching | 12 / 2 pages; 3-digit words | CV / VV / E1 | accepted duplicate/wording caution plus stale suffix/footer | NARROW CORRECTION NEEDED / Fast / copy/duplicate suppression only / B2 / 1 / E |
-| `grade3_place_value_representation_standard_form` | Standard Form — Grade 3 | ready / UR | `23dfc06` | `standardForm.js`; compact representation | 45 / 3 pages; 100-999 | CV / VV / E5 | truth/layout complete; stale suffix/footer metadata | NARROW CORRECTION NEEDED / Fast / copy-only / B2 / 1 / E |
+| `grade3_place_value_representation_number_word_match` | Write Number Words | ready / A | committed in this closeout | `numberWordMatch.js`; existing number-word writing layout | 12 / 2 pages; 100-999 | CV / VV / E1 | founder-approved writing task, title, instruction and footer | FOUNDER-APPROVED / complete / hold / B2 / approved / A |
+| `grade3_place_value_representation_standard_form` | Standard Form | ready / A | committed in this closeout | `standardForm.js`; compact representation | 45 / 2 pages; 100-999 | CV / VV / E5 | founder-approved public title/footer; current default is 2 pages | FOUNDER-APPROVED / complete / hold / B2 / approved / A |
 
 ## Completed-work findings
 
@@ -165,16 +165,47 @@ Internal footer slugs and unnecessary `— Grade 3` suffixes are real pre-proof 
 - Reconciliation movement applied: E3 -> A3, producing A15 / D13 / E10 / G15 / Total53. The three catalog records remain `ready`; no promotion or demotion occurred.
 - Commit record: committed in this closeout; the authoritative commit identifier is retained in git history rather than self-referenced inside the commit.
 
-### B2 — Place-Value Representation Copy and Default Closure
+### B2 — Place-Value Representation Copy and Default Closure (founder-approved and closed)
 
 - Exact IDs: `grade3_place_value_representation_base_ten_blocks`; `grade3_place_value_representation_expanded_form`; `grade3_place_value_representation_number_word_match`; `grade3_place_value_representation_standard_form`.
-- Shared family: place-value recipes/generators; compact representation, matching and existing visual-model layouts; `VV` contract.
-- Preserve: 45-item forms, 10-item base-ten default unless founder changes it, 12-item number-word match, 3-digit form range, seeds, examples and key truth.
-- Safe future controls: question count, 3-digit range, selected numbers, representation direction and completed example. Keep `answerStyle`, raw columns/font and internal prompt modes hidden.
-- Lane/files/tests: Fast unless base-ten hundreds require a model extension; likely service adapter/copy metadata, focused Grade 3 place-value test and proof generator.
-- Proof burden: four default PDFs in one packet.
-- Movement: E4 -> A4; projected A19 / D13 / E6 / G15 / Total53.
-- Stop if base-ten work requires new art, a renderer or values the current visual cannot print safely; split that ID to Standard lane instead.
+- Implemented IDs: `grade3_place_value_representation_expanded_form`; `grade3_place_value_representation_number_word_match`; `grade3_place_value_representation_standard_form`.
+- Split ID: `grade3_place_value_representation_base_ten_blocks` — `SHARED-FAMILY EXTENSION NEEDED` because the active generator emits repeated tens instead of hundreds blocks for 3-digit requests and bypasses selected numbers.
+- Shared family: existing place-value generators and compact/writing layouts; no generator, renderer, visual-system or public customization registration was added.
+- Preserved defaults: 45-item Expanded Form, 12-item Write Number Words, 45-item Standard Form; 100-999; 2/2/2 total default PDF pages; deterministic seeds, extra examples and key truth.
+- Public copy: `Expanded Form`, `Write Number Words`, `Standard Form`; task-matched instructions; shared `Grade 3 • Math • Place Value` footer.
+- Proof packet: three default PDFs under `review/grade-3-place-value-batch-2/founder-review/`. Base Ten Blocks has no Batch 2 proof.
+- Founder-approved movement: the three implemented resources move E3 -> A3 and Base Ten Blocks moves E1 -> D1, producing A18 / D14 / E6 / G15 / Total53.
+
+#### B2 variable checkpoint
+
+All supported controls remain raw-runtime only; no Grade 3 family is publicly registered.
+
+| Input | Alias | Default / valid values | Normalization and consumption | Preview / PDF / key | Status / coverage |
+| --- | --- | --- | --- | --- | --- |
+| `questionCount` | — | Expanded/Standard 45; Number Words 12; positive integer | global numeric normalization; worksheet builder count | exact item count in all outputs | PRESERVED / RAW RUNTIME ONLY / focused |
+| `questionsPerPage` | — | family default; positive integer override | global numeric normalization plus exact B2 layout adapter | layout and PDF paginate from the same value; key follows | PRESERVED / RAW RUNTIME ONLY / focused |
+| `minA`, `maxA` | — | 100, 999; numeric range | forms consume through `placeValueFormValues.js`; Number Words through its generator | identical range in preview/PDF/key | PRESERVED / RAW RUNTIME ONLY / focused |
+| `minValue`, `maxValue` | — | no contract for these three IDs | reserved for other place-value activities such as number lines | not consumed here | NOT SUPPORTED |
+| `selectedNumbers` | `onlyNumbers` | integer list | consumed by Expanded/Standard form value pools; currently bypassed by Number Words and split Base Ten Blocks | forms preserve selected truth in preview/PDF/key | PRESERVED for forms; BYPASSED for Number Words/Base Ten / focused |
+| `numberWordMode` | `mode` | `numeral_to_word`, `word_to_numeral` | Grade 3 Number Words adapter and generator | title, instruction, response target and key follow direction | PRESERVED / RAW RUNTIME ONLY / focused |
+| `promptStyle` | `promptType` | default `number_only`; current generator-compatible string | exact Number Words option adapter | default removes repeated task prose; PDF/key match | PRESERVED / RAW RUNTIME ONLY / focused |
+| `answerStyle` | — | default expanded sum; `hundreds_tens_ones` for Expanded Form | consumed only by `expandedForm.js` and its existing layout mode | prompt and key truth remain paired | PRESERVED for Expanded; NOT SUPPORTED for Standard/Number Words / focused |
+| `includeExample` | `completedExample`, `example` | boolean; default false | global boolean normalization; example is additional | preview/PDF/key share the extra example | PRESERVED / RAW RUNTIME ONLY / focused |
+| `worksheetSeed` | — | deterministic string | shared seeded generator path | same content in preview/PDF/key | PRESERVED / RAW RUNTIME ONLY / focused |
+| `includeAnswerKey` | — | boolean; route/render default true | renderer option, not mathematical generation | toggles key pages without changing student truth | PRESERVED / RAW RUNTIME ONLY / focused |
+
+#### B2 closeout checkpoint — founder-approved and locally committed
+
+- All three implemented catalog records remain `ready`; Base Ten Blocks remains `ready` and unchanged.
+- Focused Batch 2 tests cover exact copy, 100-999 defaults, counts, 2/2/2 PDFs, selected form values, number-word direction aliases, `answerStyle`, completed-example aliases, same-seed truth, student/key parity and Grade 1/2 isolation.
+- Grade 1 Number Representation and Grade 1 Category C regressions pass. The stale reconciliation-only expectation in `testGrade2CategoryEBatch1.js` was updated from A30/E7 to the approved Grade 2 A35/D0/E0/G17/Total52 source of truth; its runtime assertions pass unchanged.
+- Catalog audit remains Ready 104/104, Generated 213/213, Partial 5/5, Total331, with only the seven established planned `pattern_word_problems` gaps.
+- Three default proofs were generated; all six letter-size pages were raster-inspected with no clipping, overlap, target misalignment, long-answer overflow or footer pressure.
+- Founder verdict on 2026-07-21: `GRADE 3 BATCH 2 FOUNDER-APPROVED — THREE RESOURCES`; no correction round was required.
+- Base Ten Blocks is founder-approved for E -> D reclassification only. No Base Ten generator, renderer, visual system or catalog code changed, and no Base Ten proof was generated.
+- Final reconciliation is A18 / D14 / E6 / G15 / Total53. All four catalog records remain `ready`; no promotion or demotion occurred.
+- No Grade 3 public customization family was registered.
+- Commit record: committed in this closeout; git history is the authoritative commit identifier.
 
 ### B3 — Addition/Subtraction Fact Relationships
 
@@ -184,7 +215,7 @@ Internal footer slugs and unnecessary `— Grade 3` suffixes are real pre-proof 
 - Safe future controls: count, Grade 3 range, selected numbers and a tested missing-position choice. Keep generator-specific diagnostics and unsupported global aliases hidden.
 - Lane/files/tests: Fast; Grade 3 adapters in runtime/catalog service, focused four-resource suite and proof generator; regress Grade 2 fact/relation families.
 - Proof burden: four default PDFs in one packet.
-- Movement: E4 -> A4; projected A23 / D13 / E2 / G15 / Total53.
+- Movement: E4 -> A4; projected A22 / D14 / E2 / G15 / Total53.
 - Stop if the proposed range makes the existing density or answer targets unsafe.
 
 ### B4 — Grade 3 Addition/Subtraction Story Problems
@@ -195,7 +226,7 @@ Internal footer slugs and unnecessary `— Grade 3` suffixes are real pre-proof 
 - Safe future controls: count, Grade 3 total range, selected numbers, completed example and a small context set. Keep sentence-template internals hidden.
 - Lane/files/tests: Standard; exact Grade 3 adapters, focused repetition/grammar/range/parity tests and one proof generator; regress Grade 2 Batch 3 and addition/subtraction word problems.
 - Proof burden: three default PDFs in one packet.
-- Movement: D3 -> A3; projected A26 / D10 / E2 / G15 / Total53.
+- Movement: D3 -> A3; projected A25 / D11 / E2 / G15 / Total53.
 - Stop if a proposed context is not age-neutral, arithmetic truth cannot be derived first, or page count/work space no longer matches the contract.
 
 ### B5 — Concrete Visual Extensions
@@ -206,7 +237,7 @@ Internal footer slugs and unnecessary `— Grade 3` suffixes are real pre-proof 
 - Safe future controls: task-specific count/range/factor choices only after each adapter proves preview/PDF/key parity. Keep renderer geometry and low-level visual controls hidden.
 - Lane/files/tests: Standard; likely three exact adapters/generators, existing model renderer/layout, focused per-resource assertions and a combined proof generator.
 - Proof burden: three default PDFs in one packet.
-- Movement: D3 -> A3; projected A29 / D7 / E2 / G15 / Total53.
+- Movement: D3 -> A3; projected A28 / D8 / E2 / G15 / Total53.
 - Stop and move an ID to Full Review if it needs a new renderer, new icon/art system or a response structure the existing model layout cannot express.
 
 ### B6 — Fraction Relationships and Applications
@@ -217,7 +248,7 @@ Internal footer slugs and unnecessary `— Grade 3` suffixes are real pre-proof 
 - Safe future controls: question count, denominator set, model/task mode and completed example only after structured truth exists. Keep arbitrary numerator/denominator builders hidden.
 - Lane/files/tests: Standard for copy/variety, Full Review if number-line or story tasks need new visual architecture; focused structured-truth/key/isolation suite and combined proof generator.
 - Proof burden: four default PDFs in one packet.
-- Movement: E2 + D2 -> A4; projected A33 / D5 / E0 / G15 / Total53.
+- Movement: E2 + D2 -> A4; projected A32 / D6 / E0 / G15 / Total53.
 - Stop if the four roles cannot be made distinct, Grade 3-aligned and visually honest without a new renderer; defer the zero-item story resource rather than create filler.
 
 ### B7 — Structured Grade 3 Data Displays
@@ -228,7 +259,7 @@ Internal footer slugs and unnecessary `— Grade 3` suffixes are real pre-proof 
 - Safe future controls: question count, graph type, scale and category count only after registry validation and proof. Keep arbitrary graph construction and raw renderer geometry hidden.
 - Lane/files/tests: Full Review; short family contract first, then adapters/shared structured model, existing renderer if adequate, focused cross-action truth/parity/isolation test and proof generator.
 - Proof burden: five default PDFs in one packet.
-- Movement: D5 -> A5; projected A38 / D0 / E0 / G15 / Total53.
+- Movement: D5 -> A5; projected A37 / D1 / E0 / G15 / Total53.
 - Stop before implementation if founder does not approve five distinct teacher-use cases, or if a new renderer/visual system is required without a separate preflight.
 
 ## Completed first batch
@@ -256,9 +287,9 @@ Do not send obvious copy, repetition, centring, metadata, variable or layout reg
 
 - Grade 2 closeout verified at the expected commit and totals.
 - Exactly 53 Grade 3 IDs recorded once in the canonical ledger: 26 ready, 25 generated, one partial, one planned.
-- Catalog status and reconciliation are separate; the current reconciliation is A15 / D13 / E10 / G15 / Total53.
+- Catalog status and reconciliation are separate; the current reconciliation is A18 / D14 / E6 / G15 / Total53.
 - Every row has a completed-work classification, risk/action, variable code, evidence, nearest-family finding and projected result.
 - Variables and aliases are inventoried by active family with status, public-registry state, normalization/runtime behavior and safe-candidate guidance.
-- Fifteen reconciled-A resources are excluded from further implementation; fifteen duplicate/defer candidates are excluded from implementation.
-- Batch 1 is closed; the six remaining proposed batches contain only unresolved resources, none exceeds five resources, and all are grouped by shared implementation or correction type.
-- Batch 1 is the only Grade 3 implementation and reconciliation movement in this closeout. Protected paths remain outside the commit, and no push occurs.
+- Eighteen reconciled-A resources are excluded from further implementation; fifteen duplicate/defer candidates are excluded from implementation.
+- Batches 1 and 2 are closed; the five remaining proposed batches contain only unresolved resources, none exceeds five resources, and all are grouped by shared implementation or correction type.
+- Batch 2 is the only Grade 3 implementation and reconciliation movement in this closeout. Protected paths remain outside the commit, and no push occurs.

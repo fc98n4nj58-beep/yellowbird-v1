@@ -160,11 +160,11 @@ function assertCatalogReconciliationAndIsolation() {
   assert.strictEqual(master.length, 331);
 
   const reconciliation = fs.readFileSync("docs/grade-2-architecture-reconciliation-preflight.md", "utf8");
-  const categoryA = reconciliation.match(/\*\*A \(30\):\*\*[^\n]+/)?.[0] || "";
+  const categoryA = reconciliation.match(/\*\*A \(35\):\*\*[^\n]+/)?.[0] || "";
   const categoryD = reconciliation.match(/\*\*D \(0\):\*\*[^\n]+/)?.[0] || "";
-  const categoryE = reconciliation.match(/\*\*E \(7\):\*\*[^\n]+/)?.[0] || "";
-  const categoryG = reconciliation.match(/\*\*G \(15\):\*\*[^\n]+/)?.[0] || "";
-  assert(categoryA && categoryD.includes("none") && categoryG);
+  const categoryE = reconciliation.match(/\*\*E \(0\):\*\*[^\n]+/)?.[0] || "";
+  const categoryG = reconciliation.match(/\*\*G \(17\):\*\*[^\n]+/)?.[0] || "";
+  assert(categoryA && categoryD.includes("none") && categoryE.includes("none") && categoryG);
   assert(categoryA.includes(ARRAYS_ID));
   assert(categoryA.includes(BASE_TEN_ID));
   assert(!categoryE.includes(ARRAYS_ID));

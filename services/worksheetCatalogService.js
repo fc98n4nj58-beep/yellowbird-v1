@@ -154,6 +154,9 @@ const GRADE2_SHADE_EQUAL_PARTS_ID = "grade2_fraction_equivalence_shade_fraction_
 const GRADE2_SHARE_FAIRLY_TO_10_ID = "grade2_fraction_equivalence_fraction_word_problems";
 const GRADE2_ARRAYS_ID = "grade2_multiplication_facts_arrays";
 const GRADE2_BASE_TEN_BLOCKS_ID = "g2_base_ten_blocks_representation";
+const GRADE3_EXPANDED_FORM_ID = "grade3_place_value_representation_expanded_form";
+const GRADE3_NUMBER_WORD_ID = "grade3_place_value_representation_number_word_match";
+const GRADE3_STANDARD_FORM_ID = "grade3_place_value_representation_standard_form";
 const GRADE2_ADDITION_WITHIN_100_ID = "g2_addition_fluency_within_100";
 const GRADE2_MISSING_ADDENDS_WITHIN_100_ID = "g2_missing_addends_within_100";
 const GRADE2_SUBTRACTION_WITHIN_100_ID = "g2_subtraction_fluency_within_100";
@@ -229,6 +232,17 @@ const GRADE3_NUMERIC_PATTERN_TITLES = Object.freeze({
   grade3_patterning_and_algebra_identify_pattern_rule: "Identify the Pattern Rule",
   grade3_patterning_and_algebra_missing_value_pattern: "Find the Missing Number"
 });
+
+const GRADE3_PLACE_VALUE_TITLES = Object.freeze({
+  [GRADE3_EXPANDED_FORM_ID]: "Expanded Form",
+  [GRADE3_STANDARD_FORM_ID]: "Standard Form"
+});
+
+const GRADE3_PLACE_VALUE_BATCH2_IDS = new Set([
+  GRADE3_EXPANDED_FORM_ID,
+  GRADE3_NUMBER_WORD_ID,
+  GRADE3_STANDARD_FORM_ID
+]);
 
 const GRADE2_NUMERIC_PATTERN_IDS = new Set(
   Object.keys(GRADE2_NUMERIC_PATTERN_TITLES)
@@ -385,6 +399,23 @@ function normalizeGrade2CategoryEBatch1Options(item, options = {}) {
     normalized.questionCount,
     item.id === GRADE2_ARRAYS_ID ? 8 : 10
   );
+  return normalized;
+}
+
+function normalizeGrade3PlaceValueBatch2Options(item, options = {}) {
+  if (item.id !== GRADE3_NUMBER_WORD_ID) return options;
+
+  const normalized = { ...options };
+  const mode = String(normalized.numberWordMode || normalized.mode || "numeral_to_word")
+    .trim()
+    .toLowerCase();
+
+  normalized.questionCount = finiteNumber(normalized.questionCount, 12);
+  normalized.minA = finiteNumber(normalized.minA, 100);
+  normalized.maxA = Math.max(normalized.minA, finiteNumber(normalized.maxA, 999));
+  normalized.numberWordMode = mode === "word_to_numeral" ? "word_to_numeral" : "numeral_to_word";
+  normalized.promptStyle = normalized.promptStyle || normalized.promptType || "number_only";
+
   return normalized;
 }
 
@@ -838,7 +869,10 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
             item,
             normalizeGrade1NumberRepresentationOptions(
               item,
-              normalizeGrade1FluencyComparisonOptions(item, normalized)
+              normalizeGrade1FluencyComparisonOptions(
+                item,
+                normalizeGrade3PlaceValueBatch2Options(item, normalized)
+              )
             )
           )
         )
@@ -1205,6 +1239,10 @@ function buildStudentFacingInstruction(item, fallback = "") {
   return "Count the base ten blocks. Write the number.";
  }
 
+ if (item.id === GRADE3_NUMBER_WORD_ID) {
+  return "Write each number in words.";
+ }
+
  if (item.id === GRADE2_ADDITION_WITHIN_100_ID) {
   return "Solve each addition fact.";
  }
@@ -1388,7 +1426,12 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
   instructionText = "Write the numeral for each number word.";
  }
 
-  const title = GRADE2_NUMERIC_PATTERN_TITLES[item.id] || GRADE3_NUMERIC_PATTERN_TITLES[item.id] || (isReverseNumberWordMode
+  const title = GRADE2_NUMERIC_PATTERN_TITLES[item.id] ||
+  GRADE3_NUMERIC_PATTERN_TITLES[item.id] ||
+  GRADE3_PLACE_VALUE_TITLES[item.id] ||
+  (item.id === GRADE3_NUMBER_WORD_ID
+    ? isReverseNumberWordMode ? "Write the Numeral" : "Write Number Words"
+    : isReverseNumberWordMode
   ? "Write the Numeral to 50"
   : item.id === "grade1_multiplication_facts_arrays"
     ? "Arrays"
@@ -2265,7 +2308,7 @@ if (item.activityTypes?.[0] === "ten_frame") {
   }
 }
 
-if (isGrade1NumberWordMode || item.id === GRADE2_NUMBER_WORD_WRITE_ID) {
+if (isGrade1NumberWordMode || item.id === GRADE2_NUMBER_WORD_WRITE_ID || item.id === GRADE3_NUMBER_WORD_ID) {
   const questionCount = Math.max(
     1,
     finiteNumber(normalizedOptions.questionCount) || worksheet.problems?.length || 20
@@ -2276,7 +2319,7 @@ if (isGrade1NumberWordMode || item.id === GRADE2_NUMBER_WORD_WRITE_ID) {
   layout.template = {
     ...(layout.template || {}),
     columns: derivedColumns,
-    maxProblemsPerPage: item.id === GRADE2_NUMBER_WORD_WRITE_ID
+    maxProblemsPerPage: [GRADE2_NUMBER_WORD_WRITE_ID, GRADE3_NUMBER_WORD_ID].includes(item.id)
       ? 12
       : derivedColumns === 3 ? 30 : 20
   };
@@ -2287,13 +2330,26 @@ if (isGrade1NumberWordMode || item.id === GRADE2_NUMBER_WORD_WRITE_ID) {
     writingLine: true,
     equalHeightItems: true,
     numberWordResponseTarget: isReverseNumberWordMode ? "shortNumeral" : "writtenWord",
-    standardAnswerLineWidth: item.id === GRADE2_NUMBER_WORD_WRITE_ID ? 150 : layout.display?.standardAnswerLineWidth,
+    standardAnswerLineWidth: [GRADE2_NUMBER_WORD_WRITE_ID, GRADE3_NUMBER_WORD_ID].includes(item.id)
+      ? 150
+      : layout.display?.standardAnswerLineWidth,
     shortWritingLine: isReverseNumberWordMode,
     reverseNumberWordWriting: isReverseNumberWordMode,
     reverseNumberWordLineWidth: 46,
     reverseNumberWordPromptZoneWidth: 70,
     reverseNumberWordRowsPerColumn: 10,
     sequentialColumnFill: true
+  };
+}
+
+if (
+  GRADE3_PLACE_VALUE_BATCH2_IDS.has(item.id) &&
+  Number.isFinite(normalizedOptions.questionsPerPage) &&
+  normalizedOptions.questionsPerPage > 0
+) {
+  layout.template = {
+    ...(layout.template || {}),
+    maxProblemsPerPage: normalizedOptions.questionsPerPage
   };
 }
 
