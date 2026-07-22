@@ -79,6 +79,7 @@ function normalizeProblem(problem, index, context) {
     responseOperator: problem.responseOperator || null,
     showQuestionSentence: Boolean(problem.showQuestionSentence),
     taskMode: problem.taskMode || null,
+    taskAction: problem.taskAction || null,
     equationSupport: problem.equationSupport || null,
     a: finiteOptionalNumber(problem.a),
     b: finiteOptionalNumber(problem.b),

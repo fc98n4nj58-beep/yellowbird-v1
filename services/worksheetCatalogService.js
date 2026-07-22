@@ -30,6 +30,9 @@ const {
 const {
   validateGrade3FractionNumberLineWorksheet
 } = require("../engine/problemGenerators/grade3FractionNumberLine");
+const {
+  validateGrade3DataDisplayWorksheet
+} = require("../engine/problemGenerators/grade3DataDisplays");
 
 const MASTER_CATALOG_PATH = path.join(__dirname, "../data/worksheetCatalog.master.json");
 
@@ -182,6 +185,28 @@ const GRADE3_FRACTION_BATCH6_IMPLEMENTED_IDS = new Set([
   GRADE3_COMPARE_FRACTIONS_ID,
   GRADE3_FRACTION_NUMBER_LINE_ID
 ]);
+const GRADE3_DATA_BATCH7_TASKS = Object.freeze({
+  g3_complete_a_graph: "complete",
+  g3_graph_questions: "questions",
+  g3_interpret_data: "interpret",
+  g3_match_data_to_graph: "match",
+  g3_read_a_graph: "read"
+});
+const GRADE3_DATA_BATCH7_IDS = new Set(Object.keys(GRADE3_DATA_BATCH7_TASKS));
+const GRADE3_DATA_BATCH7_DEFAULT_COUNTS = Object.freeze({
+  complete: 1,
+  questions: 6,
+  interpret: 4,
+  match: 2,
+  read: 6
+});
+const GRADE3_DATA_BATCH7_MAX_COUNTS = Object.freeze({
+  complete: 1,
+  questions: 6,
+  interpret: 4,
+  match: 2,
+  read: 8
+});
 const GRADE3_CONCRETE_VISUAL_IDS = new Set([
   GRADE3_EQUAL_SHARING_ID,
   GRADE3_SHADE_FRACTION_ID,
@@ -302,6 +327,14 @@ const GRADE3_CONCRETE_VISUAL_TITLES = Object.freeze({
 const GRADE3_FRACTION_BATCH6_TITLES = Object.freeze({
   [GRADE3_COMPARE_FRACTIONS_ID]: "Compare Fractions",
   [GRADE3_FRACTION_NUMBER_LINE_ID]: "Fractions on a Number Line"
+});
+
+const GRADE3_DATA_BATCH7_TITLES = Object.freeze({
+  g3_complete_a_graph: "Complete the Graph",
+  g3_graph_questions: "Answer Questions About a Graph",
+  g3_interpret_data: "Interpret the Data",
+  g3_match_data_to_graph: "Choose the Matching Pictograph",
+  g3_read_a_graph: "Read the Graph"
 });
 
 const GRADE2_NUMERIC_PATTERN_IDS = new Set(
@@ -659,6 +692,31 @@ function normalizeGrade3FractionBatch6Options(item, options = {}) {
     normalized.questionsPerPage = Math.max(1, Math.min(6, Math.round(finiteNumber(options.questionsPerPage, 6))));
     normalized.allowEndpointTargets = parseBoolean(options.allowEndpointTargets, false);
     normalized.taskMode = String(options.taskMode || "identify").trim().toLowerCase();
+  }
+  return normalized;
+}
+
+function normalizeGrade3DataBatch7Options(item, options = {}) {
+  const task = GRADE3_DATA_BATCH7_TASKS[item.id];
+  if (!task) return options;
+  const normalized = { ...options };
+  const defaultCount = GRADE3_DATA_BATCH7_DEFAULT_COUNTS[task];
+  const maximumCount = GRADE3_DATA_BATCH7_MAX_COUNTS[task];
+  const requestedCount = finiteNumber(options.questionCount, defaultCount);
+  if (!Number.isInteger(requestedCount) || requestedCount < 1 || requestedCount > maximumCount) {
+    throw new Error(`Grade 3 ${task} data displays support 1 to ${maximumCount} items.`);
+  }
+  normalized.questionCount = requestedCount;
+  normalized.questionsPerPage = Math.max(
+    1,
+    Math.min(requestedCount, Math.round(finiteNumber(options.questionsPerPage, defaultCount)))
+  );
+  normalized.includeExample = parseBoolean(
+    options.includeExample ?? options.completedExample ?? options.example,
+    false
+  );
+  if (["complete", "match"].includes(task) && normalized.includeExample) {
+    throw new Error(`Grade 3 ${task} data displays do not support completed examples.`);
   }
   return normalized;
 }
@@ -1089,7 +1147,9 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalizeGrade3FractionBatch6Options(
+  return normalizeGrade3DataBatch7Options(
+    item,
+  normalizeGrade3FractionBatch6Options(
     item,
   normalizeGrade3ConcreteVisualOptions(
     item,
@@ -1133,7 +1193,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
       )
     )
     )
-  ))))))));
+  )))))))));
 }
 
 const NON_CUSTOMIZATION_QUERY_KEYS = new Set([
@@ -1293,7 +1353,9 @@ function generateWorksheetFromCatalogId(id, options = {}) {
   }
 
   const generatorOptions = resolveCatalogWorksheetOptions(item, options);
-  const activityType = item.id === GRADE3_COMPARE_FRACTIONS_ID
+  const activityType = GRADE3_DATA_BATCH7_IDS.has(item.id)
+    ? "grade3_data_displays"
+    : item.id === GRADE3_COMPARE_FRACTIONS_ID
     ? "grade3_compare_fractions"
     : item.id === GRADE3_FRACTION_NUMBER_LINE_ID
       ? "grade3_fraction_number_line"
@@ -1346,6 +1408,7 @@ function generateWorksheetFromCatalogId(id, options = {}) {
     validateGrade3ShadeFractionWorksheet(item.id, worksheet.problems);
     validateGrade3CompareFractionsWorksheet(item.id, worksheet.problems);
     validateGrade3FractionNumberLineWorksheet(item.id, worksheet.problems);
+    validateGrade3DataDisplayWorksheet(item.id, worksheet.problems);
     return worksheet;
   } catch (err) {
     if (/No addition facts are available/.test(err.message)) {
@@ -1507,6 +1570,26 @@ function buildStudentFacingInstruction(item, fallback = "") {
 
  if (item.id === GRADE2_MATCHING_PICTOGRAPH_ID) {
   return "Use the table. Circle A or B to show which pictograph matches the data.";
+ }
+
+ if (item.id === "g3_complete_a_graph") {
+  return "Use the data table to complete the pictograph.";
+ }
+
+ if (item.id === "g3_graph_questions") {
+  return "Use the graph to answer each question.";
+ }
+
+ if (item.id === "g3_interpret_data") {
+  return "Read each statement. Write Yes if the graph supports it or No if it does not.";
+ }
+
+ if (item.id === "g3_match_data_to_graph") {
+  return "Use the table. Circle A or B to show which pictograph matches the data.";
+ }
+
+ if (item.id === "g3_read_a_graph") {
+  return "Use the graph to answer each question.";
  }
 
  if (item.id === "grade1_fraction_equivalence_shade_fraction_models") {
@@ -1743,6 +1826,7 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
   GRADE3_STORY_PROBLEM_TITLES[item.id] ||
   GRADE3_CONCRETE_VISUAL_TITLES[item.id] ||
   GRADE3_FRACTION_BATCH6_TITLES[item.id] ||
+  GRADE3_DATA_BATCH7_TITLES[item.id] ||
   (item.id === GRADE3_NUMBER_WORD_ID
     ? isReverseNumberWordMode ? "Write the Numeral" : "Write Number Words"
     : isReverseNumberWordMode
@@ -2437,6 +2521,92 @@ if (item.id === GRADE3_FRACTION_NUMBER_LINE_ID) {
     sequentialColumnFill: true,
     standardAnswerLineWidth: 64,
     fractionNumberLine: true
+  };
+}
+
+if (["g3_read_a_graph", "g3_graph_questions", "g3_interpret_data"].includes(item.id)) {
+  const graphData = layout.problems?.[0]?.graphData || null;
+  const questionCount = finiteNumber(normalizedOptions.questionCount) || GRADE3_DATA_BATCH7_DEFAULT_COUNTS[GRADE3_DATA_BATCH7_TASKS[item.id]];
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 2,
+    maxProblemsPerPage: finiteNumber(normalizedOptions.questionsPerPage) || questionCount
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    suppressExampleLabel: false,
+    hideItemSeparators: true,
+    writingLine: true,
+    answerLineBelowPrompt: true,
+    sharedDataResponseLines: true,
+    dataResponseLineInset: 44,
+    dataResponsePromptGap: 28,
+    dataResponseLineWidths: { number: 64, category: 136, yes_no: 84 },
+    equalHeightItems: true,
+    denseGridRows: Math.ceil((finiteNumber(normalizedOptions.questionsPerPage) || questionCount) / 2),
+    sequentialColumnFill: false,
+    sharedDataPictograph: true,
+    sharedDataGraph: graphData,
+    sharedDataGraphHeight: 218,
+    sharedDataSymbolStrokeColor: "#4b5563",
+    sharedDataSymbolStrokeWidth: 1.15,
+    sharedDataScenario: graphData?.scenario || "",
+    sharedDataScenarioPlacement: "between_instruction_and_graph",
+    sharedDataScenarioAlign: "left",
+    sharedDataScenarioFullWidth: true,
+    sharedDataScenarioMaxLines: 2
+  };
+}
+
+if (item.id === "g3_complete_a_graph") {
+  const graphData = layout.problems?.[0]?.graphData || null;
+  const constructionPictograph = {
+    width: 504,
+    height: 298,
+    headerHeight: 42,
+    bodyHeight: 256,
+    categoryHeight: 64,
+    labelWidth: 112,
+    symbolDiameter: 22,
+    symbolGap: 38,
+    symbolInset: 28,
+    placement: "after_scenario_and_data_table"
+  };
+  layout.template = { ...(layout.template || {}), columns: 1, maxProblemsPerPage: 1 };
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    suppressExampleLabel: true,
+    hideItemSeparators: true,
+    sharedDataTaskMode: "complete_graph",
+    sharedDataPictograph: true,
+    sharedDataGraph: graphData,
+    sharedDataGraphHeight: constructionPictograph.height,
+    constructionPictograph,
+    sharedDataSymbolStrokeColor: "#4b5563",
+    sharedDataSymbolStrokeWidth: 1.15,
+    sharedDataScenario: graphData?.scenario || "",
+    sharedDataScenarioPlacement: "between_instruction_and_graph",
+    sharedDataScenarioAlign: "left",
+    sharedDataScenarioFullWidth: true,
+    sharedDataScenarioMaxLines: 2,
+    sequentialColumnFill: true
+  };
+}
+
+if (item.id === "g3_match_data_to_graph") {
+  layout.template = { ...(layout.template || {}), columns: 1, maxProblemsPerPage: 2 };
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    suppressExampleLabel: true,
+    hideItemSeparators: false,
+    sharedDataTaskMode: "match_graph",
+    sharedDataPictograph: true,
+    sharedDataSymbolStrokeColor: "#4b5563",
+    sharedDataSymbolStrokeWidth: 1.15,
+    sequentialColumnFill: true
   };
 }
 

@@ -83,6 +83,7 @@ function buildAnswerKeyItems(items) {
     responseOperator: it.responseOperator || null,
     showQuestionSentence: Boolean(it.showQuestionSentence),
     taskMode: it.taskMode || null,
+    taskAction: it.taskAction || null,
     equationSupport: it.equationSupport || null,
     visual: it.visual || null,
     type: it.type || "equation",
@@ -2420,7 +2421,7 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
       doc.text(rawPrompt, x + numberWidth, promptY, {
         width: Math.max(20, width - numberWidth),
         align: "left",
-        lineBreak: false
+        lineBreak: isGrade1DataResponseLine
       });
     }
 

@@ -2,17 +2,43 @@
 
 Date: 2026-07-22
 
-Status: current Grade 3 reconciliation source of truth after founder-approved Batch 6. Catalog lifecycle status and reconciliation category are separate concepts.
+Status: current Grade 3 reconciliation source of truth after founder-approved Batch 7. Catalog lifecycle status and reconciliation category are separate concepts.
 
 ## Current totals
 
-- A: 30
-- D: 6
+- A: 35
+- D: 1
 - E: 1
 - G: 16
 - Total: 53
 
-The totals reconcile exactly: 30 + 6 + 1 + 16 = 53.
+The totals reconcile exactly: 35 + 1 + 1 + 16 = 53.
+
+## Founder-approved Batch 7 movement
+
+Applied movement: D5 -> A5.
+
+| Resource ID | Founder-approved title | Catalog status | Reconciliation | Approved default |
+| --- | --- | --- | --- | --- |
+| `g3_complete_a_graph` | Complete the Graph | `ready` | A | one four-category source table and partially completed pictograph; exact completed key; values 2-8; 2 pages |
+| `g3_graph_questions` | Answer Questions About a Graph | `ready` | A | one pictograph and six exact retrieval/most/least/difference/combined/total questions; 2 pages |
+| `g3_interpret_data` | Interpret the Data | `ready` | A | four objective category-neutral statements; two Yes and two No; 2 pages |
+| `g3_match_data_to_graph` | Choose the Matching Pictograph | `ready` | A | two table-to-A/B tasks; one exact match and one single-category ±1 distractor; 2 pages |
+| `g3_read_a_graph` | Read the Graph | `ready` | A | six direct-reading questions; all four categories before repetition; changed prompt form on repeats; 2 pages |
+
+Founder approval date: 2026-07-22. No resource is split, blocked or deferred.
+
+The shared family owns one canonical pictograph model before wording and rendering, exactly four unique categories, unique whole-number values 2-8, scale 1, whole symbols only, five distinct task actions, generator-owned graph/question/answer truth and renderer-owned geometry only. Student/key parity and deterministic seeded generation are preserved. No Grade 3 public customization family was registered.
+
+Founder review identified that structured value 9 exceeded the shared renderer's established eight-symbol capacity. The Grade 3 range was narrowed from 2-9 to 2-8; explicit and mixed value-9 inputs now fail in full, valid `[5,6,7,8]` selections remain supported, and matching distractors remain inside the safe range. No renderer expansion was required. Interpretation statements now use category-neutral grammar, and Read the Graph covers every category before any repeat while changing prompt form for repeated categories. Regenerated proofs pass exact table/graph and answer-key parity.
+
+Baseline-only regression maintenance aligned `scripts/testGrade1CategoryFBatch3Data.js` from Ready 103 to 104 and Partial 6 to 5; `scripts/testGrade2PictographReadingBatch.js` from A28 to A35 and G15 to G17; and the Grade 2 Complete and Matching Pictograph suites from A28 to A35. Canonical sources are `docs/grade-2-architecture-reconciliation-preflight.md`, `docs/grade-2-category-d-shared-family-preflight.md` and `docs/grade-3-founder-review-batch-plan.md`. No functional graph expectation changed.
+
+Protected founder and stress proofs: `review/grade-3-data-displays-batch-7/`. No proof is committed.
+
+All five catalog lifecycle statuses remain `ready`; no promotion or demotion occurred.
+
+Commit record: committed in this closeout; git history is the authoritative commit identifier.
 
 ## Founder-approved Batch 6 movement
 
@@ -169,6 +195,6 @@ Commit record: committed in this closeout; git history is the authoritative comm
 
 ## Remaining classifications
 
-The canonical 53-resource row-level inventory remains `docs/grade-3-founder-review-batch-plan.md`. Batch 6 changed exactly Compare Fractions E -> A, Fraction Number Line D -> A and Fraction Word Problems D -> G. Match Equivalent Fractions remains E, and every other resource retains its prior A, D, E or G category.
+The canonical 53-resource row-level inventory remains `docs/grade-3-founder-review-batch-plan.md`. Batch 7 changed exactly the five structured data-display resources from D -> A. Batch 6 changed exactly Compare Fractions E -> A, Fraction Number Line D -> A and Fraction Word Problems D -> G. Match Equivalent Fractions remains E, and every other resource retains its prior A, D, E or G category.
 
 Commit record: committed in this closeout; git history is the authoritative commit identifier.

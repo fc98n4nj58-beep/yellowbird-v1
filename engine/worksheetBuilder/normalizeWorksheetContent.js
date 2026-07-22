@@ -119,6 +119,7 @@ function normalizeItem(item = {}, index = 0, meta = {}) {
     responseOperator: item.responseOperator || null,
     showQuestionSentence: Boolean(item.showQuestionSentence),
     taskMode: item.taskMode || null,
+    taskAction: item.taskAction || null,
     equationSupport: item.equationSupport || null,
     product: finiteOptionalNumber(item.product),
     quotient: finiteOptionalNumber(item.quotient),

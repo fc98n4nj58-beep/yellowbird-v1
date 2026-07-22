@@ -271,9 +271,9 @@ function assertCatalogAndReconciliationState() {
   });
 
   const reconciliation = fs.readFileSync("docs/grade-2-architecture-reconciliation-preflight.md", "utf8");
-  const categoryA = reconciliation.match(/\*\*A \(28\):\*\*[^\n]+/)?.[0] || "";
+  const categoryA = reconciliation.match(/\*\*A \(35\):\*\*[^\n]+/)?.[0] || "";
   const categoryD = reconciliation.match(/\*\*D \(0\):\*\*[^\n]+/)?.[0] || "";
-  const categoryG = reconciliation.match(/\*\*G \(15\):\*\*[^\n]+/)?.[0] || "";
+  const categoryG = reconciliation.match(/\*\*G \(17\):\*\*[^\n]+/)?.[0] || "";
   RESOURCES.forEach((resource) => {
     assert(categoryA.includes(resource.id));
     assert(!categoryD.includes(resource.id));

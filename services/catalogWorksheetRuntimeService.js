@@ -107,7 +107,12 @@ const GRADE3_CONCRETE_VISUAL_FOOTERS = Object.freeze({
   grade3_fraction_equivalence_shade_fraction_models: "Fractions",
   grade3_place_value_representation_number_line_identify: "Place Value",
   grade3_fraction_equivalence_compare_fractions: "Fractions",
-  grade3_fraction_equivalence_fraction_number_line: "Fractions"
+  grade3_fraction_equivalence_fraction_number_line: "Fractions",
+  g3_complete_a_graph: "Data & Graphing",
+  g3_graph_questions: "Data & Graphing",
+  g3_interpret_data: "Data & Graphing",
+  g3_match_data_to_graph: "Data & Graphing",
+  g3_read_a_graph: "Data & Graphing"
 });
 
 function finiteOptionalNumber(value) {
@@ -198,6 +203,7 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         responseOperator: p.responseOperator || null,
         showQuestionSentence: Boolean(p.showQuestionSentence),
         taskMode: p.taskMode || null,
+        taskAction: p.taskAction || null,
         equationSupport: p.equationSupport || null,
         a: finiteOptionalNumber(p.a),
         b: finiteOptionalNumber(p.b),

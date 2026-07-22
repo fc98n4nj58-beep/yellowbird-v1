@@ -162,7 +162,7 @@ function assertCatalogAndIsolation() {
   assert.strictEqual(master.filter((record) => record.id === RESOURCE_ID).length, 1);
   assert.strictEqual(master.filter((record) => record.status === "ready").length, 104);
   const reconciliation = fs.readFileSync("docs/grade-2-architecture-reconciliation-preflight.md", "utf8");
-  const categoryA = reconciliation.match(/\*\*A \(28\):\*\*[^\n]+/)?.[0] || "";
+  const categoryA = reconciliation.match(/\*\*A \(35\):\*\*[^\n]+/)?.[0] || "";
   const categoryD = reconciliation.match(/\*\*D \(0\):\*\*[^\n]+/)?.[0] || "";
   assert(categoryA.includes(RESOURCE_ID));
   assert(categoryD.includes("none"));
