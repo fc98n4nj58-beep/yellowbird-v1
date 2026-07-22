@@ -2,7 +2,7 @@
 
 Date: 2026-07-22
 
-Status: proposed sequence derived from `docs/grade-4-architecture-reconciliation-preflight.md`. No founder approval, implementation, category movement or lifecycle change is applied here.
+Status: Batch 1 founder-approved and closed; later batches remain proposed. Grade 4 remains open and lifecycle statuses remain unchanged.
 
 ## Planning rules
 
@@ -18,7 +18,7 @@ Status: proposed sequence derived from `docs/grade-4-architecture-reconciliation
 ### B1 — Numeric Patterning Public-Copy and Default Closure
 
 - Exact IDs: `grade4_patterning_and_algebra_extend_pattern`; `grade4_patterning_and_algebra_identify_pattern_rule`; `grade4_patterning_and_algebra_missing_value_pattern`.
-- Proposed categories: E3.
+- Disposition: founder-approved; all three moved E to A. Split, blocked or deferred: none.
 - Completed-work finding: shared `numericPatternRules.js` already stores sequence, start, operation, step, missing indexes/values, continuation answers, rule text and duplicate signature. Current defaults render and key correctly.
 - Implementation lane: resource-scoped public title/instruction/footer/default closure only; preserve raw variables and existing renderer/layout.
 - Shared family: Grade 3 Batch 1 and commit `feb3bc1`/`53116fc` provide the closest proof.
@@ -27,7 +27,7 @@ Status: proposed sequence derived from `docs/grade-4-architecture-reconciliation
 - Proof packet: three default PDFs in one founder packet; add at most two stress PDFs for widest sequences and completed-example/multipage behavior.
 - Founder complexity: LOW.
 - Stop conditions: any generator/renderer redesign, changed mathematical contract, page overflow or public customization requirement.
-- Recommended order: first.
+- Closeout: complete. No Batch 2 work began during this closeout.
 
 ### B2 — Grade 4 Fraction Relationships and Models
 
@@ -104,9 +104,9 @@ Status: proposed sequence derived from `docs/grade-4-architecture-reconciliation
 - Stop conditions: unresolved D/E row, missing G rationale, unapproved lifecycle movement, catalog drift, protected-path change or any total other than 48.
 - Recommended order: seventh and final.
 
-## Recommended Grade 4 Batch 1
+## Grade 4 Batch 1 closeout
 
-Start with B1: the three numeric-pattern resources.
+Batch 1 comprised the three numeric-pattern resources and is founder-approved.
 
 Why this is the safest high-leverage move:
 
@@ -117,7 +117,48 @@ Why this is the safest high-leverage move:
 - three default proofs fit one founder packet and one post-approval commit;
 - closing the family produces meaningful Grade 4 progress while preserving room for the higher-risk fraction and story batches.
 
-Exact recommended next action: run a B1 completed-work checkpoint, inventory its raw VP/VQ inputs against current behavior, apply only founder-facing title/instruction/footer/default corrections that remain necessary, add one focused three-resource test, generate one combined proof packet, and stop for founder review without reconciliation movement or lifecycle promotion.
+Closeout action: record exactly the three approved E-to-A movements, preserve the reviewed implementation and proofs, and leave all later batches untouched.
+
+## Batch 1 founder-review checkpoint
+
+Status: founder-approved and closed. Catalog lifecycle statuses remain unchanged.
+
+Approved: Extend the Pattern; Identify the Pattern Rule; Find the Missing Values. Split, blocked or deferred: none.
+
+### Completed-work and inheritance findings
+
+- `grade4_patterning_and_algebra_extend_pattern`, `grade4_patterning_and_algebra_identify_pattern_rule`, and `grade4_patterning_and_algebra_missing_value_pattern` were each classified **NARROW CORRECTION NEEDED / SHARED-FAMILY EXTENSION NEEDED**. None was already complete, stale-reconciliation-only, or dependent on new architecture.
+- Grade 3 Batch 1 already supplied the reusable sequence engine, deterministic candidate pools, add/subtract modes, continuation/missing/rule truth, completed examples, task layouts, rendering, pagination and answer-key reconstruction.
+- The remaining Grade 4 defects were stale public copy, elementary inherited defaults (starts 0-20 and steps 1-5), weak operation/range adaptation, two-column density, incomplete exposed answer state/duplicate signatures, bypassed selected step/operation and explicit missing-position inputs, and permissive invalid-input fallback.
+- The shared generator now exposes complete sequence truth, operation, step, rule, response values, activity-specific answers, answer state and duplicate signature. The renderer remains display-only. Additive truth fields and selected-pool consumption preserve Grade 2/3 output; Grade 4 public defaults and validation remain exact-ID scoped.
+
+### Approved-for-review Grade 4 contract
+
+| Resource | Title | Instruction | Default | Tested safe boundary |
+| --- | --- | --- | --- | --- |
+| `grade4_patterning_and_algebra_extend_pattern` | Extend the Pattern | Find the rule. Then write the next numbers in each pattern. | 12 questions; 12 per page; 5 visible terms; 2 continuation targets | 12 questions on one student page; 4-6 visible terms; 1-3 targets; at most 7 total terms |
+| `grade4_patterning_and_algebra_identify_pattern_rule` | Identify the Pattern Rule | Write the rule for each number pattern. | 10 questions; 10 per page; 6 terms | 18 questions over at most 2 student pages; 5-7 terms |
+| `grade4_patterning_and_algebra_missing_value_pattern` | Find the Missing Values | Find the rule. Then write the missing numbers in each pattern. | 12 questions; 12 per page; 7 terms; 2 varied missing positions | 20 questions over at most 2 student pages; 5-7 terms; 1-2 missing values |
+
+All three use `Grade 4 • Math • Patterning & Algebra`, full-width rows, mixed and exactly balanced addition/subtraction by default, starts 50-400, steps 5-25, and a safe whole-number result range of 0-1000. Default PDFs are one student page plus one answer-key page. The extension boundary is deliberately seven total terms because wider rows failed print-safe proof inspection; no negative, decimal, fraction, division, alternating-rule or multiplication-pattern contract was introduced.
+
+### Variable and validation checkpoint
+
+- **Preserved, raw-runtime-only:** `questionCount`; `questionsPerPage`; `startingValue`/`startNumber`; `minStart`/`minimumStart`/`minimumValue`; `maxStart`/`maximumStart`/`maximumValue`; `sequenceStep`/`step`; `minStep`/`minimumStep`; `maxStep`/`maximumStep`; `minValue`/`minimumSequenceValue`; `maxValue`/`maximumSequenceValue`; `operationMode`/`operation`/`ruleType`; `selectedOperations`/`onlyOperations`; `selectedSteps`/`onlySteps`; seed; and PDF answer-key inclusion.
+- **Task-scoped and consumed:** `visibleLength`/`shownTermCount`, `continuationCount`/`extensionCount`/`answerCount`; `sequenceLength`/`termCount`; `missingTermCount`/`missingCount`, `missingTermPlacement`/`missingPlacement`, `missingIndexes`/`missingPositions`; `includeExample`/`completedExample`/`example`. Examples remain additional, and every example alias uses the same safe page capacity.
+- **Narrowed to demonstrated safe limits:** integer starts/results 0-1000; integer steps 1-100; add/subtract only; extension count 1-12 and one student page; rule count 1-18; missing-value count 1-20; task capacities 13/10/12 respectively; extension visible length 4-6 and total row length no more than 7; other sequences 5-7; one or two missing positions leaving at least three visible terms.
+- Empty, duplicate, unsupported, mixed-valid/invalid or conflicting operation/step selections now throw. Decimal/zero/negative steps, decimal values, reversed ranges, unsafe density/width, unsupported counts, conflicting aliases, invalid example modes, and irrelevant missing-value controls also throw. Explicit missing indexes reject empty, duplicate, out-of-range, overlarge, insufficient-evidence and count/placement-conflict cases. No public Grade 4 customization family was registered.
+
+### Verification and proof packet
+
+- `scripts/testGrade4NumericPatterningBatch1.js`: 30 deterministic seeds per resource; same-seed failures 0; different-seed variation, exact balanced operations, duplicate prevention, structured truth, student/key parity, examples, pagination, variables and adversarial rejection pass.
+- Related regressions pass: Grade 3 Numeric Patterning Batch 1; shared Numeric Patterning runtime (including Grade 2/3 isolation, task pagination and example behavior); Grade 3 Place Value Batch 2; Grade 3 Fraction Batch 6; Grade 3 Data Displays Batch 7; Grade 4 reconciliation preflight.
+- Catalog audit remains Ready 104/104, Generated 213/213, Partial 5/5, Total331, with the seven established planned `pattern_word_problems` gaps only. No lifecycle status changed.
+- Founder defaults: `review/grade-4-numeric-patterning-batch-1/founder-review/01_extend_the_pattern.pdf`, `02_identify_the_pattern_rule.pdf`, `03_find_the_missing_values.pdf`.
+- Stress proofs: `review/grade-4-numeric-patterning-batch-1/stress/01_extend_maximum_density_and_width.pdf`, `02_extend_maximum_sequence_width.pdf`, `02_identify_largest_safe_terms.pdf`, `03_missing_multiple_positions.pdf`.
+- Every proof page was rendered and visually inspected. Sequences fit on one line; targets and rule lines remain readable; examples are additional; student/key truth matches; and no clipping, overlap, footer pressure or unsafe density remains.
+
+Applied founder-approved movement: each of the three exact IDs moved E to A, producing A14 / D10 / E1 / G23 / Total48. No other Grade 4 category changed.
 
 ## A resources held as complete
 
@@ -156,8 +197,8 @@ Every proposed G ID has a documented reconsideration trigger. Founder approval o
 
 ## Reconciliation scenarios
 
-- Proposed baseline after founder approval of this preflight: A11 / D10 / E4 / G23 / Total48.
-- After B1 approval: A14 / D10 / E1 / G23 / Total48.
+- Pre-Batch 1 baseline: A11 / D10 / E4 / G23 / Total48.
+- Current after Batch 1 closeout: A14 / D10 / E1 / G23 / Total48.
 - After B2 approval: A17 / D7 / E1 / G23 / Total48.
 - After B3 approval: A20 / D4 / E1 / G23 / Total48.
 - After B4 approval: A23 / D2 / E0 / G23 / Total48.

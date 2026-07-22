@@ -427,6 +427,14 @@ const GRADE3_NUMERIC_PATTERN_TITLES = Object.freeze({
   grade3_patterning_and_algebra_missing_value_pattern: "Find the Missing Number"
 });
 
+const GRADE4_NUMERIC_PATTERN_TITLES = Object.freeze({
+  grade4_patterning_and_algebra_extend_pattern: "Extend the Pattern",
+  grade4_patterning_and_algebra_identify_pattern_rule: "Identify the Pattern Rule",
+  grade4_patterning_and_algebra_missing_value_pattern: "Find the Missing Values"
+});
+
+const GRADE4_NUMERIC_PATTERN_IDS = new Set(Object.keys(GRADE4_NUMERIC_PATTERN_TITLES));
+
 const GRADE3_PLACE_VALUE_TITLES = Object.freeze({
   [GRADE3_BASE_TEN_ID]: "Read Base Ten Blocks",
   [GRADE3_EXPANDED_FORM_ID]: "Expanded Form",
@@ -1148,7 +1156,273 @@ function normalizeGrade1AdditionNumberLineOptions(item, options = {}) {
   return normalized;
 }
 
+function grade4PatternOptionEntries(value, label) {
+  const entries = Array.isArray(value)
+    ? value
+    : typeof value === "string" ? value.split(",").map((entry) => entry.trim()) : [value];
+  if (!entries.length || entries.some((entry) => entry === "" || entry === null || entry === undefined)) {
+    throw new Error(`Grade 4 numeric pattern ${label} must not be empty.`);
+  }
+  return entries;
+}
+
+function grade4PatternInteger(value, label, min, max) {
+  const number = Number(value);
+  if (!Number.isInteger(number) || number < min || number > max) {
+    throw new Error(`Grade 4 numeric pattern ${label} must be a whole number from ${min} to ${max}.`);
+  }
+  return number;
+}
+
+function grade4PatternOperation(value) {
+  const normalized = String(value).trim().toLowerCase();
+  if (["add", "addition", "+"].includes(normalized)) return "add";
+  if (["subtract", "subtraction", "minus", "-"].includes(normalized)) return "subtract";
+  if (["mixed", "add_subtract", "addition_subtraction"].includes(normalized)) return "mixed";
+  throw new Error(`Unsupported Grade 4 numeric pattern operation: ${value}.`);
+}
+
+function explicitGrade4PatternValue(options, keys) {
+  const entries = keys
+    .filter((key) => options[key] !== undefined && options[key] !== null && options[key] !== "")
+    .map((key) => ({ key, value: options[key] }));
+  return entries.length ? entries : null;
+}
+
+function explicitGrade4PatternListValue(options, keys) {
+  const entries = keys
+    .filter((key) => Object.prototype.hasOwnProperty.call(options, key) && options[key] !== null && options[key] !== undefined)
+    .map((key) => ({ key, value: options[key] }));
+  return entries.length ? entries : null;
+}
+
+function validateGrade4PatternAliasGroup(options, keys, label, normalize) {
+  const entries = explicitGrade4PatternValue(options, keys);
+  if (!entries) return;
+  const values = entries.map(({ value }) => normalize(value));
+  if (values.some((value) => JSON.stringify(value) !== JSON.stringify(values[0]))) {
+    throw new Error(`Conflicting Grade 4 numeric pattern ${label} aliases.`);
+  }
+}
+
+function validateGrade4NumericPatternRawOptions(item, options = {}) {
+  if (!GRADE4_NUMERIC_PATTERN_IDS.has(item.id)) return;
+  const activity = item.activityTypes?.[0];
+
+  const integerGroups = [
+    [["questionCount"], "question count", 1, activity === "extend_pattern" ? 12 : activity === "identify_pattern_rule" ? 18 : 20],
+    [["questionsPerPage"], "questions per page", 1, activity === "extend_pattern" ? 13 : activity === "identify_pattern_rule" ? 10 : 12],
+    [["startingValue", "startNumber"], "starting value", 0, 1000],
+    [["minStart", "minimumStart", "minimumValue"], "minimum start", 0, 1000],
+    [["maxStart", "maximumStart", "maximumValue"], "maximum start", 0, 1000],
+    [["sequenceStep", "step"], "fixed step", 1, 100],
+    [["minStep", "minimumStep"], "minimum step", 1, 100],
+    [["maxStep", "maximumStep"], "maximum step", 1, 100],
+    [["minValue", "minimumSequenceValue"], "minimum sequence value", 0, 1000],
+    [["maxValue", "maximumSequenceValue"], "maximum sequence value", 1, 1000]
+  ];
+  integerGroups.forEach(([keys, label, min, max]) => {
+    validateGrade4PatternAliasGroup(options, keys, label, (value) => grade4PatternInteger(value, label, min, max));
+  });
+
+  const minStart = explicitGrade4PatternValue(options, ["minStart", "minimumStart", "minimumValue"]);
+  const maxStart = explicitGrade4PatternValue(options, ["maxStart", "maximumStart", "maximumValue"]);
+  if (minStart && maxStart && Number(minStart[0].value) > Number(maxStart[0].value)) {
+    throw new Error("Grade 4 numeric pattern minimum start must not exceed maximum start.");
+  }
+  const minStep = explicitGrade4PatternValue(options, ["minStep", "minimumStep"]);
+  const maxStep = explicitGrade4PatternValue(options, ["maxStep", "maximumStep"]);
+  if (minStep && maxStep && Number(minStep[0].value) > Number(maxStep[0].value)) {
+    throw new Error("Grade 4 numeric pattern minimum step must not exceed maximum step.");
+  }
+
+  validateGrade4PatternAliasGroup(options, ["operationMode", "operation", "ruleType"], "operation", grade4PatternOperation);
+  const selectedOperationEntries = explicitGrade4PatternListValue(options, ["selectedOperations", "onlyOperations"]);
+  if (selectedOperationEntries) {
+    const lists = selectedOperationEntries.map(({ value }) => grade4PatternOptionEntries(value, "selected operations").map(grade4PatternOperation));
+    lists.forEach((list) => {
+      if (list.includes("mixed") || new Set(list).size !== list.length || list.length > 2) {
+        throw new Error("Grade 4 numeric pattern selected operations must contain unique add/subtract values.");
+      }
+    });
+    if (lists.some((list) => JSON.stringify(list) !== JSON.stringify(lists[0]))) {
+      throw new Error("Conflicting Grade 4 numeric pattern selected-operation aliases.");
+    }
+    const operationEntries = explicitGrade4PatternValue(options, ["operationMode", "operation", "ruleType"]);
+    const selectedMode = lists[0].length === 2 ? "mixed" : lists[0][0];
+    if (operationEntries && grade4PatternOperation(operationEntries[0].value) !== selectedMode) {
+      throw new Error("Conflicting Grade 4 numeric pattern operation selections.");
+    }
+  }
+
+  const selectedStepEntries = explicitGrade4PatternListValue(options, ["selectedSteps", "onlySteps"]);
+  if (selectedStepEntries) {
+    const lists = selectedStepEntries.map(({ value }) => grade4PatternOptionEntries(value, "selected steps")
+      .map((entry) => grade4PatternInteger(entry, "selected step", 1, 100)));
+    lists.forEach((list) => {
+      if (new Set(list).size !== list.length) {
+        throw new Error("Grade 4 numeric pattern selected steps must be unique.");
+      }
+    });
+    if (lists.some((list) => JSON.stringify(list) !== JSON.stringify(lists[0]))) {
+      throw new Error("Conflicting Grade 4 numeric pattern selected-step aliases.");
+    }
+    const fixedStepEntries = explicitGrade4PatternValue(options, ["sequenceStep", "step"]);
+    if (fixedStepEntries && (lists[0].length !== 1 || lists[0][0] !== Number(fixedStepEntries[0].value))) {
+      throw new Error("Conflicting Grade 4 numeric pattern fixed and selected steps.");
+    }
+    if (minStep && lists[0].some((step) => step < Number(minStep[0].value))) {
+      throw new Error("Grade 4 numeric pattern selected steps must respect the minimum step.");
+    }
+    if (maxStep && lists[0].some((step) => step > Number(maxStep[0].value))) {
+      throw new Error("Grade 4 numeric pattern selected steps must respect the maximum step.");
+    }
+  }
+
+  if (activity === "extend_pattern") {
+    validateGrade4PatternAliasGroup(options, ["visibleLength", "shownTermCount"], "visible-term count", (value) => grade4PatternInteger(value, "visible-term count", 4, 6));
+    validateGrade4PatternAliasGroup(options, ["continuationCount", "extensionCount", "answerCount"], "continuation count", (value) => grade4PatternInteger(value, "continuation count", 1, 3));
+  } else {
+    validateGrade4PatternAliasGroup(options, ["sequenceLength", "termCount"], "sequence length", (value) => grade4PatternInteger(value, "sequence length", 5, 7));
+  }
+
+  if (activity === "missing_value_pattern") {
+    validateGrade4PatternAliasGroup(options, ["missingTermCount", "missingCount"], "missing-value count", (value) => grade4PatternInteger(value, "missing-value count", 1, 2));
+    const placementEntries = explicitGrade4PatternValue(options, ["missingTermPlacement", "missingPlacement"]);
+    if (placementEntries) {
+      const placements = placementEntries.map(({ value }) => String(value).trim().toLowerCase() === "mixed" ? "random" : String(value).trim().toLowerCase());
+      if (placements.some((value) => !["beginning", "middle", "end", "random"].includes(value)) || new Set(placements).size !== 1) {
+        throw new Error("Grade 4 numeric pattern missing placement must be beginning, middle, end, random, or mixed.");
+      }
+    }
+    const indexEntries = explicitGrade4PatternListValue(options, ["missingIndexes", "missingPositions"]);
+    if (indexEntries) {
+      const sequenceLengthEntries = explicitGrade4PatternValue(options, ["sequenceLength", "termCount"]);
+      const sequenceLength = sequenceLengthEntries ? Number(sequenceLengthEntries[0].value) : 7;
+      const indexes = grade4PatternOptionEntries(indexEntries[0].value, "missing indexes")
+        .map((entry) => grade4PatternInteger(entry, "missing index", 0, sequenceLength - 1));
+      if (new Set(indexes).size !== indexes.length || indexes.length > 2 || sequenceLength - indexes.length < 3) {
+        throw new Error("Grade 4 numeric pattern missing indexes must be unique and leave at least three visible terms.");
+      }
+      const missingCountEntries = explicitGrade4PatternValue(options, ["missingTermCount", "missingCount"]);
+      if (missingCountEntries && Number(missingCountEntries[0].value) !== indexes.length) {
+        throw new Error("Grade 4 numeric pattern missing-value count must match the explicit missing indexes.");
+      }
+      if (placementEntries) {
+        throw new Error("Use either Grade 4 numeric pattern missing indexes or missing placement, not both.");
+      }
+    }
+  } else if (explicitGrade4PatternValue(options, ["missingIndexes", "missingPositions", "missingTermCount", "missingCount", "missingTermPlacement", "missingPlacement"])) {
+    throw new Error("Missing-value controls are supported only by Find the Missing Values.");
+  }
+
+  let includesExample = false;
+  const exampleEntries = explicitGrade4PatternValue(options, ["includeExample", "completedExample", "example"]);
+  if (exampleEntries) {
+    const normalizeBoolean = (value) => {
+      if (typeof value === "boolean") return value;
+      const normalized = String(value).trim().toLowerCase();
+      if (["1", "true", "yes", "on"].includes(normalized)) return true;
+      if (["0", "false", "no", "off"].includes(normalized)) return false;
+      throw new Error("Grade 4 numeric pattern completed-example options must be boolean.");
+    };
+    const values = exampleEntries.map(({ value }) => normalizeBoolean(value));
+    if (new Set(values).size !== 1) throw new Error("Conflicting Grade 4 numeric pattern completed-example aliases.");
+    includesExample = values[0];
+  }
+
+  const questionCountEntries = explicitGrade4PatternValue(options, ["questionCount"]);
+  const perPageEntries = explicitGrade4PatternValue(options, ["questionsPerPage"]);
+  const questionCount = questionCountEntries
+    ? Number(questionCountEntries[0].value)
+    : activity === "identify_pattern_rule" ? 10 : 12;
+  const questionsPerPage = perPageEntries
+    ? Number(perPageEntries[0].value)
+    : activity === "extend_pattern" && includesExample ? 13 : activity === "identify_pattern_rule" ? 10 : 12;
+  if (questionCount + (includesExample ? 1 : 0) > questionsPerPage * 2) {
+    throw new Error("Grade 4 numeric pattern question count, page density, and completed example must fit within two student pages.");
+  }
+  if (activity === "extend_pattern") {
+    const visibleEntries = explicitGrade4PatternValue(options, ["visibleLength", "shownTermCount"]);
+    const continuationEntries = explicitGrade4PatternValue(options, ["continuationCount", "extensionCount", "answerCount"]);
+    const visibleLength = visibleEntries ? Number(visibleEntries[0].value) : 5;
+    const continuationCount = continuationEntries ? Number(continuationEntries[0].value) : 2;
+    if (visibleLength + continuationCount > 7) {
+      throw new Error("Grade 4 numeric pattern extension rows support at most seven total terms.");
+    }
+    if (questionCount + (includesExample ? 1 : 0) > questionsPerPage) {
+      throw new Error("Grade 4 numeric pattern extension rows must fit on one student page.");
+    }
+  }
+}
+
+function normalizeGrade4NumericPatterningOptions(item, options = {}) {
+  if (!GRADE4_NUMERIC_PATTERN_IDS.has(item.id)) return options;
+  const activity = item.activityTypes?.[0];
+  const first = (keys, fallback) => {
+    const entry = explicitGrade4PatternValue(options, keys);
+    return entry ? entry[0].value : fallback;
+  };
+  const includeExample = parseBoolean(
+    first(["includeExample", "completedExample", "example"], false),
+    false
+  );
+  const normalized = {
+    ...options,
+    includeExample,
+    questionCount: Number(first(["questionCount"], activity === "identify_pattern_rule" ? 10 : 12)),
+    questionsPerPage: Number(first(
+      ["questionsPerPage"],
+      activity === "extend_pattern" && includeExample ? 13 : activity === "identify_pattern_rule" ? 10 : 12
+    )),
+    minStart: Number(first(["minStart", "minimumStart", "minimumValue"], 50)),
+    maxStart: Number(first(["maxStart", "maximumStart", "maximumValue"], 400)),
+    minStep: Number(first(["minStep", "minimumStep"], 5)),
+    maxStep: Number(first(["maxStep", "maximumStep"], 25)),
+    minValue: Number(first(["minValue", "minimumSequenceValue"], 0)),
+    maxValue: Number(first(["maxValue", "maximumSequenceValue"], 1000)),
+    operationMode: grade4PatternOperation(first(["operationMode", "operation", "ruleType"], "mixed")),
+    balanceOperations: true
+  };
+
+  const selectedOperationsEntry = explicitGrade4PatternListValue(options, ["selectedOperations", "onlyOperations"]);
+  const selectedOperations = selectedOperationsEntry ? selectedOperationsEntry[0].value : null;
+  if (selectedOperations !== null) {
+    const values = grade4PatternOptionEntries(selectedOperations, "selected operations").map(grade4PatternOperation);
+    normalized.operationMode = values.length === 2 ? "mixed" : values[0];
+  }
+  const selectedStepsEntry = explicitGrade4PatternListValue(options, ["selectedSteps", "onlySteps"]);
+  const selectedSteps = selectedStepsEntry ? selectedStepsEntry[0].value : null;
+  if (selectedSteps !== null) {
+    normalized.selectedSteps = grade4PatternOptionEntries(selectedSteps, "selected steps").map(Number);
+    normalized.minStep = Math.min(...normalized.selectedSteps);
+    normalized.maxStep = Math.max(...normalized.selectedSteps);
+  }
+
+  if (activity === "extend_pattern") {
+    normalized.visibleLength = Number(first(["visibleLength", "shownTermCount"], 5));
+    normalized.continuationCount = Number(first(["continuationCount", "extensionCount", "answerCount"], 2));
+  } else {
+    normalized.sequenceLength = Number(first(["sequenceLength", "termCount"], activity === "identify_pattern_rule" ? 6 : 7));
+  }
+
+  if (activity === "missing_value_pattern") {
+    normalized.missingTermCount = Number(first(["missingTermCount", "missingCount"], 2));
+    const placement = String(first(["missingTermPlacement", "missingPlacement"], "random")).trim().toLowerCase();
+    normalized.missingTermPlacement = placement === "mixed" ? "random" : placement;
+    const indexEntry = explicitGrade4PatternListValue(options, ["missingIndexes", "missingPositions"]);
+    const indexes = indexEntry ? indexEntry[0].value : null;
+    if (indexes !== null) {
+      normalized.missingIndexes = grade4PatternOptionEntries(indexes, "missing indexes").map(Number);
+      normalized.missingTermCount = normalized.missingIndexes.length;
+    }
+  }
+
+  return normalized;
+}
+
 function normalizeCatalogWorksheetOptions(item, options = {}) {
+  validateGrade4NumericPatternRawOptions(item, options);
   if (item.id === GRADE3_BASE_TEN_ID) {
     validateGrade3BaseTenRawOptions(options);
   }
@@ -1319,7 +1593,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalizeGrade3DataBatch7Options(
+  return normalizeGrade4NumericPatterningOptions(item, normalizeGrade3DataBatch7Options(
     item,
   normalizeGrade3FractionBatch6Options(
     item,
@@ -1365,7 +1639,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
       )
     )
     )
-  )))))))));
+  ))))))))));
 }
 
 const NON_CUSTOMIZATION_QUERY_KEYS = new Set([
@@ -1881,6 +2155,18 @@ function buildStudentFacingInstruction(item, fallback = "") {
 }
 
 function patterningInstruction(item, activityType, normalizedOptions = {}) {
+  if (GRADE4_NUMERIC_PATTERN_IDS.has(item.id)) {
+    if (activityType === "extend_pattern") {
+      return "Find the rule. Then write the next numbers in each pattern.";
+    }
+    if (activityType === "missing_value_pattern") {
+      return "Find the rule. Then write the missing numbers in each pattern.";
+    }
+    if (activityType === "identify_pattern_rule") {
+      return "Write the rule for each number pattern.";
+    }
+  }
+
   if (activityType === "extend_pattern") {
     const continuationCount = Math.max(
       1,
@@ -1998,6 +2284,7 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
 
   const title = GRADE2_NUMERIC_PATTERN_TITLES[item.id] ||
   GRADE3_NUMERIC_PATTERN_TITLES[item.id] ||
+  GRADE4_NUMERIC_PATTERN_TITLES[item.id] ||
   GRADE3_PLACE_VALUE_TITLES[item.id] ||
   GRADE3_ADDITION_SUBTRACTION_BATCH3_TITLES[item.id] ||
   GRADE3_STORY_PROBLEM_TITLES[item.id] ||
@@ -2294,10 +2581,11 @@ if (
     finiteNumber(normalizedOptions.missingTermCount ?? normalizedOptions.missingCount) || 1
   );
   const isGrade2NumericPattern = GRADE2_NUMERIC_PATTERN_IDS.has(item.id);
+  const isGrade4NumericPattern = GRADE4_NUMERIC_PATTERN_IDS.has(item.id);
   const maxProblemsPerPage = resolvePatterningPageCapacity(item, activityType, normalizedOptions);
   const columns = isGrade2NumericPattern
     ? 2
-    : activityType === "identify_pattern_rule" ? 1 : 2;
+    : isGrade4NumericPattern || activityType === "identify_pattern_rule" ? 1 : 2;
 
   layout.instruction = patterningInstruction(item, activityType, normalizedOptions);
   layout.template = {
@@ -2314,9 +2602,9 @@ if (
     patterningSequenceFontSize: patterningSequenceFontSize(item, activityType, normalizedOptions),
     patterningTargetStrokeColor: isGrade2NumericPattern ? "#68788f" : "#8f98a8",
     patterningTargetStrokeWidth: isGrade2NumericPattern ? 1.15 : 0.95,
-    patterningCommaGap: isGrade2NumericPattern ? 8 : 5,
-    patterningExtendTargetWidth: isGrade2NumericPattern ? 68 : 56,
-    patterningMissingTargetWidth: isGrade2NumericPattern ? 64 : 58,
+    patterningCommaGap: isGrade2NumericPattern ? 8 : isGrade4NumericPattern ? 7 : 5,
+    patterningExtendTargetWidth: isGrade2NumericPattern ? 68 : isGrade4NumericPattern ? 62 : 56,
+    patterningMissingTargetWidth: isGrade2NumericPattern ? 64 : isGrade4NumericPattern ? 62 : 58,
     patterningRuleTargetWidth: isGrade2NumericPattern ? 64 : 120,
     patterningResponseFontSize: isGrade2NumericPattern ? 15 : patterningSequenceFontSize(item, activityType, normalizedOptions),
     patterningRuleResponseMode: isGrade2NumericPattern && activityType === "identify_pattern_rule"

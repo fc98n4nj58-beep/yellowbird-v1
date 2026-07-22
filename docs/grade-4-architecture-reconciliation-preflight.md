@@ -2,7 +2,7 @@
 
 Date: 2026-07-22
 
-Status: draft founder-review preflight only. No category is founder-approved, no lifecycle status changes, and Grade 4 is not closed.
+Status: founder-approved Batch 1 movement recorded. Grade 4 is not closed; remaining categories retain their existing preflight disposition and lifecycle statuses remain unchanged.
 
 ## Baseline and method
 
@@ -80,10 +80,10 @@ Preview, PDF and answer key all pass through `normalizeCatalogWorksheetOptions`,
 | 33 | `g4_multiplication_fact_fluency` | Multiplication Fact Fluency / `ready` | Multiplication & Division / fluency | `multiplicationBasic.js`; fluency grid | 60 / 2 | QA metadata; VM/VQ/H0+HM | Clear full fact-fluency role with inheritance proofs | ALREADY COMPLETE / EXISTING ARCHITECTURE SAFE | A / — |
 | 34 | `grade4_multiplication_facts_skip_counting` | Skip Counting — Grade 4 / `generated` | Multiplication & Division / pattern worksheet | `skipCounting.js`; equation text | 10 / 2 | task-facing; VM/VQ/H0+HP | Better as selected-step review/customization; weak distinct Grade 4 launch role | LOW-VALUE — DEFER / EXISTING ARCHITECTURE SAFE | G / — |
 | 35 | `grade4_multiplication_facts_word_problems` | Word Problems — Grade 4 / `ready` | Multiplication & Division / word problems | `wordProblems.js`; one-column work boxes | 12 / 8 | accepted review copy; VM/VQ/H0+HO | Full equal-groups independent practice, distinct from six-item Quick Check; wording previously accepted | ALREADY COMPLETE / EXISTING ARCHITECTURE SAFE | A / — |
-| 36 | `grade4_patterning_and_algebra_extend_pattern` | Extend Pattern — Grade 4 / `ready` | Patterning & Algebra / worksheet | `numericPatternRules.js`; equation text | 12 / 2 | task-facing; VP/VQ/H0+HP | Structured sequence/step/rule truth is healthy; title/footer/default framing need founder closure | NARROW CORRECTION NEEDED / RESOURCE-SCOPED CORRECTION SAFE | E / B1 |
+| 36 | `grade4_patterning_and_algebra_extend_pattern` | Extend the Pattern / `ready` | Patterning & Algebra / worksheet | `numericPatternRules.js`; full-width pattern row | 12 / 2 | founder-approved copy; VP/VQ/H0+HP | Grade 3 structured family reused; Grade 4 starts, steps, validation, full-width layout and exact answer state verified | FOUNDER-APPROVED / EXISTING ARCHITECTURE SAFE | A / B1 closed |
 | 37 | `grade4_patterning_and_algebra_function_table` | Function Table — Grade 4 / `generated` | Patterning & Algebra / worksheet | `numericPatternRules.js`; equation text | 12 / 4 | internal copy; VP/VQ/H0+HP | Generator stores input/output pairs, but current page is one text sentence rather than a function table | NEW ARCHITECTURE NEEDED / NEW ARCHITECTURE REQUIRED | D / B5 |
-| 38 | `grade4_patterning_and_algebra_identify_pattern_rule` | Identify Pattern Rule — Grade 4 / `ready` | Patterning & Algebra / worksheet | `numericPatternRules.js`; equation text | 12 / 4 | task-facing; VP/VQ/H0+HP | Structured rule truth healthy; public title/default density need narrow founder closure | NARROW CORRECTION NEEDED / RESOURCE-SCOPED CORRECTION SAFE | E / B1 |
-| 39 | `grade4_patterning_and_algebra_missing_value_pattern` | Missing Value Pattern — Grade 4 / `ready` | Patterning & Algebra / worksheet | `numericPatternRules.js`; equation text | 12 / 2 | task-facing; VP/VQ/H0+HP | Structured missing-index/value truth healthy; public title/default framing need narrow closure | NARROW CORRECTION NEEDED / RESOURCE-SCOPED CORRECTION SAFE | E / B1 |
+| 38 | `grade4_patterning_and_algebra_identify_pattern_rule` | Identify the Pattern Rule / `ready` | Patterning & Algebra / worksheet | `numericPatternRules.js`; full-width pattern row | 10 / 2 | founder-approved copy; VP/VQ/H0+HP | Exact rule truth, balanced operations, Grade 4 defaults, validation and readable response lines verified | FOUNDER-APPROVED / EXISTING ARCHITECTURE SAFE | A / B1 closed |
+| 39 | `grade4_patterning_and_algebra_missing_value_pattern` | Find the Missing Values / `ready` | Patterning & Algebra / worksheet | `numericPatternRules.js`; full-width pattern row | 12 / 2 | founder-approved copy; VP/VQ/H0+HP | Exact missing indexes/answers, varied positions, Grade 4 defaults, validation and key restoration verified | FOUNDER-APPROVED / EXISTING ARCHITECTURE SAFE | A / B1 closed |
 | 40 | `grade4_patterning_and_algebra_pattern_word_problems` | Pattern Word Problems — Grade 4 / `planned` | Patterning & Algebra / worksheet | no generator | fails | —; VP/VQ/H0 | One of seven established planned gaps; no distinct approved role | PLANNED GAP / NEW ARCHITECTURE REQUIRED | G / — |
 | 41 | `grade4_place_value_representation_base_ten_blocks` | Base Ten Blocks — Grade 4 / `generated` | Place Value / visual worksheet | `baseTenBlocks.js`; base-ten primitive | 10 / 2 | internal copy; VV/VQ/H0+HV | Default represents 29, not Grade 4 place value; thousands model/role is absent and Grade 3 adapter is exact-ID scoped | LOW-VALUE — DEFER / VISUAL SYSTEM MISSING | G / — |
 | 42 | `grade4_place_value_representation_compare_numbers` | Compare Numbers — Grade 4 / `generated` | Place Value / worksheet | `compareNumbers.js`; equation grid | 12 / 2 | task-facing; VV/VQ/H0+HV | Structured left/right/symbol truth works, but default is only three-digit and old docs explicitly hold it | NARROW CORRECTION NEEDED / RESOURCE-SCOPED CORRECTION SAFE | E / B4 |
@@ -94,15 +94,22 @@ Preview, PDF and answer key all pass through `normalizeCatalogWorksheetOptions`,
 | 47 | `grade4_place_value_representation_standard_form` | Standard Form — Grade 4 / `generated` | Place Value / representation | `standardForm.js`; three-column representation | 45 / 2 | task-facing; VV/VQ/H0+HV | Byte-identical to ID 48 at the same seed | DUPLICATE — DEFER / EXISTING ARCHITECTURE SAFE | G / — |
 | 48 | `g4_standard_form_large_numbers` | Standard Form with Large Numbers / `ready` | Place Value / representation | `standardForm.js`; three-column representation | 45 / 2 | task-facing; VV/VQ/H0+HV | Clear large-number conversion role with widest-value/example/multipage proofs | ALREADY COMPLETE / EXISTING ARCHITECTURE SAFE | A / — |
 
-## Proposed reconciliation
+## Batch 1 closeout
 
-- A: 11 — `g4_compare_fractions_quick_check`, `g4_pattern_rule_quick_check`, `g4_compare_fractions_exit_ticket`, `g4_multiplication_word_problem_quick_check`, `g4_array_interpretation`, `g4_equal_groups_interpretation`, `g4_missing_factors`, `g4_multiplication_fact_fluency`, `grade4_multiplication_facts_word_problems`, `g4_expanded_form_large_numbers`, `g4_standard_form_large_numbers`.
+- Founder-approved: `grade4_patterning_and_algebra_extend_pattern`, `grade4_patterning_and_algebra_identify_pattern_rule`, `grade4_patterning_and_algebra_missing_value_pattern`. Split, blocked or deferred: none.
+- Inheritance: the Grade 3 numeric-patterning generator, pattern layouts, deterministic seed behavior, answer-key path and additional completed-example behavior are preserved. Grade 4-specific defaults and strict validation were added without a Grade 4-only engine or renderer redesign.
+- Grade 4 contract: starts 50-400; steps 5-25; balanced addition and subtraction; whole-number results 0-1000; full-width rows; default counts 12 Extend, 10 Identify and 12 Missing; one student page plus one answer-key page; no public customization registration.
+- Reconciliation: exactly these three IDs moved E to A. Catalog lifecycle statuses remain `ready`; Grade 4 remains open.
+
+## Current reconciliation after Batch 1 closeout
+
+- A: 14 — `g4_compare_fractions_quick_check`, `g4_pattern_rule_quick_check`, `g4_compare_fractions_exit_ticket`, `g4_multiplication_word_problem_quick_check`, `g4_array_interpretation`, `g4_equal_groups_interpretation`, `g4_missing_factors`, `g4_multiplication_fact_fluency`, `grade4_multiplication_facts_word_problems`, `grade4_patterning_and_algebra_extend_pattern`, `grade4_patterning_and_algebra_identify_pattern_rule`, `grade4_patterning_and_algebra_missing_value_pattern`, `g4_expanded_form_large_numbers`, `g4_standard_form_large_numbers`.
 - D: 10 — `grade4_addition_subtraction_word_problems_addition_word_problem`, `grade4_addition_subtraction_facts_equation_match`, `grade4_addition_subtraction_word_problems_missing_addend_word_problem`, `grade4_addition_subtraction_word_problems_subtraction_word_problem`, `grade4_fraction_equivalence_compare_fractions`, `grade4_fraction_equivalence_fraction_number_line`, `grade4_fraction_equivalence_shade_fraction_models`, `grade4_patterning_and_algebra_function_table`, `grade4_place_value_representation_number_line_identify`, `grade4_place_value_representation_number_word_match`.
-- E: 4 — `grade4_patterning_and_algebra_extend_pattern`, `grade4_patterning_and_algebra_identify_pattern_rule`, `grade4_patterning_and_algebra_missing_value_pattern`, `grade4_place_value_representation_compare_numbers`.
+- E: 1 — `grade4_place_value_representation_compare_numbers`.
 - G: 23 — `grade4_addition_subtraction_facts_fact_family`, `grade4_addition_subtraction_facts_fact_fluency`, `grade4_addition_subtraction_facts_missing_addend`, `grade4_addition_subtraction_facts_related_subtraction`, `grade4_addition_subtraction_facts_ten_frame`, `grade4_addition_subtraction_facts_word_problems`, `grade4_data_display_graphing_complete_graph`, `grade4_data_display_graphing_graph_questions`, `grade4_data_display_graphing_graph_word_problems`, `grade4_data_display_graphing_interpret_data`, `grade4_data_display_graphing_match_data_to_graph`, `grade4_data_display_graphing_read_graph`, `g4_read_and_interpret_graphs`, `grade4_fraction_equivalence_fraction_word_problems`, `grade4_fraction_equivalence_match_equivalent_fractions`, `grade4_multiplication_facts_arrays`, `grade4_multiplication_facts_equal_groups`, `grade4_multiplication_facts_missing_factor`, `grade4_multiplication_facts_skip_counting`, `grade4_patterning_and_algebra_pattern_word_problems`, `grade4_place_value_representation_base_ten_blocks`, `grade4_place_value_representation_expanded_form`, `grade4_place_value_representation_standard_form`.
-- Total: 48. Proposed arithmetic: 11 + 10 + 4 + 23 = 48.
+- Total: 48. Current arithmetic: 14 + 10 + 1 + 23 = 48.
 
-These are proposals only. The existing catalog statuses remain unchanged and are not a proxy for A/D/E/G.
+Exactly the three founder-approved Batch 1 IDs moved E to A. D and G are unchanged. Existing catalog statuses remain unchanged and are not a proxy for A/D/E/G.
 
 ## Shared-family inheritance summary
 
@@ -116,7 +123,7 @@ These are proposals only. The existing catalog statuses remain unchanged and are
 
 ## Ready-status and lifecycle findings
 
-Seven `ready` records are not proposed A: `grade4_fraction_equivalence_compare_fractions` (D), `grade4_fraction_equivalence_match_equivalent_fractions` (G), `grade4_multiplication_facts_equal_groups` (G duplicate), `g4_read_and_interpret_graphs` (G), and the three ready numeric-pattern resources (E). Ready status is therefore not treated as architecture approval.
+Four `ready` records are not A: `grade4_fraction_equivalence_compare_fractions` (D), `grade4_fraction_equivalence_match_equivalent_fractions` (G), `grade4_multiplication_facts_equal_groups` (G duplicate), and `g4_read_and_interpret_graphs` (G). Ready status is therefore not treated as architecture approval.
 
 Conversely, four generated duplicate records have complete runtime truth but are proposed G because the ready anchor is byte-identical: `grade4_multiplication_facts_arrays`, `grade4_multiplication_facts_missing_factor`, `grade4_place_value_representation_expanded_form`, and `grade4_place_value_representation_standard_form`.
 
@@ -133,5 +140,6 @@ Conversely, four generated duplicate records have complete runtime truth but are
 
 - Grade 2 remains A35 / D0 / E0 / G17 / Total52.
 - Grade 3 remains A36 / D0 / E0 / G17 / Total53.
+- Grade 4 is now A14 / D10 / E1 / G23 / Total48 after the founder-approved Batch 1 movement; Grade 4 remains open.
 - Catalog baseline remains Ready 104/104, Generated 213/213, Partial 5/5, Total331, with the seven established planned `pattern_word_problems` gaps only.
 - No implementation, proof generation, lifecycle movement, public customization, staging, commit or push is part of this preflight.

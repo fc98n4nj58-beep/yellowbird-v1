@@ -173,6 +173,12 @@ function normalizeNumericPatternOptions(purpose, options = {}) {
   const missingTermPlacement = String(
     firstDefined(options, ["missingTermPlacement", "missingPlacement"], defaults.missingTermPlacement || "middle")
   ).toLowerCase();
+  const selectedSteps = Array.isArray(options.selectedSteps) && options.selectedSteps.length
+    ? [...options.selectedSteps]
+    : null;
+  const explicitMissingIndexes = Array.isArray(options.missingIndexes) && options.missingIndexes.length
+    ? [...options.missingIndexes]
+    : null;
 
   return Object.freeze({
     purpose,
@@ -181,12 +187,15 @@ function normalizeNumericPatternOptions(purpose, options = {}) {
     maxStart,
     minStep,
     maxStep,
+    selectedSteps,
     minValue: clampInt(firstDefined(options, ["minValue", "minimumSequenceValue"], defaults.minValue), 0, maxValue, defaults.minValue),
     maxValue,
     sequenceLength,
     visibleLength,
     continuationCount,
     missingTermCount,
+    explicitMissingIndexes,
+    balanceOperations: options.balanceOperations === true,
     missingTermPlacement: ["beginning", "middle", "end", "random"].includes(missingTermPlacement)
       ? missingTermPlacement
       : defaults.missingTermPlacement || "middle"
@@ -194,6 +203,9 @@ function normalizeNumericPatternOptions(purpose, options = {}) {
 }
 
 function missingIndexesForPattern(options, sequence, random) {
+  if (Array.isArray(options.explicitMissingIndexes)) {
+    return [...options.explicitMissingIndexes];
+  }
   const count = options.sequenceLength;
   const maxMissing = Math.max(1, count - 2);
   const missingCount = Math.min(options.missingTermCount, maxMissing);
@@ -236,8 +248,13 @@ function buildCandidatePool(purpose, normalizedOptions, random) {
     : normalizedOptions.sequenceLength;
   const pool = [];
 
+  const steps = normalizedOptions.selectedSteps || Array.from(
+    { length: normalizedOptions.maxStep - normalizedOptions.minStep + 1 },
+    (_, index) => normalizedOptions.minStep + index
+  );
+
   operationsForMode(normalizedOptions.operationMode).forEach((operation) => {
-    for (let step = normalizedOptions.minStep; step <= normalizedOptions.maxStep; step += 1) {
+    for (const step of steps) {
       for (let start = normalizedOptions.minStart; start <= normalizedOptions.maxStart; start += 1) {
         const sequence = buildSequence({ operation, start, step, length });
         if (sequence.some((value) => value < normalizedOptions.minValue || value > normalizedOptions.maxValue)) {
@@ -273,7 +290,24 @@ function buildCandidatePool(purpose, normalizedOptions, random) {
     }
   });
 
-  return shuffle(pool, random);
+  const shuffled = shuffle(pool, random);
+  if (normalizedOptions.operationMode !== "mixed" || !normalizedOptions.balanceOperations) {
+    return shuffled;
+  }
+
+  const byOperation = {
+    add: shuffled.filter((candidate) => candidate.operation === "add"),
+    subtract: shuffled.filter((candidate) => candidate.operation === "subtract")
+  };
+  const balanced = [];
+  const firstOperation = random() < 0.5 ? "add" : "subtract";
+  const secondOperation = firstOperation === "add" ? "subtract" : "add";
+  const operationPoolLength = Math.max(byOperation.add.length, byOperation.subtract.length);
+  for (let index = 0; index < operationPoolLength; index += 1) {
+    if (byOperation[firstOperation][index]) balanced.push(byOperation[firstOperation][index]);
+    if (byOperation[secondOperation][index]) balanced.push(byOperation[secondOperation][index]);
+  }
+  return balanced;
 }
 
 function stateKey(purpose, normalizedOptions) {
@@ -284,12 +318,15 @@ function stateKey(purpose, normalizedOptions) {
     maxStart: normalizedOptions.maxStart,
     minStep: normalizedOptions.minStep,
     maxStep: normalizedOptions.maxStep,
+    selectedSteps: normalizedOptions.selectedSteps,
     minValue: normalizedOptions.minValue,
     maxValue: normalizedOptions.maxValue,
     sequenceLength: normalizedOptions.sequenceLength,
     visibleLength: normalizedOptions.visibleLength,
     continuationCount: normalizedOptions.continuationCount,
     missingTermCount: normalizedOptions.missingTermCount,
+    explicitMissingIndexes: normalizedOptions.explicitMissingIndexes,
+    balanceOperations: normalizedOptions.balanceOperations,
     missingTermPlacement: normalizedOptions.missingTermPlacement
   });
 }
@@ -364,12 +401,24 @@ function buildNumericPatternProblem(purpose, options = {}) {
     : [];
 
   if (purpose === "missing_value_pattern") {
+    const displayedSequence = pattern.sequence.map((value, index) => pattern.missingIndexes.includes(index) ? null : value);
+    const answerState = {
+      completeSequence: [...pattern.sequence],
+      displayedSequence,
+      startingValue: pattern.start,
+      step: pattern.step,
+      operation: pattern.operation,
+      ruleText: pattern.ruleText,
+      missingIndexes: [...pattern.missingIndexes],
+      missingAnswers: [...pattern.missingValues],
+      responseValues: [...pattern.missingValues]
+    };
     return {
       type: "equation",
       prompt: blankedSequenceText(pattern.sequence, pattern.missingIndexes),
       answer: valuesAnswer(pattern.missingValues),
       responseValues: pattern.missingValues,
-      sequence: pattern.sequence.map((value, index) => pattern.missingIndexes.includes(index) ? null : value),
+      sequence: displayedSequence,
       missingIndex: pattern.missingIndexes[0],
       missingIndexes: pattern.missingIndexes,
       step: pattern.step,
@@ -377,12 +426,23 @@ function buildNumericPatternProblem(purpose, options = {}) {
       patternRule: pattern.ruleText,
       patternOperation: pattern.operation,
       missingTermPlacement: publicPlacement(options.missingTermPlacement || options.missingPlacement),
+      answerState,
+      duplicateSignature: pattern.signature,
       diagnostics,
       pattern
     };
   }
 
   if (purpose === "identify_pattern_rule") {
+    const answerState = {
+      completeSequence: [...pattern.sequence],
+      startingValue: pattern.start,
+      step: pattern.step,
+      operation: pattern.operation,
+      ruleText: pattern.ruleText,
+      acceptedAnswerText: pattern.ruleText,
+      responseTarget: "rule"
+    };
     return {
       type: "equation",
       prompt: pattern.sequence.join(", "),
@@ -392,6 +452,8 @@ function buildNumericPatternProblem(purpose, options = {}) {
       patternKind: purpose,
       patternRule: pattern.ruleText,
       patternOperation: pattern.operation,
+      answerState,
+      duplicateSignature: pattern.signature,
       diagnostics,
       pattern
     };
@@ -415,6 +477,18 @@ function buildNumericPatternProblem(purpose, options = {}) {
   }
 
   const visible = pattern.sequence.slice(0, pattern.visibleLength);
+  const answerState = {
+    completeSequence: [...pattern.sequence],
+    visibleSequence: [...visible],
+    startingValue: pattern.start,
+    step: pattern.step,
+    operation: pattern.operation,
+    ruleText: pattern.ruleText,
+    visibleTermCount: pattern.visibleLength,
+    continuationCount: pattern.continuationAnswers.length,
+    continuationAnswers: [...pattern.continuationAnswers],
+    responseValues: [...pattern.continuationAnswers]
+  };
   return {
     type: "equation",
     prompt: `${visible.join(", ")}, ${Array(pattern.continuationAnswers.length).fill("__").join(", ")}`,
@@ -427,6 +501,8 @@ function buildNumericPatternProblem(purpose, options = {}) {
     patternOperation: pattern.operation,
     continuationCount: pattern.continuationAnswers.length,
     continuationAnswers: pattern.continuationAnswers,
+    answerState,
+    duplicateSignature: pattern.signature,
     diagnostics,
     pattern
   };

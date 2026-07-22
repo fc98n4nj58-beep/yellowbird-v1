@@ -433,7 +433,10 @@ function testPatterningLayoutContract() {
     missingTermCount: 2,
     missingTermPlacement: "end"
   });
-  assert.strictEqual(missingTwo.layout.instruction, "Write the missing numbers in each pattern.");
+  assert.strictEqual(
+    missingTwo.layout.instruction,
+    "Find the rule. Then write the missing numbers in each pattern."
+  );
   assert.strictEqual(missingTwo.layout.template.maxProblemsPerPage, 12);
   assert.strictEqual(missingTwo.contentObject.content.items[0].missingIndexes.length, 2);
 
@@ -456,9 +459,9 @@ function testPatterningLayoutContract() {
     worksheetSeed: "layout-rule",
     questionCount: 8
   });
-  assert.strictEqual(identify.layout.instruction, "Write the rule for each pattern.");
+  assert.strictEqual(identify.layout.instruction, "Write the rule for each number pattern.");
   assert.strictEqual(identify.layout.template.columns, 1);
-  assert.strictEqual(identify.layout.template.maxProblemsPerPage, 8);
+  assert.strictEqual(identify.layout.template.maxProblemsPerPage, 10);
   assert.strictEqual(identify.layout.display.patterningSequenceFontSize, 13);
   assert.strictEqual(identify.layout.display.patterningLayout, "identify_pattern_rule");
   assert(identify.contentObject.content.items.every((item) => item.patternRule === item.answer));
@@ -470,7 +473,8 @@ function testPatterningPaginationBalance() {
     ["grade4_patterning_and_algebra_missing_value_pattern", { worksheetSeed: "missing-two", questionCount: 12, missingTermCount: 2, missingTermPlacement: "end" }],
     ["grade4_patterning_and_algebra_missing_value_pattern", { worksheetSeed: "missing-example", questionCount: 12, includeExample: true }],
     ["grade3_patterning_and_algebra_identify_pattern_rule", { worksheetSeed: "rule-example", questionCount: 8, includeExample: true, operationMode: "mixed" }],
-    ["grade4_patterning_and_algebra_extend_pattern", { worksheetSeed: "multi", questionCount: 32, questionsPerPage: 10 }]
+    ["grade4_patterning_and_algebra_extend_pattern", { worksheetSeed: "extend-default", questionCount: 12, questionsPerPage: 12 }],
+    ["grade4_patterning_and_algebra_identify_pattern_rule", { worksheetSeed: "multi", questionCount: 18, questionsPerPage: 10 }]
   ];
 
   cases.forEach(([resourceId, query]) => {
@@ -482,13 +486,13 @@ function testPatterningPaginationBalance() {
     assertContinuousSourceIds(runtime);
   });
 
-  const multi = buildCatalogWorksheetRuntime("grade4_patterning_and_algebra_extend_pattern", {
+  const multi = buildCatalogWorksheetRuntime("grade4_patterning_and_algebra_identify_pattern_rule", {
     worksheetSeed: "multi",
-    questionCount: 32,
+    questionCount: 18,
     questionsPerPage: 10
   });
   const multiDistribution = renderRuntimeForPagination(multi);
-  assert.deepStrictEqual(multiDistribution.pageItemCounts, [8, 8, 8, 8]);
+  assert.deepStrictEqual(multiDistribution.pageItemCounts, [9, 9]);
 
   const identifyExample = buildCatalogWorksheetRuntime("grade3_patterning_and_algebra_identify_pattern_rule", {
     worksheetSeed: "rule-example",
@@ -535,14 +539,14 @@ function testAnswerMetadata() {
 }
 
 function testMultiPageAndSkipCountingRegression() {
-  const multi = buildCatalogWorksheetRuntime("grade4_patterning_and_algebra_extend_pattern", {
+  const multi = buildCatalogWorksheetRuntime("grade4_patterning_and_algebra_identify_pattern_rule", {
     worksheetSeed: "multi",
-    questionCount: 32,
+    questionCount: 18,
     questionsPerPage: 10
   });
-  assert.strictEqual(multi.contentObject.content.items.length, 32);
+  assert.strictEqual(multi.contentObject.content.items.length, 18);
   assert.strictEqual(multi.layout.template.maxProblemsPerPage, 10);
-  assert.strictEqual(multi.layout.display.patterningLayout, "extend_pattern");
+  assert.strictEqual(multi.layout.display.patterningLayout, "identify_pattern_rule");
 
   const skip = buildCatalogWorksheetRuntime("g2_skip_counting_by_2", {
     worksheetSeed: "skip-regression",

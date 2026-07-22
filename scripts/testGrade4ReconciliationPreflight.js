@@ -23,6 +23,9 @@ const CATEGORIES = Object.freeze({
     "g4_missing_factors",
     "g4_multiplication_fact_fluency",
     "grade4_multiplication_facts_word_problems",
+    "grade4_patterning_and_algebra_extend_pattern",
+    "grade4_patterning_and_algebra_identify_pattern_rule",
+    "grade4_patterning_and_algebra_missing_value_pattern",
     "g4_expanded_form_large_numbers",
     "g4_standard_form_large_numbers"
   ]),
@@ -39,9 +42,6 @@ const CATEGORIES = Object.freeze({
     "grade4_place_value_representation_number_word_match"
   ]),
   E: Object.freeze([
-    "grade4_patterning_and_algebra_extend_pattern",
-    "grade4_patterning_and_algebra_identify_pattern_rule",
-    "grade4_patterning_and_algebra_missing_value_pattern",
     "grade4_place_value_representation_compare_numbers"
   ]),
   G: Object.freeze([
@@ -101,7 +101,7 @@ const BATCHES = Object.freeze({
 function parseLedger(markdown) {
   const section = markdown
     .split("## Canonical 48-resource draft inventory")[1]
-    .split("## Proposed reconciliation")[0];
+    .split("## Current reconciliation after Batch 1 closeout")[0];
   return section
     .split("\n")
     .filter((line) => /^\| \d+ \| `(g4_|grade4_)/.test(line))
@@ -155,7 +155,7 @@ function run() {
   assert.strictEqual(categoryById.size, 48);
   assert.deepStrictEqual(
     Object.fromEntries(Object.entries(CATEGORIES).map(([category, ids]) => [category, ids.length])),
-    { A: 11, D: 10, E: 4, G: 23 }
+    { A: 14, D: 10, E: 1, G: 23 }
   );
   rows.forEach((row) => assert.strictEqual(row.category, categoryById.get(row.id), `Ledger category mismatch: ${row.id}`));
   CATEGORIES.G.forEach((id) => {
@@ -176,7 +176,7 @@ function run() {
       batchById.set(id, batch);
     });
   });
-  const implementationIds = new Set([...CATEGORIES.D, ...CATEGORIES.E]);
+  const implementationIds = new Set([...CATEGORIES.D, ...CATEGORIES.E, ...BATCHES.B1]);
   assert.deepStrictEqual(new Set(batchById.keys()), implementationIds);
 
   const statuses = catalog.reduce((counts, item) => {
@@ -211,7 +211,7 @@ function run() {
     grade4Records: grade4.length,
     uniqueGrade4Ids: grade4Set.size,
     catalogStatuses: { ready: 18, generated: 29, planned: 1 },
-    proposedReconciliation: { A: 11, D: 10, E: 4, G: 23, Total: 48 },
+    currentReconciliation: { A: 14, D: 10, E: 1, G: 23, Total: 48 },
     batches: Object.fromEntries(Object.entries(BATCHES).map(([batch, ids]) => [batch, ids.length])),
     readyRuntimeDeterminism: "18/18",
     publicGrade4CustomizationFamilies: 0,
