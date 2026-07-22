@@ -1652,6 +1652,32 @@ function buildCompactWordProblemAnswerKeyGeometry({ y, height, promptHeight }) {
   };
 }
 
+function buildWordProblemWorkBoxGeometry({
+  cellTopY,
+  cellBottomY,
+  promptHeight,
+  topGap = 8,
+  bottomBreathing = 24,
+  minimumHeight = 42
+}) {
+  const promptBottomY = Number(cellTopY) + Math.max(0, Number(promptHeight) || 0);
+  const boxTop = promptBottomY + Number(topGap);
+  const availableHeight = Math.max(
+    Number(minimumHeight),
+    Number(cellBottomY) - boxTop - Number(bottomBreathing)
+  );
+  return {
+    cellTopY: Number(cellTopY),
+    cellBottomY: Number(cellBottomY),
+    promptBottomY,
+    boxTop,
+    boxHeight: availableHeight,
+    boxBottom: boxTop + availableHeight,
+    bottomBreathing: Number(cellBottomY) - (boxTop + availableHeight),
+    promptToBoxGap: boxTop - promptBottomY
+  };
+}
+
 function renderCompactWordProblemAnswerKeyItem(doc, question, layoutBox, fonts = {}) {
   const { x, y, width, height } = layoutBox;
   const prompt = `${question.id != null ? `${question.id})  ` : ""}${question.prompt || question.text || ""}`.trim();
@@ -2741,10 +2767,14 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
   }
 
   if (!visual?.kind && display.workSpaceBox) {
-    const boxTop = promptBottomY + 8;
     const bottomBreathing = Number(display.workBoxBottomBreathing || 24);
-    const availableHeight = Math.max(42, cellBottomY - boxTop - bottomBreathing);
-    const boxHeight = drawWorkBox(doc, x, boxTop, width, availableHeight);
+    const geometry = buildWordProblemWorkBoxGeometry({
+      cellTopY: y,
+      cellBottomY,
+      promptHeight,
+      bottomBreathing
+    });
+    const boxHeight = drawWorkBox(doc, x, geometry.boxTop, width, geometry.boxHeight);
 
     if ((display.answerKey || isExample) && question.answer != null) {
       doc.save();
@@ -2753,13 +2783,13 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
       const label = "Answer: ";
       const answerText = formatAnswerValue(question.answer);
       const answerX = x + 10 + doc.widthOfString(label);
-      doc.text(label, x + 10, boxTop + 10, {
+      doc.text(label, x + 10, geometry.boxTop + 10, {
         width: width - 20,
         align: "left",
         lineBreak: false
       });
       setFont(doc, fonts.bold || fonts.regular || "Helvetica", 12);
-      doc.text(answerText, answerX, boxTop + 10, {
+      doc.text(answerText, answerX, geometry.boxTop + 10, {
         width: Math.max(20, width - 20 - doc.widthOfString(label)),
         align: "left"
       });
@@ -4643,6 +4673,8 @@ module.exports = {
     matchChoiceStrokeWidth,
     measureCircularLabelGeometry,
     buildFractionStripGeometry,
+    buildWordProblemWorkBoxGeometry,
+    paginateEven,
     drawFractionStripPrimitive,
     buildCompactWordProblemAnswerKeyGeometry,
     buildDivisibleObjectGeometry,

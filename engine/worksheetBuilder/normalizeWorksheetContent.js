@@ -212,6 +212,14 @@ function normalizeItem(item = {}, index = 0, meta = {}) {
     duplicateSignature: item.duplicateSignature || null,
     relatedDuplicateSignature: item.relatedDuplicateSignature || null,
     diagnostics: Array.isArray(item.diagnostics) ? item.diagnostics : null,
+    ...(item.contextId !== undefined ? {
+      contextId: item.contextId || null,
+      templateId: item.templateId || null,
+      storyType: item.storyType || null,
+      unknownPosition: item.unknownPosition || null,
+      operationFamily: item.operationFamily || null,
+      knownAddend: finiteOptionalNumber(item.knownAddend)
+    } : {}),
     visual: normalizeVisual(item.visual),
     meta: {
       grade: meta.grade ?? item.grade ?? null,

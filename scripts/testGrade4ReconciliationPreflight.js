@@ -30,13 +30,13 @@ const CATEGORIES = Object.freeze({
     "g4_standard_form_large_numbers",
     "grade4_fraction_equivalence_compare_fractions",
     "grade4_fraction_equivalence_fraction_number_line",
-    "grade4_fraction_equivalence_shade_fraction_models"
+    "grade4_fraction_equivalence_shade_fraction_models",
+    "grade4_addition_subtraction_word_problems_addition_word_problem",
+    "grade4_addition_subtraction_word_problems_missing_addend_word_problem",
+    "grade4_addition_subtraction_word_problems_subtraction_word_problem"
   ]),
   D: Object.freeze([
-    "grade4_addition_subtraction_word_problems_addition_word_problem",
     "grade4_addition_subtraction_facts_equation_match",
-    "grade4_addition_subtraction_word_problems_missing_addend_word_problem",
-    "grade4_addition_subtraction_word_problems_subtraction_word_problem",
     "grade4_patterning_and_algebra_function_table",
     "grade4_place_value_representation_number_line_identify",
     "grade4_place_value_representation_number_word_match"
@@ -101,7 +101,7 @@ const BATCHES = Object.freeze({
 function parseLedger(markdown) {
   const section = markdown
     .split("## Canonical 48-resource draft inventory")[1]
-    .split("## Current reconciliation after Batch 2 closeout")[0];
+    .split("## Current reconciliation after Batch 3 closeout")[0];
   return section
     .split("\n")
     .filter((line) => /^\| \d+ \| `(g4_|grade4_)/.test(line))
@@ -155,7 +155,7 @@ function run() {
   assert.strictEqual(categoryById.size, 48);
   assert.deepStrictEqual(
     Object.fromEntries(Object.entries(CATEGORIES).map(([category, ids]) => [category, ids.length])),
-    { A: 17, D: 7, E: 1, G: 23 }
+    { A: 20, D: 4, E: 1, G: 23 }
   );
   rows.forEach((row) => assert.strictEqual(row.category, categoryById.get(row.id), `Ledger category mismatch: ${row.id}`));
   CATEGORIES.G.forEach((id) => {
@@ -176,7 +176,7 @@ function run() {
       batchById.set(id, batch);
     });
   });
-  const implementationIds = new Set([...CATEGORIES.D, ...CATEGORIES.E, ...BATCHES.B1, ...BATCHES.B2]);
+  const implementationIds = new Set([...CATEGORIES.D, ...CATEGORIES.E, ...BATCHES.B1, ...BATCHES.B2, ...BATCHES.B3]);
   assert.deepStrictEqual(new Set(batchById.keys()), implementationIds);
 
   const statuses = catalog.reduce((counts, item) => {
@@ -211,7 +211,7 @@ function run() {
     grade4Records: grade4.length,
     uniqueGrade4Ids: grade4Set.size,
     catalogStatuses: { ready: 18, generated: 29, planned: 1 },
-    currentReconciliation: { A: 17, D: 7, E: 1, G: 23, Total: 48 },
+    currentReconciliation: { A: 20, D: 4, E: 1, G: 23, Total: 48 },
     batches: Object.fromEntries(Object.entries(BATCHES).map(([batch, ids]) => [batch, ids.length])),
     readyRuntimeDeterminism: "18/18",
     publicGrade4CustomizationFamilies: 0,

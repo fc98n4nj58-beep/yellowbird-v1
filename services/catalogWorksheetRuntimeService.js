@@ -102,6 +102,12 @@ const GRADE3_STORY_PROBLEM_IDS = new Set([
   "grade3_addition_subtraction_word_problems_subtraction_word_problem"
 ]);
 
+const GRADE4_STORY_PROBLEM_IDS = new Set([
+  "grade4_addition_subtraction_word_problems_addition_word_problem",
+  "grade4_addition_subtraction_word_problems_missing_addend_word_problem",
+  "grade4_addition_subtraction_word_problems_subtraction_word_problem"
+]);
+
 const GRADE3_CONCRETE_VISUAL_FOOTERS = Object.freeze({
   g3_equal_sharing_division: "Multiplication and Division",
   grade3_fraction_equivalence_shade_fraction_models: "Fractions",
@@ -133,6 +139,7 @@ function publicSkillLabel(item) {
   if (GRADE3_PLACE_VALUE_BATCH2_IDS.has(item?.id)) return "";
   if (GRADE3_ADDITION_SUBTRACTION_BATCH3_IDS.has(item?.id)) return "";
   if (GRADE3_STORY_PROBLEM_IDS.has(item?.id)) return "";
+  if (GRADE4_STORY_PROBLEM_IDS.has(item?.id)) return "";
   if (PUBLIC_SKILL_LABEL_HIDDEN_IDS.has(item?.id)) return "";
   if (item?.skillKey === "patterning_and_algebra") return "";
   return item?.skillKey || "";
@@ -157,6 +164,9 @@ function publicDomainLabel(item) {
   }
   if (GRADE3_STORY_PROBLEM_IDS.has(item?.id)) {
     return "Addition and Subtraction";
+  }
+  if (GRADE4_STORY_PROBLEM_IDS.has(item?.id)) {
+    return "Addition & Subtraction";
   }
   if (EARLY_MULTIPLICATION_FOOTER_IDS.has(item?.id)) {
     return "Early Multiplication Thinking";
@@ -297,7 +307,15 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         layoutVariant: p.layoutVariant || null,
         duplicateSignature: p.duplicateSignature || null,
         relatedDuplicateSignature: p.relatedDuplicateSignature || null,
-        diagnostics: Array.isArray(p.diagnostics) ? p.diagnostics : null
+        diagnostics: Array.isArray(p.diagnostics) ? p.diagnostics : null,
+        ...(GRADE4_STORY_PROBLEM_IDS.has(item.id) ? {
+          contextId: p.contextId || null,
+          templateId: p.templateId || null,
+          storyType: p.storyType || null,
+          unknownPosition: p.unknownPosition || null,
+          operationFamily: p.operationFamily || null,
+          knownAddend: finiteOptionalNumber(p.knownAddend)
+        } : {})
       }))
     }
   };

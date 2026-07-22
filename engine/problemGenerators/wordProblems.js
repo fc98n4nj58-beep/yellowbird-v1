@@ -14,6 +14,14 @@ const GRADE3_STORY_PROBLEM_IDS = new Set([
   GRADE3_MISSING_ADDEND_WORD_PROBLEMS_ID,
   GRADE3_SUBTRACTION_WORD_PROBLEMS_ID
 ]);
+const GRADE4_ADDITION_STORY_ID = "grade4_addition_subtraction_word_problems_addition_word_problem";
+const GRADE4_MISSING_ADDEND_STORY_ID = "grade4_addition_subtraction_word_problems_missing_addend_word_problem";
+const GRADE4_SUBTRACTION_STORY_ID = "grade4_addition_subtraction_word_problems_subtraction_word_problem";
+const GRADE4_STORY_PROBLEM_IDS = new Set([
+  GRADE4_ADDITION_STORY_ID,
+  GRADE4_MISSING_ADDEND_STORY_ID,
+  GRADE4_SUBTRACTION_STORY_ID
+]);
 
 const GRADE3_STORY_NAMES = Object.freeze([
   { id: "maya", name: "Maya", pronoun: "she" },
@@ -35,6 +43,20 @@ const GRADE3_STORY_OBJECTS = Object.freeze([
   { id: "shells", item: "shell" },
   { id: "markers", item: "marker" },
   { id: "buttons", item: "button" }
+]);
+
+const GRADE4_STORY_NAMES = GRADE3_STORY_NAMES;
+const GRADE4_STORY_OBJECTS = Object.freeze([
+  { id: "books", item: "book" },
+  { id: "tickets", item: "ticket" },
+  { id: "points", item: "point" },
+  { id: "notebooks", item: "notebook" },
+  { id: "pencils", item: "pencil" },
+  { id: "cans", item: "can" },
+  { id: "flyers", item: "flyer" },
+  { id: "badges", item: "badge" },
+  { id: "seedlings", item: "seedling" },
+  { id: "bottles", item: "bottle" }
 ]);
 
 function randInt(min, max, random = Math.random) {
@@ -282,6 +304,441 @@ function grade3SubtractionCandidates(options = {}) {
     throw new Error("No Grade 3 subtraction word-problem relationships are available for the selected number contract.");
   }
   return candidates;
+}
+
+function grade4StoryPools(options = {}) {
+  const selectedContexts = normalizedTextList(options.selectedContexts, options.contexts);
+  const selectedObjects = normalizedTextList(options.selectedObjects, options.onlyObjects);
+  let names = GRADE4_STORY_NAMES;
+  let objects = GRADE4_STORY_OBJECTS;
+  if (selectedContexts.length) {
+    const matchingNames = names.filter((entry) => selectedContexts.some((value) => (
+      [entry.id, entry.name].some((part) => String(part).toLowerCase() === value)
+    )));
+    const matchingObjects = objects.filter((entry) => selectedContexts.some((value) => (
+      [entry.id, entry.item].some((part) => String(part).toLowerCase() === value)
+    )));
+    if (matchingNames.length) names = matchingNames;
+    if (matchingObjects.length) objects = matchingObjects;
+  }
+  if (selectedObjects.length) {
+    objects = objects.filter((entry) => selectedObjects.some((value) => (
+      [entry.id, entry.item].some((part) => String(part).toLowerCase() === value)
+    )));
+  }
+  return { names, objects };
+}
+
+function pickGrade4StoryContext(names, objects, random, stateKey, options = {}) {
+  const generatorState = options.generatorState || {};
+  if (!generatorState.grade4StoryContexts) generatorState.grade4StoryContexts = {};
+  const state = generatorState.grade4StoryContexts[stateKey] || {
+    nameCounts: new Map(),
+    objectCounts: new Map(),
+    usedPairs: new Set(),
+    recentNames: [],
+    recentObjects: []
+  };
+  generatorState.grade4StoryContexts[stateKey] = state;
+  let candidates = [];
+  names.forEach((name) => {
+    objects.forEach((object) => {
+      const pairKey = `${name.id}:${object.id}`;
+      if (state.usedPairs.has(pairKey)) return;
+      if ((state.nameCounts.get(name.id) || 0) >= 2) return;
+      if ((state.objectCounts.get(object.id) || 0) >= 2) return;
+      candidates.push({ name, object, pairKey });
+    });
+  });
+  const outsideRecentWindow = candidates.filter(({ name, object }) => (
+    !state.recentNames.includes(name.id) && !state.recentObjects.includes(object.id)
+  ));
+  if (outsideRecentWindow.length) candidates = outsideRecentWindow;
+  if (!candidates.length) {
+    throw new Error("No unique Grade 4 story-problem contexts remain for the selected context contract.");
+  }
+  const lowestScore = Math.min(...candidates.map(({ name, object }) => (
+    (state.nameCounts.get(name.id) || 0) + (state.objectCounts.get(object.id) || 0)
+  )));
+  candidates = candidates.filter(({ name, object }) => (
+    (state.nameCounts.get(name.id) || 0) + (state.objectCounts.get(object.id) || 0) === lowestScore
+  ));
+  const selected = pick(candidates, random);
+  state.usedPairs.add(selected.pairKey);
+  state.nameCounts.set(selected.name.id, (state.nameCounts.get(selected.name.id) || 0) + 1);
+  state.objectCounts.set(selected.object.id, (state.objectCounts.get(selected.object.id) || 0) + 1);
+  state.recentNames = [...state.recentNames, selected.name.id].slice(-2);
+  state.recentObjects = [...state.recentObjects, selected.object.id].slice(-2);
+  return { ...selected.name, ...selected.object, id: selected.pairKey };
+}
+
+function nextGrade4StoryType(allowedTypes, random, stateKey, options = {}) {
+  return pickBalancedContext(
+    allowedTypes.map((id) => ({ id })),
+    random,
+    `grade4StoryType:${stateKey}`,
+    options
+  ).id;
+}
+
+function pickGrade4UniqueTruth(options, keyPrefix, buildTruth) {
+  const usedProblemKeys = options.usedProblemKeys || new Set();
+  for (let attempt = 0; attempt < 500; attempt += 1) {
+    const truth = buildTruth();
+    const key = `${keyPrefix}:${truth.key}`;
+    if (usedProblemKeys.has(key)) continue;
+    usedProblemKeys.add(key);
+    delete truth.key;
+    return truth;
+  }
+  throw new Error("No unique Grade 4 story-problem arithmetic relationships remain for the selected number contract.");
+}
+
+function pickGrade4Value(values, minimum, maximum, random) {
+  const candidates = values.length
+    ? values.filter((value) => value >= minimum && value <= maximum)
+    : null;
+  if (candidates && !candidates.length) return null;
+  return candidates ? pick(candidates, random) : randInt(minimum, maximum, random);
+}
+
+function sampleGrade4AdditionTruth(options = {}) {
+  const random = options.random || Math.random;
+  const selected = normalizeNumberList(options.selectedNumbers || options.onlyNumbers);
+  const minA = Number(options.minA);
+  const maxA = Number(options.maxA);
+  const minB = Number(options.minB);
+  const maxB = Number(options.maxB);
+  const minTotal = Number(options.minTotal);
+  const maxTotal = Number(options.maxTotal);
+  for (let attempt = 0; attempt < 500; attempt += 1) {
+    const a = pickGrade4Value(selected, minA, maxA, random);
+    if (a === null) break;
+    const minimumB = Math.max(minB, minTotal - a);
+    const maximumB = Math.min(maxB, maxTotal - a);
+    if (minimumB > maximumB) continue;
+    const b = pickGrade4Value(selected, minimumB, maximumB, random);
+    if (b === null) continue;
+    return { a, b, total: a + b, key: `${Math.min(a, b)}:${Math.max(a, b)}` };
+  }
+  throw new Error("No Grade 4 addition story relationships are available for the selected number contract.");
+}
+
+function sampleGrade4SubtractionTruth(options = {}) {
+  const random = options.random || Math.random;
+  const selected = normalizeNumberList(options.selectedNumbers || options.onlyNumbers);
+  const minA = Number(options.minA);
+  const maxA = Number(options.maxA);
+  const minB = Number(options.minB);
+  const maxB = Number(options.maxB);
+  for (let attempt = 0; attempt < 500; attempt += 1) {
+    const minuend = pickGrade4Value(selected, minA, maxA, random);
+    if (minuend === null) break;
+    const maximumSubtrahend = Math.min(maxB, minuend);
+    if (minB > maximumSubtrahend) continue;
+    const subtrahend = pickGrade4Value(selected, minB, maximumSubtrahend, random);
+    if (subtrahend === null) continue;
+    return {
+      minuend,
+      subtrahend,
+      difference: minuend - subtrahend,
+      key: `${minuend}:${subtrahend}`
+    };
+  }
+  throw new Error("No Grade 4 subtraction story relationships are available for the selected number contract.");
+}
+
+function activeGrade4StoryTemplates(templates, options = {}) {
+  const selected = Array.isArray(options.selectedStoryTypes) ? options.selectedStoryTypes : [];
+  return selected.length ? templates.filter((template) => selected.includes(template.storyType)) : templates;
+}
+
+function generateGrade4AdditionStory(options = {}) {
+  const random = options.random || Math.random;
+  const truth = pickGrade4UniqueTruth(options, "grade4_addition_story", () => sampleGrade4AdditionTruth(options));
+  const { names, objects } = grade4StoryPools(options);
+  const context = pickGrade4StoryContext(names, objects, random, "addition", options);
+  const templates = activeGrade4StoryTemplates([
+    {
+      id: "g4_add_join_delivery",
+      storyType: "join_result",
+      build: ({ context, a, b, aItems, bItems, items }) =>
+        `${context.name} organized ${a} ${aItems}. A delivery brought ${b} more ${bItems}. How many ${items} are there altogether?`
+    },
+    {
+      id: "g4_add_join_collection",
+      storyType: "join_result",
+      build: ({ context, a, b, aItems, bItems, items, addVerb }) =>
+        `${context.name} starts with ${a} ${aItems}. ${capitalizeFirst(context.pronoun)} ${addVerb} ${b} more ${bItems}. How many ${items} does ${context.name} have now?`
+    },
+    {
+      id: "g4_add_join_two_days",
+      storyType: "join_result",
+      build: ({ context, a, b, aItems, bItems, items }) =>
+        `${context.name} records ${a} ${aItems} on Monday and ${b} ${bItems} on Tuesday. What is the total number of ${items}?`
+    },
+    {
+      id: "g4_add_join_goal_progress",
+      storyType: "join_result",
+      build: ({ context, a, b, aItems, bItems, items }) =>
+        `A project already has ${a} ${aItems}. ${context.name} contributes ${b} more ${bItems}. How many ${items} does the project have now?`
+    },
+    {
+      id: "g4_add_combine_groups",
+      storyType: "combine_total",
+      build: ({ context, a, b, aItems, bItems, items }) =>
+        `One group has ${a} ${aItems}, and another has ${b} ${bItems}. How many ${items} do the groups have in all?`
+    },
+    {
+      id: "g4_add_combine_locations",
+      storyType: "combine_total",
+      build: ({ context, a, b, aItems, bItems, items }) =>
+        `${context.name} counts ${a} ${aItems} in one room and ${b} ${bItems} in another. How many ${items} are in both rooms?`
+    },
+    {
+      id: "g4_add_combine_teams",
+      storyType: "combine_total",
+      build: ({ context, a, b, aItems, bItems, items }) =>
+        `Two teams collect ${items}. One team collects ${a} ${aItems}, and the other collects ${b} ${bItems}. What is their combined total?`
+    },
+    {
+      id: "g4_add_combine_shelves",
+      storyType: "combine_total",
+      build: ({ context, a, b, aItems, bItems, items }) =>
+        `A storage area has ${a} ${aItems} on one shelf and ${b} ${bItems} on another. How many ${items} are stored altogether?`
+    }
+  ], options);
+  if (!templates.length) throw new Error("No Grade 4 addition story templates match the selected story types.");
+  const template = pickVariedTemplate(templates, random, "grade4Addition", options);
+  const aItems = pluralize(truth.a, context.item);
+  const bItems = pluralize(truth.b, context.item);
+  const items = pluralNoun(context.item);
+  const addVerb = context.pronoun === "they" ? "add" : "adds";
+  const duplicateSignature = `grade4_story:add:${Math.min(truth.a, truth.b)}:${Math.max(truth.a, truth.b)}:${context.id}:${template.id}`;
+  return {
+    prompt: template.build({ context, ...truth, aItems, bItems, items, addVerb }),
+    answer: truth.total,
+    a: truth.a,
+    b: truth.b,
+    op: "+",
+    operation: "add",
+    operationFamily: "addition",
+    firstAddend: truth.a,
+    secondAddend: truth.b,
+    total: truth.total,
+    unknownPosition: "total",
+    storyType: template.storyType,
+    contextId: context.id,
+    templateId: template.id,
+    duplicateSignature,
+    answerState: {
+      operation: "add",
+      firstAddend: truth.a,
+      secondAddend: truth.b,
+      total: truth.total,
+      unknownPosition: "total",
+      answer: truth.total
+    }
+  };
+}
+
+function generateGrade4MissingAddendStory(options = {}) {
+  const random = options.random || Math.random;
+  const allowedPositions = Array.isArray(options.allowedMissingPositions) && options.allowedMissingPositions.length
+    ? options.allowedMissingPositions
+    : ["first", "second"];
+  const missingPosition = nextGrade4StoryType(allowedPositions, random, "missingPosition", options);
+  const truth = pickGrade4UniqueTruth(options, `grade4_missing_story:${missingPosition}`, () => sampleGrade4AdditionTruth(options));
+  const { names, objects } = grade4StoryPools(options);
+  const context = pickGrade4StoryContext(names, objects, random, "missingAddend", options);
+  const templates = [
+    {
+      id: "g4_missing_first_arrival",
+      missingPosition: "first",
+      storyType: "start_unknown",
+      build: ({ context, b, total, bItems, items }) =>
+        `${context.name} had some ${items}. After ${b} more ${bItems} arrived, there were ${total} altogether. How many ${items} were there at first?`
+    },
+    {
+      id: "g4_missing_first_added",
+      missingPosition: "first",
+      storyType: "start_unknown",
+      build: ({ context, b, total, bItems, items }) =>
+        `${context.name} added ${b} ${bItems} to a collection. The collection then had ${total} ${items}. How many ${items} were in it before?`
+    },
+    {
+      id: "g4_missing_first_before",
+      missingPosition: "first",
+      storyType: "start_unknown",
+      build: ({ context, b, total, bItems, items }) =>
+        `A supply grew by ${b} ${bItems} and reached ${total} ${items}. How many ${items} were in the supply before it grew?`
+    },
+    {
+      id: "g4_missing_first_received",
+      missingPosition: "first",
+      storyType: "start_unknown",
+      build: ({ context, b, total, bItems, items }) =>
+        `After receiving ${b} ${bItems}, ${context.name} counted ${total} ${items} in all. What was the starting amount?`
+    },
+    {
+      id: "g4_missing_second_goal",
+      missingPosition: "second",
+      storyType: "added_amount_unknown",
+      build: ({ context, a, total, aItems, items }) =>
+        `${context.name} has ${a} ${aItems} and needs ${total} ${items} altogether. How many more ${items} are needed?`
+    },
+    {
+      id: "g4_missing_second_target",
+      missingPosition: "second",
+      storyType: "added_amount_unknown",
+      build: ({ context, a, total, aItems, items }) =>
+        `A project has collected ${a} ${aItems} toward a target of ${total} ${items}. How many more ${items} must be collected?`
+    },
+    {
+      id: "g4_missing_second_question",
+      missingPosition: "second",
+      storyType: "added_amount_unknown",
+      build: ({ context, a, total, aItems, items, questionAux }) =>
+        `${context.name} has ${a} ${aItems}. How many more ${items} ${questionAux} ${context.pronoun} need to reach ${total}?`
+    },
+    {
+      id: "g4_missing_second_complete",
+      missingPosition: "second",
+      storyType: "added_amount_unknown",
+      build: ({ context, a, total, aItems, items }) =>
+        `${context.name} counted ${a} ${aItems} so far. The final total must be ${total}. How many more ${items} should be added?`
+    }
+  ].filter((template) => template.missingPosition === missingPosition);
+  const template = pickVariedTemplate(templates, random, `grade4Missing:${missingPosition}`, options);
+  const aItems = pluralize(truth.a, context.item);
+  const bItems = pluralize(truth.b, context.item);
+  const items = pluralNoun(context.item);
+  const answer = missingPosition === "first" ? truth.a : truth.b;
+  const unknownPosition = missingPosition === "first" ? "first_addend" : "second_addend";
+  const questionAux = context.pronoun === "they" ? "do" : "does";
+  const duplicateSignature = `grade4_story:missing:${truth.a}:${truth.b}:${missingPosition}:${context.id}:${template.id}`;
+  return {
+    prompt: template.build({ context, ...truth, aItems, bItems, items, questionAux }),
+    answer,
+    a: truth.a,
+    b: truth.b,
+    op: "+",
+    operation: "add",
+    operationFamily: "addition",
+    firstAddend: truth.a,
+    secondAddend: truth.b,
+    knownAddend: missingPosition === "first" ? truth.b : truth.a,
+    total: truth.total,
+    missingPosition,
+    missingValue: answer,
+    unknownPosition,
+    storyType: template.storyType,
+    contextId: context.id,
+    templateId: template.id,
+    duplicateSignature,
+    answerState: {
+      operation: "add",
+      firstAddend: truth.a,
+      secondAddend: truth.b,
+      knownAddend: missingPosition === "first" ? truth.b : truth.a,
+      missingAddend: answer,
+      total: truth.total,
+      unknownPosition,
+      answer
+    }
+  };
+}
+
+function generateGrade4SubtractionStory(options = {}) {
+  const random = options.random || Math.random;
+  const truth = pickGrade4UniqueTruth(options, "grade4_subtraction_story", () => sampleGrade4SubtractionTruth(options));
+  const { names, objects } = grade4StoryPools(options);
+  const context = pickGrade4StoryContext(names, objects, random, "subtraction", options);
+  const allowedTypes = Array.isArray(options.selectedStoryTypes) && options.selectedStoryTypes.length
+    ? options.selectedStoryTypes
+    : ["take_away", "compare"];
+  const storyType = nextGrade4StoryType(allowedTypes, random, "subtraction", options);
+  const templates = [
+    {
+      id: "g4_sub_take_used",
+      storyType: "take_away",
+      build: ({ context, minuend, subtrahend, startItems, removedItems, items, useVerb }) =>
+        `${context.name} has ${minuend} ${startItems}. ${capitalizeFirst(context.pronoun)} ${useVerb} ${subtrahend} ${removedItems}. How many ${items} remain?`
+    },
+    {
+      id: "g4_sub_take_distributed",
+      storyType: "take_away",
+      build: ({ context, minuend, subtrahend, startItems, removedItems, items }) =>
+        `A school has ${minuend} ${startItems}. It distributes ${subtrahend} ${removedItems}. How many ${items} are left?`
+    },
+    {
+      id: "g4_sub_take_removed",
+      storyType: "take_away",
+      build: ({ context, minuend, subtrahend, startItems, removedItems, items }) =>
+        `${context.name} counts ${minuend} ${startItems}. After ${subtrahend} ${removedItems} are removed, how many ${items} remain?`
+    },
+    {
+      id: "g4_sub_take_sent",
+      storyType: "take_away",
+      build: ({ context, minuend, subtrahend, startItems, removedItems, items }) =>
+        `A collection begins with ${minuend} ${startItems}. ${context.name} sends away ${subtrahend} ${removedItems}. How many ${items} are left?`
+    },
+    {
+      id: "g4_sub_compare_more",
+      storyType: "compare",
+      build: ({ context, minuend, subtrahend, startItems, removedItems, items }) =>
+        `${context.name} records ${minuend} ${startItems}. Another group records ${subtrahend} ${removedItems}. How many more ${items} does ${context.name} record?`
+    },
+    {
+      id: "g4_sub_compare_difference",
+      storyType: "compare",
+      build: ({ context, minuend, subtrahend, startItems, removedItems, items }) =>
+        `One class collects ${minuend} ${startItems}, while another collects ${subtrahend} ${removedItems}. What is the difference between the two amounts?`
+    },
+    {
+      id: "g4_sub_compare_lead",
+      storyType: "compare",
+      build: ({ context, minuend, subtrahend, startItems, removedItems, items }) =>
+        `${context.name}'s team earns ${minuend} ${startItems}. The other team earns ${subtrahend} ${removedItems}. By how many ${items} does ${context.name}'s team lead?`
+    },
+    {
+      id: "g4_sub_compare_gap",
+      storyType: "compare",
+      build: ({ context, minuend, subtrahend, startItems, removedItems, items }) =>
+        `A larger group has ${minuend} ${startItems}, and a smaller group has ${subtrahend} ${removedItems}. How many more ${items} are in the larger group?`
+    }
+  ].filter((template) => template.storyType === storyType);
+  const template = pickVariedTemplate(templates, random, `grade4Subtraction:${storyType}`, options);
+  const startItems = pluralize(truth.minuend, context.item);
+  const removedItems = pluralize(truth.subtrahend, context.item);
+  const items = pluralNoun(context.item);
+  const useVerb = context.pronoun === "they" ? "use" : "uses";
+  const duplicateSignature = `grade4_story:subtract:${truth.minuend}:${truth.subtrahend}:${storyType}:${context.id}:${template.id}`;
+  return {
+    prompt: template.build({ context, ...truth, startItems, removedItems, items, useVerb }),
+    answer: truth.difference,
+    a: truth.minuend,
+    b: truth.subtrahend,
+    op: "-",
+    operation: "subtract",
+    operationFamily: "subtraction",
+    minuend: truth.minuend,
+    subtrahend: truth.subtrahend,
+    difference: truth.difference,
+    unknownPosition: "difference",
+    storyType,
+    contextId: context.id,
+    templateId: template.id,
+    duplicateSignature,
+    answerState: {
+      operation: "subtract",
+      minuend: truth.minuend,
+      subtrahend: truth.subtrahend,
+      difference: truth.difference,
+      unknownPosition: "difference",
+      answer: truth.difference
+    }
+  };
 }
 
 function pickBalancedAdditionContext(names, objects, random, options = {}) {
@@ -714,6 +1171,9 @@ function generateGrade3SubtractionWordProblem(options = {}) {
 }
 
 function generateAdditionWordProblem(options = {}) {
+  if (options.worksheetId === GRADE4_ADDITION_STORY_ID) {
+    return generateGrade4AdditionStory(options);
+  }
   if (options.worksheetId === GRADE3_ADDITION_WORD_PROBLEMS_ID) {
     return generateGrade3AdditionWordProblem(options);
   }
@@ -929,6 +1389,9 @@ function generateMultiplicationWordProblem(options = {}) {
 }
 
 function generateSubtractionWordProblem(options = {}) {
+  if (options.worksheetId === GRADE4_SUBTRACTION_STORY_ID) {
+    return generateGrade4SubtractionStory(options);
+  }
   if (options.worksheetId === GRADE3_SUBTRACTION_WORD_PROBLEMS_ID) {
     return generateGrade3SubtractionWordProblem(options);
   }
@@ -985,6 +1448,9 @@ function generateSubtractionWordProblem(options = {}) {
 }
 
 function generateMissingAddendWordProblem(options = {}) {
+  if (options.worksheetId === GRADE4_MISSING_ADDEND_STORY_ID) {
+    return generateGrade4MissingAddendStory(options);
+  }
   if (options.worksheetId === GRADE3_MISSING_ADDEND_WORD_PROBLEMS_ID) {
     return generateGrade3MissingAddendWordProblem(options);
   }
@@ -1041,6 +1507,12 @@ function generateMissingAddendWordProblem(options = {}) {
 
 function generateWordProblem(options = {}) {
   const context = getContext(options);
+
+  if (GRADE4_STORY_PROBLEM_IDS.has(options.worksheetId)) {
+    if (options.worksheetId === GRADE4_ADDITION_STORY_ID) return generateGrade4AdditionStory(options);
+    if (options.worksheetId === GRADE4_MISSING_ADDEND_STORY_ID) return generateGrade4MissingAddendStory(options);
+    return generateGrade4SubtractionStory(options);
+  }
 
   if (GRADE3_STORY_PROBLEM_IDS.has(options.worksheetId)) {
     if (options.worksheetId === GRADE3_ADDITION_WORD_PROBLEMS_ID) {

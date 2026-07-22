@@ -2,7 +2,7 @@
 
 Date: 2026-07-22
 
-Status: Batches 1 and 2 are founder-approved and closed; later batches remain proposed. Grade 4 remains open and lifecycle statuses remain unchanged.
+Status: Batches 1, 2 and 3 are founder-approved and closed; later batches remain proposed. Grade 4 remains open and lifecycle statuses remain unchanged.
 
 ## Planning rules
 
@@ -200,6 +200,51 @@ All three use `Grade 4 • Math • Fractions`, include one student answer-key c
 
 Applied founder-approved movement: exactly these three resources moved D to A, producing A17 / D7 / E1 / G23 / Total48. Grade 4 remains open; no lifecycle status changed.
 
+## Batch 3 founder-review checkpoint
+
+Status: founder-approved and closed. Exactly the three Batch 3 resources moved D to A; reconciliation is A20 / D4 / E1 / G23 / Total48. All three catalog lifecycle statuses remain `generated`.
+
+Review packet: `grade4_addition_subtraction_word_problems_addition_word_problem`, `grade4_addition_subtraction_word_problems_missing_addend_word_problem`, and `grade4_addition_subtraction_word_problems_subtraction_word_problem`. Split, blocked or deferred: none.
+
+### Completed-work and shared-family findings
+
+- All three exact IDs were classified **SHARED-FAMILY EXTENSION NEEDED**. They still used generic lower-grade number and copy defaults, produced eight-page default PDFs at three questions per student page, lacked a Grade 4 exact-ID truth adapter, and did not expose complete context/template/unknown-position state. None was already complete, reconciliation-only, duplicated, or dependent on a new renderer.
+- Grade 3 Batch 4 supplied the reusable arithmetic-first story family, deterministic context/template scheduling, repetition controls, one-column work boxes, compact answer keys and additional completed examples. Batch 3 adds one shared Grade 4 adapter with exact resource roles, Grade 4 ranges, strict raw validation and conditional structured-field preservation. The renderer only receives supplied truth and never parses prose.
+- The three roles remain distinct: Addition is total-unknown only; Missing Addend always solves a first or second addend from `known + missing = total`; Subtraction is non-negative difference/result unknown with balanced take-away and compare structures.
+
+### Public copy, defaults and safe boundaries
+
+| Resource | Title | Instruction | Default truth and range | Verified layout |
+| --- | --- | --- | --- | --- |
+| Addition | Addition Story Problems | Solve each addition story problem. Show your work. | 8 questions; addends 100-2500; totals 500-5000; four join-result and four combine-total | One column; 3/3/2 student pagination; three student pages plus two compact key pages |
+| Missing Addend | Missing Addend Story Problems | Find the missing amount in each story problem. Show your work. | 8 questions; addends 100-2500; totals 500-5000; four first-addend and four second-addend unknowns | One column; 3/3/2 student pagination; three student pages plus two compact key pages |
+| Subtraction | Subtraction Story Problems | Solve each subtraction story problem. Show your work. | 8 questions; minuends 500-5000; subtrahends 100-4000; non-negative differences; four take-away and four compare | One column; 3/3/2 student pagination; three student pages plus two compact key pages |
+
+All three use `Grade 4 • Math • Addition & Subtraction`, a quiet full-width work box per question, no subtitle, concise one- or two-sentence stories, deterministic seeds, and exact student/key parity. Whole-number inputs are bounded at 0-10,000; defaults remain concentrated below the technical maximum. The founder-directed density correction caps student pages at three questions so four-digit computation, regrouping, checking and corrections have materially more room. Default student pagination is exactly 3/3/2, followed by two unchanged compact answer-key pages, for five pages total. The final student page retains the same calm three-slot geometry with its unused third slot left open rather than stretching two work areas. The safe boundary remains 16 questions, now distributed 3/3/3/3/2/2 across six student pages, followed by three compact answer-key pages, without shrinking type or workspace.
+
+### Structured truth and language contract
+
+- Every item stores operation, operands, total or difference, unknown position, exact answer, operation family, story type, context ID, template ID, prompt, answer state and duplicate signature. Addition stores `firstAddend + secondAddend = total`; Missing Addend additionally stores `knownAddend`, `missingValue` and the exact first/second hidden role; Subtraction stores `minuend - subtrahend = difference`.
+- Eight Grade 4 templates per resource provide join/combine, start/change unknown, and take-away/compare variation. Eight names and ten classroom-safe objects rotate with a hard maximum of two appearances each, no repeated name/object pair, and no name, object or template reuse within the preceding two questions.
+- Pronoun and noun agreement, punctuation, direct-question framing and prompt lengths were checked across 30 deterministic seeds. No multi-step, mixed-operation, negative, decimal, fraction, estimation or prose-reconstruction behavior is present.
+
+### Variable and adversarial checkpoint
+
+- **Preserved, raw-runtime-only:** `questionCount` (1-16); `questionsPerPage` (1-3, with 4 rejected); seed; PDF answer-key inclusion; `includeExample`/`completedExample`/`example` (additional, aliases must agree); `selectedNumbers`/`onlyNumbers`; `selectedContexts`/`contexts`; and `selectedObjects`/`onlyObjects`.
+- **Operand and total aliases:** `minA`/`minimumFirstOperand`/`minimumOperand`; `maxA`/`maximumFirstOperand`/`maximumOperand`; `minB`/`minimumSecondOperand`; `maxB`/`maximumSecondOperand`; `minTotal`/`minimumTotal`; `maxTotal`/`maximumTotal`. Addition and Missing Addend consume total controls; Subtraction rejects both total controls because its exact role has no total target.
+- **Task-scoped controls:** `selectedStoryTypes`/`storyTypes` accepts join/combine for Addition, start/change for Missing Addend, and take-away/compare for Subtraction. Missing Addend also accepts `missingPosition`/`missingAddendPosition`/`missingPartPosition`/`unknownPosition`; mixed remains the default and conflicting role aliases throw.
+- **Not supported:** caller-selected operation, regrouping mode, workspace/layout overrides, sentence-template overrides, or caller-owned prompt/answer/truth fields. No Grade 4 public customization family was registered.
+- Decimal or negative values, values above 10,000, empty or duplicate explicit lists, mixed valid/invalid or conflicting aliases, reversed/impossible ranges, excessive counts/density, invalid context/object/type IDs, insufficient context capacity, conflicting missing positions, invalid example modes, impossible non-negative subtraction and supplied answer-state overrides all throw. Explicit invalid input never falls back silently.
+
+### Tests and proofs
+
+- `scripts/testGrade4AdditionSubtractionStoriesBatch3.js`: 30 deterministic seeds per resource; same-seed failures 0; different-seed variation; exact 8-question defaults; role boundaries; arithmetic-before-prose truth; answer-state and compact-key parity; balanced story modes; repetition caps; pair/template uniqueness; pronoun agreement; selectors/aliases; additional examples; exact 3/3/2 defaults; 16-question 3/3/3/3/2/2 pagination; materially larger work boxes with prompt/box/footer clearance; calm final-page geometry; explicit four-per-page rejection; adversarial rejection; Grade 2/3 isolation; lifecycle stability; and absence of public customization all pass.
+- Founder defaults: `review/grade-4-addition-subtraction-stories-batch-3/founder-review/01_addition_story_problems.pdf`, `02_missing_addend_story_problems.pdf`, and `03_subtraction_story_problems.pdf`.
+- Stress proofs: `review/grade-4-addition-subtraction-stories-batch-3/stress/01_addition_largest_safe_values.pdf`, `02_addition_maximum_count_and_density.pdf`, `03_missing_addend_positions_and_example.pdf`, `04_subtraction_compare_largest_values.pdf`, and `05_subtraction_maximum_count_compact_key.pdf`.
+- After the density correction, all 48 proof pages were rendered and visually inspected. The three default PDFs are five pages each; work boxes are materially taller; 3/3/2 student pagination, calm final pages and compact two-page keys remain consistent; story wrapping, example treatment and footers remain readable and unclipped; contexts vary; compare direction is unambiguous; and no overlap, tiny text or footer pressure is present. Arithmetic truth, public copy, ranges, variables, lifecycle statuses and reconciliation remain unchanged.
+
+Applied founder-approved movement: each of these three exact IDs moved D to A, producing A20 / D4 / E1 / G23 / Total48. No other Grade 4 row changed category, and Grade 4 remains open.
+
 ## A resources held as complete
 
 - Compact assessment/review: `g4_compare_fractions_quick_check`, `g4_compare_fractions_exit_ticket`, `g4_pattern_rule_quick_check`, `g4_multiplication_word_problem_quick_check`.
@@ -239,8 +284,8 @@ Every proposed G ID has a documented reconsideration trigger. Founder approval o
 
 - Pre-Batch 1 baseline: A11 / D10 / E4 / G23 / Total48.
 - After Batch 1 closeout: A14 / D10 / E1 / G23 / Total48.
-- Current after Batch 2 closeout: A17 / D7 / E1 / G23 / Total48.
-- After B3 approval: A20 / D4 / E1 / G23 / Total48.
+- After Batch 2 closeout: A17 / D7 / E1 / G23 / Total48.
+- Current after Batch 3 closeout: A20 / D4 / E1 / G23 / Total48.
 - After B4 approval: A23 / D2 / E0 / G23 / Total48.
 - After B5 approval: A25 / D0 / E0 / G23 / Total48.
 
