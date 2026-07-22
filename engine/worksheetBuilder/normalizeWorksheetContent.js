@@ -91,9 +91,12 @@ function normalizeVisual(visual = {}) {
     return {
       kind,
       data: {
+        value: Number(data.value ?? data.representedValue ?? 0),
+        representedValue: Number(data.representedValue ?? data.value ?? 0),
         hundreds: Number(data.hundreds ?? 0),
         tens: Number(data.tens ?? 0),
-        ones: Number(data.ones ?? 0)
+        ones: Number(data.ones ?? 0),
+        labelMode: data.labelMode || "none"
       }
     };
   }
@@ -165,6 +168,7 @@ function normalizeItem(item = {}, index = 0, meta = {}) {
     frameCount: finiteOptionalNumber(item.frameCount),
     dotArrangement: item.dotArrangement || null,
     selectionMode: item.selectionMode || null,
+    hundreds: finiteOptionalNumber(item.hundreds),
     tens: finiteOptionalNumber(item.tens),
     ones: finiteOptionalNumber(item.ones),
     labelMode: item.labelMode || null,

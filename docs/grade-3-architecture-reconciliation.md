@@ -2,17 +2,34 @@
 
 Date: 2026-07-22
 
-Status: current Grade 3 reconciliation source of truth after founder-approved Batch 7. Catalog lifecycle status and reconciliation category are separate concepts.
+Status: Grade 3 architecture reconciliation is founder-approved and closed. Catalog lifecycle status and reconciliation category remain separate concepts.
 
 ## Current totals
 
-- A: 35
-- D: 1
-- E: 1
-- G: 16
+- A: 36
+- D: 0
+- E: 0
+- G: 17
 - Total: 53
 
-The totals reconcile exactly: 35 + 1 + 1 + 16 = 53.
+The totals reconcile exactly: 36 + 0 + 0 + 17 = 53. No D or E resources remain.
+
+## Founder-approved final reconciliation movement
+
+Applied movement: D1 -> A1 and E1 -> G1.
+
+| Resource ID | Founder disposition | Catalog status | Reconciliation | Final contract or rationale |
+| --- | --- | --- | --- | --- |
+| `grade3_place_value_representation_base_ten_blocks` | founder-approved | `ready` | A | `Read Base Ten Blocks`; 8 unique values from 100-499; 4 per page; two student and two key pages; exact hundreds/tens/ones truth; selected-number support; measured full-height centring; 50-point flats; 9-point internal hundreds gaps; unchanged 4-point tens/ones and 10-point place-value group gaps |
+| `grade3_fraction_equivalence_match_equivalent_fractions` | founder-approved deferral | `ready` | G | `NEW ARCHITECTURE NEEDED — DEFER`; current equation completion has no candidate set, unique correct match, verified distractors or matching response state |
+
+Founder approval date: 2026-07-22.
+
+Base Ten Blocks was completed through the existing shared primitive with a resource-scoped Grade 3 adapter. Each item explicitly stores represented value, hundreds, tens, ones, visual truth, answer truth and duplicate state; `hundreds × 100 + tens × 10 + ones` equals the represented value. Strict range and selected-number validation cover 100-499. The approved one-column layout uses four questions per page and measures the complete model before centring it with at least 14 points of top and bottom breathing room. The final founder corrections preserve flat size, answer-line placement and separator positions while separating adjacent hundreds flats horizontally and vertically by 9 points. Grade 1 and Grade 2 spacing is unchanged.
+
+Match Equivalent Fractions remains the existing equation-completion activity and was not implemented or renamed. A future reconsideration requires a source fraction, candidate fractions, exact integer equivalence truth, exactly one correct equivalent candidate, provably non-equivalent distractors, an approved matching or selection layout and unambiguous answer-key state.
+
+All 53 canonical ledger rows remain unique. Exactly Base Ten Blocks moved D -> A and exactly Match Equivalent Fractions moved E -> G. Catalog lifecycle statuses remain unchanged, no Grade 3 public customization family was registered, and documented G deferrals are not launch failures. Batches 1-7 remain closed; Grade 3 architecture reconciliation is complete.
 
 ## Founder-approved Batch 7 movement
 
@@ -49,7 +66,7 @@ Applied movement: E1 -> A1, D1 -> A1 and D1 -> G1.
 | `grade3_fraction_equivalence_compare_fractions` | founder-approved | `ready` | A | 12 proper-fraction comparisons; four `<`, four `>` and four `=`; denominators 2, 3, 4, 5, 6 and 8; 2 pages |
 | `grade3_fraction_equivalence_fraction_number_line` | founder-approved | `generated` | A | 6 full-width 0-to-1 lines; denominators 2, 3, 4, 5, 6 and 8; partition-denominator answers; 2 pages |
 | `grade3_fraction_equivalence_fraction_word_problems` | founder-approved deferral | `generated` | G | no distinct approved role; reconsider only after one curriculum-safe fraction-application lane is defined |
-| `grade3_fraction_equivalence_match_equivalent_fractions` | split and unresolved | `ready` | E | current equation-completion task is not true matching; separate matching-set architecture required |
+| `grade3_fraction_equivalence_match_equivalent_fractions` | founder-approved deferral | `ready` | G | current equation-completion task is not true matching; `NEW ARCHITECTURE NEEDED — DEFER` until a separate matching-set contract is approved |
 
 Founder approval date: 2026-07-22.
 
@@ -151,7 +168,7 @@ Applied movement: E3 -> A3 and E1 -> D1.
 | `grade3_place_value_representation_expanded_form` | Expanded Form | `ready` | A |
 | `grade3_place_value_representation_number_word_match` | Write Number Words | `ready` | A |
 | `grade3_place_value_representation_standard_form` | Standard Form | `ready` | A |
-| `grade3_place_value_representation_base_ten_blocks` | Base Ten Blocks — Grade 3 | `ready` | D |
+| `grade3_place_value_representation_base_ten_blocks` | Read Base Ten Blocks | `ready` | A |
 
 Founder approval date: 2026-07-21.
 
@@ -165,7 +182,7 @@ Approved shared footer: `Grade 3 • Math • Place Value`.
 
 Protected founder proofs: `review/grade-3-place-value-batch-2/founder-review/`.
 
-Base Ten Blocks remains a shared-family extension: a request for 345 currently produces 34 tens and 5 ones with no hundreds block, and `selectedNumbers` is bypassed. No Base Ten production implementation occurred. Future work requires true hundreds/tens/ones truth, selected-number support, density and print-safety verification, student/key parity, Grade 1/2 isolation and a separate founder proof.
+Base Ten Blocks was split here historically and completed in the final reconciliation closeout. It now owns true hundreds/tens/ones decomposition, strict selected-number support, the approved 100-499 range, eight-question/four-per-page default, four-page student/key PDF and founder-approved measured geometry. The final movement is D -> A without lifecycle promotion.
 
 All four catalog records remain `ready`. Catalog lifecycle status remains separate from reconciliation category; no resource was promoted or demoted.
 
@@ -195,6 +212,6 @@ Commit record: committed in this closeout; git history is the authoritative comm
 
 ## Remaining classifications
 
-The canonical 53-resource row-level inventory remains `docs/grade-3-founder-review-batch-plan.md`. Batch 7 changed exactly the five structured data-display resources from D -> A. Batch 6 changed exactly Compare Fractions E -> A, Fraction Number Line D -> A and Fraction Word Problems D -> G. Match Equivalent Fractions remains E, and every other resource retains its prior A, D, E or G category.
+The canonical 53-resource row-level inventory remains `docs/grade-3-founder-review-batch-plan.md`. Batch 7 changed exactly the five structured data-display resources from D -> A. Batch 6 changed exactly Compare Fractions E -> A, Fraction Number Line D -> A and Fraction Word Problems D -> G. The final closeout changed exactly Base Ten Blocks D -> A and Match Equivalent Fractions E -> G. Every other resource retains its prior A, D, E or G category; D and E are empty.
 
 Commit record: committed in this closeout; git history is the authoritative commit identifier.

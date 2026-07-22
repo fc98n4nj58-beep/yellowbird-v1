@@ -182,9 +182,9 @@ function assertCatalogReconciliationAndIsolation() {
   assert.strictEqual(grade1BaseTen.layout.header.title, "Base Ten Blocks to 50 — Grade 1");
   assert.strictEqual(grade1BaseTen.layout.instruction, BASE_TEN_INSTRUCTION);
   const grade3BaseTen = buildCatalogWorksheetRuntime("grade3_place_value_representation_base_ten_blocks", { worksheetSeed: "g2-e1-isolation" });
-  assert.strictEqual(grade3BaseTen.normalizedContentObject.content.items.length, 10);
-  assert.strictEqual(grade3BaseTen.layout.header.title, "Base Ten Blocks — Grade 3");
-  assert.strictEqual(grade3BaseTen.layout.display.hideItemPrompts, undefined);
+  assert.strictEqual(grade3BaseTen.normalizedContentObject.content.items.length, 8);
+  assert.strictEqual(grade3BaseTen.layout.header.title, "Read Base Ten Blocks");
+  assert.strictEqual(grade3BaseTen.layout.display.hideItemPrompts, true);
 }
 
 async function run() {

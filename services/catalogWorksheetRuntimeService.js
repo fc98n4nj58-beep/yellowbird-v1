@@ -112,7 +112,8 @@ const GRADE3_CONCRETE_VISUAL_FOOTERS = Object.freeze({
   g3_graph_questions: "Data & Graphing",
   g3_interpret_data: "Data & Graphing",
   g3_match_data_to_graph: "Data & Graphing",
-  g3_read_a_graph: "Data & Graphing"
+  g3_read_a_graph: "Data & Graphing",
+  grade3_place_value_representation_base_ten_blocks: "Place Value"
 });
 
 function finiteOptionalNumber(value) {
@@ -253,6 +254,7 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         frameCount: finiteOptionalNumber(p.frameCount),
         dotArrangement: p.dotArrangement || null,
         selectionMode: p.selectionMode || null,
+        hundreds: finiteOptionalNumber(p.hundreds),
         tens: finiteOptionalNumber(p.tens),
         ones: finiteOptionalNumber(p.ones),
         labelMode: p.labelMode || null,

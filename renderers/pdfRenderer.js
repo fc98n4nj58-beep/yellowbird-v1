@@ -132,6 +132,7 @@ function buildAnswerKeyItems(items) {
     frameCount: finiteOptionalNumber(it.frameCount),
     dotArrangement: it.dotArrangement || null,
     selectionMode: it.selectionMode || null,
+    hundreds: finiteOptionalNumber(it.hundreds),
     tens: finiteOptionalNumber(it.tens),
     ones: finiteOptionalNumber(it.ones),
     labelMode: it.labelMode || null,
@@ -448,6 +449,38 @@ function buildNumberLineAnswerTargetGeometry({
   };
 }
 
+function buildBaseTenHundredsGeometry({
+  hundreds,
+  flatSize,
+  hundredsGap,
+  x = 0,
+  y = 0
+}) {
+  const count = Math.max(0, Number(hundreds || 0));
+  const cols = count > 0 ? Math.min(count, 2) : 0;
+  const rows = cols > 0 ? Math.ceil(count / cols) : 0;
+  const flats = Array.from({ length: count }, (_, index) => {
+    const col = index % cols;
+    const row = Math.floor(index / cols);
+    return {
+      x: x + col * (flatSize + hundredsGap),
+      y: y + row * (flatSize + hundredsGap),
+      width: flatSize,
+      height: flatSize,
+      col,
+      row
+    };
+  });
+
+  return {
+    cols,
+    rows,
+    flats,
+    width: cols * flatSize + Math.max(0, cols - 1) * hundredsGap,
+    height: rows * flatSize + Math.max(0, rows - 1) * hundredsGap
+  };
+}
+
 function drawBaseTenBlocksPrimitive(doc, x, y, opts = {}) {
   const hundreds = Math.max(0, Number(opts.hundreds ?? 0));
   const tens = Math.max(0, Number(opts.tens ?? 0));
@@ -457,6 +490,7 @@ function drawBaseTenBlocksPrimitive(doc, x, y, opts = {}) {
   const rodLength = Number(opts.rodLength ?? unit * 10);
   const flatSize = Number(opts.flatSize ?? unit * 10);
   const gap = Number(opts.gap ?? 4);
+  const hundredsGap = Number(opts.hundredsGap ?? gap);
   const groupGap = Number(opts.groupGap ?? 10);
 
   doc.save();
@@ -468,14 +502,17 @@ function drawBaseTenBlocksPrimitive(doc, x, y, opts = {}) {
   let maxHeight = 0;
 
   if (hundreds > 0) {
-    const cols = Math.min(hundreds, 2);
-    const rows = Math.ceil(hundreds / cols);
+    const hundredsGeometry = buildBaseTenHundredsGeometry({
+      hundreds,
+      flatSize,
+      hundredsGap,
+      x: cursorX,
+      y
+    });
 
-    for (let i = 0; i < hundreds; i++) {
-      const col = i % cols;
-      const row = Math.floor(i / cols);
-      const fx = cursorX + col * (flatSize + gap);
-      const fy = y + row * (flatSize + gap);
+    hundredsGeometry.flats.forEach((flat) => {
+      const fx = flat.x;
+      const fy = flat.y;
 
       doc.rect(fx, fy, flatSize, flatSize).fillAndStroke();
 
@@ -487,12 +524,10 @@ function drawBaseTenBlocksPrimitive(doc, x, y, opts = {}) {
         const yy = fy + gy * (flatSize / 10);
         doc.moveTo(fx, yy).lineTo(fx + flatSize, yy).stroke();
       }
-    }
+    });
 
-    const blockWidth = cols * flatSize + (cols - 1) * gap;
-    const blockHeight = rows * flatSize + (rows - 1) * gap;
-    cursorX += blockWidth + groupGap;
-    maxHeight = Math.max(maxHeight, blockHeight);
+    cursorX += hundredsGeometry.width + groupGap;
+    maxHeight = Math.max(maxHeight, hundredsGeometry.height);
   }
 
   if (tens > 0) {
@@ -882,7 +917,7 @@ function measureNumberLineVisual(data = {}, maxWidth, targetHeight, options = {}
   };
 }
 
-function measureBaseTenVisual(data = {}, maxWidth, targetHeight) {
+function measureBaseTenVisual(data = {}, maxWidth, targetHeight, options = {}) {
   const hundreds = Math.max(0, Number(data.hundreds || 0));
   const tens = Math.max(0, Number(data.tens || 0));
   const ones = Math.max(0, Number(data.ones || 0));
@@ -891,19 +926,17 @@ function measureBaseTenVisual(data = {}, maxWidth, targetHeight) {
   const rodLength = unit * 10;
   const flatSize = unit * 10;
   const gap = 4;
+  const hundredsGap = Number(options.baseTenHundredsGap ?? gap);
   const groupGap = 10;
 
   let width = 0;
   let height = 0;
 
   if (hundreds > 0) {
-    const cols = Math.min(hundreds, 2);
-    const rows = Math.ceil(hundreds / cols);
-    const hundredsWidth = cols * flatSize + (cols - 1) * gap;
-    const hundredsHeight = rows * flatSize + (rows - 1) * gap;
+    const hundredsGeometry = buildBaseTenHundredsGeometry({ hundreds, flatSize, hundredsGap });
 
-    width += hundredsWidth;
-    height = Math.max(height, hundredsHeight);
+    width += hundredsGeometry.width;
+    height = Math.max(height, hundredsGeometry.height);
 
     if (tens > 0 || ones > 0) width += groupGap;
   }
@@ -935,6 +968,7 @@ function measureBaseTenVisual(data = {}, maxWidth, targetHeight) {
     rodLength,
     flatSize,
     gap,
+    hundredsGap,
     groupGap
   };
 }
@@ -963,7 +997,7 @@ function measureVisual(visual, maxWidth, targetHeight, options = {}) {
   }
 
   if (visual.kind === "base_ten_blocks") {
-    return measureBaseTenVisual(visual.data, maxWidth, targetHeight);
+    return measureBaseTenVisual(visual.data, maxWidth, targetHeight, options);
   }
 
   return null;
@@ -1101,6 +1135,39 @@ function placeVisualInRegionWithDisplay(region, measured, display = {}) {
   }
 
   return { x, y };
+}
+
+function buildBaseTenCellGeometry({
+  cellTopY,
+  cellBottomY,
+  measuredHeight,
+  rodLength,
+  separatorInset = 8,
+  topPadding = 14,
+  bottomPadding = 14
+}) {
+  const separatorY = cellBottomY - separatorInset;
+  const usableTop = cellTopY + topPadding;
+  const usableBottom = separatorY - bottomPadding;
+  const usableHeight = Math.max(0, usableBottom - usableTop);
+  const visualTop = usableTop + (usableHeight - measuredHeight) / 2;
+  const visualBottom = visualTop + measuredHeight;
+  const answerLineY = visualTop + Math.min(measuredHeight, rodLength || measuredHeight);
+
+  return {
+    cellTopY,
+    cellBottomY,
+    separatorY,
+    usableTop,
+    usableBottom,
+    usableHeight,
+    visualTop,
+    visualBottom,
+    visualCenterY: visualTop + measuredHeight / 2,
+    answerLineY,
+    topBreathingRoom: visualTop - cellTopY,
+    bottomBreathingRoom: separatorY - visualBottom
+  };
 }
 
 function drawAnswerLine(doc, region, options = {}) {
@@ -2558,10 +2625,25 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
       visualForRender,
       region.maxWidth,
       region.targetHeight,
-      { forceFullWidth: fullContentWidthNumberLine }
+      {
+        forceFullWidth: fullContentWidthNumberLine,
+        baseTenHundredsGap: display.baseTenHundredsGap
+      }
     );
 
     const placed = placeVisualInRegionWithDisplay(region, measured, display);
+    const baseTenCellGeometry = measured && visualForRender.kind === "base_ten_blocks" && display.baseTenMeasuredCellCenter
+      ? buildBaseTenCellGeometry({
+          cellTopY: y,
+          cellBottomY,
+          measuredHeight: measured.height,
+          rodLength: measured.rodLength
+        })
+      : null;
+
+    if (placed && baseTenCellGeometry) {
+      placed.y = baseTenCellGeometry.visualTop;
+    }
 
     if (measured && placed) {
       try {
@@ -2587,7 +2669,7 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
         }
 
         if (visualForRender.kind === "base_ten_blocks" && display.baseTenAlignedResponse) {
-          const modelBottomY = placed.y + (measured.rodLength || measured.height);
+          const modelBottomY = baseTenCellGeometry?.answerLineY ?? placed.y + (measured.rodLength || measured.height);
 
           if (display.baseTenTensOnesBoxes) {
           const totalWidth = 52;
@@ -2788,6 +2870,7 @@ function renderVisualByKind(doc, visual, placed, measured) {
       rodLength: measured.rodLength,
       flatSize: measured.flatSize,
       gap: measured.gap,
+      hundredsGap: measured.hundredsGap,
       groupGap: measured.groupGap
     });
   }
@@ -4549,6 +4632,9 @@ module.exports = {
     measureEqualGroupsVisual,
     measureEqualSharingVisual,
     measureNumberLineVisual,
+    measureBaseTenVisual,
+    buildBaseTenHundredsGeometry,
+    buildBaseTenCellGeometry,
     buildNumberLineAnswerTargetGeometry,
     buildSharedDataPictographGeometry,
     sharedDataSymbolCount,

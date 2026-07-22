@@ -128,6 +128,7 @@ function normalizeProblem(problem, index, context) {
     frameCount: finiteOptionalNumber(problem.frameCount),
     dotArrangement: problem.dotArrangement || null,
     selectionMode: problem.selectionMode || null,
+    hundreds: finiteOptionalNumber(problem.hundreds),
     tens: finiteOptionalNumber(problem.tens),
     ones: finiteOptionalNumber(problem.ones),
     labelMode: problem.labelMode || null,

@@ -128,6 +128,144 @@ function parseNumberList(value) {
     .filter((n) => n !== null);
 }
 
+function strictGrade3BaseTenInteger(value, label) {
+  const number = Number(value);
+  if (!Number.isInteger(number)) {
+    throw new Error(`Grade 3 Base Ten Blocks ${label} must be a whole number.`);
+  }
+  return number;
+}
+
+function strictGrade3BaseTenList(value, label) {
+  const entries = Array.isArray(value)
+    ? value
+    : typeof value === "string" ? value.split(",").map((entry) => entry.trim()) : [value];
+  if (!entries.length || entries.some((entry) => entry === "" || entry === null || entry === undefined)) {
+    throw new Error(`Grade 3 Base Ten Blocks ${label} must contain whole numbers.`);
+  }
+  return entries.map((entry) => strictGrade3BaseTenInteger(entry, label));
+}
+
+function strictGrade3BaseTenBoolean(value, label) {
+  if (typeof value === "boolean") return value;
+  const normalized = String(value).trim().toLowerCase();
+  if (["1", "true", "yes", "on"].includes(normalized)) return true;
+  if (["0", "false", "no", "off"].includes(normalized)) return false;
+  throw new Error(`Grade 3 Base Ten Blocks ${label} must be true or false.`);
+}
+
+function suppliedAliasValues(options, aliases) {
+  return aliases
+    .filter((alias) => options[alias] !== undefined && options[alias] !== null && options[alias] !== "")
+    .map((alias) => ({ alias, value: options[alias] }));
+}
+
+function validateGrade3BaseTenRawOptions(options = {}) {
+  const minInputs = suppliedAliasValues(options, ["minA", "minimumValue", "minimumNumber"]);
+  const maxInputs = suppliedAliasValues(options, ["maxA", "maximumValue", "maximumNumber"]);
+  const selectedInputs = suppliedAliasValues(options, ["selectedNumbers", "selectedValues", "onlyNumbers"]);
+
+  const normalizedAliasNumber = (inputs, fallback, label) => {
+    const values = inputs.map(({ value }) => strictGrade3BaseTenInteger(value, label));
+    if (new Set(values).size > 1) {
+      throw new Error(`Grade 3 Base Ten Blocks ${label} aliases must agree.`);
+    }
+    return values[0] ?? fallback;
+  };
+
+  const minimum = normalizedAliasNumber(minInputs, 100, "minimum value");
+  const maximum = normalizedAliasNumber(maxInputs, 499, "maximum value");
+  if (minimum < 100 || minimum > 499 || maximum < 100 || maximum > 499 || minimum > maximum) {
+    throw new Error("Grade 3 Base Ten Blocks values must use a valid range from 100 through 499.");
+  }
+
+  const questionCount = options.questionCount === undefined || options.questionCount === ""
+    ? 8
+    : strictGrade3BaseTenInteger(options.questionCount, "question count");
+  const questionsPerPage = options.questionsPerPage === undefined || options.questionsPerPage === ""
+    ? 4
+    : strictGrade3BaseTenInteger(options.questionsPerPage, "questions per page");
+  if (questionCount < 1 || questionCount > 24) {
+    throw new Error("Grade 3 Base Ten Blocks question count must be from 1 through 24.");
+  }
+  if (questionsPerPage < 1 || questionsPerPage > 4) {
+    throw new Error("Grade 3 Base Ten Blocks supports at most 4 questions per page.");
+  }
+
+  const exampleInputs = suppliedAliasValues(options, ["includeExample", "completedExample", "example"]);
+  const exampleValues = exampleInputs.map(({ value, alias }) => strictGrade3BaseTenBoolean(value, alias));
+  if (new Set(exampleValues).size > 1) {
+    throw new Error("Grade 3 Base Ten Blocks example aliases must agree.");
+  }
+  const includeExample = exampleValues[0] ?? false;
+
+  if (selectedInputs.length) {
+    const lists = selectedInputs.map(({ value, alias }) => strictGrade3BaseTenList(value, alias));
+    const signatures = lists.map((list) => list.join(","));
+    if (new Set(signatures).size > 1) {
+      throw new Error("Grade 3 Base Ten Blocks selected-number aliases must agree.");
+    }
+    const selected = lists[0];
+    if (new Set(selected).size !== selected.length) {
+      throw new Error("Grade 3 Base Ten Blocks selected numbers must be unique.");
+    }
+    if (selected.some((value) => value < minimum || value > maximum)) {
+      throw new Error("Grade 3 Base Ten Blocks selected numbers must stay inside the approved range.");
+    }
+    if (selected.length < questionCount + (includeExample ? 1 : 0)) {
+      throw new Error("Grade 3 Base Ten Blocks selected numbers do not provide enough unique questions.");
+    }
+  } else if (maximum - minimum + 1 < questionCount + (includeExample ? 1 : 0)) {
+    throw new Error("Grade 3 Base Ten Blocks range does not provide enough unique questions.");
+  }
+
+  const labelInputs = suppliedAliasValues(options, ["showPlaceValueLabels", "baseTenTensOnesBoxes"]);
+  if (labelInputs.some(({ value, alias }) => strictGrade3BaseTenBoolean(value, alias))) {
+    throw new Error("Grade 3 Base Ten Blocks does not support place-value response labels in read-model mode.");
+  }
+  if (options.labelMode !== undefined && !["", "none"].includes(String(options.labelMode).trim().toLowerCase())) {
+    throw new Error("Grade 3 Base Ten Blocks label mode must be 'none'.");
+  }
+  if (
+    options.responseMode !== undefined &&
+    !["number", "standard_number"].includes(String(options.responseMode).trim().toLowerCase())
+  ) {
+    throw new Error("Grade 3 Base Ten Blocks response mode must be standard-number reading.");
+  }
+  if (["hundreds", "tens", "ones", "representedValue"].some((key) => options[key] !== undefined)) {
+    throw new Error("Grade 3 Base Ten Blocks place-value truth is generator-owned and cannot be overridden.");
+  }
+}
+
+function validateGrade3BaseTenWorksheet(id, problems = []) {
+  if (id !== GRADE3_BASE_TEN_ID) return;
+  const signatures = new Set();
+  problems.forEach((problem) => {
+    const value = Number(problem.representedValue);
+    const hundreds = Number(problem.hundreds);
+    const tens = Number(problem.tens);
+    const ones = Number(problem.ones);
+    if (!Number.isInteger(value) || value < 100 || value > 499) {
+      throw new Error("Grade 3 Base Ten Blocks represented value must be from 100 through 499.");
+    }
+    if (hundreds * 100 + tens * 10 + ones !== value) {
+      throw new Error("Grade 3 Base Ten Blocks place-value truth must equal the represented number.");
+    }
+    if (
+      problem.answer !== value ||
+      problem.visual?.data?.hundreds !== hundreds ||
+      problem.visual?.data?.tens !== tens ||
+      problem.visual?.data?.ones !== ones
+    ) {
+      throw new Error("Grade 3 Base Ten Blocks student, answer, and visual truth must agree.");
+    }
+    if (!problem.duplicateSignature || signatures.has(problem.duplicateSignature)) {
+      throw new Error("Grade 3 Base Ten Blocks questions must have unique structured truth.");
+    }
+    signatures.add(problem.duplicateSignature);
+  });
+}
+
 const GRADE1_FLUENCY_COMPARISON_IDS = new Set([
   "g1_subtraction_facts_within_20",
   "g1_missing_addends_within_20",
@@ -166,6 +304,7 @@ const GRADE2_SHADE_EQUAL_PARTS_ID = "grade2_fraction_equivalence_shade_fraction_
 const GRADE2_SHARE_FAIRLY_TO_10_ID = "grade2_fraction_equivalence_fraction_word_problems";
 const GRADE2_ARRAYS_ID = "grade2_multiplication_facts_arrays";
 const GRADE2_BASE_TEN_BLOCKS_ID = "g2_base_ten_blocks_representation";
+const GRADE3_BASE_TEN_ID = "grade3_place_value_representation_base_ten_blocks";
 const GRADE3_EXPANDED_FORM_ID = "grade3_place_value_representation_expanded_form";
 const GRADE3_NUMBER_WORD_ID = "grade3_place_value_representation_number_word_match";
 const GRADE3_STANDARD_FORM_ID = "grade3_place_value_representation_standard_form";
@@ -289,11 +428,13 @@ const GRADE3_NUMERIC_PATTERN_TITLES = Object.freeze({
 });
 
 const GRADE3_PLACE_VALUE_TITLES = Object.freeze({
+  [GRADE3_BASE_TEN_ID]: "Read Base Ten Blocks",
   [GRADE3_EXPANDED_FORM_ID]: "Expanded Form",
   [GRADE3_STANDARD_FORM_ID]: "Standard Form"
 });
 
 const GRADE3_PLACE_VALUE_BATCH2_IDS = new Set([
+  GRADE3_BASE_TEN_ID,
   GRADE3_EXPANDED_FORM_ID,
   GRADE3_NUMBER_WORD_ID,
   GRADE3_STANDARD_FORM_ID
@@ -496,6 +637,33 @@ function normalizeGrade2CategoryEBatch1Options(item, options = {}) {
 }
 
 function normalizeGrade3PlaceValueBatch2Options(item, options = {}) {
+  if (item.id === GRADE3_BASE_TEN_ID) {
+    const normalized = { ...options };
+    const selectedSource = normalized.selectedNumbers ?? normalized.selectedValues ?? normalized.onlyNumbers;
+    const selectedNumbers = selectedSource === undefined
+      ? []
+      : strictGrade3BaseTenList(selectedSource, "selected numbers");
+
+    normalized.questionCount = finiteNumber(normalized.questionCount, 8);
+    normalized.questionsPerPage = finiteNumber(normalized.questionsPerPage, 4);
+    normalized.minA = finiteNumber(
+      normalized.minA ?? normalized.minimumValue ?? normalized.minimumNumber,
+      100
+    );
+    normalized.maxA = finiteNumber(
+      normalized.maxA ?? normalized.maximumValue ?? normalized.maximumNumber,
+      499
+    );
+    normalized.selectedNumbers = selectedNumbers;
+    normalized.selectedValues = selectedNumbers;
+    normalized.onlyNumbers = selectedNumbers.join(",");
+    normalized.labelMode = "none";
+    normalized.showPlaceValueLabels = false;
+    normalized.baseTenTensOnesBoxes = false;
+    normalized.responseMode = "standard_number";
+    return normalized;
+  }
+
   if (item.id !== GRADE3_NUMBER_WORD_ID) return options;
 
   const normalized = { ...options };
@@ -981,6 +1149,10 @@ function normalizeGrade1AdditionNumberLineOptions(item, options = {}) {
 }
 
 function normalizeCatalogWorksheetOptions(item, options = {}) {
+  if (item.id === GRADE3_BASE_TEN_ID) {
+    validateGrade3BaseTenRawOptions(options);
+  }
+
   const normalized = {
     ...(item.generatorOptions || {}),
     ...options
@@ -1409,6 +1581,7 @@ function generateWorksheetFromCatalogId(id, options = {}) {
     validateGrade3CompareFractionsWorksheet(item.id, worksheet.problems);
     validateGrade3FractionNumberLineWorksheet(item.id, worksheet.problems);
     validateGrade3DataDisplayWorksheet(item.id, worksheet.problems);
+    validateGrade3BaseTenWorksheet(item.id, worksheet.problems);
     return worksheet;
   } catch (err) {
     if (/No addition facts are available/.test(err.message)) {
@@ -1634,6 +1807,10 @@ function buildStudentFacingInstruction(item, fallback = "") {
 
  if (item.id === GRADE3_NUMBER_WORD_ID) {
   return "Write each number in words.";
+ }
+
+ if (item.id === GRADE3_BASE_TEN_ID) {
+  return "Count the hundreds, tens, and ones. Write the number.";
  }
 
  if (item.id === GRADE2_ADDITION_WITHIN_100_ID) {
@@ -1949,6 +2126,29 @@ if (item.id === GRADE2_BASE_TEN_BLOCKS_ID) {
     ...(layout.display || {}),
     hideItemPrompts: true,
     hideSubtitle: true,
+    visualVerticalAlign: "center"
+  };
+}
+
+if (item.id === GRADE3_BASE_TEN_ID) {
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 1,
+    maxProblemsPerPage: finiteNumber(normalizedOptions.questionsPerPage) || 4
+  };
+  layout.grid = {
+    ...(layout.grid || {}),
+    columns: 1
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    hideItemPrompts: true,
+    hideSubtitle: true,
+    visualColumns: 1,
+    baseTenAlignedResponse: true,
+    baseTenMeasuredCellCenter: true,
+    baseTenHundredsGap: 9,
+    baseTenTensOnesBoxes: false,
     visualVerticalAlign: "center"
   };
 }

@@ -273,13 +273,13 @@ function testCrossGradeAndSplitIsolation() {
   assert.strictEqual(grade2Words.layout.instruction, "Write each number in words.");
   assert.strictEqual(grade2Words.normalizedContentObject.content.items.length, 12);
 
-  const splitBaseTen = buildCatalogWorksheetRuntime("grade3_place_value_representation_base_ten_blocks", {
-    worksheetSeed: "grade3-b2-split-isolation"
+  const finalizedBaseTen = buildCatalogWorksheetRuntime("grade3_place_value_representation_base_ten_blocks", {
+    worksheetSeed: "grade3-b2-final-isolation"
   });
-  assert.strictEqual(splitBaseTen.layout.header.title, "Base Ten Blocks — Grade 3");
-  assert.strictEqual(splitBaseTen.layout.instruction, "Students interpret base ten block models.");
-  assert.strictEqual(splitBaseTen.contentObject.meta.curriculum.footerText, "Grade 3 • Math • Place Value • place_value_representation");
-  assert.strictEqual(splitBaseTen.normalizedContentObject.content.items.length, 10);
+  assert.strictEqual(finalizedBaseTen.layout.header.title, "Read Base Ten Blocks");
+  assert.strictEqual(finalizedBaseTen.layout.instruction, "Count the hundreds, tens, and ones. Write the number.");
+  assert.strictEqual(finalizedBaseTen.contentObject.meta.curriculum.footerText, "Grade 3 • Math • Place Value");
+  assert.strictEqual(finalizedBaseTen.normalizedContentObject.content.items.length, 8);
 }
 
 async function run() {
@@ -289,7 +289,7 @@ async function run() {
   testCompletedExampleAliases();
   await testAnswerKeyOption();
   testCrossGradeAndSplitIsolation();
-  console.log("Grade 3 Place-Value Batch 2 tests passed; default PDF pages: 2/2/2; Base Ten Blocks split unchanged.");
+  console.log("Grade 3 Place-Value Batch 2 tests passed; default PDF pages: 2/2/2; finalized Base Ten isolation passes.");
 }
 
 run().catch((error) => {
