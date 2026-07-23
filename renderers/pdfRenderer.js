@@ -178,6 +178,26 @@ function buildAnswerKeyItems(items) {
     duplicateSignature: it.duplicateSignature || null,
     relatedDuplicateSignature: it.relatedDuplicateSignature || null,
     diagnostics: Array.isArray(it.diagnostics) ? it.diagnostics : null,
+    ...(it.startingValue !== undefined ? {
+      startingValue: finiteOptionalNumber(it.startingValue),
+      ruleAmount: finiteOptionalNumber(it.ruleAmount),
+      fullSequence: Array.isArray(it.fullSequence) ? it.fullSequence.map(Number) : null,
+      visiblePrefix: Array.isArray(it.visiblePrefix) ? it.visiblePrefix.map(Number) : null,
+      fullVisibleSequence: Array.isArray(it.fullVisibleSequence) ? it.fullVisibleSequence.map(Number) : null,
+      displayedSequence: Array.isArray(it.displayedSequence)
+        ? it.displayedSequence.map((value) => value === null ? null : Number(value))
+        : null,
+      continuationValues: Array.isArray(it.continuationValues) ? it.continuationValues.map(Number) : null,
+      missingValues: Array.isArray(it.missingValues) ? it.missingValues.map(Number) : null,
+      responseTargets: Array.isArray(it.responseTargets)
+        ? it.responseTargets.map((target) => ({ ...target }))
+        : null,
+      answerList: Array.isArray(it.answerList) ? [...it.answerList] : null,
+      studentFacingRule: it.studentFacingRule || null,
+      acceptedNormalizedRule: it.acceptedNormalizedRule
+        ? { ...it.acceptedNormalizedRule }
+        : null
+    } : {})
   }));
 }
 
@@ -1980,7 +2000,7 @@ function renderPatterningRow(doc, question, layoutBox, fonts = {}, display = {})
   const showAnswers = Boolean(display.answerKey || isExample);
   const lineHeight = layout.typography.body?.lineHeight || 16;
   const fontSize = Number(display.patterningSequenceFontSize || 13);
-  const labelWidth = question.isExample ? 0 : 30;
+  const labelWidth = question.isExample ? 0 : Number(display.patterningLabelWidth || 30);
   const sequenceX = x + labelWidth;
   const sequenceWidth = Math.max(40, width - labelWidth);
   const exampleLabelGap = Number(display.patterningExampleLabelGap || 6);
@@ -2104,7 +2124,13 @@ function renderPatterningRow(doc, question, layoutBox, fonts = {}, display = {})
       lineBreak: false
     });
     const lineX = sequenceX + 38;
-    const lineWidth = Math.min(260, Math.max(120, sequenceWidth - 42));
+    const lineWidth = Math.min(
+      260,
+      Math.max(
+        120,
+        sequenceWidth - Number(display.patterningRuleLineRightPadding || 42)
+      )
+    );
     drawShortAnswerLine(doc, lineX, ruleY + 14, lineWidth);
 
     if (showAnswers) {
@@ -3136,6 +3162,87 @@ function getColumns(cols) {
   const colW = cols === 1 ? cb.width : (cb.width - gutter * (cols - 1)) / cols;
   const xForCol = (i) => cb.x + i * (colW + gutter);
   return { cb, gutter, colW, xForCol };
+}
+
+function buildSideWorkspaceGeometry({
+  contentBox = layout.page.contentBox,
+  startY,
+  bottomContentY,
+  config = {},
+  answerKey = false
+} = {}) {
+  const enabled = Boolean(config?.enabled) && !(config.studentOnly && answerKey);
+  if (!enabled) return { enabled: false };
+
+  const requestedRatio = Math.max(0.35, Math.min(0.4, Number(config.widthRatio) || 0.35));
+  const minimumWidthRatio = Math.max(
+    0.25,
+    Math.min(requestedRatio, Number(config.minimumWidthRatio) || requestedRatio)
+  );
+  const dividerGap = Math.max(4, Number(config.dividerGap) || 4);
+  const workspacePadding = Math.max(8, Number(config.workspacePadding) || 12);
+  const minimumTaskWidth = Math.max(0, Number(config.minimumTaskWidth) || 0);
+  const maximumSafeRatio = (
+    contentBox.width - dividerGap - minimumTaskWidth
+  ) / contentBox.width;
+  const ratio = Math.max(
+    minimumWidthRatio,
+    Math.min(requestedRatio, maximumSafeRatio)
+  );
+  const workspaceWidth = contentBox.width * ratio;
+  const dividerX = contentBox.x + contentBox.width - workspaceWidth;
+  const taskWidth = dividerX - dividerGap - contentBox.x;
+  if (taskWidth < minimumTaskWidth) {
+    throw new Error(
+      `Side workspace leaves ${taskWidth.toFixed(1)} points for tasks; ${minimumTaskWidth} points are required.`
+    );
+  }
+
+  const dividerTop = Number(startY);
+  const dividerBottom = Number(bottomContentY);
+  if (!Number.isFinite(dividerTop) || !Number.isFinite(dividerBottom) || dividerBottom <= dividerTop) {
+    throw new Error("Side workspace requires valid content-area vertical bounds.");
+  }
+
+  return {
+    enabled: true,
+    heading: safeStr(config.heading || "Work It Out"),
+    requestedWidthRatio: requestedRatio,
+    widthRatio: ratio,
+    workspaceWidth,
+    dividerX,
+    dividerTop,
+    dividerBottom,
+    dividerWidth: Math.max(0.5, Number(config.dividerWidth) || 0.8),
+    dividerColor: safeStr(config.dividerColor || "#c4cad1"),
+    taskX: contentBox.x,
+    taskWidth,
+    workspaceX: dividerX + workspacePadding,
+    workspaceContentWidth: Math.max(
+      24,
+      contentBox.x + contentBox.width - dividerX - workspacePadding
+    )
+  };
+}
+
+function renderSideWorkspace(doc, fonts, geometry) {
+  if (!geometry?.enabled) return;
+
+  doc.save();
+  doc.strokeColor(geometry.dividerColor);
+  doc.lineWidth(geometry.dividerWidth);
+  doc.moveTo(geometry.dividerX, geometry.dividerTop)
+    .lineTo(geometry.dividerX, geometry.dividerBottom)
+    .stroke();
+
+  setFont(doc, fonts.bold || fonts.regular || "Helvetica", 10.5);
+  doc.fillColor(pdfDesignTokens.colors.muted);
+  doc.text(geometry.heading, geometry.workspaceX, geometry.dividerTop + 2, {
+    width: geometry.workspaceContentWidth,
+    align: "left",
+    lineBreak: false
+  });
+  doc.restore();
 }
 
 function distributeBalanced(items, cols) {
@@ -4587,10 +4694,10 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     const pageQuestionsPerColumn = isReverseNumberWordLayout
       ? Number(display.reverseNumberWordRowsPerColumn || 10)
       : questionsPerColumn;
-    const { colW: pageColW, xForCol: pageXForCol } = pageCols === cols
+    let { colW: pageColW, xForCol: pageXForCol } = pageCols === cols
       ? { colW, xForCol }
       : getColumns(pageCols);
-    const pageDisplay = display.patterningLayout
+    let pageDisplay = display.patterningLayout
       ? {
           ...display,
           denseGridRows: Math.max(
@@ -4599,6 +4706,32 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
           )
         }
       : display;
+    const sideWorkspaceGeometry = buildSideWorkspaceGeometry({
+      contentBox: layout.page.contentBox,
+      startY,
+      bottomContentY,
+      config: pageDisplay.sideWorkspace,
+      answerKey: Boolean(pageDisplay.answerKey)
+    });
+    if (sideWorkspaceGeometry.enabled) {
+      const taskGutter = pageCols === 1 ? 0 : (layout.grid?.gutter ?? 24);
+      pageColW = pageCols === 1
+        ? sideWorkspaceGeometry.taskWidth
+        : (
+            sideWorkspaceGeometry.taskWidth -
+            taskGutter * (pageCols - 1)
+          ) / pageCols;
+      pageXForCol = (index) =>
+        sideWorkspaceGeometry.taskX + index * (pageColW + taskGutter);
+      pageDisplay = {
+        ...pageDisplay,
+        patterningLabelWidth: Number(pageDisplay.sideWorkspace?.taskLabelWidth || 30),
+        patterningRuleLineRightPadding: Number(
+          pageDisplay.sideWorkspace?.ruleLineRightPadding || 42
+        )
+      };
+      renderSideWorkspace(doc, fonts, sideWorkspaceGeometry);
+    }
     const columns = pageDisplay.sequentialColumnFill
       ? distributeSequential(pageItems, pageCols)
       : distributeBalanced(pageItems, pageCols);
@@ -4848,6 +4981,7 @@ module.exports = {
     GRADE1_FRACTION_EXAMPLE_LABEL,
     GRADE1_FRACTION_RENDERER_VARIANTS,
     patterningRuleResponseParts,
+    buildSideWorkspaceGeometry,
     comparisonRowParts
   }
 };

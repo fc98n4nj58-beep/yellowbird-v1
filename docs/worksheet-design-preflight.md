@@ -121,6 +121,8 @@ Approved examples to keep in mind:
 - Identify Pattern Rule uses a one-column written-response layout.
 - Missing Value Pattern uses structured inline-answer placement.
 
+When a worksheet's task safely occupies only part of the page, consider an opt-in open workspace area rather than leaving unexplained whitespace. The workspace must not reduce approved density, response-target width, or readability, and should appear only where student pencil work is genuinely useful. It is not a global requirement: the family preflight must confirm student-only behavior, print-safe separation, preserved task geometry, and an unchanged full-width answer key where appropriate.
+
 Do not duplicate production implementation details in this document. The preflight defines design intent and acceptance criteria.
 
 ## Typography And Readability

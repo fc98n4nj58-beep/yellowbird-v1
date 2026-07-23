@@ -115,6 +115,12 @@ const GRADE4_PLACE_VALUE_BATCH4_IDS = new Set([
   "grade4_place_value_representation_compare_numbers"
 ]);
 
+const GRADE5_NUMERIC_PATTERN_IDS = new Set([
+  "grade5_patterning_and_algebra_extend_pattern",
+  "grade5_patterning_and_algebra_identify_pattern_rule",
+  "grade5_patterning_and_algebra_missing_value_pattern"
+]);
+
 const GRADE3_CONCRETE_VISUAL_FOOTERS = Object.freeze({
   g3_equal_sharing_division: "Multiplication and Division",
   grade3_fraction_equivalence_shade_fraction_models: "Fractions",
@@ -328,6 +334,26 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         duplicateSignature: p.duplicateSignature || null,
         relatedDuplicateSignature: p.relatedDuplicateSignature || null,
         diagnostics: Array.isArray(p.diagnostics) ? p.diagnostics : null,
+        ...(GRADE5_NUMERIC_PATTERN_IDS.has(item.id) ? {
+          startingValue: finiteOptionalNumber(p.startingValue),
+          ruleAmount: finiteOptionalNumber(p.ruleAmount),
+          fullSequence: Array.isArray(p.fullSequence) ? p.fullSequence.map(Number) : null,
+          visiblePrefix: Array.isArray(p.visiblePrefix) ? p.visiblePrefix.map(Number) : null,
+          fullVisibleSequence: Array.isArray(p.fullVisibleSequence) ? p.fullVisibleSequence.map(Number) : null,
+          displayedSequence: Array.isArray(p.displayedSequence)
+            ? p.displayedSequence.map((value) => value === null ? null : Number(value))
+            : null,
+          continuationValues: Array.isArray(p.continuationValues) ? p.continuationValues.map(Number) : null,
+          missingValues: Array.isArray(p.missingValues) ? p.missingValues.map(Number) : null,
+          responseTargets: Array.isArray(p.responseTargets)
+            ? p.responseTargets.map((target) => ({ ...target }))
+            : null,
+          answerList: Array.isArray(p.answerList) ? [...p.answerList] : null,
+          studentFacingRule: p.studentFacingRule || null,
+          acceptedNormalizedRule: p.acceptedNormalizedRule
+            ? { ...p.acceptedNormalizedRule }
+            : null
+        } : {}),
         ...(GRADE4_STORY_PROBLEM_IDS.has(item.id) ? {
           contextId: p.contextId || null,
           templateId: p.templateId || null,

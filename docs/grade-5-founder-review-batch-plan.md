@@ -1,8 +1,8 @@
 # Grade 5 Founder Review Batch Plan
 
-Status: planning only. This file does not authorize implementation, lifecycle changes, reconciliation movements, proofs, or public customization.
+Status: active founder-review plan. Batch 1 is founder-approved and closed; later batches remain planning only.
 
-Source reconciliation proposal: **A8 / D16 / E1 / G21 / Total46**. All 16 D records are assigned exactly once. No G or E item is hidden inside a low-risk batch.
+Current reconciliation: **A11 / D13 / E1 / G21 / Total46**. The three Batch 1 records moved from D to A; all 13 remaining D records are assigned exactly once. No G or E item is hidden inside a low-risk batch.
 
 ## Batch 1 — Numeric Patterning
 
@@ -25,6 +25,84 @@ Variables to preserve: question count/page, seed, start/rule/step, sequence leng
 Focused test/proof strategy: 30 deterministic seeds; rule distribution; unique prompts; missing-position truth; widest and largest sequences; default/max counts; student/key parity; one combined founder packet with three default proofs plus stress pages.
 
 Risk: **LOW**. Recommended first.
+
+### Batch 1 closeout — founder approved
+
+Exact resolved records:
+
+| ID | Public title | Status/category | Completed-work classification |
+|---|---|---|---|
+| `grade5_patterning_and_algebra_extend_pattern` | Extend the Pattern | `generated` / A | **FOUNDER APPROVED** |
+| `grade5_patterning_and_algebra_identify_pattern_rule` | Identify the Pattern Rule | `generated` / A | **FOUNDER APPROVED** |
+| `grade5_patterning_and_algebra_missing_value_pattern` | Find the Missing Values | `generated` / A | **FOUNDER APPROVED** |
+
+The live records resolve through the shared `patterning_and_algebra` recipe, numeric-pattern generator, task-specific normalization, shared PDF renderer and answer-key path. Grade 5 previously inherited generic titles/copy, lower-grade ranges, incomplete structured truth, permissive aliases and silent-fallback paths. None was a duplicate, stale-reconciliation-only record or new-architecture task. The founder approved the exact-ID-scoped corrections and student workspace; lower-grade defaults, public customization, and catalog lifecycle statuses remain unchanged.
+
+#### Full family and layout inheritance
+
+| Contract | Grade 1 | Grade 2 | Grade 3 | Grade 4 | Grade 5 review candidate |
+|---|---|---|---|---|---|
+| Family role | controlled extend/rule/missing trio | same three distinct tasks | same trio with add/subtract and completed-example aliases | same trio with Grade 4 value/rule extension | preserve all three roles; do not merge task modes |
+| Default density | controlled shared pattern layout | 12 items, 2 columns × 6 rows, 2-page PDF | 12-item family defaults with task-specific pagination | Extend 12, Rule 10, Missing 12; full-width rows; 2-page PDFs | Extend 12, Rule 10, Missing 12; full-width rows; 2-page PDFs |
+| Sequence/targets | simple whole-number sequences | four shown; one continuation/internal target; structured additive-rule target | task-owned continuation, rule and missing targets | Extend 5+2; Rule 6+rule line; Missing 7 with 2 internal targets | inherit Grade 4 target counts and geometry |
+| Range/rules | controlled early-number scope | starts 0–20, steps 1–5, addition default | established add/subtract engine | starts 50–400, steps 5–25, mixed balanced add/subtract, results 0–1000 | starts 100–700, steps 10–50, mixed balanced add/subtract, results 0–1000 |
+| Structured truth | shared deterministic arithmetic | answer metadata and task targets | sequence, operation, step, task answer state | complete task truth, duplicate signature and exact key reconstruction | retain generator-owned truth and expose every Grade 5 task field end to end |
+| Examples | controlled/raw | no public example contract | aliases supported; example additional | aliases supported; example additional | aliases supported; example additional; off by default |
+| Safe boundary | early-grade controlled scope | 12 default items | family-specific pagination | Extend 12/one student page; Rule 18/two; Missing 20/two | same established boundaries |
+
+The strongest exact-family contract is Grade 4's strict arithmetic/variable contract. The strongest layout-class contract is also its full-width fixed-row geometry: two columns are stronger for short Grade 2 terms, but are not print-safe for five to seven three-digit Grade 5 terms, continuation targets or a readable rule-response line. Grade 5 therefore keeps full-width rows rather than reviving the older two-column shell. This is a documented width requirement, not new architecture. Grade 4's full-width correction is not drift, and no new Grade 1–4 consistency-review watchlist item was found.
+
+#### Distinct task decisions and defaults
+
+| ID | Instruction | Default truth/layout | Tested boundary |
+|---|---|---|---|
+| `grade5_patterning_and_algebra_extend_pattern` | Continue each pattern by writing the next numbers. | 12 questions; 12 per page; 5 visible terms; 2 continuation targets; no internal missing terms or rule response | 4–6 visible terms, 1–3 continuations, at most 7 total terms, 12 questions on one student page |
+| `grade5_patterning_and_algebra_identify_pattern_rule` | Write the rule for each pattern. | 10 questions; 10 per page; 6 fully visible terms; one rule-response line; no continuation or hidden terms | 5–7 terms, 18 questions over at most 2 student pages |
+| `grade5_patterning_and_algebra_missing_value_pattern` | Write the missing numbers in each pattern. | 12 questions; 12 per page; 7 terms; 2 varied internal missing positions; no rule-writing or continuation task | 5–7 terms, 1–2 missing values, 20 questions over at most 2 student pages |
+
+All use `Grade 5 • Math • Patterning & Algebra`, balanced addition/subtraction by default, integer starts 100–700, integer rule amounts 10–50, and safe whole-number results 0–1000. Grade 5 difficulty comes from larger starts, larger and more varied rule amounts and internal-position reasoning, not smaller type or ambiguous rules.
+
+Supported and safe rule families are constant whole-number addition and subtraction. They are the only defaults and the only raw-runtime selections accepted for this batch. Multiplication, division, alternating, two-step, decimal, fraction and negative-number rules are unsupported/deferred; none was introduced merely to signal Grade 5 difficulty.
+
+#### Structured truth and variable contract
+
+Every Grade 5 item stores `startingValue`, `operation`, `ruleAmount`, `fullSequence`, `duplicateSignature` and `answerState`. Extend additionally stores `visiblePrefix`, `continuationValues`, `continuationCount`, `responseTargets` and `answerList`. Identify additionally stores `fullVisibleSequence`, `studentFacingRule`, `acceptedNormalizedRule` and `answerList`. Missing additionally stores `displayedSequence`, `missingIndexes`, `missingValues`, `responseTargets` and `answerList`. These fields survive layout, content and answer-key normalization; the renderer displays them but does not calculate sequence truth. Worksheet-level validation rejects duplicate signatures and verifies exact task arithmetic and student/key state.
+
+| Variable class | Grade 5 contract |
+|---|---|
+| Count/density | `questionCount`; `questionsPerPage`; strict task maxima and two-student-page ceiling; Extend remains one student page |
+| Start | `startingValue`/`startNumber`; `minStart`/`minimumStart`/`minimumValue`; `maxStart`/`maximumStart`/`maximumValue`; fixed values are genuinely fixed; selected-start lists are **NOT SUPPORTED** |
+| Rule amount | `sequenceStep`/`step`; `minStep`/`minimumStep`/`minimumRuleAmount`; `maxStep`/`maximumStep`/`maximumRuleAmount`; `selectedSteps`/`onlySteps`/`selectedRuleAmounts`/`ruleAmounts` |
+| Operation | `operationMode`/`operation`/`ruleType`; `selectedOperations`/`onlyOperations`; add, subtract or mixed only |
+| Sequence bounds | `minValue`/`minimumSequenceValue`; `maxValue`/`maximumSequenceValue` |
+| Extend role | `visibleLength`/`shownTermCount`; `continuationCount`/`extensionCount`/`answerCount` |
+| Rule role | `sequenceLength`/`termCount` |
+| Missing role | `sequenceLength`/`termCount`; `missingTermCount`/`missingCount`; `missingTermPlacement`/`missingPlacement`; `missingIndexes`/`missingPositions` |
+| Shared runtime | `includeExample`/`completedExample`/`example`; `worksheetSeed`; PDF answer-key inclusion |
+
+These remain raw-runtime or internal aliases; none is publicly registered. Valid fixed values, ranges, selected rule amounts and selected operations are consumed rather than merely validated. Unsupported caller-owned sequence, rule, displayed-state, answer, response-target, duplicate-signature and answer-state fields are **UNSAFE — REJECT**.
+
+#### Adversarial QA, tests and proofs
+
+The focused suite rejects decimal/negative starts, zero/invalid rule amounts, empty or duplicate selections, unsupported operations, conflicting aliases, reversed/fixed-range conflicts, unsafe counts/density/width, invalid example modes, irrelevant missing controls, duplicate/out-of-range missing indexes, insufficient visible evidence and caller-owned truth. A fully fixed contract that cannot supply unique questions throws instead of repeating or silently widening its pool.
+
+`scripts/testGrade5NumericPatterningBatch1.js` passes 30 deterministic seeds per resource with same-seed failures 0 and different-seed variation. Exact copy, defaults, balanced operations, sequence arithmetic, missing-index truth and variation, normalized rule truth, structured answer state, duplicate prevention, examples-additional behavior, variable consumption, page geometry, student/key parity and Grade 1–4 isolation pass. Shared Grade 2 runtime, Grade 3 Batch 1, Grade 4 Batch 1, Grade 4 final reconciliation, Grade 5 reconciliation preflight and customization-registry regressions pass. The audit remains Ready 104/104, Generated 213/213, Partial 5/5, Total331 with only the seven established planned `pattern_word_problems` gaps.
+
+Founder proofs:
+
+- `review/grade-5-numeric-patterning-batch-1/founder-review/01_extend_the_pattern.pdf`
+- `review/grade-5-numeric-patterning-batch-1/founder-review/02_identify_the_pattern_rule.pdf`
+- `review/grade-5-numeric-patterning-batch-1/founder-review/03_find_the_missing_values.pdf`
+
+Stress proofs in the sibling `stress/` folder cover largest default starts and rule amounts, addition-only, subtraction-only, zero targets, maximum continuation and visible widths, maximum counts, varied missing positions, longest rule responses and a completed example. All 22 founder/stress pages were rendered and visually inspected: student/key truth is aligned, target lines are clear, defaults use the page efficiently, maximum counts paginate safely, and no clipping, overlap, tiny type or footer pressure was found.
+
+#### Narrow workspace correction
+
+Founder review identified that the right side of the three student worksheets was visually underused. An opt-in, student-only side workspace now uses the heading `Work It Out` once per student page and a subtle 0.8-point light-neutral vertical divider that begins below the instruction and ends above the footer. Default pages assign 35% of the usable width to the open, unboxed and unshaded workspace. The maximum three-continuation variant uses a measured safety override of approximately 30.5% so all three unchanged 62-point targets remain fully inside the left task region; no type, target, term, count or content is reduced.
+
+The workspace is enabled only for the three exact Grade 5 Batch 1 IDs. Answer-key pages remain full-width and do not show the divider or heading. The full 260-point rule-response line, question positions, row heights, examples-additional behavior, counts, density, pagination, variables, structured arithmetic truth, deterministic seeds and lifecycle statuses are unchanged. Regenerated founder and stress proofs confirm that each student page has one workspace heading, keys remain teacher-speed full width, and no sequence wraps or crosses the divider.
+
+Batch 1 is founder-approved and closed. The three records move D → A, producing **A11 / D13 / E1 / G21 / Total46**. There are no split or deferred Batch 1 resources. All three catalog statuses remain `generated`, and no public customization family was registered.
 
 ## Batch 2 — Compact Relational Practice
 
@@ -173,12 +251,13 @@ The accelerated execution model is one full session per batch: completed-work re
 ## Reconciliation scenarios
 
 - initial proposal: **A8 / D16 / E1 / G21 / Total46**
+- after founder-approved Batch 1: **A11 / D13 / E1 / G21 / Total46**
 - after Batches 1–6: **A24 / D0 / E1 / G21 / Total46**
 - Function Table implemented: **A25 / D0 / E0 / G21 / Total46**
 - Function Table deferred: **A24 / D0 / E0 / G22 / Total46**
 
 Catalog lifecycle statuses remain independent and unchanged until separately approved.
 
-## Batch 1 next action
+## Batch 1 closeout
 
-Founder reviews the three Numeric Patterning roles, proposed Grade 5 rule/value difficulty, inherited density, and raw variable inventory in one preflight packet. After approval, run completed-work reconciliation and implement only those three IDs, producing one combined founder proof packet and one closeout commit after approval.
+Founder approval covers all three Numeric Patterning roles, Grade 5 rule/value difficulty, inherited density, raw variable inventory, structured truth, and the student-only `Work It Out` workspace. The approved packet contains three founder proofs and six stress proofs. Batch 1 has no split or deferred resource; the next implementation action belongs to Batch 2 under separate authorization.

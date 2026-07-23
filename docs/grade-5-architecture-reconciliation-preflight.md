@@ -1,6 +1,6 @@
 # Grade 5 Architecture Reconciliation Preflight
 
-Status: preflight only. Grade 5 implementation has not started. This document proposes, but does not apply, reconciliation movements or lifecycle changes.
+Status: active reconciliation. Founder-approved Batch 1 is closed; later Grade 5 batches remain unimplemented. Catalog lifecycle statuses remain unchanged.
 
 Starting checkpoint: `f1b04ee6d7f90789af46419947164fa84d5c320a`
 
@@ -67,10 +67,10 @@ Density notation is `questions / columns / questions-per-student-page / total PD
 | 33 | `g5_multiplication_fact_review` | Multiplication Fact Review; Multiplication & Division; fluency/ready | multiplication review; fluency grid | 60/4/60/2 | previously manually print-QA’d; distinct mixed review role | A |
 | 34 | `grade5_multiplication_facts_skip_counting` | Skip Counting — Grade 5; Multiplication & Division; practice/generated | skip count; full-width sequence | 10/1/10/2 | lower-grade precursor without a natural Grade 5 distinction | G |
 | 35 | `grade5_multiplication_facts_word_problems` | Word Problems — Grade 5; Multiplication & Division; practice/generated | equal-groups stories; full-width work box | 12/1/3/8 | documented as too basic for Grade 5 except intervention | G |
-| 36 | `grade5_patterning_and_algebra_extend_pattern` | Extend Pattern — Grade 5; Patterning & Algebra; practice/generated | numeric pattern; two-column sequence | 12/2/16/2 | strong Grade 3/4 family exists; Grade 5 rule/range extension needed | D/B1 |
+| 36 | `grade5_patterning_and_algebra_extend_pattern` | Extend the Pattern; Patterning & Algebra; practice/generated | numeric pattern; full-width sequence with student-only side workspace | 12/1/12/2 | founder-approved Grade 5 shared-family extension; Batch 1 closed | A |
 | 37 | `grade5_patterning_and_algebra_function_table` | Function Table — Grade 5; Patterning & Algebra; practice/generated | sentence fallback; full-width | 12/1/6/4 | no approved visible input/output-table architecture | E |
-| 38 | `grade5_patterning_and_algebra_identify_pattern_rule` | Identify Pattern Rule — Grade 5; Patterning & Algebra; practice/generated | numeric pattern; full-width rule response | 12/1/8/4 | strong Grade 3/4 family exists; shared extension needed | D/B1 |
-| 39 | `grade5_patterning_and_algebra_missing_value_pattern` | Missing Value Pattern — Grade 5; Patterning & Algebra; practice/generated | numeric pattern; two-column sequence | 12/2/12/2 | strong Grade 3/4 family exists; shared extension needed | D/B1 |
+| 38 | `grade5_patterning_and_algebra_identify_pattern_rule` | Identify Pattern Rule — Grade 5; Patterning & Algebra; practice/generated | numeric pattern; full-width rule response with student-only side workspace | 10/1/10/2 | founder-approved Grade 5 shared-family extension; Batch 1 closed | A |
+| 39 | `grade5_patterning_and_algebra_missing_value_pattern` | Find the Missing Values; Patterning & Algebra; practice/generated | numeric pattern; full-width sequence with student-only side workspace | 12/1/12/2 | founder-approved Grade 5 shared-family extension; Batch 1 closed | A |
 | 40 | `grade5_patterning_and_algebra_pattern_word_problems` | Pattern Word Problems — Grade 5; Patterning & Algebra; practice/planned | missing generator; generic practice | — | established planned gap; no approved application architecture | G |
 | 41 | `grade5_place_value_representation_base_ten_blocks` | Base Ten Blocks — Grade 5; Place Value; visual/generated | base-ten model; full-width visual | 10/1/10/2 | current shared model does not establish a Grade 5 magnitude role | G |
 | 42 | `grade5_place_value_representation_compare_numbers` | Compare Numbers — Grade 5; Place Value; practice/generated | compare numbers; fluency grid | 12/4/60/2 | shared compare-equations density/range correction needed | D/B2 |
@@ -190,7 +190,7 @@ Sparse current output is not evidence for a lower density. Conversely, story, nu
 
 Proposed only; no catalog or reconciliation movement has been applied.
 
-### A — 8
+### A — 11
 
 - `g5_compare_numbers_to_100000_exit_ticket`
 - `g5_equivalent_fractions_exit_ticket`
@@ -200,8 +200,11 @@ Proposed only; no catalog or reconciliation movement has been applied.
 - `grade5_fraction_equivalence_compare_fractions`
 - `grade5_multiplication_facts_missing_factor`
 - `g5_multiplication_fact_review`
+- `grade5_patterning_and_algebra_extend_pattern`
+- `grade5_patterning_and_algebra_identify_pattern_rule`
+- `grade5_patterning_and_algebra_missing_value_pattern`
 
-### D — 16
+### D — 13
 
 - `grade5_addition_subtraction_word_problems_addition_word_problem` — B5
 - `grade5_addition_subtraction_facts_equation_match` — B2
@@ -210,9 +213,6 @@ Proposed only; no catalog or reconciliation movement has been applied.
 - `grade5_fraction_equivalence_fraction_number_line` — B4
 - `grade5_fraction_equivalence_match_equivalent_fractions` — B4
 - `grade5_fraction_equivalence_shade_fraction_models` — B4
-- `grade5_patterning_and_algebra_extend_pattern` — B1
-- `grade5_patterning_and_algebra_identify_pattern_rule` — B1
-- `grade5_patterning_and_algebra_missing_value_pattern` — B1
 - `grade5_place_value_representation_compare_numbers` — B2
 - `grade5_place_value_representation_expanded_form` — B3
 - `grade5_place_value_representation_number_line_identify` — B3
@@ -248,9 +248,9 @@ Proposed only; no catalog or reconciliation movement has been applied.
 - `grade5_patterning_and_algebra_pattern_word_problems`
 - `grade5_place_value_representation_base_ten_blocks`
 
-Total: **A8 / D16 / E1 / G21 / Total46**.
+Total: **A11 / D13 / E1 / G21 / Total46**.
 
-Projected scenario after the six D batches: **A24 / D0 / E1 / G21 / Total46**. If the founder later approves and implements a genuine Function Table architecture: **A25 / D0 / E0 / G21 / Total46**. A founder decision to defer Function Table instead yields **A24 / D0 / E0 / G22 / Total46**.
+Projected scenario after the remaining five D batches: **A24 / D0 / E1 / G21 / Total46**. If the founder later approves and implements a genuine Function Table architecture: **A25 / D0 / E0 / G21 / Total46**. A founder decision to defer Function Table instead yields **A24 / D0 / E0 / G22 / Total46**.
 
 ## Duplicate and deferred analysis
 
@@ -281,11 +281,10 @@ Each implementation batch must run:
 
 ## Founder decisions required
 
-- Approve A8/D16/E1/G21 as the initial reconciliation.
-- Approve B1 Numeric Patterning as the first implementation batch.
+- Batch 1 Numeric Patterning is founder-approved and closed at **A11 / D13 / E1 / G21 / Total46**.
 - Decide whether Grade 5 fraction number lines stay within 0–1 or add an approved 0–2/improper-fraction lane.
 - Approve honest “complete the equivalent fraction” positioning for ID 28, or require genuine matching architecture and move it to E.
 - Decide the exact Grade 5 story default (recommended 8 for the approved work-box geometry; current runtime is 12).
 - Decide whether Function Table should receive new visible-table architecture or move E → G.
 
-The preflight is ready to commit as a documentation checkpoint. Grade 5 implementation remains not started until after that commit and founder approval of Batch 1.
+Batch 1 is closed without lifecycle movement or public customization. The remaining Grade 5 implementation work starts with Batch 2 only after separate founder authorization.

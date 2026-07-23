@@ -386,6 +386,7 @@ function valuesAnswer(values) {
 
 function buildNumericPatternProblem(purpose, options = {}) {
   const pattern = nextNumericPattern(purpose, options);
+  const includeStructuredTruth = options.structuredPatternTruth === true;
   const poolState = options.generatorState?.numericPatternPools
     ? Object.values(options.generatorState.numericPatternPools).find((state) =>
       Array.isArray(state.pool) && state.pool.some((candidate) => candidate.signature === pattern.signature)
@@ -407,11 +408,18 @@ function buildNumericPatternProblem(purpose, options = {}) {
       displayedSequence,
       startingValue: pattern.start,
       step: pattern.step,
+      ruleAmount: pattern.step,
       operation: pattern.operation,
       ruleText: pattern.ruleText,
       missingIndexes: [...pattern.missingIndexes],
       missingAnswers: [...pattern.missingValues],
-      responseValues: [...pattern.missingValues]
+      missingValues: [...pattern.missingValues],
+      responseValues: [...pattern.missingValues],
+      responseTargets: pattern.missingIndexes.map((sequenceIndex, index) => ({
+        sequenceIndex,
+        answer: pattern.missingValues[index]
+      })),
+      answerList: [...pattern.missingValues]
     };
     return {
       type: "equation",
@@ -429,7 +437,17 @@ function buildNumericPatternProblem(purpose, options = {}) {
       answerState,
       duplicateSignature: pattern.signature,
       diagnostics,
-      pattern
+      pattern,
+      ...(includeStructuredTruth ? {
+        startingValue: pattern.start,
+        operation: pattern.operation,
+        ruleAmount: pattern.step,
+        fullSequence: [...pattern.sequence],
+        displayedSequence: [...displayedSequence],
+        missingValues: [...pattern.missingValues],
+        responseTargets: answerState.responseTargets.map((target) => ({ ...target })),
+        answerList: [...pattern.missingValues]
+      } : {})
     };
   }
 
@@ -438,8 +456,14 @@ function buildNumericPatternProblem(purpose, options = {}) {
       completeSequence: [...pattern.sequence],
       startingValue: pattern.start,
       step: pattern.step,
+      ruleAmount: pattern.step,
       operation: pattern.operation,
       ruleText: pattern.ruleText,
+      studentFacingRule: pattern.ruleText,
+      acceptedNormalizedRule: {
+        operation: pattern.operation,
+        amount: pattern.step
+      },
       acceptedAnswerText: pattern.ruleText,
       responseTarget: "rule"
     };
@@ -455,7 +479,17 @@ function buildNumericPatternProblem(purpose, options = {}) {
       answerState,
       duplicateSignature: pattern.signature,
       diagnostics,
-      pattern
+      pattern,
+      ...(includeStructuredTruth ? {
+        startingValue: pattern.start,
+        operation: pattern.operation,
+        ruleAmount: pattern.step,
+        fullSequence: [...pattern.sequence],
+        fullVisibleSequence: [...pattern.sequence],
+        studentFacingRule: pattern.ruleText,
+        acceptedNormalizedRule: { ...answerState.acceptedNormalizedRule },
+        answerList: [pattern.ruleText]
+      } : {})
     };
   }
 
@@ -482,12 +516,20 @@ function buildNumericPatternProblem(purpose, options = {}) {
     visibleSequence: [...visible],
     startingValue: pattern.start,
     step: pattern.step,
+    ruleAmount: pattern.step,
     operation: pattern.operation,
     ruleText: pattern.ruleText,
     visibleTermCount: pattern.visibleLength,
+    visiblePrefix: [...visible],
     continuationCount: pattern.continuationAnswers.length,
     continuationAnswers: [...pattern.continuationAnswers],
-    responseValues: [...pattern.continuationAnswers]
+    continuationValues: [...pattern.continuationAnswers],
+    responseValues: [...pattern.continuationAnswers],
+    responseTargets: pattern.continuationAnswers.map((answer, index) => ({
+      sequenceIndex: pattern.visibleLength + index,
+      answer
+    })),
+    answerList: [...pattern.continuationAnswers]
   };
   return {
     type: "equation",
@@ -504,7 +546,17 @@ function buildNumericPatternProblem(purpose, options = {}) {
     answerState,
     duplicateSignature: pattern.signature,
     diagnostics,
-    pattern
+    pattern,
+    ...(includeStructuredTruth ? {
+      startingValue: pattern.start,
+      operation: pattern.operation,
+      ruleAmount: pattern.step,
+      fullSequence: [...pattern.sequence],
+      visiblePrefix: [...visible],
+      continuationValues: [...pattern.continuationAnswers],
+      responseTargets: answerState.responseTargets.map((target) => ({ ...target })),
+      answerList: [...pattern.continuationAnswers]
+    } : {})
   };
 }
 

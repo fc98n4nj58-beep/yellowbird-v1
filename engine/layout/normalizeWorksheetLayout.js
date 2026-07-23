@@ -169,7 +169,27 @@ function normalizeProblem(problem, index, context) {
     layoutVariant: problem.layoutVariant || null,
     duplicateSignature: problem.duplicateSignature || null,
     relatedDuplicateSignature: problem.relatedDuplicateSignature || null,
-    diagnostics: Array.isArray(problem.diagnostics) ? problem.diagnostics : null
+    diagnostics: Array.isArray(problem.diagnostics) ? problem.diagnostics : null,
+    ...(problem.startingValue !== undefined ? {
+      startingValue: finiteOptionalNumber(problem.startingValue),
+      ruleAmount: finiteOptionalNumber(problem.ruleAmount),
+      fullSequence: Array.isArray(problem.fullSequence) ? problem.fullSequence.map(Number) : null,
+      visiblePrefix: Array.isArray(problem.visiblePrefix) ? problem.visiblePrefix.map(Number) : null,
+      fullVisibleSequence: Array.isArray(problem.fullVisibleSequence) ? problem.fullVisibleSequence.map(Number) : null,
+      displayedSequence: Array.isArray(problem.displayedSequence)
+        ? problem.displayedSequence.map((value) => value === null ? null : Number(value))
+        : null,
+      continuationValues: Array.isArray(problem.continuationValues) ? problem.continuationValues.map(Number) : null,
+      missingValues: Array.isArray(problem.missingValues) ? problem.missingValues.map(Number) : null,
+      responseTargets: Array.isArray(problem.responseTargets)
+        ? problem.responseTargets.map((target) => ({ ...target }))
+        : null,
+      answerList: Array.isArray(problem.answerList) ? [...problem.answerList] : null,
+      studentFacingRule: problem.studentFacingRule || null,
+      acceptedNormalizedRule: problem.acceptedNormalizedRule
+        ? { ...problem.acceptedNormalizedRule }
+        : null
+    } : {})
   };
 }
 

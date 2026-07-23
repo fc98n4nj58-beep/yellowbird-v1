@@ -222,6 +222,26 @@ function normalizeItem(item = {}, index = 0, meta = {}) {
     duplicateSignature: item.duplicateSignature || null,
     relatedDuplicateSignature: item.relatedDuplicateSignature || null,
     diagnostics: Array.isArray(item.diagnostics) ? item.diagnostics : null,
+    ...(item.startingValue !== undefined ? {
+      startingValue: finiteOptionalNumber(item.startingValue),
+      ruleAmount: finiteOptionalNumber(item.ruleAmount),
+      fullSequence: Array.isArray(item.fullSequence) ? item.fullSequence.map(Number) : null,
+      visiblePrefix: Array.isArray(item.visiblePrefix) ? item.visiblePrefix.map(Number) : null,
+      fullVisibleSequence: Array.isArray(item.fullVisibleSequence) ? item.fullVisibleSequence.map(Number) : null,
+      displayedSequence: Array.isArray(item.displayedSequence)
+        ? item.displayedSequence.map((value) => value === null ? null : Number(value))
+        : null,
+      continuationValues: Array.isArray(item.continuationValues) ? item.continuationValues.map(Number) : null,
+      missingValues: Array.isArray(item.missingValues) ? item.missingValues.map(Number) : null,
+      responseTargets: Array.isArray(item.responseTargets)
+        ? item.responseTargets.map((target) => ({ ...target }))
+        : null,
+      answerList: Array.isArray(item.answerList) ? [...item.answerList] : null,
+      studentFacingRule: item.studentFacingRule || null,
+      acceptedNormalizedRule: item.acceptedNormalizedRule
+        ? { ...item.acceptedNormalizedRule }
+        : null
+    } : {}),
     ...(item.contextId !== undefined ? {
       contextId: item.contextId || null,
       templateId: item.templateId || null,
