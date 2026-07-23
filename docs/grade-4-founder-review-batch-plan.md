@@ -245,6 +245,49 @@ All three use `Grade 4 • Math • Addition & Subtraction`, a quiet full-width 
 
 Applied founder-approved movement: each of these three exact IDs moved D to A, producing A20 / D4 / E1 / G23 / Total48. No other Grade 4 row changed category, and Grade 4 remains open.
 
+## Batch 4 closeout
+
+Status: founder-approved and closed. Reconciliation is A23 / D2 / E0 / G23 / Total48. All three catalog lifecycle statuses remain `generated`; no public Grade 4 customization family was registered. Grade 4 remains open for Batch 5.
+
+Review packet: `grade4_place_value_representation_number_line_identify`, `grade4_place_value_representation_number_word_match`, and `grade4_place_value_representation_compare_numbers`. Split, blocked or deferred: none.
+
+### Completed-work, inheritance and role findings
+
+- Number Line Identification was classified **SHARED-FAMILY EXTENSION NEEDED**. Its inherited output still used the stale `Number Line — Grade 4` title, instructional prose, an internal-skill footer, ten generic 0-to-10 models spread over four PDF pages, and incomplete bounds/interval/target truth. The Grade 2/3 whole-number number-line generator, full-width layout and answer-under-marker renderer were sound and are now selected through an exact-ID Grade 4 adapter.
+- Number Word Match was classified **SHARED-FAMILY EXTENSION NEEDED**. The current generator was a writing task rather than matching, formatted only values below 1,000, returned digits for thousands, exposed stale copy/internal footer text and did not retain numeral/word/direction answer state. The honest default role is now numeral-to-word writing under the public title `Write Numbers in Words`; the catalog ID remains unchanged. Supported reverse writing uses `Write the Numeral`. No matching mode or renderer was added.
+- Compare Numbers was classified **NARROW CORRECTION NEEDED**. It already stored left/right values and the symbol, but inherited 0-to-999 values, stale copy/internal footer text, high-density generic layout, unbalanced random results, and no reversal-safe duplicate or complete equality state. The shared comparison generator now selects an exact-ID Grade 4 balanced pool and the existing comparison-symbol renderer.
+- Grade 1-3 generator defaults remain unchanged. The extensions are exact-ID scoped; the renderer displays supplied number-line, number-word or comparison truth and does not reconstruct arithmetic or wording.
+
+### Public copy, Grade 4 defaults and safe boundaries
+
+| Resource | Title and instruction | Default | Verified safe boundary and Grade 3 distinction |
+| --- | --- | --- | --- |
+| Number Line Identification | `Identify Numbers on a Number Line`; `Write the number shown by the point on each number line.` | 6 questions; 6 per page; values 1,000-10,000; ten intervals; safe intervals 10, 25, 50, 100, 250, 500; endpoints allowed | 12 questions over two student pages; interval 500 at 10,000 and interval 10 with five-digit labels remain readable. All labels and key answers at 1,000+ display thousands separators while raw truth remains numeric. Grade 3 retains its smaller interval/range profile. |
+| Number Words | `Write Numbers in Words`; `Write each number in words.` | 12 questions; 12 per page; numeral-to-word; values 1,000-9,999; two aligned columns of six | 20 questions over two student pages at the standardized 12-item page capacity; formatter supports 0-10,000, commas, project-standard hyphens and no “and”. Reverse direction uses the same two-column capacity with exact row alignment. Grade 3 remains capped at 999. |
+| Compare Numbers | `Compare Numbers`; `Write >, <, or = to compare each pair of numbers.` | 30 questions; 30 per page; values 1,000-10,000; three aligned columns of ten; exact 10/10/10 `<`/`>`/`=` balance | The 30-item standardized capacity is the maximum; incompatible balanced counts and densities above 30 throw. Grade 3/lower shared outputs retain their former ranges and layouts. |
+
+All three use `Grade 4 • Math • Place Value`, no subtitle, deterministic seeded generation, stored truth, duplicate prevention and student/key parity. Each default is exactly one student page plus one answer-key page. Number Words uses two equal-height columns of six with long response rules and measured prompt-to-line alignment; its compact answer key remains readable. Compare Numbers uses three equal-height columns of ten with a print-safe symbol target. Completed examples supplement rather than replace the requested student questions and may therefore add pages. Number Line remains unchanged by this restoration.
+
+### Structured truth and variable contract
+
+- Number lines store minimum/maximum, interval, tick count, target index/value, endpoint policy, displayed labels, represented value, response target, answer state and duplicate signature. Every answer satisfies `targetValue = minValue + targetIndex × interval`; the visual consumes the same target index and value.
+- Number words store represented value, comma-formatted numeral, exact project-style number word, task direction, response type/target, answer state and duplicate signature. Zero placeholders were directly verified at 1,000, 1,005, 1,040, 4,008 and 10,000.
+- Comparisons store exact left/right integers, expected symbol, comparison result, equality state, response target, answer state and a reversal-safe signature. Default non-example items are exactly ten `<`, ten `>` and ten `=`; reversed unequal pairs cannot recur.
+- **Preserved, raw-runtime-only:** `questionCount`; `questionsPerPage`; minimum aliases `minValue`/`minA`/`minimumValue`/`minimumNumber`; maximum aliases `maxValue`/`maxA`/`maximumValue`/`maximumNumber`; selected-value aliases `selectedNumbers`/`selectedValues`/`onlyNumbers`; `includeExample`/`completedExample`/`example`; deterministic worksheet seed; and PDF answer-key inclusion.
+- **Number-line controls:** `allowedIntervals`/`intervals`/`selectedIntervals`/`numberLineIntervals`; fixed `tickCount: 10`; `allowEndpointTargets`/`endpointPolicy`; and identify-only `taskMode`. **Number-word controls:** `numberWordMode`/`numberWordDirection`/`mode` for `numeral_to_word` or `word_to_numeral`. **Comparison controls:** `includeEqualPairs`/`equalPairs`, with exact three-way balance when enabled and exact two-way balance when disabled.
+- **Capacity contract:** maximum counts are 12/20/30 and maximum per-page densities are 6/12/30 for line/word/compare. Number Words uses the same 12-item page capacity in both directions; Compare Numbers requires a count compatible with its balanced comparison contract and rejects counts or per-page density above 30 rather than clamping. The whole-number range remains 0-10,000, with Grade 4 defaults beginning at 1,000; number-line intervals remain limited to the six print-safe values; number-line task remains identification-only; and no genuine matching mode is supported. None is publicly registered as customization.
+
+### Adversarial, test and proof checkpoint
+
+- Empty/duplicate selections, decimals, negatives, values above 10,000, reversed ranges, conflicting aliases, mixed valid/invalid values, unsafe counts/densities, insufficient unique pools, invalid examples and caller-owned prompt/answer/truth fields throw. Number lines additionally reject zero/negative/decimal/unsupported or non-dividing intervals, non-10 tick counts, conflicting endpoint controls and unsupported task modes. Number words reject malformed lists and matching/unknown directions. Comparisons reject unsupported equality controls, unbalanced counts and pools unable to supply balanced unique pairs. Explicit invalid input never falls back silently.
+- `scripts/testGrade4PlaceValueRepresentationsBatch4.js`: 30 deterministic seeds per resource; same-seed failures 0; different-seed variation; exact public copy and defaults; numeric number-line truth with comma-formatted display; all six intervals and 10,000 endpoints; fixed number-word alignment geometry; exact two-column 6/6 default pagination; long writing rules; exact 10/10/10 comparison balance in three columns of ten; student/key parity; variables; aliases; safe reverse direction; additional examples; default PDFs 2/2/2; maximum PDFs 4/4/2; explicit Number Words density 13 and Compare Numbers density/count 31 rejection; adversarial rejection; Grade 2/3 isolation; lifecycle stability; and no public customization all pass.
+- Related regressions pass: Grade 3 Place Value Batch 2; Grade 3 Final Reconciliation Base Ten; Grade 1 Number Representation; Grade 2 Category D low-risk place-value family; Grade 2 Comparison; Grade 4 Numeric Patterning Batch 1; Grade 4 Structured Fractions Batch 2; Grade 4 Story Problems Batch 3; Grade 4 reconciliation preflight; and the worksheet customization registry. Changed-JavaScript syntax checks and `git diff --check` pass.
+- Catalog audit remains Ready 104/104, Generated 213/213, Partial 5/5, Total331, Ready failures 0, with only the seven established planned `pattern_word_problems` gaps. No lifecycle status changed.
+- Founder defaults: `review/grade-4-place-value-batch-4/founder-review/01_identify_numbers_on_a_number_line.pdf`, `02_write_numbers_in_words.pdf`, and `03_compare_numbers.pdf`. Nine stress PDFs cover largest/smallest intervals, endpoints and an example, zero placeholders and 10,000, long words, reverse direction, equality/zero-placeholder comparisons, standardized 30-item density and a comparison example.
+- The same 12 proof PDFs were regenerated for this restoration and all 30 pages were rendered and visually inspected. All four Number Line PDFs remained render-identical to the approved proofs. Number Words shows exact two-column 6/6 alignment, equal long response rules, safe wrapped reverse prompts and readable one-page default keys. Compare Numbers shows exact three-column 10/10/10 geometry, centered symbol targets and readable comma-formatted values through `10,000` on both student and key pages. Examples remain additional and create extra pages without reducing the 12 or 30 requested questions. No clipping, overlap, baseline drift, tiny type or footer pressure was found.
+
+Applied founder-approved movement: Number Line Identification moved D to A, Number Words moved D to A, and Compare Numbers moved E to A. The result is A23 / D2 / E0 / G23 / Total48. No other Grade 4 row changed category.
+
 ## A resources held as complete
 
 - Compact assessment/review: `g4_compare_fractions_quick_check`, `g4_compare_fractions_exit_ticket`, `g4_pattern_rule_quick_check`, `g4_multiplication_word_problem_quick_check`.
@@ -285,11 +328,11 @@ Every proposed G ID has a documented reconsideration trigger. Founder approval o
 - Pre-Batch 1 baseline: A11 / D10 / E4 / G23 / Total48.
 - After Batch 1 closeout: A14 / D10 / E1 / G23 / Total48.
 - After Batch 2 closeout: A17 / D7 / E1 / G23 / Total48.
-- Current after Batch 3 closeout: A20 / D4 / E1 / G23 / Total48.
-- After B4 approval: A23 / D2 / E0 / G23 / Total48.
+- After Batch 3 closeout: A20 / D4 / E1 / G23 / Total48.
+- Current after Batch 4 closeout: A23 / D2 / E0 / G23 / Total48.
 - After B5 approval: A25 / D0 / E0 / G23 / Total48.
 
-These are planning scenarios, not applied movements. A final Grade 4 reconciliation ledger should be created only after founder approval of the inventory and initial categories.
+Batch 1-4 movements are applied. Batch 5 remains a planning scenario; Grade 4 is not closed.
 
 ## Founder decisions required
 

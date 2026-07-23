@@ -7,6 +7,7 @@ const GRADE1_NUMBER_WORD_RESOURCE_IDS = new Set([
   "g1_write_the_numeral_to_50",
   "grade2_place_value_representation_number_word_match"
 ]);
+const GRADE4_NUMBER_WORD_ID = "grade4_place_value_representation_number_word_match";
 
 function randInt(min, max, random = Math.random) {
   return Math.floor(random() * (max - min + 1)) + min;
@@ -42,9 +43,72 @@ function numberToWords(n) {
   return String(n);
 }
 
+function grade4NumberToWords(n) {
+  if (n < 1000) return numberToWords(n);
+  if (n > 10000) return String(n);
+  const thousands = Math.floor(n / 1000);
+  const rest = n % 1000;
+  const prefix = thousands === 10 ? "ten thousand" : `${numberToWords(thousands)} thousand`;
+  return rest === 0 ? prefix : `${prefix} ${numberToWords(rest)}`;
+}
+
+function shuffle(values, random = Math.random) {
+  const result = [...values];
+  for (let index = result.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(random() * (index + 1));
+    [result[index], result[swapIndex]] = [result[swapIndex], result[index]];
+  }
+  return result;
+}
+
+function generateGrade4NumberWordProblem(options = {}) {
+  const random = options.random || Math.random;
+  const generatorState = options.generatorState || {};
+  const min = Number(options.minA ?? options.minValue ?? 1000);
+  const max = Number(options.maxA ?? options.maxValue ?? 9999);
+  const selected = Array.isArray(options.selectedNumbers) ? options.selectedNumbers.map(Number) : [];
+  const mode = String(options.numberWordMode || options.numberWordDirection || options.mode || "numeral_to_word");
+  const requestedCount = Number(options.questionCount || 10);
+  const key = JSON.stringify({ min, max, selected, mode, requestedCount });
+  if (!generatorState.grade4NumberWordPools) generatorState.grade4NumberWordPools = {};
+  if (!generatorState.grade4NumberWordPools[key]?.length) {
+    const candidates = selected.length
+      ? selected
+      : Array.from({ length: max - min + 1 }, (_, index) => min + index);
+    if (candidates.length < requestedCount) {
+      throw new Error(`Grade 4 number words need ${requestedCount} unique values; the selected contract provides ${candidates.length}.`);
+    }
+    generatorState.grade4NumberWordPools[key] = shuffle(candidates, random).slice(0, requestedCount);
+  }
+  const value = generatorState.grade4NumberWordPools[key].shift();
+  const word = grade4NumberToWords(value);
+  const isReverse = mode === "word_to_numeral";
+  const numeral = value.toLocaleString("en-CA");
+  return {
+    type: "equation",
+    prompt: isReverse ? word : numeral,
+    answer: isReverse ? value : word,
+    value,
+    representedValue: value,
+    numeral,
+    numberWord: word,
+    numberWordMode: mode,
+    taskDirection: mode,
+    responseMode: isReverse ? "shortNumeral" : "writtenNumberWord",
+    responseType: isReverse ? "numeral" : "number_word",
+    responseTarget: isReverse ? "numeral" : "number_word",
+    responseValues: [isReverse ? value : word],
+    answerState: { representedValue: value, numeral, numberWord: word, taskDirection: mode },
+    duplicateSignature: `grade4_number_word:${mode}:${value}`
+  };
+}
+
 function generateNumberWordMatchProblem(options = {}) {
   if (GRADE1_NUMBER_WORD_RESOURCE_IDS.has(options.worksheetId)) {
     return generateNumberWordProblem(options);
+  }
+  if (options.worksheetId === GRADE4_NUMBER_WORD_ID) {
+    return generateGrade4NumberWordProblem(options);
   }
 
   const random = options.random || Math.random;
@@ -79,3 +143,4 @@ function generateNumberWordMatchProblem(options = {}) {
 }
 
 module.exports = generateNumberWordMatchProblem;
+module.exports.grade4NumberToWords = grade4NumberToWords;

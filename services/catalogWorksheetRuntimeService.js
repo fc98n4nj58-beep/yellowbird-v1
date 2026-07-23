@@ -108,6 +108,12 @@ const GRADE4_STORY_PROBLEM_IDS = new Set([
   "grade4_addition_subtraction_word_problems_subtraction_word_problem"
 ]);
 
+const GRADE4_PLACE_VALUE_BATCH4_IDS = new Set([
+  "grade4_place_value_representation_number_line_identify",
+  "grade4_place_value_representation_number_word_match",
+  "grade4_place_value_representation_compare_numbers"
+]);
+
 const GRADE3_CONCRETE_VISUAL_FOOTERS = Object.freeze({
   g3_equal_sharing_division: "Multiplication and Division",
   grade3_fraction_equivalence_shade_fraction_models: "Fractions",
@@ -140,6 +146,7 @@ function publicSkillLabel(item) {
   if (GRADE3_ADDITION_SUBTRACTION_BATCH3_IDS.has(item?.id)) return "";
   if (GRADE3_STORY_PROBLEM_IDS.has(item?.id)) return "";
   if (GRADE4_STORY_PROBLEM_IDS.has(item?.id)) return "";
+  if (GRADE4_PLACE_VALUE_BATCH4_IDS.has(item?.id)) return "";
   if (PUBLIC_SKILL_LABEL_HIDDEN_IDS.has(item?.id)) return "";
   if (item?.skillKey === "patterning_and_algebra") return "";
   return item?.skillKey || "";
@@ -168,6 +175,7 @@ function publicDomainLabel(item) {
   if (GRADE4_STORY_PROBLEM_IDS.has(item?.id)) {
     return "Addition & Subtraction";
   }
+  if (GRADE4_PLACE_VALUE_BATCH4_IDS.has(item?.id)) return "Place Value";
   if (EARLY_MULTIPLICATION_FOOTER_IDS.has(item?.id)) {
     return "Early Multiplication Thinking";
   }
@@ -263,6 +271,8 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         value: finiteOptionalNumber(p.value),
         numberWord: p.numberWord || null,
         numberWordMode: p.numberWordMode || null,
+        numeral: p.numeral || null,
+        taskDirection: p.taskDirection || null,
         representedValue: finiteOptionalNumber(p.representedValue),
         frameCount: finiteOptionalNumber(p.frameCount),
         dotArrangement: p.dotArrangement || null,

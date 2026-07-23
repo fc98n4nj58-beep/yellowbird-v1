@@ -371,9 +371,13 @@ doc.lineWidth(1);
 
     if (shouldLabel && !(hideValueLabel && isTargetValue)) {
       const fractionLabels = Array.isArray(opts.fractionLabels) ? opts.fractionLabels : null;
-      const labelText = fractionLabels && fractionLabels[i] != null ? String(fractionLabels[i]) : String(tickValue);
+      const labelText = fractionLabels && fractionLabels[i] != null
+        ? String(fractionLabels[i])
+        : formatNumberLineDisplayValue(tickValue, Boolean(opts.formatThousands));
       const insetEndpointLabel = (isAdditionModel || fractionLabels) && (i === 0 || i === steps);
-      const labelWidth = fractionLabels ? 36 : 18;
+      const labelWidth = Number.isFinite(Number(opts.labelWidth))
+        ? Number(opts.labelWidth)
+        : fractionLabels ? 36 : 18;
       const labelX = insetEndpointLabel
         ? (i === 0 ? tickX : tickX - labelWidth)
         : tickX - labelWidth / 2;
@@ -426,6 +430,14 @@ doc.circle(dotX, lineY, 3.2).fillAndStroke();
     dotX,
     lineY
   };
+}
+
+function formatNumberLineDisplayValue(value, useThousandsSeparators = false) {
+  const numeric = Number(value);
+  if (!useThousandsSeparators || !Number.isFinite(numeric) || Math.abs(numeric) < 1000) {
+    return String(value);
+  }
+  return numeric.toLocaleString("en-CA", { maximumFractionDigits: 0 });
 }
 
 function buildNumberLineAnswerTargetGeometry({
@@ -2233,6 +2245,14 @@ function comparisonRowParts(question = {}) {
   };
 }
 
+function formatComparisonDisplayValue(value, useThousandsSeparators = false) {
+  const numeric = finiteOptionalNumber(value);
+  if (numeric === null) return safeStr(value);
+  return useThousandsSeparators
+    ? numeric.toLocaleString("en-US")
+    : String(numeric);
+}
+
 function renderGrade2ComparisonRow(doc, question, layoutBox, fonts = {}, display = {}) {
   const { x, y, width } = layoutBox;
   const parts = comparisonRowParts(question);
@@ -2240,9 +2260,11 @@ function renderGrade2ComparisonRow(doc, question, layoutBox, fonts = {}, display
 
   const fontSize = Number(display.comparisonFontSize || 16);
   const targetWidth = Number(display.comparisonTargetWidth || 52);
-  const numberWidth = 30;
-  const operandWidth = 58;
-  const gap = 12;
+  const numberWidth = Number(display.comparisonNumberGutter || 30);
+  const operandWidth = Number(display.comparisonOperandWidth || 58);
+  const gap = Number(display.comparisonGap || 12);
+  const leftText = formatComparisonDisplayValue(parts.left, display.comparisonThousandsSeparators);
+  const rightText = formatComparisonDisplayValue(parts.right, display.comparisonThousandsSeparators);
   const equationWidth = operandWidth * 2 + targetWidth + gap * 2;
   const availableWidth = Math.max(equationWidth, width - numberWidth);
   const equationX = x + numberWidth + Math.max(0, (availableWidth - equationWidth) / 2);
@@ -2261,7 +2283,7 @@ function renderGrade2ComparisonRow(doc, question, layoutBox, fonts = {}, display
   });
 
   setFont(doc, fonts.regular || "Helvetica", fontSize);
-  doc.text(String(parts.left), equationX, textY, {
+  doc.text(leftText, equationX, textY, {
     width: operandWidth,
     align: "center",
     lineBreak: false
@@ -2274,7 +2296,7 @@ function renderGrade2ComparisonRow(doc, question, layoutBox, fonts = {}, display
     });
   }
   restoreAnswerSurroundingTextStyle(doc, fonts, fontSize);
-  doc.text(String(parts.right), rightX, textY, {
+  doc.text(rightText, rightX, textY, {
     width: operandWidth,
     align: "center",
     lineBreak: false
@@ -2325,7 +2347,7 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
     if (rendered) return rendered;
   }
 
-  if (!visual?.kind && display.grade2ComparisonLayout) {
+  if (!visual?.kind && (display.grade2ComparisonLayout || display.structuredComparisonLayout)) {
     const rendered = renderGrade2ComparisonRow(doc, question, layoutBox, fonts, display);
     if (rendered) return rendered;
   }
@@ -2466,11 +2488,14 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
         Math.max(48, width - numberWidth - lineWidth - 10)
       )
       : null;
+    const fixedNumberWordPromptWidth = Number(display.numberWordPromptZoneWidth);
     const writtenNumberWordPromptWidth = display.numberWordResponseTarget === "writtenWord"
-      ? Math.min(
-        Math.max(18, doc.widthOfString(rawPrompt) + 12),
-        Math.max(18, width * 0.28)
-      )
+      ? Number.isFinite(fixedNumberWordPromptWidth) && fixedNumberWordPromptWidth > 0
+        ? Math.min(fixedNumberWordPromptWidth, Math.max(18, width * 0.28))
+        : Math.min(
+          Math.max(18, doc.widthOfString(rawPrompt) + 12),
+          Math.max(18, width * 0.28)
+        )
       : null;
     const lineStartX = dataResponseGeometry
       ? dataResponseGeometry.lineX
@@ -2501,7 +2526,7 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
       doc.text(rawPrompt, wordX, promptY, {
         width: wordWidth,
         align: "left",
-        lineBreak: false,
+        lineBreak: Boolean(display.reverseNumberWordWrapPrompts),
         ellipsis: false
       });
     } else {
@@ -2686,7 +2711,14 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
 
           if ((display.answerKey || isExample) && question.answer != null) {
             drawShortAnswerLine(doc, answerTarget.x, answerTarget.y, answerTarget.width);
-            drawTextOnLine(doc, question.answer, answerTarget.x, answerTarget.y, answerTarget.width, fonts);
+            drawTextOnLine(
+              doc,
+              formatNumberLineDisplayValue(question.answer, Boolean(visualForRender.data?.formatThousands)),
+              answerTarget.x,
+              answerTarget.y,
+              answerTarget.width,
+              fonts
+            );
           } else {
             drawShortAnswerLine(doc, answerTarget.x, answerTarget.y, answerTarget.width);
           }
@@ -4405,7 +4437,9 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
   doc.fillColor(pdfDesignTokens.colors.text);
 
   const maxPerPage = isReverseNumberWordLayout
-    ? 30
+    ? display.reverseNumberWordRespectPageCapacity
+      ? Math.max(1, layoutMaxProblemsPerPage || Number(display.reverseNumberWordRowsPerColumn || 10))
+      : 30
     : hasVisuals
     ? cols * questionsPerColumn
     : Math.max(1, layoutMaxProblemsPerPage || cols * questionsPerColumn);
@@ -4443,7 +4477,11 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     }
 
     const pageCols = isReverseNumberWordLayout
-      ? clampCols(pageItems.length > 20 ? 3 : pageItems.length > 10 ? 2 : 1)
+      ? display.answerKey && display.numberWordAnswerKeySingleColumn
+        ? 1
+        : display.reverseNumberWordRespectPageCapacity
+          ? 2
+          : clampCols(pageItems.length > 20 ? 3 : pageItems.length > 10 ? 2 : 1)
       : cols;
     const pageQuestionsPerColumn = isReverseNumberWordLayout
       ? Number(display.reverseNumberWordRowsPerColumn || 10)
@@ -4523,6 +4561,7 @@ function renderAnswerKey(doc, fonts, contentObject, options, pageState, layoutOb
   const compactWordProblemAnswerKey = Boolean(
     worksheetType === "word_problem" && layoutObject?.display?.compactWordProblemAnswerKey
   );
+  const numberWordSingleColumnKey = Boolean(layoutObject?.display?.numberWordAnswerKeySingleColumn);
 
   doc.addPage();
   pageState.pageNum += 1;
@@ -4586,7 +4625,13 @@ function renderAnswerKey(doc, fonts, contentObject, options, pageState, layoutOb
             columns: 1,
             maxProblemsPerPage: 6
           }
-        : layoutObject?.template,
+        : numberWordSingleColumnKey
+          ? {
+              ...(layoutObject?.template || {}),
+              columns: 1,
+              maxProblemsPerPage: 12
+            }
+          : layoutObject?.template,
       display: {
         ...(layoutObject?.display || {}),
         answerKey: true,
@@ -4596,6 +4641,14 @@ function renderAnswerKey(doc, fonts, contentObject, options, pageState, layoutOb
               compactWordProblemAnswerKey: true,
               equalHeightItems: true,
               denseGridRows: 6,
+              sequentialColumnFill: true,
+              hideItemSeparators: true
+            }
+          : {}),
+        ...(numberWordSingleColumnKey
+          ? {
+              equalHeightItems: true,
+              denseGridRows: 12,
               sequentialColumnFill: true,
               hideItemSeparators: true
             }
@@ -4666,6 +4719,9 @@ module.exports = {
     buildBaseTenHundredsGeometry,
     buildBaseTenCellGeometry,
     buildNumberLineAnswerTargetGeometry,
+    formatNumberLineDisplayValue,
+    formatComparisonDisplayValue,
+    distributeSequential,
     buildSharedDataPictographGeometry,
     sharedDataSymbolCount,
     buildSharedDataScenarioGeometry,

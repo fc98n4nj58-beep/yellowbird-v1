@@ -323,6 +323,14 @@ const GRADE4_STORY_PROBLEM_IDS = new Set([
   GRADE4_MISSING_ADDEND_STORY_ID,
   GRADE4_SUBTRACTION_STORY_ID
 ]);
+const GRADE4_NUMBER_LINE_ID = "grade4_place_value_representation_number_line_identify";
+const GRADE4_NUMBER_WORD_ID = "grade4_place_value_representation_number_word_match";
+const GRADE4_COMPARE_NUMBERS_ID = "grade4_place_value_representation_compare_numbers";
+const GRADE4_PLACE_VALUE_BATCH4_IDS = new Set([
+  GRADE4_NUMBER_LINE_ID,
+  GRADE4_NUMBER_WORD_ID,
+  GRADE4_COMPARE_NUMBERS_ID
+]);
 const GRADE3_EQUAL_SHARING_ID = "g3_equal_sharing_division";
 const GRADE3_SHADE_FRACTION_ID = "grade3_fraction_equivalence_shade_fraction_models";
 const GRADE3_NUMBER_LINE_IDENTIFY_ID = "grade3_place_value_representation_number_line_identify";
@@ -487,6 +495,12 @@ const GRADE4_STORY_PROBLEM_TITLES = Object.freeze({
   [GRADE4_ADDITION_STORY_ID]: "Addition Story Problems",
   [GRADE4_MISSING_ADDEND_STORY_ID]: "Missing Addend Story Problems",
   [GRADE4_SUBTRACTION_STORY_ID]: "Subtraction Story Problems"
+});
+
+const GRADE4_PLACE_VALUE_BATCH4_TITLES = Object.freeze({
+  [GRADE4_NUMBER_LINE_ID]: "Identify Numbers on a Number Line",
+  [GRADE4_NUMBER_WORD_ID]: "Write Numbers in Words",
+  [GRADE4_COMPARE_NUMBERS_ID]: "Compare Numbers"
 });
 
 const GRADE3_CONCRETE_VISUAL_TITLES = Object.freeze({
@@ -992,6 +1006,299 @@ function normalizeGrade4StoryProblemOptions(item, options = {}) {
     normalized.missingPosition = position;
   } else if (storyTypes) {
     normalized.selectedStoryTypes = storyTypes;
+  }
+  return normalized;
+}
+
+const GRADE4_PLACE_VALUE_SAFE_INTERVALS = Object.freeze([10, 25, 50, 100, 250, 500]);
+
+function grade4PlaceValueEntries(options, aliases) {
+  return aliases.filter((alias) => Object.prototype.hasOwnProperty.call(options, alias))
+    .map((alias) => ({ alias, value: options[alias] }));
+}
+
+function grade4PlaceValueInteger(value, label, minimum, maximum) {
+  const number = Number(value);
+  if (!Number.isInteger(number) || number < minimum || number > maximum) {
+    throw new Error(`Grade 4 place-value ${label} must be a whole number from ${minimum} through ${maximum}.`);
+  }
+  return number;
+}
+
+function grade4PlaceValueBoolean(value, label) {
+  if (typeof value === "boolean") return value;
+  const normalized = String(value).trim().toLowerCase();
+  if (["1", "true", "yes", "on"].includes(normalized)) return true;
+  if (["0", "false", "no", "off"].includes(normalized)) return false;
+  throw new Error(`Grade 4 place-value ${label} must be true or false.`);
+}
+
+function grade4PlaceValueScalarAlias(options, aliases, label, normalize) {
+  const entries = grade4PlaceValueEntries(options, aliases);
+  if (!entries.length) return null;
+  const values = entries.map(({ value }) => normalize(value));
+  if (new Set(values.map((value) => JSON.stringify(value))).size !== 1) {
+    throw new Error(`Grade 4 place-value ${label} aliases must agree.`);
+  }
+  return values[0];
+}
+
+function grade4PlaceValueList(value, label) {
+  const list = Array.isArray(value)
+    ? value
+    : typeof value === "string" ? value.split(/[\s,|]+/) : value == null ? [] : [value];
+  if (!list.length || list.some((entry) => entry === "" || entry === null || entry === undefined)) {
+    throw new Error(`Grade 4 place-value ${label} must not be empty.`);
+  }
+  return list;
+}
+
+function grade4PlaceValueListAlias(options, aliases, label, normalize) {
+  const entries = grade4PlaceValueEntries(options, aliases);
+  if (!entries.length) return null;
+  const lists = entries.map(({ value }) => grade4PlaceValueList(value, label).map(normalize));
+  lists.forEach((list) => {
+    if (new Set(list).size !== list.length) {
+      throw new Error(`Grade 4 place-value ${label} values must be unique.`);
+    }
+  });
+  const signatures = lists.map((list) => [...list].sort((a, b) => a - b).join(","));
+  if (new Set(signatures).size !== 1) {
+    throw new Error(`Grade 4 place-value ${label} aliases must agree.`);
+  }
+  return lists[0];
+}
+
+function normalizeGrade4NumberWordMode(value) {
+  const token = String(value).trim().toLowerCase().replace(/[\s-]+/g, "_");
+  if (["numeral_to_word", "number_to_word", "write_words"].includes(token)) return "numeral_to_word";
+  if (["word_to_numeral", "word_to_number", "write_numeral"].includes(token)) return "word_to_numeral";
+  throw new Error("Grade 4 number words support numeral_to_word or word_to_numeral only; matching is not supported.");
+}
+
+function normalizeGrade4EndpointPolicy(value) {
+  const token = String(value).trim().toLowerCase().replace(/[\s-]+/g, "_");
+  if (["allowed", "endpoints_allowed", "include_endpoints"].includes(token)) return true;
+  if (["interior", "interior_only", "exclude_endpoints"].includes(token)) return false;
+  throw new Error("Grade 4 number-line endpoint policy must be endpoints_allowed or interior_only.");
+}
+
+function normalizeGrade4NumberLineTask(value) {
+  const token = String(value).trim().toLowerCase().replace(/[\s-]+/g, "_");
+  if (["identify", "identify_marked_number", "read_number_line"].includes(token)) return "identify_marked_number";
+  throw new Error("Grade 4 number lines support identify_marked_number mode only.");
+}
+
+function validateGrade4PlaceValueRawOptions(item, options = {}) {
+  if (!GRADE4_PLACE_VALUE_BATCH4_IDS.has(item.id)) return;
+  const isLine = item.id === GRADE4_NUMBER_LINE_ID;
+  const isWords = item.id === GRADE4_NUMBER_WORD_ID;
+  const defaultCount = isLine ? 6 : isWords ? 12 : 30;
+  const maxCount = isLine ? 12 : isWords ? 20 : 30;
+  const numberWordMode = isWords
+    ? grade4PlaceValueScalarAlias(
+      options,
+      ["numberWordMode", "numberWordDirection", "mode"],
+      "number-word direction",
+      normalizeGrade4NumberWordMode
+    ) || "numeral_to_word"
+    : null;
+  const defaultPerPage = isLine ? 6 : isWords ? 12 : 30;
+  const questionCount = grade4PlaceValueScalarAlias(
+    options,
+    ["questionCount"],
+    "question count",
+    (value) => grade4PlaceValueInteger(value, "question count", 1, maxCount)
+  ) ?? defaultCount;
+  grade4PlaceValueScalarAlias(
+    options,
+    ["questionsPerPage"],
+    "questions per page",
+    (value) => grade4PlaceValueInteger(value, "questions per page", 1, defaultPerPage)
+  );
+  const includeExample = grade4PlaceValueScalarAlias(
+    options,
+    ["includeExample", "completedExample", "example"],
+    "completed-example",
+    (value) => grade4PlaceValueBoolean(value, "completed-example option")
+  ) ?? false;
+  const defaultMin = 1000;
+  const defaultMax = isWords ? 9999 : 10000;
+  const minimum = grade4PlaceValueScalarAlias(
+    options,
+    ["minValue", "minA", "minimumValue", "minimumNumber"],
+    "minimum value",
+    (value) => grade4PlaceValueInteger(value, "minimum value", 0, 10000)
+  ) ?? defaultMin;
+  const maximum = grade4PlaceValueScalarAlias(
+    options,
+    ["maxValue", "maxA", "maximumValue", "maximumNumber"],
+    "maximum value",
+    (value) => grade4PlaceValueInteger(value, "maximum value", 0, 10000)
+  ) ?? defaultMax;
+  if (minimum > maximum) throw new Error("Grade 4 place-value minimum value must not exceed maximum value.");
+  const selected = grade4PlaceValueListAlias(
+    options,
+    ["selectedNumbers", "selectedValues", "onlyNumbers"],
+    "selected numbers",
+    (value) => grade4PlaceValueInteger(value, "selected number", 0, 10000)
+  );
+  if (selected?.some((value) => value < minimum || value > maximum)) {
+    throw new Error("Grade 4 place-value selected numbers must remain inside the selected range.");
+  }
+
+  if (isLine) {
+    const intervals = grade4PlaceValueListAlias(
+      options,
+      ["allowedIntervals", "intervals", "selectedIntervals", "numberLineIntervals"],
+      "number-line intervals",
+      (value) => grade4PlaceValueInteger(value, "number-line interval", 1, 500)
+    ) || [...GRADE4_PLACE_VALUE_SAFE_INTERVALS];
+    if (intervals.some((value) => !GRADE4_PLACE_VALUE_SAFE_INTERVALS.includes(value))) {
+      throw new Error(`Grade 4 number lines support intervals ${GRADE4_PLACE_VALUE_SAFE_INTERVALS.join(", ")} only.`);
+    }
+    intervals.forEach((interval) => {
+      if ((maximum - minimum) % interval !== 0 || maximum - minimum < interval * 10) {
+        throw new Error("Grade 4 number-line intervals must divide the selected range and support ten intervals.");
+      }
+    });
+    const tickCount = grade4PlaceValueScalarAlias(
+      options,
+      ["tickCount"],
+      "tick count",
+      (value) => grade4PlaceValueInteger(value, "tick count", 10, 10)
+    );
+    if (tickCount !== null && tickCount !== 10) throw new Error("Grade 4 number lines use exactly 10 intervals.");
+    const endpointBoolean = grade4PlaceValueScalarAlias(
+      options,
+      ["allowEndpointTargets"],
+      "endpoint option",
+      (value) => grade4PlaceValueBoolean(value, "endpoint option")
+    );
+    const endpointPolicy = grade4PlaceValueScalarAlias(
+      options,
+      ["endpointPolicy"],
+      "endpoint policy",
+      normalizeGrade4EndpointPolicy
+    );
+    if (endpointBoolean !== null && endpointPolicy !== null && endpointBoolean !== endpointPolicy) {
+      throw new Error("Grade 4 number-line endpoint aliases must agree.");
+    }
+    grade4PlaceValueScalarAlias(options, ["taskMode"], "task mode", normalizeGrade4NumberLineTask);
+    if (selected && selected.length < questionCount + (includeExample ? 1 : 0)) {
+      throw new Error("Grade 4 number-line selected values cannot support the requested unique targets.");
+    }
+  }
+
+  if (isWords) {
+    if ((selected?.length || maximum - minimum + 1) < questionCount + (includeExample ? 1 : 0)) {
+      throw new Error("Grade 4 number words need enough unique values for the requested count.");
+    }
+  }
+
+  if (item.id === GRADE4_COMPARE_NUMBERS_ID) {
+    const includeEqualPairs = grade4PlaceValueScalarAlias(
+      options,
+      ["includeEqualPairs", "equalPairs"],
+      "equality option",
+      (value) => grade4PlaceValueBoolean(value, "equality option")
+    ) ?? true;
+    if ((includeEqualPairs && questionCount % 3 !== 0) || (!includeEqualPairs && questionCount % 2 !== 0)) {
+      throw new Error("Grade 4 comparison question count must support exact symbol balance.");
+    }
+    const valueCount = selected?.length || maximum - minimum + 1;
+    const equalCount = includeEqualPairs ? questionCount / 3 : 0;
+    const unequalCount = questionCount - equalCount;
+    const requiredUnequalPairs = unequalCount + (!includeEqualPairs && includeExample ? 1 : 0);
+    if (valueCount < equalCount + (includeEqualPairs && includeExample ? 1 : 0) || valueCount * (valueCount - 1) / 2 < requiredUnequalPairs) {
+      throw new Error("Grade 4 comparison value pool cannot support balanced unique pairs.");
+    }
+  }
+
+  const truthKeys = [
+    "answer", "answerState", "prompt", "responseTarget", "duplicateSignature",
+    "targetValue", "targetIndex", "displayedLabels", "numberWord", "numeral",
+    "leftValue", "rightValue", "expectedSymbol", "comparisonResult", "equalityState"
+  ];
+  if (truthKeys.some((key) => Object.prototype.hasOwnProperty.call(options, key))) {
+    throw new Error("Grade 4 place-value caller-owned answer truth is not supported.");
+  }
+}
+
+function normalizeGrade4PlaceValueOptions(item, options = {}, rawOptions = {}) {
+  if (!GRADE4_PLACE_VALUE_BATCH4_IDS.has(item.id)) return options;
+  const isLine = item.id === GRADE4_NUMBER_LINE_ID;
+  const isWords = item.id === GRADE4_NUMBER_WORD_ID;
+  const numberWordMode = isWords
+    ? grade4PlaceValueScalarAlias(
+      rawOptions,
+      ["numberWordMode", "numberWordDirection", "mode"],
+      "number-word direction",
+      normalizeGrade4NumberWordMode
+    ) || "numeral_to_word"
+    : null;
+  const normalized = { ...options };
+  normalized.questionCount = Number(rawOptions.questionCount ?? (isLine ? 6 : isWords ? 12 : 30));
+  normalized.questionsPerPage = Number(rawOptions.questionsPerPage ?? (isLine ? 6 : isWords ? 12 : 30));
+  normalized.minA = Number(rawOptions.minValue ?? rawOptions.minA ?? rawOptions.minimumValue ?? rawOptions.minimumNumber ?? 1000);
+  normalized.maxA = Number(rawOptions.maxValue ?? rawOptions.maxA ?? rawOptions.maximumValue ?? rawOptions.maximumNumber ?? (isWords ? 9999 : 10000));
+  normalized.minValue = normalized.minA;
+  normalized.maxValue = normalized.maxA;
+  const selected = grade4PlaceValueListAlias(
+    rawOptions,
+    ["selectedNumbers", "selectedValues", "onlyNumbers"],
+    "selected numbers",
+    Number
+  );
+  if (selected) {
+    normalized.selectedNumbers = selected;
+    normalized.selectedValues = selected;
+    normalized.onlyNumbers = selected.join(",");
+  }
+  normalized.includeExample = grade4PlaceValueScalarAlias(
+    rawOptions,
+    ["includeExample", "completedExample", "example"],
+    "completed-example",
+    grade4PlaceValueBoolean
+  ) ?? false;
+
+  if (isLine) {
+    const intervals = grade4PlaceValueListAlias(
+      rawOptions,
+      ["allowedIntervals", "intervals", "selectedIntervals", "numberLineIntervals"],
+      "number-line intervals",
+      Number
+    ) || [...GRADE4_PLACE_VALUE_SAFE_INTERVALS];
+    const endpointBoolean = grade4PlaceValueScalarAlias(
+      rawOptions,
+      ["allowEndpointTargets"],
+      "endpoint option",
+      grade4PlaceValueBoolean
+    );
+    const endpointPolicy = grade4PlaceValueScalarAlias(
+      rawOptions,
+      ["endpointPolicy"],
+      "endpoint policy",
+      normalizeGrade4EndpointPolicy
+    );
+    normalized.allowedIntervals = intervals;
+    normalized.intervals = intervals;
+    normalized.selectedIntervals = intervals;
+    normalized.tickCount = 10;
+    normalized.allowEndpointTargets = endpointBoolean ?? endpointPolicy ?? true;
+    normalized.endpointPolicy = normalized.allowEndpointTargets ? "endpoints_allowed" : "interior_only";
+    normalized.taskMode = "identify_marked_number";
+  } else if (isWords) {
+    normalized.numberWordMode = numberWordMode;
+    normalized.numberWordDirection = normalized.numberWordMode;
+    normalized.promptStyle = "number_only";
+  } else {
+    normalized.includeEqualPairs = grade4PlaceValueScalarAlias(
+      rawOptions,
+      ["includeEqualPairs", "equalPairs"],
+      "equality option",
+      grade4PlaceValueBoolean
+    ) ?? true;
   }
   return normalized;
 }
@@ -1893,6 +2200,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
   validateGrade4NumericPatternRawOptions(item, options);
   validateGrade4StructuredFractionRawOptions(item, options);
   validateGrade4StoryRawOptions(item, options);
+  validateGrade4PlaceValueRawOptions(item, options);
   if (item.id === GRADE3_BASE_TEN_ID) {
     validateGrade3BaseTenRawOptions(options);
   }
@@ -2064,7 +2372,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  return normalizeGrade4StoryProblemOptions(item, normalizeGrade4StructuredFractionOptions(item, normalizeGrade4NumericPatterningOptions(item, normalizeGrade3DataBatch7Options(
+  return normalizeGrade4PlaceValueOptions(item, normalizeGrade4StoryProblemOptions(item, normalizeGrade4StructuredFractionOptions(item, normalizeGrade4NumericPatterningOptions(item, normalizeGrade3DataBatch7Options(
     item,
   normalizeGrade3FractionBatch6Options(
     item,
@@ -2110,7 +2418,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
       )
     )
     )
-  ))))))))))));
+  )))))))))))), options);
 }
 
 const NON_CUSTOMIZATION_QUERY_KEYS = new Set([
@@ -2283,6 +2591,47 @@ function validateGrade4StoryWorksheet(id, problems = []) {
   });
 }
 
+function validateGrade4PlaceValueWorksheet(id, problems = []) {
+  if (!GRADE4_PLACE_VALUE_BATCH4_IDS.has(id)) return;
+  const signatures = new Set();
+  const targets = new Set();
+  problems.forEach((problem) => {
+    if (!problem.duplicateSignature || signatures.has(problem.duplicateSignature)) {
+      throw new Error("Grade 4 place-value questions require unique structured signatures.");
+    }
+    signatures.add(problem.duplicateSignature);
+    if (id === GRADE4_NUMBER_LINE_ID) {
+      if (
+        problem.taskMode !== "identify_marked_number" ||
+        problem.tickCount !== 10 ||
+        problem.targetValue !== problem.minValue + problem.targetIndex * problem.interval ||
+        problem.maxValue - problem.minValue !== problem.tickCount * problem.interval ||
+        problem.answer !== problem.targetValue ||
+        problem.answerState?.targetValue !== problem.targetValue ||
+        targets.has(problem.targetValue)
+      ) throw new Error("Grade 4 number-line structured truth is inconsistent or duplicated.");
+      targets.add(problem.targetValue);
+    } else if (id === GRADE4_NUMBER_WORD_ID) {
+      if (
+        !Number.isInteger(problem.representedValue) ||
+        !problem.numeral || !problem.numberWord ||
+        !["numeral_to_word", "word_to_numeral"].includes(problem.numberWordMode) ||
+        (problem.numberWordMode === "numeral_to_word" && (problem.prompt !== problem.numeral || problem.answer !== problem.numberWord)) ||
+        (problem.numberWordMode === "word_to_numeral" && (problem.prompt !== problem.numberWord || problem.answer !== problem.representedValue)) ||
+        problem.answerState?.representedValue !== problem.representedValue
+      ) throw new Error("Grade 4 number-word structured truth is inconsistent.");
+    } else {
+      const expected = problem.leftValue < problem.rightValue ? "<" : problem.leftValue > problem.rightValue ? ">" : "=";
+      if (
+        problem.expectedSymbol !== expected || problem.comparisonResult !== expected || problem.answer !== expected ||
+        problem.equalityState !== (expected === "=") ||
+        problem.answerState?.expectedSymbol !== expected ||
+        problem.responseTarget !== "comparison_symbol"
+      ) throw new Error("Grade 4 comparison structured truth is inconsistent.");
+    }
+  });
+}
+
 function generateWorksheetFromCatalogId(id, options = {}) {
   const item = getAnyWorksheetCatalogById(id);
 
@@ -2365,6 +2714,7 @@ function generateWorksheetFromCatalogId(id, options = {}) {
     validateGrade3DataDisplayWorksheet(item.id, worksheet.problems);
     validateGrade3BaseTenWorksheet(item.id, worksheet.problems);
     validateGrade4StoryWorksheet(item.id, worksheet.problems);
+    validateGrade4PlaceValueWorksheet(item.id, worksheet.problems);
     return worksheet;
   } catch (err) {
     if (/No addition facts are available/.test(err.message)) {
@@ -2426,6 +2776,18 @@ function buildStudentFacingInstruction(item, fallback = "") {
 
  if (item.id === GRADE3_NUMBER_LINE_IDENTIFY_ID) {
   return "Write the number shown by the point on each number line.";
+ }
+
+ if (item.id === GRADE4_NUMBER_LINE_ID) {
+  return "Write the number shown by the point on each number line.";
+ }
+
+ if (item.id === GRADE4_NUMBER_WORD_ID) {
+  return "Write each number in words.";
+ }
+
+ if (item.id === GRADE4_COMPARE_NUMBERS_ID) {
+  return "Write >, <, or = to compare each pair of numbers.";
  }
 
  if ([GRADE3_COMPARE_FRACTIONS_ID, GRADE4_COMPARE_FRACTIONS_ID].includes(item.id)) {
@@ -2810,6 +3172,9 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
   GRADE3_ADDITION_SUBTRACTION_BATCH3_TITLES[item.id] ||
   GRADE3_STORY_PROBLEM_TITLES[item.id] ||
   GRADE4_STORY_PROBLEM_TITLES[item.id] ||
+  (item.id === GRADE4_NUMBER_WORD_ID
+    ? isReverseNumberWordMode ? "Write the Numeral" : "Write Numbers in Words"
+    : GRADE4_PLACE_VALUE_BATCH4_TITLES[item.id]) ||
   GRADE3_CONCRETE_VISUAL_TITLES[item.id] ||
   GRADE3_FRACTION_BATCH6_TITLES[item.id] ||
   GRADE4_STRUCTURED_FRACTION_TITLES[item.id] ||
@@ -3044,6 +3409,17 @@ if (GRADE4_STORY_PROBLEM_IDS.has(item.id)) {
   };
 }
 
+if (GRADE4_PLACE_VALUE_BATCH4_IDS.has(item.id)) {
+  layout.problems = layout.problems.map((problem, index) => {
+    const truth = worksheet.problems?.[index] || {};
+    return {
+      ...problem,
+      numeral: truth.numeral || null,
+      taskDirection: truth.taskDirection || null
+    };
+  });
+}
+
 if (["math.addition.basic", "related_subtraction", "missing_addend"].includes(item.activityTypes?.[0])) {
   layout.display = {
     ...(layout.display || {}),
@@ -3054,24 +3430,32 @@ if (["math.addition.basic", "related_subtraction", "missing_addend"].includes(it
 
 if (item.activityTypes?.[0] === "compare_numbers") {
   const isGrade2Comparison = GRADE2_COMPARISON_IDS.has(item.id);
+  const isGrade4Comparison = item.id === GRADE4_COMPARE_NUMBERS_ID;
+  const isStructuredComparison = isGrade2Comparison || isGrade4Comparison;
   layout.template = {
     ...(layout.template || {}),
-    columns: isGrade2Comparison ? 2 : 4,
-    maxProblemsPerPage: finiteNumber(normalizedOptions.questionsPerPage) || (isGrade2Comparison ? 12 : 60)
+    columns: isGrade4Comparison ? 3 : isStructuredComparison ? 2 : 4,
+    maxProblemsPerPage: finiteNumber(normalizedOptions.questionsPerPage) || (isGrade4Comparison ? 30 : isStructuredComparison ? 12 : 60)
   };
   layout.display = {
     ...(layout.display || {}),
+    hideSubtitle: isGrade4Comparison || layout.display?.hideSubtitle,
     answerTargetVariant: "comparisonSymbol",
     standardShortAnswerTarget: true,
-    standardAnswerLineWidth: isGrade2Comparison ? 52 : 34,
+    standardAnswerLineWidth: isGrade4Comparison ? 24 : isStructuredComparison ? 52 : 34,
     standardAnswerBlankText: "___",
     hideItemSeparators: true,
     equalHeightItems: true,
-    denseGridRows: isGrade2Comparison ? 6 : 15,
-    sequentialColumnFill: isGrade2Comparison,
+    denseGridRows: isGrade4Comparison ? 10 : isStructuredComparison ? 6 : 15,
+    sequentialColumnFill: isStructuredComparison,
     grade2ComparisonLayout: isGrade2Comparison,
-    comparisonTargetWidth: isGrade2Comparison ? 52 : 34,
-    comparisonFontSize: isGrade2Comparison ? 16 : 12
+    structuredComparisonLayout: isStructuredComparison,
+    comparisonTargetWidth: isGrade4Comparison ? 24 : isStructuredComparison ? 52 : 34,
+    comparisonFontSize: isGrade4Comparison ? 10.5 : isStructuredComparison ? 16 : 12,
+    comparisonNumberGutter: isGrade4Comparison ? 20 : 30,
+    comparisonOperandWidth: isGrade4Comparison ? 42 : 58,
+    comparisonGap: isGrade4Comparison ? 4 : 12,
+    comparisonThousandsSeparators: isGrade4Comparison
   };
 }
 
@@ -3494,7 +3878,7 @@ if ([GRADE3_FACT_FLUENCY_ID, GRADE3_MISSING_ADDEND_ID].includes(item.id)) {
   };
 }
 
-if ([GRADE2_NUMBER_LINE_IDENTIFY_ID, GRADE3_NUMBER_LINE_IDENTIFY_ID].includes(item.id)) {
+if ([GRADE2_NUMBER_LINE_IDENTIFY_ID, GRADE3_NUMBER_LINE_IDENTIFY_ID, GRADE4_NUMBER_LINE_ID].includes(item.id)) {
   layout.template = {
     ...(layout.template || {}),
     columns: 1,
@@ -3980,7 +4364,7 @@ if (item.activityTypes?.[0] === "ten_frame") {
   }
 }
 
-if (isGrade1NumberWordMode || item.id === GRADE2_NUMBER_WORD_WRITE_ID || item.id === GRADE3_NUMBER_WORD_ID) {
+if (isGrade1NumberWordMode || item.id === GRADE2_NUMBER_WORD_WRITE_ID || item.id === GRADE3_NUMBER_WORD_ID || item.id === GRADE4_NUMBER_WORD_ID) {
   const questionCount = Math.max(
     1,
     finiteNumber(normalizedOptions.questionCount) || worksheet.problems?.length || 20
@@ -3990,8 +4374,10 @@ if (isGrade1NumberWordMode || item.id === GRADE2_NUMBER_WORD_WRITE_ID || item.id
 
   layout.template = {
     ...(layout.template || {}),
-    columns: derivedColumns,
-    maxProblemsPerPage: [GRADE2_NUMBER_WORD_WRITE_ID, GRADE3_NUMBER_WORD_ID].includes(item.id)
+    columns: item.id === GRADE4_NUMBER_WORD_ID ? 2 : derivedColumns,
+    maxProblemsPerPage: item.id === GRADE4_NUMBER_WORD_ID
+      ? finiteNumber(normalizedOptions.questionsPerPage) || 10
+      : [GRADE2_NUMBER_WORD_WRITE_ID, GRADE3_NUMBER_WORD_ID].includes(item.id)
       ? 12
       : derivedColumns === 3 ? 30 : 20
   };
@@ -4002,14 +4388,24 @@ if (isGrade1NumberWordMode || item.id === GRADE2_NUMBER_WORD_WRITE_ID || item.id
     writingLine: true,
     equalHeightItems: true,
     numberWordResponseTarget: isReverseNumberWordMode ? "shortNumeral" : "writtenWord",
-    standardAnswerLineWidth: [GRADE2_NUMBER_WORD_WRITE_ID, GRADE3_NUMBER_WORD_ID].includes(item.id)
+    numberWordPromptZoneWidth: item.id === GRADE4_NUMBER_WORD_ID && !isReverseNumberWordMode ? 52 : null,
+    answerLineBelowPrompt: item.id === GRADE4_NUMBER_WORD_ID && !isReverseNumberWordMode,
+    standardAnswerLineWidth: item.id === GRADE4_NUMBER_WORD_ID
+      ? 190
+      : [GRADE2_NUMBER_WORD_WRITE_ID, GRADE3_NUMBER_WORD_ID].includes(item.id)
       ? 150
       : layout.display?.standardAnswerLineWidth,
     shortWritingLine: isReverseNumberWordMode,
     reverseNumberWordWriting: isReverseNumberWordMode,
+    reverseNumberWordRespectPageCapacity: item.id === GRADE4_NUMBER_WORD_ID,
     reverseNumberWordLineWidth: 46,
-    reverseNumberWordPromptZoneWidth: 70,
-    reverseNumberWordRowsPerColumn: 10,
+    reverseNumberWordPromptZoneWidth: item.id === GRADE4_NUMBER_WORD_ID ? 142 : 70,
+    reverseNumberWordWrapPrompts: item.id === GRADE4_NUMBER_WORD_ID,
+    numberWordAnswerKeySingleColumn: item.id === GRADE4_NUMBER_WORD_ID,
+    reverseNumberWordRowsPerColumn: item.id === GRADE4_NUMBER_WORD_ID
+      ? Math.ceil((finiteNumber(normalizedOptions.questionsPerPage) || 12) / 2)
+      : 10,
+    denseGridRows: item.id === GRADE4_NUMBER_WORD_ID ? 6 : layout.display?.denseGridRows,
     sequentialColumnFill: true
   };
 }

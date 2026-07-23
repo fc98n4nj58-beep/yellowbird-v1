@@ -5,6 +5,7 @@ const {
 const GRADE1_COMPARE_NUMBERS_ID = "g1_compare_numbers_to_20";
 const GRADE2_THREE_DIGIT_COMPARISON_ID = "grade2_place_value_representation_compare_numbers";
 const GRADE2_TO_100_COMPARISON_ID = "g2_compare_numbers_to_100";
+const GRADE4_COMPARE_NUMBERS_ID = "grade4_place_value_representation_compare_numbers";
 
 function randInt(min, max, random = Math.random) {
   return Math.floor(random() * (max - min + 1)) + min;
@@ -23,9 +24,141 @@ function pickNumber(options, min, max) {
   return randInt(min, max, random);
 }
 
+function shuffle(values, random = Math.random) {
+  const result = [...values];
+  for (let index = result.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(random() * (index + 1));
+    [result[index], result[swapIndex]] = [result[swapIndex], result[index]];
+  }
+  return result;
+}
+
+function buildGrade4ComparisonPool(options = {}) {
+  const random = options.random || Math.random;
+  const min = Number(options.minA ?? options.minValue ?? 1000);
+  const max = Number(options.maxA ?? options.maxValue ?? 10000);
+  const selected = Array.isArray(options.selectedNumbers) ? options.selectedNumbers.map(Number) : [];
+  const count = Number(options.questionCount || 12);
+  const studentCount = Number(options.studentQuestionCount || count);
+  const additionalExampleCount = Math.max(0, count - studentCount);
+  const includeEqualPairs = options.includeEqualPairs !== false;
+  const equalCount = includeEqualPairs ? studentCount / 3 : 0;
+  const lessCount = includeEqualPairs ? studentCount / 3 : studentCount / 2;
+  const greaterCount = studentCount - equalCount - lessCount;
+  const values = selected.length ? selected : null;
+  const pick = () => values
+    ? values[Math.floor(random() * values.length)]
+    : randInt(min, max, random);
+  const usedValues = new Set();
+  const usedPairs = new Set();
+  const pool = [];
+  const examples = [];
+
+  for (let index = 0; index < additionalExampleCount; index += 1) {
+    if (includeEqualPairs) {
+      let value = pick();
+      for (let attempt = 0; attempt < 1000 && usedValues.has(value); attempt += 1) value = pick();
+      if (usedValues.has(value)) throw new Error("Grade 4 comparison example pool is too small.");
+      usedValues.add(value);
+      examples.push({ leftValue: value, rightValue: value, expectedSymbol: "=" });
+    } else {
+      let low;
+      let high;
+      let pairKey;
+      for (let attempt = 0; attempt < 2000; attempt += 1) {
+        const first = pick();
+        const second = pick();
+        if (first === second) continue;
+        low = Math.min(first, second);
+        high = Math.max(first, second);
+        pairKey = `${low}:${high}`;
+        if (!usedPairs.has(pairKey)) break;
+      }
+      if (!pairKey || usedPairs.has(pairKey)) throw new Error("Grade 4 comparison example pool is too small.");
+      usedPairs.add(pairKey);
+      examples.push({ leftValue: low, rightValue: high, expectedSymbol: "<" });
+    }
+  }
+
+  for (let index = 0; index < equalCount; index += 1) {
+    let value = pick();
+    for (let attempt = 0; attempt < 1000 && usedValues.has(value); attempt += 1) value = pick();
+    if (usedValues.has(value)) throw new Error("Grade 4 comparison equality pool is too small.");
+    usedValues.add(value);
+    pool.push({ leftValue: value, rightValue: value, expectedSymbol: "=" });
+  }
+
+  [["<", lessCount], [">", greaterCount]].forEach(([symbol, targetCount]) => {
+    for (let index = 0; index < targetCount; index += 1) {
+      let leftValue;
+      let rightValue;
+      let pairKey;
+      for (let attempt = 0; attempt < 2000; attempt += 1) {
+        const first = pick();
+        const second = pick();
+        if (first === second) continue;
+        const low = Math.min(first, second);
+        const high = Math.max(first, second);
+        pairKey = `${low}:${high}`;
+        if (usedPairs.has(pairKey)) continue;
+        leftValue = symbol === "<" ? low : high;
+        rightValue = symbol === "<" ? high : low;
+        break;
+      }
+      if (!pairKey || leftValue === undefined) throw new Error("Grade 4 comparison pair pool is too small.");
+      usedPairs.add(pairKey);
+      pool.push({ leftValue, rightValue, expectedSymbol: symbol });
+    }
+  });
+  return examples.concat(shuffle(pool, random));
+}
+
+function generateGrade4CompareNumbersProblem(options = {}) {
+  const generatorState = options.generatorState || {};
+  const key = JSON.stringify({
+    min: options.minA ?? options.minValue ?? 1000,
+    max: options.maxA ?? options.maxValue ?? 10000,
+    selected: options.selectedNumbers || [],
+    questionCount: options.questionCount || 12,
+    includeEqualPairs: options.includeEqualPairs !== false
+  });
+  if (!generatorState.grade4ComparisonPools) generatorState.grade4ComparisonPools = {};
+  if (!generatorState.grade4ComparisonPools[key]?.length) {
+    generatorState.grade4ComparisonPools[key] = buildGrade4ComparisonPool(options);
+  }
+  const item = generatorState.grade4ComparisonPools[key].shift();
+  if (!item) throw new Error("No Grade 4 comparison items are available.");
+  const equalityState = item.expectedSymbol === "=";
+  const leftNumeral = item.leftValue.toLocaleString("en-CA");
+  const rightNumeral = item.rightValue.toLocaleString("en-CA");
+  const low = Math.min(item.leftValue, item.rightValue);
+  const high = Math.max(item.leftValue, item.rightValue);
+  return {
+    type: "equation",
+    prompt: `${leftNumeral}   ___   ${rightNumeral}`,
+    answer: item.expectedSymbol,
+    leftValue: item.leftValue,
+    rightValue: item.rightValue,
+    expectedSymbol: item.expectedSymbol,
+    comparisonResult: item.expectedSymbol,
+    equalityState,
+    responseMode: "comparison_symbol",
+    responseType: "symbol",
+    responseTarget: "comparison_symbol",
+    responseValues: [item.expectedSymbol],
+    answerState: { expectedSymbol: item.expectedSymbol, equalityState },
+    duplicateSignature: equalityState
+      ? `grade4_compare:${item.leftValue}=${item.rightValue}`
+      : `grade4_compare:${low}:${high}`
+  };
+}
+
 function generateCompareNumbersProblem(options = {}) {
   if (options.worksheetId === GRADE1_COMPARE_NUMBERS_ID) {
     return generateCompareNumbersFact(options);
+  }
+  if (options.worksheetId === GRADE4_COMPARE_NUMBERS_ID) {
+    return generateGrade4CompareNumbersProblem(options);
   }
 
   const random = options.random || Math.random;
@@ -71,3 +204,4 @@ function generateCompareNumbersProblem(options = {}) {
 }
 
 module.exports = generateCompareNumbersProblem;
+module.exports.buildGrade4ComparisonPool = buildGrade4ComparisonPool;
