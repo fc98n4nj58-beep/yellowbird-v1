@@ -159,6 +159,12 @@ function buildAnswerKeyItems(items) {
     missingValue: finiteOptionalNumber(it.missingValue),
     leftValue: finiteOptionalNumber(it.leftValue),
     rightValue: finiteOptionalNumber(it.rightValue),
+    leftExpression: it.leftExpression || null,
+    rightExpression: it.rightExpression || null,
+    leftOperation: it.leftOperation || null,
+    rightOperation: it.rightOperation || null,
+    leftOperands: Array.isArray(it.leftOperands) ? it.leftOperands.map(Number) : null,
+    rightOperands: Array.isArray(it.rightOperands) ? it.rightOperands.map(Number) : null,
     expectedSymbol: it.expectedSymbol || null,
     comparisonResult: it.comparisonResult || null,
     graphData: it.graphData || null,
@@ -2245,6 +2251,14 @@ function comparisonRowParts(question = {}) {
   };
 }
 
+function equationComparisonRowParts(question = {}) {
+  return {
+    left: safeStr(question.leftExpression),
+    right: safeStr(question.rightExpression),
+    answer: question.expectedSymbol || question.comparisonResult || question.answer
+  };
+}
+
 function formatComparisonDisplayValue(value, useThousandsSeparators = false) {
   const numeric = finiteOptionalNumber(value);
   if (numeric === null) return safeStr(value);
@@ -2255,28 +2269,89 @@ function formatComparisonDisplayValue(value, useThousandsSeparators = false) {
 
 function renderGrade2ComparisonRow(doc, question, layoutBox, fonts = {}, display = {}) {
   const { x, y, width } = layoutBox;
-  const parts = comparisonRowParts(question);
-  if (parts.left === null || parts.right === null) return 0;
+  const isEquationComparison = Boolean(display.equationComparisonLayout);
+  const parts = isEquationComparison
+    ? equationComparisonRowParts(question)
+    : comparisonRowParts(question);
+  if (
+    parts.left === null ||
+    parts.right === null ||
+    (isEquationComparison && (!parts.left || !parts.right))
+  ) return 0;
 
-  const fontSize = Number(display.comparisonFontSize || 16);
-  const targetWidth = Number(display.comparisonTargetWidth || 52);
-  const numberWidth = Number(display.comparisonNumberGutter || 30);
-  const operandWidth = Number(display.comparisonOperandWidth || 58);
-  const gap = Number(display.comparisonGap || 12);
-  const leftText = formatComparisonDisplayValue(parts.left, display.comparisonThousandsSeparators);
-  const rightText = formatComparisonDisplayValue(parts.right, display.comparisonThousandsSeparators);
+  const fontSize = Number(
+    isEquationComparison
+      ? display.equationComparisonFontSize || 12
+      : display.comparisonFontSize || 16
+  );
+  const targetWidth = Number(
+    isEquationComparison
+      ? display.equationComparisonTargetWidth || 18
+      : display.comparisonTargetWidth || 52
+  );
+  const numberWidth = Number(
+    isEquationComparison
+      ? display.equationComparisonNumberGutter || 20
+      : display.comparisonNumberGutter || 30
+  );
+  const numberFontSize = Number(
+    isEquationComparison
+      ? display.equationComparisonNumberFontSize || 11
+      : 12
+  );
+  const operandWidth = Number(
+    isEquationComparison
+      ? display.equationComparisonExpressionWidth || 56
+      : display.comparisonOperandWidth || 58
+  );
+  const gap = Number(
+    isEquationComparison
+      ? display.equationComparisonGap || 1
+      : display.comparisonGap || 12
+  );
+  const leftText = isEquationComparison
+    ? parts.left
+    : formatComparisonDisplayValue(parts.left, display.comparisonThousandsSeparators);
+  const rightText = isEquationComparison
+    ? parts.right
+    : formatComparisonDisplayValue(parts.right, display.comparisonThousandsSeparators);
   const equationWidth = operandWidth * 2 + targetWidth + gap * 2;
-  const availableWidth = Math.max(equationWidth, width - numberWidth);
+  const availableWidth = Math.max(0, width - numberWidth);
+  if (isEquationComparison && equationWidth > availableWidth + 0.01) {
+    throw new Error("Grade 4 equation-comparison fixed zones exceed the available column width.");
+  }
   const equationX = x + numberWidth + Math.max(0, (availableWidth - equationWidth) / 2);
   const targetX = equationX + operandWidth + gap;
   const rightX = targetX + targetWidth + gap;
   const textY = y + 3;
   const lineY = textY + fontSize + 5;
+  const isExampleItem = Boolean(display.includeExample && question.isExample);
+  const exampleCountsAsQuestion = Boolean(display.exampleCountsAsQuestion);
+  const displayNumber = question.id != null && (!question.isExample || exampleCountsAsQuestion)
+    ? display.includeExample && !exampleCountsAsQuestion
+      ? Math.max(1, Number(question.id) - 1)
+      : question.id
+    : null;
+
+  if (isEquationComparison && fontSize < Number(display.equationComparisonMinimumFontSize || 12)) {
+    throw new Error("Grade 4 equation-comparison type is below the approved family minimum.");
+  }
 
   doc.save();
-  setFont(doc, fonts.regular || "Helvetica", 12);
+  setFont(doc, fonts.regular || "Helvetica", numberFontSize);
   doc.fillColor(pdfDesignTokens.colors.text);
-  doc.text(`${question.id ?? ""})`, x, textY + 2, {
+  if (isExampleItem && !exampleCountsAsQuestion) {
+    setFont(doc, fonts.lightItalic || fonts.regular || "Helvetica", 9);
+    doc.fillColor(pdfDesignTokens.colors.muted);
+    doc.text("Example", x, y - 11, {
+      width,
+      align: "left",
+      lineBreak: false
+    });
+    setFont(doc, fonts.regular || "Helvetica", numberFontSize);
+    doc.fillColor(pdfDesignTokens.colors.text);
+  }
+  doc.text(displayNumber == null ? "" : `${displayNumber})`, x, textY + 2, {
     width: numberWidth - 4,
     align: "left",
     lineBreak: false
@@ -2289,7 +2364,7 @@ function renderGrade2ComparisonRow(doc, question, layoutBox, fonts = {}, display
     lineBreak: false
   });
   drawShortAnswerLine(doc, targetX, lineY, targetWidth);
-  if (display.answerKey && parts.answer != null) {
+  if ((display.answerKey || isExampleItem) && parts.answer != null) {
     drawTextOnLine(doc, parts.answer, targetX, lineY, targetWidth, fonts, {
       align: "center",
       fontSize
@@ -2347,7 +2422,10 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
     if (rendered) return rendered;
   }
 
-  if (!visual?.kind && (display.grade2ComparisonLayout || display.structuredComparisonLayout)) {
+  if (
+    !visual?.kind &&
+    (display.grade2ComparisonLayout || display.structuredComparisonLayout || display.equationComparisonLayout)
+  ) {
     const rendered = renderGrade2ComparisonRow(doc, question, layoutBox, fonts, display);
     if (rendered) return rendered;
   }
@@ -4361,7 +4439,13 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     return nextY + 176;
   }
 
-  const hasVisuals = allItems.some((item) => item.visual);
+  const equationComparisonExample = display.equationComparisonExampleStrip
+    ? allItems.find((item) => item.isExample) || null
+    : null;
+  const paginatedItems = equationComparisonExample
+    ? allItems.filter((item) => !item.isExample)
+    : allItems;
+  const hasVisuals = paginatedItems.some((item) => item.visual);
   const isReverseNumberWordLayout = Boolean(display.reverseNumberWordWriting);
 
   if (
@@ -4444,10 +4528,10 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     ? cols * questionsPerColumn
     : Math.max(1, layoutMaxProblemsPerPage || cols * questionsPerColumn);
   const pages = display.patterningLayout
-    ? paginateBalancedWithinCapacity(allItems, maxPerPage)
+    ? paginateBalancedWithinCapacity(paginatedItems, maxPerPage)
     : isReverseNumberWordLayout
-      ? paginateSequential(allItems, maxPerPage)
-      : paginateEven(allItems, maxPerPage);
+      ? paginateSequential(paginatedItems, maxPerPage)
+      : paginateEven(paginatedItems, maxPerPage);
 
   if (display.patterningLayout && layoutObject) {
     layoutObject.patterningPagination = patterningDistributionMetadata(pages, maxPerPage, cols);
@@ -4474,6 +4558,23 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
 
       setFont(doc, fonts.regular, bodyStyle.size);
       doc.fillColor(pdfDesignTokens.colors.text);
+    }
+
+    if (equationComparisonExample && pageIndex === 0) {
+      renderGrade2ComparisonRow(
+        doc,
+        equationComparisonExample,
+        {
+          x: layout.page.contentBox.x,
+          y: startY + 12,
+          width: layout.page.contentBox.width,
+          height: 42,
+          dividerY: null
+        },
+        fonts,
+        display
+      );
+      startY += 64;
     }
 
     const pageCols = isReverseNumberWordLayout

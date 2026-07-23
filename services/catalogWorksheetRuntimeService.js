@@ -38,7 +38,8 @@ const PUBLIC_SKILL_LABEL_HIDDEN_IDS = new Set([
   "grade2_data_display_graphing_read_graph",
   "grade2_data_display_graphing_interpret_data",
   "grade2_data_display_graphing_complete_graph",
-  "grade2_data_display_graphing_match_data_to_graph"
+  "grade2_data_display_graphing_match_data_to_graph",
+  "grade4_addition_subtraction_facts_equation_match"
 ]);
 
 const GRADE2_CATEGORY_D_FOOTER_LABELS = Object.freeze({
@@ -175,6 +176,9 @@ function publicDomainLabel(item) {
   if (GRADE4_STORY_PROBLEM_IDS.has(item?.id)) {
     return "Addition & Subtraction";
   }
+  if (item?.id === "grade4_addition_subtraction_facts_equation_match") {
+    return "Addition & Subtraction";
+  }
   if (GRADE4_PLACE_VALUE_BATCH4_IDS.has(item?.id)) return "Place Value";
   if (EARLY_MULTIPLICATION_FOOTER_IDS.has(item?.id)) {
     return "Early Multiplication Thinking";
@@ -305,6 +309,12 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         missingValue: finiteOptionalNumber(p.missingValue),
         leftValue: finiteOptionalNumber(p.leftValue),
         rightValue: finiteOptionalNumber(p.rightValue),
+        leftExpression: p.leftExpression || null,
+        rightExpression: p.rightExpression || null,
+        leftOperation: p.leftOperation || null,
+        rightOperation: p.rightOperation || null,
+        leftOperands: Array.isArray(p.leftOperands) ? p.leftOperands.map(Number) : null,
+        rightOperands: Array.isArray(p.rightOperands) ? p.rightOperands.map(Number) : null,
         expectedSymbol: p.expectedSymbol || null,
         comparisonResult: p.comparisonResult || null,
         graphData: p.graphData || null,

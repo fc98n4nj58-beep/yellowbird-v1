@@ -288,6 +288,60 @@ All three use `Grade 4 • Math • Place Value`, no subtitle, deterministic see
 
 Applied founder-approved movement: Number Line Identification moved D to A, Number Words moved D to A, and Compare Numbers moved E to A. The result is A23 / D2 / E0 / G23 / Total48. No other Grade 4 row changed category.
 
+## Batch 5 closeout
+
+Status: founder-approved and closed. Compare Equations moved D to A; Function Table moved D to G. Reconciliation is A24 / D0 / E0 / G24 / Total48. Both catalog lifecycle statuses remain `generated`; no Grade 4 public customization family was registered. Grade 4 final closeout remains separate.
+
+Exact IDs resolved:
+
+- `grade4_addition_subtraction_facts_equation_match`
+- `grade4_patterning_and_algebra_function_table`
+
+### Completed-work and role decisions
+
+- **Equation Match — SHARED-FAMILY EXTENSION NEEDED and implemented.** The inherited Grade 4 output was not a matching or relational task: it displayed isolated equations such as `7 + 7 = __` under stale internal copy. The founder-approved Grade 3 equality-comparison generator, comparison target, fixed-row layout, answer-key path and deterministic pool supplied a safe shared base. The exact-ID Grade 4 adapter now uses the honest title `Compare Equations` and asks students to write `=` or `≠` between two stored expressions. It is distinct from Compare Numbers because students reason about expression values, distinct from fluency because neither side is an isolated answer target, and distinct from missing-addend work because no operand is unknown.
+- **Function Table — NEW ARCHITECTURE NEEDED and deferred.** The current generator produces sentence prompts such as `Function table: input 5, rule Add 4 each time, output = __`; it has no input/output headers, table rows, missing-cell state, answer state, unique signature or table renderer. Grade 3 explicitly deferred the same family. Batch 1 `Find the Missing Values` is not a duplicate: it shows one number sequence per rule and students restore missing terms. A genuine Function Table would instead show multiple input/output rows under a visible rule and could naturally vary missing inputs and outputs. That role is instructionally distinct, but the repository has no approved input-output table renderer to inherit. No sentence-only pseudo-table, second renderer or invented complexity was added.
+
+### Family-consistency correction
+
+- The initial Grade 4 one-column layout was rejected because it left excessive unused space and deviated from the approved Grade 1-3 Equation Match family.
+- The subsequent 12-question three-column by four-row correction was also rejected as under-dense. Exact-family comparison alone was insufficient: Grade 1-3 Equation Match establishes the relational visual language, while the closest approved Grade 4 task/layout class is Compare Numbers at 30 questions in three columns of ten.
+- Grade 4 now inherits the exact family's sequential fill, equal-height aligned rows, centred comparison-symbol target, fixed expression spacing and mirrored key while adopting the denser safe Grade 4 comparison-class capacity. The Grade 4-specific geometry uses measured fixed 56.5-point expression zones, a 19-point number gutter with 11-point number labels, and a compact centred target. Expression text remains Source Sans 3 at 12 points; supplied and generated boundary expressions fit without wrapping, clipping or type reduction, and two-digit numbers remain on one line.
+- Before implementing or approving a worksheet, compare both the nearest exact family and the nearest approved task/layout class. Preserve the densest safe established contract unless a documented instructional or print-safety reason requires otherwise.
+- Arithmetic truth, variables, deterministic generation, public copy and both lifecycle statuses remain unchanged. Function Table remains deferred.
+
+### Grade 4 Equation Match contract
+
+- Public copy: `Compare Equations`; `Write = or ≠ to compare each pair of equations.`; footer `Grade 4 • Math • Addition & Subtraction`.
+- Default: 30 questions, one fixed-row student page and one mirrored answer-key page; three sequential columns of ten aligned rows; exact 15 `=` and 15 `≠`; exactly ten addition/addition, ten subtraction/subtraction and ten addition/subtraction expression pairs. Each template contains five equal and five unequal pairs.
+- Difficulty: default expression values 100-1,000, compared with Grade 3 values 0-100. Whole-number results may be selected through 2,000. Addition and subtraction only; no multiplication, division, negative default result, decimal or multi-step rule.
+- Maximum: 60 questions with 30 per page, producing two 3-by-10 student pages and two mirrored key pages. Completed examples are additional; a dedicated full-width strip sits above the unchanged 3-by-10 question grid, so the 30-question example PDF remains one student page plus one key page.
+- Structured truth: each item stores both expression strings, both operations, both operand arrays, both calculated values, expected relation, equality state, response target, reversal-safe canonical signature and complete answer state. The generator owns arithmetic and equality; the renderer displays supplied truth only.
+- Uniqueness: equality pairs are genuinely equal, inequality pairs differ, and the canonical sorted-expression signature prevents duplicate or reversed pair leakage.
+
+### Variable contract and adversarial checkpoint
+
+- **Preserved, raw-runtime-only:** `questionCount` (1-60); `questionsPerPage` (1-30); `minimumResult`/`minResult`/`minimumValue` (0-1,999); `maximumResult`/`maxResult`/`maxTotal`/`maximumTotal`/`maximumValue` (1-2,000); `includeEqualPairs`; `equalPairs`/`equalityCount`; `operationMode`/`mode`; `selectedOperations`/`operations`; `includeExample`/`completedExample`/`example`; deterministic seed; and render-time answer-key inclusion.
+- Operations normalize only to addition, subtraction or mixed. Equality aliases must agree. Mixed valid/invalid aliases, reversed or decimal ranges, unsupported operations, unsafe counts or densities, impossible uniqueness pools, invalid example controls, operand selectors, selected-number selectors, relation overrides, expression strings and caller-owned prompt/answer/answer-state/signature truth throw. No invalid value silently clamps or falls back.
+- Public customization: none. Operand selection is intentionally not supported because the previous generic inputs bypassed relational structured truth.
+
+### Duplicate and distinction findings
+
+- `grade4_patterning_and_algebra_extend_pattern`: students extend a visible sequence; known rule structure is implicit in the sequence.
+- `grade4_patterning_and_algebra_identify_pattern_rule`: students name the operation and amount shown by a complete sequence.
+- `grade4_patterning_and_algebra_missing_value_pattern`: students restore missing terms in one visible sequence; no table is shown.
+- Proposed Function Table role: students use a visible rule across several input/output rows and complete missing cells. This is naturally distinct from all three Batch 1 resources, but it cannot be honestly delivered through the current sentence renderer. Deferral is safer than forcing a duplicate-looking pseudo-table or introducing unapproved table architecture.
+
+### Test and proof checkpoint
+
+- `scripts/testGrade4EquationMatchFunctionTableBatch5.js` passes 30 deterministic Equation Match seeds with same-seed failures 0, cross-seed variation, exact 15/15 default truth, exact 10/10/10 operation-pair distribution, complete structured truth, canonical reversal suppression, student/key parity, variable aliases, examples, 60-item maximum pagination, adversarial rejection, Grade 1-3 exact-family isolation, Grade 4 Compare Numbers layout-class consistency, Batch 1 isolation, lifecycle stability, no public customization and the Function Table architecture-deferral evidence.
+- Related regressions pass: Grade 1 Equation Match; Grade 2 Equation Match; Grade 3 Equation Match and Addition/Subtraction Batch 3; Grade 4 Numeric Patterning Batch 1; Grade 4 Structured Fractions Batch 2; Grade 4 Story Problems Batch 3; Grade 4 Place Value Batch 4; Grade 4 reconciliation preflight; and the worksheet customization registry. Changed-JavaScript syntax checks and `git diff --check` pass.
+- Catalog audit remains Ready 104/104, Generated 213/213, Partial 5/5, Total331, Ready failures 0, with only the seven established planned `pattern_word_problems` gaps. Both Batch 5 lifecycle statuses remain `generated`.
+- Proof generator: `scripts/generateGrade4EquationMatchFunctionTableBatch5Proofs.js`. Proof location: `review/grade-4-equation-function-batch-5/`. One founder-default PDF and five stress PDFs cover largest safe values/expressions, mixed operation/equality balance, addition-only and subtraction-only modes, a completed example, and the 60-question maximum. The six PDFs contain 14 pages total.
+- All 14 corrected proof pages were rendered and visually inspected. Every normal-capacity student and key page uses three aligned columns with ten equal-height rows. Fixed expression zones keep comma-formatted four-digit values on one line at 12 points; centred relation targets, completed-example strip, continuous numbering and footers remain readable and unclipped. The 60-question proof repeats the same 3-by-10 geometry across two student and two key pages. No overlap, staggered rows, tiny type, footer pressure or excessive default-page whitespace remains. Only Equation Match receives proofs; no Function Table placeholder is generated.
+
+Founder-approved movement applied: Compare Equations alone moved D to A and Function Table alone moved D to G. Reconciliation is A24 / D0 / E0 / G24 / Total48. Grade 4 is not yet marked closed.
+
 ## A resources held as complete
 
 - Compact assessment/review: `g4_compare_fractions_quick_check`, `g4_compare_fractions_exit_ticket`, `g4_pattern_rule_quick_check`, `g4_multiplication_word_problem_quick_check`.
@@ -330,16 +384,16 @@ Every proposed G ID has a documented reconsideration trigger. Founder approval o
 - After Batch 2 closeout: A17 / D7 / E1 / G23 / Total48.
 - After Batch 3 closeout: A20 / D4 / E1 / G23 / Total48.
 - Current after Batch 4 closeout: A23 / D2 / E0 / G23 / Total48.
-- After B5 approval: A25 / D0 / E0 / G23 / Total48.
+- After Batch 5 closeout: A24 / D0 / E0 / G24 / Total48.
 
-Batch 1-4 movements are applied. Batch 5 remains a planning scenario; Grade 4 is not closed.
+Batch 1-5 movements are applied. Grade 4 final closeout remains a separate task.
 
 ## Founder decisions required
 
 - Approve or revise the proposed A11/D10/E4/G23 baseline.
 - Confirm the five duplicate anchor choices, especially which Equal Groups ID should survive.
 - Confirm that Grade 4 data displays are deferred rather than forcing a new bar-graph system.
-- Approve the B5 bounded function-table layout before implementation.
+- Revisit Function Table only after approving a shared input/output-table contract with visible rule labels, structured rows and missing cells, deterministic truth, safe pagination, and mirrored answer keys.
 - Confirm no Grade 4 Base Ten thousands model is required for launch.
 
 ## Verification and proof policy
@@ -347,4 +401,4 @@ Batch 1-4 movements are applied. Batch 5 remains a planning scenario; Grade 4 is
 - Preflight verification must check all 48 IDs exactly once, unique IDs, proposed counts, batch membership, D/E coverage, G rationales, Grade 2/3 closed totals, catalog totals, ready runtime health and absence of Grade 4 public customization.
 - Future proof PDFs remain under batch-specific untracked `review/` folders and are never committed.
 - Each implementation batch ends at founder review; reconciliation movement and commit occur only after approval.
-- Current preflight creates no proof PDF and modifies no production, catalog, route, UI or renderer file.
+- The original preflight created no proofs or production changes. Batch 5 now has the bounded Equation Match implementation and untracked founder-review proofs recorded above; no catalog record, route, UI, renderer or public customization was changed.
