@@ -2,7 +2,7 @@
 
 Date: 2026-07-22
 
-Status: Batches 1, 2 and 3 are founder-approved and closed; later batches remain proposed. Grade 4 remains open and lifecycle statuses remain unchanged.
+Status: Batches 1-5, the A-resource confirmation sweep and final reconciliation are complete. Grade 4 founder review is closed at A24 / D0 / E0 / G24 / Total48; lifecycle statuses remain unchanged and Grade 5 has not started.
 
 ## Planning rules
 
@@ -46,8 +46,8 @@ Status: Batches 1, 2 and 3 are founder-approved and closed; later batches remain
 ### B3 — Grade 4 Addition/Subtraction Story Problems
 
 - Exact IDs: `grade4_addition_subtraction_word_problems_addition_word_problem`; `grade4_addition_subtraction_word_problems_missing_addend_word_problem`; `grade4_addition_subtraction_word_problems_subtraction_word_problem`.
-- Proposed categories: D3.
-- Completed-work finding: shared work-box and compact-key layout exists, and Grade 2/3 context language has been corrected. Grade 4 IDs still use the generic within-20 path and lack exact Grade 4 operation/missing-position adapters.
+- Disposition: founder-approved; all three moved D to A.
+- Pre-implementation finding: shared work-box and compact-key layout existed, and Grade 2/3 context language had been corrected. Grade 4 IDs still used the generic within-20 path and lacked exact Grade 4 operation/missing-position adapters.
 - Implementation lane: Grade 4 arithmetic-first adapters on the current shared word-problem renderer; preserve clear one-step roles.
 - Shared family: Grade 3 Batch 4 story generators/context scheduling and current `wordProblems.js` work-box layout.
 - Variables: VQ and VO; define Grade 4 ranges, selected numbers, operation-specific constraints, contexts/objects, example aliases and page density.
@@ -60,8 +60,8 @@ Status: Batches 1, 2 and 3 are founder-approved and closed; later batches remain
 ### B4 — Grade 4 Place-Value Range and Number-Line Closure
 
 - Exact IDs: `grade4_place_value_representation_compare_numbers`; `grade4_place_value_representation_number_line_identify`; `grade4_place_value_representation_number_word_match`.
-- Proposed categories: E1 (`compare_numbers`) and D2 (number line, number words).
-- Completed-work finding: compare already stores left/right/symbol truth but defaults to three digits. Generic number line defaults to 0-10 without structured interval/index state. Number Words is really a writing task and cannot spell values >=1000.
+- Disposition: founder-approved; Compare Numbers moved E to A, while Number Line and Number Words moved D to A.
+- Pre-implementation finding: comparison already stored left/right/symbol truth but defaulted to three digits. The generic number line defaulted to 0-10 without structured interval/index state, and Number Words needed the approved four-digit formatter and honest writing role.
 - Implementation lane: resource-scoped Grade 4 range/copy correction for comparison; extend Grade 3 full-width number-line structure; extend number-to-words through the approved Grade 4 range. Keep the existing horizontal origins and representation layouts.
 - Shared family: Grade 2 comparison, Grade 3 number line, Grade 3 Number Words, and complete Grade 4 expanded/standard-form anchors.
 - Variables: VQ and VV. Validate 1000/9999 boundaries, selected values, alias conflicts, intervals, endpoints, word direction and prompt style.
@@ -74,13 +74,13 @@ Status: Batches 1, 2 and 3 are founder-approved and closed; later batches remain
 ### B5 — Algebraic Relationship Structures
 
 - Exact IDs: `grade4_addition_subtraction_facts_equation_match`; `grade4_patterning_and_algebra_function_table`.
-- Proposed categories: D2.
-- Completed-work finding: Equation Match is currently equation completion, not comparison. Function Table has generator-owned input/output pairs but renders one prose sentence rather than a table.
-- Implementation lane: extend Grade 3 relational-equation truth to Grade 4 ranges; create only the smallest approved input/output table response layout, with generator-owned rows/rule/answers.
-- Shared family: Grade 3 relational equations and shared numeric-patterning candidate pools. No broad matching architecture.
-- Variables: VQ, VO and VP. Define result/range selectors, equality balance, operation modes, input rows and one missing-output policy.
-- Tests: 30 seeds; exactly balanced true/false relations; exact expression values; one unambiguous target per table; input/output/rule parity; duplicate prevention; density; key restoration; cross-grade isolation.
-- Proof packet: two default PDFs plus one mixed-operation relation stress and one widest-table stress.
+- Disposition: founder-approved split; Compare Equations moved D to A and Function Table moved D to G.
+- Pre-implementation finding: Equation Match was equation completion rather than comparison. Function Table had generator-owned input/output pairs but rendered one prose sentence rather than a table.
+- Implementation lane: Grade 3 relational-equation truth was extended to Grade 4 ranges and the Grade 4 Compare Numbers density class. Function Table was not implemented because no approved input/output-table contract exists.
+- Shared family: Grade 3 relational equations and Grade 4 Compare Numbers layout class. No broad matching or table architecture was added.
+- Variables: VQ and VO for Compare Equations; Function Table variables remain outside an approved launch contract.
+- Tests: 30 seeds; exact 15/15 relations; exact 10/10/10 operation templates; exact expression values; duplicate prevention; density; key restoration; cross-grade isolation; and explicit Function Table deferral evidence.
+- Proof packet: one Compare Equations founder proof plus five stress proofs. No Function Table proof exists.
 - Founder complexity: MODERATE to HIGH.
 - Stop conditions: arbitrary matching UI, renderer-owned arithmetic, multi-rule ambiguity, table overflow or a broader visual system than one bounded input/output table.
 - Recommended order: fifth.
@@ -88,17 +88,17 @@ Status: Batches 1, 2 and 3 are founder-approved and closed; later batches remain
 ### S6 — A-Resource Confirmation Sweep
 
 - Exact IDs: the 11 resources listed under **A resources held as complete** below.
-- Review lane: confirmation only; compare current default output, structured truth, answer-key parity, lifecycle status and teacher role with the evidence recorded in the preflight inventory.
+- Result: complete. Current default output, structured truth, answer-key parity, lifecycle status and teacher role agree with the preflight inventory.
 - Shared architecture: existing compact assessment, multiplication-model/fluency, multiplication-story and place-value-form families; no generator or renderer work is planned.
 - Tests: rerun the focused Grade 4 preflight verifier, catalog audit and directly relevant established family regressions only if founder review identifies a concrete discrepancy.
 - Proof expectation: one compact confirmation packet may reuse newly generated default proofs for the 11 records; proofs remain untracked and no proof is required merely to apply the proposed reconciliation.
-- Stop conditions: any arithmetic, copy, layout, duplication or variable-contract defect that invalidates proposed A. Move that exact resource back to a correction lane rather than broadening the sweep.
+- Stop conditions: any arithmetic, copy, layout, duplication or variable-contract defect that invalidates confirmed A. Move that exact resource back to a correction lane rather than broadening the sweep.
 - Recommended order: sixth, after B1-B5 founder closeout.
 
 ### S7 — Final Grade 4 Reconciliation and Closeout
 
-- Scope: apply only founder-approved movements from the 48-row ledger after B1-B5 and the A-resource confirmation sweep are complete.
-- Expected scenario if all proposals are approved: A25 / D0 / E0 / G23 / Total48; lifecycle statuses remain independent and unchanged unless separately authorized.
+- Scope: complete. Only founder-approved movements from the 48-row ledger were applied after B1-B5 and the A-resource confirmation sweep.
+- Final result: A24 / D0 / E0 / G24 / Total48; lifecycle statuses remain independent and unchanged.
 - Verification: 48 rows, 48 unique IDs, exact category totals, every G rationale retained, Grade 2/3 closure guards, catalog audit, staged-path guard and diff check.
 - Proof expectation: no new resource proof packet; closeout evidence is the approved batch packets and final reconciliation report.
 - Stop conditions: unresolved D/E row, missing G rationale, unapproved lifecycle movement, catalog drift, protected-path change or any total other than 48.
@@ -290,7 +290,7 @@ Applied founder-approved movement: Number Line Identification moved D to A, Numb
 
 ## Batch 5 closeout
 
-Status: founder-approved and closed. Compare Equations moved D to A; Function Table moved D to G. Reconciliation is A24 / D0 / E0 / G24 / Total48. Both catalog lifecycle statuses remain `generated`; no Grade 4 public customization family was registered. Grade 4 final closeout remains separate.
+Status: founder-approved and closed. Compare Equations moved D to A; Function Table moved D to G. Reconciliation is A24 / D0 / E0 / G24 / Total48. Both catalog lifecycle statuses remain `generated`; no Grade 4 public customization family was registered. The completed Grade 4 final closeout is recorded below.
 
 Exact IDs resolved:
 
@@ -340,7 +340,28 @@ Exact IDs resolved:
 - Proof generator: `scripts/generateGrade4EquationMatchFunctionTableBatch5Proofs.js`. Proof location: `review/grade-4-equation-function-batch-5/`. One founder-default PDF and five stress PDFs cover largest safe values/expressions, mixed operation/equality balance, addition-only and subtraction-only modes, a completed example, and the 60-question maximum. The six PDFs contain 14 pages total.
 - All 14 corrected proof pages were rendered and visually inspected. Every normal-capacity student and key page uses three aligned columns with ten equal-height rows. Fixed expression zones keep comma-formatted four-digit values on one line at 12 points; centred relation targets, completed-example strip, continuous numbering and footers remain readable and unclipped. The 60-question proof repeats the same 3-by-10 geometry across two student and two key pages. No overlap, staggered rows, tiny type, footer pressure or excessive default-page whitespace remains. Only Equation Match receives proofs; no Function Table placeholder is generated.
 
-Founder-approved movement applied: Compare Equations alone moved D to A and Function Table alone moved D to G. Reconciliation is A24 / D0 / E0 / G24 / Total48. Grade 4 is not yet marked closed.
+Founder-approved movement applied: Compare Equations alone moved D to A and Function Table alone moved D to G. Reconciliation is A24 / D0 / E0 / G24 / Total48.
+
+## Final Grade 4 closeout
+
+Grade 4 founder review and architecture reconciliation are closed at A24 / D0 / E0 / G24 / Total48. All 48 catalog IDs appear exactly once, D and E are empty, lifecycle statuses remain independent, no public Grade 4 customization family is registered, and Grade 5 has not started.
+
+### A-resource confirmation
+
+- **Batch 1 — Numeric Patterning:** `grade4_patterning_and_algebra_extend_pattern`, `grade4_patterning_and_algebra_identify_pattern_rule`, `grade4_patterning_and_algebra_missing_value_pattern`.
+- **Batch 2 — Structured Fractions:** `grade4_fraction_equivalence_compare_fractions`, `grade4_fraction_equivalence_fraction_number_line`, `grade4_fraction_equivalence_shade_fraction_models`.
+- **Batch 3 — Addition/Subtraction Stories:** `grade4_addition_subtraction_word_problems_addition_word_problem`, `grade4_addition_subtraction_word_problems_missing_addend_word_problem`, `grade4_addition_subtraction_word_problems_subtraction_word_problem`.
+- **Batch 4 — Place-Value Representations:** `grade4_place_value_representation_number_line_identify`, `grade4_place_value_representation_number_word_match`, `grade4_place_value_representation_compare_numbers`.
+- **Batch 5 — Equation Comparison:** `grade4_addition_subtraction_facts_equation_match`.
+- **Previously complete anchors:** the 11 resources listed below under A resources held as complete.
+
+All 24 A resources retain honest public titles, task-matched instructions, Grade 4 footer metadata, deterministic generation, structured truth where required, student/key parity, approved density and pagination, documented family inheritance or safe deviation, regression coverage and no public customization.
+
+### Final design and scope
+
+- Compare both the nearest exact family and nearest approved task/layout class; preserve the densest safe established contract.
+- Do not narrow founder-approved variables to solve a layout problem. Examples remain additional. Mathematical truth precedes wording and rendering; prose parsing and renderer-owned arithmetic remain prohibited.
+- Grade 4 stays within the current stable content scope. Geometry, measurement and financial literacy are not represented; visual data/graphing remains limited; Function Table and the other G resources remain deferred. Closure does not claim full Grade 4 curriculum coverage.
 
 ## A resources held as complete
 
@@ -348,7 +369,7 @@ Founder-approved movement applied: Compare Equations alone moved D to A and Func
 - Multiplication models/fluency: `g4_array_interpretation`, `g4_equal_groups_interpretation`, `g4_missing_factors`, `g4_multiplication_fact_fluency`, `grade4_multiplication_facts_word_problems`.
 - Place-value forms: `g4_expanded_form_large_numbers`, `g4_standard_form_large_numbers`.
 
-These 11 IDs require no implementation batch. Founder may approve proposed A after reviewing the preflight evidence; lifecycle status remains independent.
+These 11 IDs required no implementation batch and are confirmed A from the preflight evidence and final regression sweep; lifecycle status remains independent.
 
 ## G deferral lanes
 
@@ -371,11 +392,12 @@ Reconsider only if a distinct Grade 4 intervention, relationship or thousands-mo
 
 ### Missing/disproportionate architecture
 
-- Data: `grade4_data_display_graphing_complete_graph`, `grade4_data_display_graphing_graph_questions`, `grade4_data_display_graphing_graph_word_problems`, `grade4_data_display_graphing_interpret_data`, `grade4_data_display_graphing_match_data_to_graph`, plus the two read IDs above. Reconsider after a bounded Grade 4 display type and teacher role are approved; do not create a general graph engine.
+- Data: `grade4_data_display_graphing_complete_graph`, `grade4_data_display_graphing_graph_questions`, `grade4_data_display_graphing_graph_word_problems`, `grade4_data_display_graphing_interpret_data`, `grade4_data_display_graphing_match_data_to_graph`. The two read IDs are counted in the exact-duplicate lane above. Reconsider after a bounded Grade 4 display type and teacher role are approved; do not create a general graph engine.
 - Fractions: `grade4_fraction_equivalence_fraction_word_problems` lacks a distinct role; `grade4_fraction_equivalence_match_equivalent_fractions` needs genuine candidate/match architecture.
+- Function Table: `grade4_patterning_and_algebra_function_table` remains sentence-only pseudo-table content. Revisit only after approving a shared input/output-table contract with visible rule labels, structured rows and missing cells, deterministic truth, safe pagination, and mirrored answer keys.
 - Planned gap: `grade4_patterning_and_algebra_pattern_word_problems` remains one of the seven established planned generator gaps.
 
-Every proposed G ID has a documented reconsideration trigger. Founder approval of the preflight would move these rows into a documented defer lane only; it would not delete catalog records or change lifecycle status.
+Every G ID has a documented reconsideration trigger. All 24 remain hidden from founder-approved launch classification without deleting catalog records or changing lifecycle status.
 
 ## Reconciliation scenarios
 
@@ -386,15 +408,14 @@ Every proposed G ID has a documented reconsideration trigger. Founder approval o
 - Current after Batch 4 closeout: A23 / D2 / E0 / G23 / Total48.
 - After Batch 5 closeout: A24 / D0 / E0 / G24 / Total48.
 
-Batch 1-5 movements are applied. Grade 4 final closeout remains a separate task.
+Batch 1-5 movements and final closeout are applied. Grade 4 is closed.
 
-## Founder decisions required
+## Future expansion triggers
 
-- Approve or revise the proposed A11/D10/E4/G23 baseline.
-- Confirm the five duplicate anchor choices, especially which Equal Groups ID should survive.
-- Confirm that Grade 4 data displays are deferred rather than forcing a new bar-graph system.
+- Reconsider duplicate aliases only if a distinct teacher role is approved.
+- Reconsider Grade 4 data displays only after a bounded display type and teacher role are approved; do not force a general graph engine.
 - Revisit Function Table only after approving a shared input/output-table contract with visible rule labels, structured rows and missing cells, deterministic truth, safe pagination, and mirrored answer keys.
-- Confirm no Grade 4 Base Ten thousands model is required for launch.
+- Reconsider Base Ten Blocks only if a distinct Grade 4 thousands-model lane is approved.
 
 ## Verification and proof policy
 

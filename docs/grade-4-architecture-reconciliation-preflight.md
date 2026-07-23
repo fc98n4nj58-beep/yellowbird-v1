@@ -2,7 +2,7 @@
 
 Date: 2026-07-22
 
-Status: founder-approved Batch 1 through Batch 5 movements recorded. Grade 4 is not closed; final closeout remains separate and lifecycle statuses remain unchanged.
+Status: Grade 4 founder review and architecture reconciliation are closed at A24 / D0 / E0 / G24 / Total48. Lifecycle statuses remain unchanged, Grade 5 has not started, and G remains an intentional defer lane rather than a failure state.
 
 ## Baseline and method
 
@@ -107,7 +107,7 @@ Preview, PDF and answer key all pass through `normalizeCatalogWorksheetOptions`,
 - Compare Equations inherits structured relational truth, deterministic generation, canonical reversal-safe signatures and answer-state parity from Grade 1-3 Equation Match. Its compact relational-comparison layout inherits the safe 30-question, three-column by ten-row density from Grade 4 Compare Numbers. The mirrored key uses identical fixed zones; the tested maximum is 60 questions at 30 per page; completed examples remain additional. Grade 1-3 outputs are unchanged.
 - Decision history: the initial 12-question one-column layout was rejected; the 12-question 3×4 correction was also rejected as under-dense. Exact-family comparison alone was insufficient. The final layout compares both the nearest exact family and nearest approved task/layout class and preserves the densest safe established contract.
 - Function Table remains sentence-only pseudo-table output and was not implemented. G is safer than preserving a launch placeholder because no approved visible input/output-table renderer, structured missing-cell model or mirrored table-key contract exists. Revisit only after approving a shared input/output-table contract with visible rule labels, structured rows and missing cells, deterministic truth, safe pagination, and mirrored answer keys.
-- Reconciliation: Compare Equations alone moved D to A; Function Table alone moved D to G. The result is A24 / D0 / E0 / G24 / Total48. Both catalog lifecycle statuses remain `generated`; Grade 4 remains open for a separate final closeout.
+- Reconciliation: Compare Equations alone moved D to A; Function Table alone moved D to G. The result is A24 / D0 / E0 / G24 / Total48. Both catalog lifecycle statuses remain `generated`; the separate Grade 4 final closeout is recorded below.
 
 ## Current reconciliation after Batch 5 closeout
 
@@ -118,6 +118,16 @@ Preview, PDF and answer key all pass through `normalizeCatalogWorksheetOptions`,
 - Total: 48. Current arithmetic: 24 + 0 + 0 + 24 = 48.
 
 Exactly the approved Batch 5 movements were applied: Compare Equations moved D to A and Function Table moved D to G. Existing catalog statuses remain unchanged and are not a proxy for A/D/E/G.
+
+## Final Grade 4 closeout
+
+- Final reconciliation: A24 / D0 / E0 / G24 / Total48. The ledger contains exactly 48 rows and 48 unique Grade 4 IDs, with no hidden D or E row and no ID in more than one category.
+- Closed batches: Batch 1 Numeric Patterning; Batch 2 Structured Fractions; Batch 3 Addition/Subtraction Stories; Batch 4 Place-Value Representations; Batch 5 Compare Equations with Function Table deferred.
+- The 24 A resources comprise the 11 previously complete assessment, multiplication and place-value anchors plus 13 founder-approved batch resources. Their focused and inherited regressions confirm honest public copy, Grade 4 footers, deterministic structured truth where required, student/key parity, approved density and pagination, and no public customization.
+- The 24 G resources remain intentionally deferred as exact duplicates, low-value or overlapping aliases, unsupported visual/content families, or resources requiring a new approved renderer/layout contract. Current production output for G is outside founder-approved launch classification; lifecycle status remains independent and unchanged.
+- Final design rules: compare both the nearest exact family and nearest approved task/layout class; preserve the densest safe established contract; do not narrow founder-approved variables to solve layout; keep examples additional; generate structured truth before rendering; do not parse prose or place arithmetic in the renderer; do not register public customization during founder review.
+- Honest limitations: the current Grade 4 library does not represent geometry, measurement or financial literacy; visual data/graphing remains limited; Function Table remains deferred; and other G resources remain outside the stable launch library. Closure does not claim full Grade 4 curriculum coverage.
+- Grade 4 founder review and architecture reconciliation are closed. Grade 5 has not started.
 
 ## Batch 3 closeout
 
@@ -165,6 +175,6 @@ Conversely, four generated duplicate records have complete runtime truth but are
 
 - Grade 2 remains A35 / D0 / E0 / G17 / Total52.
 - Grade 3 remains A36 / D0 / E0 / G17 / Total53.
-- Grade 4 is now A24 / D0 / E0 / G24 / Total48 after the founder-approved Batch 5 movement; Grade 4 remains open for separate final closeout.
+- Grade 4 is closed at A24 / D0 / E0 / G24 / Total48.
 - Catalog baseline remains Ready 104/104, Generated 213/213, Partial 5/5, Total331, with the seven established planned `pattern_word_problems` gaps only.
 - Batch 5 reconciliation is recorded without lifecycle movement or public customization.
