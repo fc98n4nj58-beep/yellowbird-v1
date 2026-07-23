@@ -6,6 +6,7 @@ const GRADE1_COMPARE_NUMBERS_ID = "g1_compare_numbers_to_20";
 const GRADE2_THREE_DIGIT_COMPARISON_ID = "grade2_place_value_representation_compare_numbers";
 const GRADE2_TO_100_COMPARISON_ID = "g2_compare_numbers_to_100";
 const GRADE4_COMPARE_NUMBERS_ID = "grade4_place_value_representation_compare_numbers";
+const GRADE5_COMPARE_NUMBERS_ID = "grade5_place_value_representation_compare_numbers";
 
 function randInt(min, max, random = Math.random) {
   return Math.floor(random() * (max - min + 1)) + min;
@@ -153,12 +154,129 @@ function generateGrade4CompareNumbersProblem(options = {}) {
   };
 }
 
+function buildGrade5ComparisonPool(options = {}) {
+  const random = options.random || Math.random;
+  const min = Number(options.minA ?? options.minValue ?? 10000);
+  const max = Number(options.maxA ?? options.maxValue ?? 100000);
+  const selected = Array.isArray(options.selectedNumbers) ? options.selectedNumbers.map(Number) : [];
+  const studentCount = Number(options.studentQuestionCount ?? options.questionCount ?? 30);
+  const totalCount = Number(options.questionCount ?? studentCount);
+  const additionalExampleCount = Math.max(0, totalCount - studentCount);
+  const includeEqualPairs = options.includeEqualPairs !== false;
+  const equalCount = includeEqualPairs
+    ? Number.isInteger(options.equalityCount) ? options.equalityCount : Math.floor(studentCount / 3)
+    : 0;
+  const unequalCount = studentCount - equalCount;
+  const lessCount = Math.floor(unequalCount / 2);
+  const greaterCount = unequalCount - lessCount;
+  const values = selected.length ? selected : null;
+  const pick = () => values
+    ? values[Math.floor(random() * values.length)]
+    : randInt(min, max, random);
+  const usedEqualValues = new Set();
+  const usedPairs = new Set();
+  const examples = [];
+  const pool = [];
+
+  function takeEqual(target) {
+    let value;
+    for (let attempt = 0; attempt < 2000; attempt += 1) {
+      value = pick();
+      if (!usedEqualValues.has(value)) break;
+    }
+    if (usedEqualValues.has(value)) throw new Error("Grade 5 comparison equality pool is too small.");
+    usedEqualValues.add(value);
+    target.push({ leftValue: value, rightValue: value, expectedSymbol: "=" });
+  }
+
+  function takeUnequal(target, symbol) {
+    let leftValue;
+    let rightValue;
+    let pairKey;
+    for (let attempt = 0; attempt < 4000; attempt += 1) {
+      const first = pick();
+      const second = pick();
+      if (first === second) continue;
+      const low = Math.min(first, second);
+      const high = Math.max(first, second);
+      pairKey = `${low}:${high}`;
+      if (usedPairs.has(pairKey)) continue;
+      leftValue = symbol === "<" ? low : high;
+      rightValue = symbol === "<" ? high : low;
+      break;
+    }
+    if (!pairKey || leftValue === undefined) throw new Error("Grade 5 comparison pair pool is too small.");
+    usedPairs.add(pairKey);
+    target.push({ leftValue, rightValue, expectedSymbol: symbol });
+  }
+
+  for (let index = 0; index < additionalExampleCount; index += 1) {
+    if (includeEqualPairs) takeEqual(examples);
+    else takeUnequal(examples, "<");
+  }
+  for (let index = 0; index < equalCount; index += 1) takeEqual(pool);
+  for (let index = 0; index < lessCount; index += 1) takeUnequal(pool, "<");
+  for (let index = 0; index < greaterCount; index += 1) takeUnequal(pool, ">");
+  return examples.concat(shuffle(pool, random));
+}
+
+function generateGrade5CompareNumbersProblem(options = {}) {
+  const generatorState = options.generatorState || {};
+  const key = JSON.stringify({
+    min: options.minA ?? options.minValue ?? 10000,
+    max: options.maxA ?? options.maxValue ?? 100000,
+    selected: options.selectedNumbers || [],
+    questionCount: options.questionCount ?? 30,
+    studentQuestionCount: options.studentQuestionCount ?? options.questionCount ?? 30,
+    includeEqualPairs: options.includeEqualPairs !== false,
+    equalityCount: options.equalityCount
+  });
+  if (!generatorState.grade5ComparisonPools) generatorState.grade5ComparisonPools = {};
+  if (!generatorState.grade5ComparisonPools[key]?.length) {
+    generatorState.grade5ComparisonPools[key] = buildGrade5ComparisonPool(options);
+  }
+  const item = generatorState.grade5ComparisonPools[key].shift();
+  if (!item) throw new Error("No Grade 5 comparison items are available.");
+  const equalityState = item.expectedSymbol === "=";
+  const leftNumeral = item.leftValue.toLocaleString("en-CA");
+  const rightNumeral = item.rightValue.toLocaleString("en-CA");
+  const low = Math.min(item.leftValue, item.rightValue);
+  const high = Math.max(item.leftValue, item.rightValue);
+  const duplicateSignature = equalityState
+    ? `grade5_compare:${item.leftValue}=${item.rightValue}`
+    : `grade5_compare:${low}:${high}`;
+  return {
+    type: "equation",
+    prompt: `${leftNumeral}   ___   ${rightNumeral}`,
+    answer: item.expectedSymbol,
+    leftValue: item.leftValue,
+    rightValue: item.rightValue,
+    expectedSymbol: item.expectedSymbol,
+    comparisonResult: item.expectedSymbol,
+    equalityState,
+    responseMode: "comparison_symbol",
+    responseType: "symbol",
+    responseTarget: "comparison_symbol",
+    responseValues: [item.expectedSymbol],
+    answerState: {
+      leftValue: item.leftValue,
+      rightValue: item.rightValue,
+      expectedSymbol: item.expectedSymbol,
+      equalityState
+    },
+    duplicateSignature
+  };
+}
+
 function generateCompareNumbersProblem(options = {}) {
   if (options.worksheetId === GRADE1_COMPARE_NUMBERS_ID) {
     return generateCompareNumbersFact(options);
   }
   if (options.worksheetId === GRADE4_COMPARE_NUMBERS_ID) {
     return generateGrade4CompareNumbersProblem(options);
+  }
+  if (options.worksheetId === GRADE5_COMPARE_NUMBERS_ID) {
+    return generateGrade5CompareNumbersProblem(options);
   }
 
   const random = options.random || Math.random;
@@ -205,3 +323,4 @@ function generateCompareNumbersProblem(options = {}) {
 
 module.exports = generateCompareNumbersProblem;
 module.exports.buildGrade4ComparisonPool = buildGrade4ComparisonPool;
+module.exports.buildGrade5ComparisonPool = buildGrade5ComparisonPool;

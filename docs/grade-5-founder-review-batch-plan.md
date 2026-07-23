@@ -1,8 +1,8 @@
 # Grade 5 Founder Review Batch Plan
 
-Status: active founder-review plan. Batch 1 is founder-approved and closed; later batches remain planning only.
+Status: active founder-review plan. Batches 1 and 2 are founder-approved and closed; later batches remain planning only.
 
-Current reconciliation: **A11 / D13 / E1 / G21 / Total46**. The three Batch 1 records moved from D to A; all 13 remaining D records are assigned exactly once. No G or E item is hidden inside a low-risk batch.
+Current reconciliation: **A13 / D11 / E1 / G21 / Total46**. The three Batch 1 records and two Batch 2 records moved from D to A; all 11 remaining D records are assigned exactly once. No G or E item is hidden inside a low-risk batch.
 
 ## Batch 1 — Numeric Patterning
 
@@ -106,24 +106,119 @@ Batch 1 is founder-approved and closed. The three records move D → A, producin
 
 ## Batch 2 — Compact Relational Practice
 
-Exact IDs:
+Status: founder-approved and closed. Both resources moved D → A. Reconciliation is **A13 / D11 / E1 / G21 / Total46**.
 
-- `grade5_addition_subtraction_facts_equation_match`
-- `grade5_place_value_representation_compare_numbers`
+### Exact records and completed-work classification
 
-Shared task/layout class: compact relational comparison, even though the arithmetic generators differ.
+| Exact ID | Current role before correction | Status/category | Classification | Resolution |
+|---|---|---|---|---|
+| `grade5_addition_subtraction_facts_equation_match` | generic single-equation completion under “Equation Match” | `generated` / A | **FOUNDER APPROVED** | honest equation-value comparison in the measured 2×15 layout |
+| `grade5_place_value_representation_compare_numbers` | 12 generic comparisons using Grade 3 magnitude inside an oversized 4×15 shell | `generated` / A | **FOUNDER APPROVED** | structured whole-number comparison to 100,000 in the 3×10 layout |
 
-Inheritance: Grade 1–3 relational targets plus the founder-approved Grade 4 Compare Equations 3×10 geometry, exact equality balance, duplicate/reversal protections, and safe maximum.
+Both IDs already routed through shared generators, normalization, the shared dense-grid renderer and the common key path, but neither current output fulfilled its Grade 5 role. The equation record fell through to ordinary solve-the-equation prompts and had no relational structured truth. The number record had comparison copy but inherited a generic 0–999 generator, only 12 questions, incomplete truth, and a 60-cell layout shell. Previous Grade 1–4 shared-family commits provided the safe engines and renderer primitives but did not correct either exact Grade 5 ID.
 
-Common correction: make each public action honest, raise Grade 5 numerical/relational difficulty, and use the strongest safe compact grid instead of sparse generic defaults.
+### Full Grade 1–4 inheritance cross-reference
 
-Likely reviewed files: relation/comparison generators and normalization, compact-grid layout, runtime/catalog service adapters, focused tests, proof generator, documentation.
+| Contract | Grade 1 | Grade 2 | Grade 3 | Grade 4 | Strongest safe Grade 5 contract |
+|---|---|---|---|---|---|
+| Equation public role | Equal or Not Equal? | Equal or Not Equal? | Equal or Not Equal? | Compare Equations | Compare Equations |
+| Equation action | solve both sides; write `=`/`≠` | same | same | compare two supplied expressions | compare two supplied expressions |
+| Equation density | 12, 2×6 | 12, 2×6 | 12, 2×6 | 30, 3×10 | 30, 2×15; width-driven |
+| Equation range | results to 20 | results to 50 | results to 100 | default 100–1,000; tested to 2,000 | default 1,000–10,000 |
+| Equation balance | equal/not-equal | exact 6/6 across templates | caller-controlled exact count | exact equality count; balanced operation templates | exact equality count; mixed/add/subtract modes |
+| Equation truth | prompt/answer | relation templates | left/right values | expressions, operations, operands, values, equality, answer state, reversal-safe signature | inherit complete Grade 4 truth |
+| Number public role | Compare Numbers to 20 | Compare 3-Digit Numbers | generic Grade 3 comparison | Compare Numbers | Compare Numbers |
+| Number action | write `>`, `<`, or `=` | same | same | same | same |
+| Number density | 60, 4×15 | 12, 2×6 | 12 inside generic 4×15 capacity | 30, 3×10 | 30, 3×10 |
+| Number range | 0–20 | 100–999 | generic 0–999 | default 1,000–10,000 | default 10,000–100,000 |
+| Number balance | family-balanced | structured family | incidental | exact 10/10/10 or 15/15 without equality | exact count, then balanced `<`/`>` |
+| Number truth | structured comparison fact | left/right/symbol | incomplete generic truth | left/right/symbol, equality state, answer state, reversal-safe signature | complete structured truth with Grade 5 signature |
+| Examples | family-specific | family-specific | no distinct contract | additional, off by default | additional, off by default |
+| Key geometry | mirrors student grid | mirrors student grid | generic grid | mirrored fixed zones | mirrored fixed zones |
+| Variables | bounded range and selected values | family bounded | permissive generic aliases | strict count/page/range/selection/equality/example contract | preserve strict aliases; reject silent fallback |
 
-Variables to preserve: count/page, selected operations, number/operand ranges, selected numbers, equality/equal-pair controls, example aliases, seed, key inclusion.
+Nearest approved layout classes were also checked: Grade 5 Missing Factors and Multiplication Fact Review safely use 4×15 because each cell contains one short equation; Grade 4 Compare Numbers and Compare Equations use 3×10 because two operands or expressions share a cell. Six-digit numerals still fit the Grade 4 3×10 comparison geometry after a measured four-point operand-zone increase. Five-digit equation expressions do not fit three columns at the 12-point family minimum, so Grade 5 Compare Equations uses two columns and safely raises vertical density to 15 rows rather than shrinking type.
 
-Focused test/proof strategy: 30 seeds; exact relation/equality distribution; alias consumption; conflict/invalid rejection; unique and reversal-safe pairs; widest expressions/numbers; default and maximum pagination; student/key parity. One combined founder packet.
+The Grade 3 place-value comparison record remains a sparse 12-question output inside generic 4×15 capacity and lacks the stronger later structured contract. Record this as a later lower-grade family-consistency watchlist item; Batch 2 does not reopen Grade 3.
 
-Risk: **LOW–MODERATE**. Recommended second.
+### Task-role and duplicate gate
+
+`Compare Equations` shows two addition/subtraction expressions and asks for `=` or `≠`; it measures equivalence after evaluating both sides. `Compare Numbers` shows two whole-number numerals and asks for `>`, `<`, or `=`; it measures place-value magnitude. Neither duplicates Grade 5 Missing Factors or Multiplication Fact Review, which require numeric fact answers. The 30-question number-comparison practice also remains distinct from the existing three-question exit ticket and six-question quick check. No split or deferral is recommended.
+
+### Approved review-candidate defaults and density
+
+| ID | Title/instruction/footer | Default | Maximum | Geometry and measured boundary |
+|---|---|---|---|---|
+| `grade5_addition_subtraction_facts_equation_match` | Compare Equations; “Write = or ≠ to compare each pair of equations.”; `Grade 5 • Math • Addition & Subtraction` | 30 questions; fifteen `=` and fifteen `≠`; mixed addition/subtraction; results 1,000–10,000 | 60 questions; 30 per student page | 2×15; 12-point expressions; 92-point expression zones; 18-point target; 19-point number gutter |
+| `grade5_place_value_representation_compare_numbers` | Compare Numbers; “Write >, <, or = to compare each pair of numbers.”; `Grade 5 • Math • Place Value` | 30 questions; ten each `<`, `>`, `=`; values 10,000–100,000 | 60 questions; 30 per student page | 3×10; 10.5-point numerals; 46-point operand zones; 24-point target; 20-point number gutter; comma-formatted `100,000` fits |
+
+Default PDFs are two pages including the key. Maximum PDFs are four pages. Equation completed examples remain additional inside the two-page default; number-comparison examples remain additional and use the established example-strip pagination. Multipage student and key pages repeat identical grid geometry.
+
+### Compare Equations density correction
+
+The founder rejected the initially submitted 20-question 2×10 default as unnecessarily sparse. The renderer was measured at its actual text placements and page bounds, then tested with five 2×15 prototypes. The founder-approved final decision is **30 questions in a 2×15 grid**, with 15 `=` and 15 `≠`; the maximum is **60 questions**, with 30 per student page.
+
+| Measurement | Result |
+|---|---:|
+| Student content top / bottom | 166 / 714 points |
+| Key content top / bottom | 166 / 714 points |
+| Available student / key height | 548 / 548 points |
+| Row height at 10 rows | 54.80 points |
+| Row height at 15 rows | 36.53 points |
+| Completed-example 15-row height | 32.27 points |
+| Asserted minimum safe row height | 30.00 points |
+| Completed-example displacement | 64.00 points |
+| Expression text origin | row top + 3 points |
+| Response-line baseline | row top + 20 points |
+| Final response-line clearance to content floor | 16.53 points default; 12.27 points with example |
+| Final response-line clearance to footer rule | 40.53 points default; 36.27 points with example |
+| Expression font / number font | 12 / 11 points |
+| Expression zones / relation target | 92 / 18 points |
+| Inter-expression gaps | 1 point on each side of the target |
+| Number gutter | 19 points |
+| Widest measured near-10,000 expression | 64.45 points, leaving 27.55 points in its zone |
+
+All measurements preserve the submitted horizontal geometry. Rendered prototypes retain readable numbering, centred relation targets, distinct rows, unclipped commas and operators, and teacher-speed answer keys. No expression wraps, font size falls, target narrowing, arithmetic change, or structured-truth change occurred. The completed example remains additional without adding a sparse page.
+
+Density-review proofs:
+
+- `review/grade-5-compact-relational-batch-2/density-review/01_compare_equations_default_30.pdf`
+- `review/grade-5-compact-relational-batch-2/density-review/02_compare_equations_longest_expressions_30.pdf`
+- `review/grade-5-compact-relational-batch-2/density-review/03_compare_equations_completed_example_30.pdf`
+- `review/grade-5-compact-relational-batch-2/density-review/04_compare_equations_subtraction_only_30.pdf`
+- `review/grade-5-compact-relational-batch-2/density-review/05_compare_equations_maximum_candidate.pdf`
+
+The approved Compare Numbers implementation and proof files were not changed during this correction.
+
+### Variable and structured-truth contract
+
+| Resource | Supported raw inputs and aliases | Classification |
+|---|---|---|
+| both | `questionCount`; `questionsPerPage`; `includeExample` / `completedExample` / `example`; `worksheetSeed`; answer-key inclusion | **PRESERVED / RAW RUNTIME ONLY** |
+| equations | `minimumResult` / `minResult` / `minimumValue`; `maximumResult` / `maxResult` / `maxTotal` / `maximumTotal` / `maximumValue`; `operationMode` / `mode`; `selectedOperations` / `operations`; `includeEqualPairs`; `equalPairs` / `equalityCount` | **PRESERVED AND CONSUMED** |
+| numbers | `minValue` / `minA` / `minimumValue` / `minimumNumber`; `maxValue` / `maxA` / `maximumValue` / `maximumNumber`; `selectedNumbers` / `selectedValues` / `onlyNumbers`; `includeEqualPairs`; `equalPairs` / `equalityCount` | **PRESERVED AND CONSUMED** |
+| both | caller-owned prompt, expressions/operands, left/right values, relation/equality state, answer, answer state, response target, duplicate signature | **UNSAFE — REJECT** |
+| equations | multiplication/division operations, operand selectors, relation selectors, negative/decimal ranges | **NOT SUPPORTED** |
+| numbers | operation controls, relation selectors, negative/decimal/out-of-range values | **NOT SUPPORTED** |
+
+Equation items store both expressions, operations, operands, evaluated values, expected relation, equality state, response target, answer state, and canonical reversal-safe signature. Number items store both values, expected symbol, equality state, response target, answer state, and a canonical unordered-pair signature. The renderer only displays these supplied values and answers.
+
+Adversarial QA rejects empty/duplicate selections, conflicting aliases, reversed ranges, decimals, negatives, excessive counts/density, impossible equality counts, insufficient candidate pools, unsupported operations/relations, invalid example aliases, and caller-owned truth. No invalid explicit input silently falls back.
+
+### Focused verification and founder packet
+
+`scripts/testGrade5CompactRelationalPracticeBatch2.js` covers 30 deterministic seeds per resource, same-seed failures 0, different-seed variation, exact equality/relation counts, operation modes, selected-number and range consumption, examples-additional behavior, maximum pagination, actual rendered 15-row positions, the completed-example displacement and footer clearance, fixed-zone width measurements, complete truth, student/key parity, duplicate/reversal rejection, invalid inputs, Grade 1–4 isolation, Batch 1 isolation, lifecycle status, and no public customization.
+
+Founder proofs:
+
+- `review/grade-5-compact-relational-batch-2/founder-review/01_compare_equations.pdf`
+- `review/grade-5-compact-relational-batch-2/founder-review/02_compare_numbers.pdf`
+
+Nine stress proofs cover the largest and smallest values, longest expressions, comma-formatted six-digit numerals, addition-only, subtraction-only, no-equality mode, completed examples, equality balance, and both maximum counts. The affected Compare Equations founder and stress proofs were regenerated for 2×15; all approved Compare Numbers proof hashes remained unchanged. Founder approval covers both resources, so each moves D → A, yielding **A13 / D11 / E1 / G21 / Total46**.
+
+Split, blocked, or deferred Batch 2 resources: **none**. Catalog lifecycle statuses remain `generated`; no public customization family was registered. Grade 1–4 relational history and the nearest dense-grid task classes were reviewed. Grade 5 preserves the Grade 4 structured-truth guarantees, while Grade 3 sparse comparison drift remains on the later K–6 consistency watchlist. No lower-grade resource was reopened.
+
+Risk: **CLOSED — FOUNDER APPROVED**.
 
 ## Batch 3 — Place-Value Representations
 
@@ -252,6 +347,7 @@ The accelerated execution model is one full session per batch: completed-work re
 
 - initial proposal: **A8 / D16 / E1 / G21 / Total46**
 - after founder-approved Batch 1: **A11 / D13 / E1 / G21 / Total46**
+- after founder-approved Batch 2: **A13 / D11 / E1 / G21 / Total46**
 - after Batches 1–6: **A24 / D0 / E1 / G21 / Total46**
 - Function Table implemented: **A25 / D0 / E0 / G21 / Total46**
 - Function Table deferred: **A24 / D0 / E0 / G22 / Total46**

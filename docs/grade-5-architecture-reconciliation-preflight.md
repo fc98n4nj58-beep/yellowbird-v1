@@ -1,6 +1,6 @@
 # Grade 5 Architecture Reconciliation Preflight
 
-Status: active reconciliation. Founder-approved Batch 1 is closed; later Grade 5 batches remain unimplemented. Catalog lifecycle statuses remain unchanged.
+Status: active reconciliation. Founder-approved Batches 1 and 2 are closed; later Grade 5 batches remain unimplemented. Catalog lifecycle statuses remain unchanged.
 
 Starting checkpoint: `f1b04ee6d7f90789af46419947164fa84d5c320a`
 
@@ -37,7 +37,7 @@ Density notation is `questions / columns / questions-per-student-page / total PD
 | 3 | `g5_place_value_to_100000_quick_check` | Compare Numbers to 100,000 Quick Check; Place Value; quick check/ready | compare numbers; compact assessment | 6/4/60/2 | previously curated and print-QA’d; honest bounded role | A |
 | 4 | `g5_equivalent_fractions_quick_check` | Equivalent Fractions Quick Check; Fractions; quick check/ready | equivalent-fraction completion; compact assessment | 6/2/20/2 | previously curated and print-QA’d | A |
 | 5 | `grade5_addition_subtraction_word_problems_addition_word_problem` | Addition Word Problem — Grade 5; Addition & Subtraction; practice/generated | addition story; full-width work box | 12/1/3/8 | shared-family Grade 5 extension and language/range review needed | D/B5 |
-| 6 | `grade5_addition_subtraction_facts_equation_match` | Equation Match — Grade 5; Addition & Subtraction; matching/generated | relation comparison; matching/compact relation | 12/2/12/2 | current generic contract trails approved Grade 4 compare-equations class | D/B2 |
+| 6 | `grade5_addition_subtraction_facts_equation_match` | Compare Equations; Addition & Subtraction; matching/generated | structured equation comparison; compact relation | 30/2/30/2 | founder-approved 2×15 Grade 5 extension with exact equality balance | A |
 | 7 | `grade5_addition_subtraction_facts_fact_family` | Fact Families — Grade 5; Addition & Subtraction; matching/generated | fact family; matching | 12/3/12/2 | primary-fact task has no natural Grade 5 distinction | G |
 | 8 | `grade5_addition_subtraction_facts_fact_fluency` | Fact Fluency — Grade 5; Addition & Subtraction; fluency/generated | fact fluency; fluency grid | 12/2/20/2 | overlaps approved multiplication review and lower-grade remediation | G |
 | 9 | `grade5_addition_subtraction_word_problems_missing_addend_word_problem` | Missing Addend Word Problem — Grade 5; Addition & Subtraction; practice/generated | missing-addend story; full-width work box | 12/1/3/8 | shared-family Grade 5 extension and language/range review needed | D/B5 |
@@ -73,7 +73,7 @@ Density notation is `questions / columns / questions-per-student-page / total PD
 | 39 | `grade5_patterning_and_algebra_missing_value_pattern` | Find the Missing Values; Patterning & Algebra; practice/generated | numeric pattern; full-width sequence with student-only side workspace | 12/1/12/2 | founder-approved Grade 5 shared-family extension; Batch 1 closed | A |
 | 40 | `grade5_patterning_and_algebra_pattern_word_problems` | Pattern Word Problems — Grade 5; Patterning & Algebra; practice/planned | missing generator; generic practice | — | established planned gap; no approved application architecture | G |
 | 41 | `grade5_place_value_representation_base_ten_blocks` | Base Ten Blocks — Grade 5; Place Value; visual/generated | base-ten model; full-width visual | 10/1/10/2 | current shared model does not establish a Grade 5 magnitude role | G |
-| 42 | `grade5_place_value_representation_compare_numbers` | Compare Numbers — Grade 5; Place Value; practice/generated | compare numbers; fluency grid | 12/4/60/2 | shared compare-equations density/range correction needed | D/B2 |
+| 42 | `grade5_place_value_representation_compare_numbers` | Compare Numbers; Place Value; practice/generated | structured number comparison; compact relation | 30/3/30/2 | founder-approved 3×10 Grade 5 magnitude comparison through 100,000 | A |
 | 43 | `grade5_place_value_representation_expanded_form` | Expanded Form — Grade 5; Place Value; representation/generated | expanded form; three-column grid | 45/3/45/2 | reusable representation family; Grade 5 range/format QA needed | D/B3 |
 | 44 | `grade5_place_value_representation_number_line_identify` | Number Line — Grade 5; Place Value; visual/generated | place-value number line; full-width | 10/1/5/4 | structured interval family needs Grade 5 extension | D/B3 |
 | 45 | `grade5_place_value_representation_number_word_match` | Number Word Match — Grade 5; Place Value; matching/generated | number words; two-column matching | 12/2/12/2 | shared Grade 4 family needs Grade 5 range/format QA | D/B3 |
@@ -186,11 +186,11 @@ Public readiness remains **none**. Controls become public only in a separate cus
 
 Sparse current output is not evidence for a lower density. Conversely, story, number-line, and visual families keep full-width space because the response action needs it.
 
-## Initial reconciliation proposal
+## Current reconciliation
 
-Proposed only; no catalog or reconciliation movement has been applied.
+Catalog lifecycle statuses remain independent and unchanged.
 
-### A — 11
+### A — 13
 
 - `g5_compare_numbers_to_100000_exit_ticket`
 - `g5_equivalent_fractions_exit_ticket`
@@ -203,17 +203,17 @@ Proposed only; no catalog or reconciliation movement has been applied.
 - `grade5_patterning_and_algebra_extend_pattern`
 - `grade5_patterning_and_algebra_identify_pattern_rule`
 - `grade5_patterning_and_algebra_missing_value_pattern`
+- `grade5_addition_subtraction_facts_equation_match`
+- `grade5_place_value_representation_compare_numbers`
 
-### D — 13
+### D — 11
 
 - `grade5_addition_subtraction_word_problems_addition_word_problem` — B5
-- `grade5_addition_subtraction_facts_equation_match` — B2
 - `grade5_addition_subtraction_word_problems_missing_addend_word_problem` — B5
 - `grade5_addition_subtraction_word_problems_subtraction_word_problem` — B5
 - `grade5_fraction_equivalence_fraction_number_line` — B4
 - `grade5_fraction_equivalence_match_equivalent_fractions` — B4
 - `grade5_fraction_equivalence_shade_fraction_models` — B4
-- `grade5_place_value_representation_compare_numbers` — B2
 - `grade5_place_value_representation_expanded_form` — B3
 - `grade5_place_value_representation_number_line_identify` — B3
 - `grade5_place_value_representation_number_word_match` — B3
@@ -248,9 +248,9 @@ Proposed only; no catalog or reconciliation movement has been applied.
 - `grade5_patterning_and_algebra_pattern_word_problems`
 - `grade5_place_value_representation_base_ten_blocks`
 
-Total: **A11 / D13 / E1 / G21 / Total46**.
+Total: **A13 / D11 / E1 / G21 / Total46**.
 
-Projected scenario after the remaining five D batches: **A24 / D0 / E1 / G21 / Total46**. If the founder later approves and implements a genuine Function Table architecture: **A25 / D0 / E0 / G21 / Total46**. A founder decision to defer Function Table instead yields **A24 / D0 / E0 / G22 / Total46**.
+Projected scenario after the remaining four D batches: **A24 / D0 / E1 / G21 / Total46**. If the founder later approves and implements a genuine Function Table architecture: **A25 / D0 / E0 / G21 / Total46**. A founder decision to defer Function Table instead yields **A24 / D0 / E0 / G22 / Total46**.
 
 ## Duplicate and deferred analysis
 
@@ -282,9 +282,10 @@ Each implementation batch must run:
 ## Founder decisions required
 
 - Batch 1 Numeric Patterning is founder-approved and closed at **A11 / D13 / E1 / G21 / Total46**.
+- Batch 2 Compact Relational Practice is founder-approved and closed at **A13 / D11 / E1 / G21 / Total46**.
 - Decide whether Grade 5 fraction number lines stay within 0–1 or add an approved 0–2/improper-fraction lane.
 - Approve honest “complete the equivalent fraction” positioning for ID 28, or require genuine matching architecture and move it to E.
 - Decide the exact Grade 5 story default (recommended 8 for the approved work-box geometry; current runtime is 12).
 - Decide whether Function Table should receive new visible-table architecture or move E → G.
 
-Batch 1 is closed without lifecycle movement or public customization. The remaining Grade 5 implementation work starts with Batch 2 only after separate founder authorization.
+Batches 1 and 2 are closed without lifecycle movement or public customization. Grade 3 sparse comparison drift remains on the later K–6 consistency watchlist; no lower-grade resource was reopened. The next implementation action belongs to a separately authorized later Grade 5 batch.

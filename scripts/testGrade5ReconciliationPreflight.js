@@ -25,17 +25,17 @@ const CATEGORIES = Object.freeze({
     "g5_multiplication_fact_review",
     "grade5_patterning_and_algebra_extend_pattern",
     "grade5_patterning_and_algebra_identify_pattern_rule",
-    "grade5_patterning_and_algebra_missing_value_pattern"
+    "grade5_patterning_and_algebra_missing_value_pattern",
+    "grade5_addition_subtraction_facts_equation_match",
+    "grade5_place_value_representation_compare_numbers"
   ]),
   D: Object.freeze([
     "grade5_addition_subtraction_word_problems_addition_word_problem",
-    "grade5_addition_subtraction_facts_equation_match",
     "grade5_addition_subtraction_word_problems_missing_addend_word_problem",
     "grade5_addition_subtraction_word_problems_subtraction_word_problem",
     "grade5_fraction_equivalence_fraction_number_line",
     "grade5_fraction_equivalence_match_equivalent_fractions",
     "grade5_fraction_equivalence_shade_fraction_models",
-    "grade5_place_value_representation_compare_numbers",
     "grade5_place_value_representation_expanded_form",
     "grade5_place_value_representation_number_line_identify",
     "grade5_place_value_representation_number_word_match",
@@ -76,11 +76,12 @@ const CLOSED_BATCH_ONE = Object.freeze([
   "grade5_patterning_and_algebra_missing_value_pattern"
 ]);
 
+const CLOSED_BATCH_TWO = Object.freeze([
+  "grade5_addition_subtraction_facts_equation_match",
+  "grade5_place_value_representation_compare_numbers"
+]);
+
 const BATCHES = Object.freeze({
-  B2: Object.freeze([
-    "grade5_addition_subtraction_facts_equation_match",
-    "grade5_place_value_representation_compare_numbers"
-  ]),
   B3: Object.freeze([
     "grade5_place_value_representation_expanded_form",
     "grade5_place_value_representation_number_line_identify",
@@ -155,7 +156,7 @@ function run() {
   assert.strictEqual(categoryById.size, 46);
   assert.deepStrictEqual(
     Object.fromEntries(Object.entries(CATEGORIES).map(([category, ids]) => [category, ids.length])),
-    { A: 11, D: 13, E: 1, G: 21 }
+    { A: 13, D: 11, E: 1, G: 21 }
   );
   rows.forEach((row) => {
     assert.strictEqual(row.proposed, categoryById.get(row.id), `Inventory category mismatch: ${row.id}`);
@@ -179,6 +180,12 @@ function run() {
   });
   assert(plan.includes("Batch 1 is founder-approved and closed"));
   assert(plan.includes("There are no split or deferred Batch 1 resources"));
+  CLOSED_BATCH_TWO.forEach((id) => {
+    assert(CATEGORIES.A.includes(id), `Closed Batch 2 resource is not A: ${id}`);
+    assert(plan.includes(`\`${id}\``), `Batch 2 closeout documentation omits ${id}`);
+  });
+  assert(plan.includes("Both resources moved D → A"));
+  assert(plan.includes("Split, blocked, or deferred Batch 2 resources: **none**"));
   assert(plan.includes("`grade5_patterning_and_algebra_function_table` remains E"));
 
   const grade5Statuses = grade5.reduce((counts, item) => {
@@ -232,7 +239,7 @@ function run() {
     "g5_interpret_graphs"
   ]);
 
-  assert(preflight.includes("A11 / D13 / E1 / G21 / Total46"));
+  assert(preflight.includes("A13 / D11 / E1 / G21 / Total46"));
   assert(preflight.includes("CONFIRMED GRADE 4 DRIFT"));
   assert(preflight.includes("Grade 2–4 reconciliations"));
   assert(workflow.includes(
@@ -244,7 +251,7 @@ function run() {
     grade5Records: grade5.length,
     uniqueGrade5Ids: grade5Set.size,
     grade5Lifecycle: grade5Statuses,
-    proposedReconciliation: { A: 11, D: 13, E: 1, G: 21, Total: 46 },
+    proposedReconciliation: { A: 13, D: 11, E: 1, G: 21, Total: 46 },
     batches: Object.fromEntries(Object.entries(BATCHES).map(([batch, ids]) => [batch, ids.length])),
     expectedRuntimeGaps: runtimeFailures,
     documentedSameSeedDefects: nonDeterministic,

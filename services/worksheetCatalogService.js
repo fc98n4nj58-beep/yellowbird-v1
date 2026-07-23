@@ -327,6 +327,8 @@ const GRADE4_NUMBER_LINE_ID = "grade4_place_value_representation_number_line_ide
 const GRADE4_NUMBER_WORD_ID = "grade4_place_value_representation_number_word_match";
 const GRADE4_COMPARE_NUMBERS_ID = "grade4_place_value_representation_compare_numbers";
 const GRADE4_EQUATION_MATCH_ID = "grade4_addition_subtraction_facts_equation_match";
+const GRADE5_COMPARE_NUMBERS_ID = "grade5_place_value_representation_compare_numbers";
+const GRADE5_EQUATION_MATCH_ID = "grade5_addition_subtraction_facts_equation_match";
 const GRADE4_PLACE_VALUE_BATCH4_IDS = new Set([
   GRADE4_NUMBER_LINE_ID,
   GRADE4_NUMBER_WORD_ID,
@@ -335,6 +337,13 @@ const GRADE4_PLACE_VALUE_BATCH4_IDS = new Set([
 const GRADE4_BATCH5_TITLES = Object.freeze({
   [GRADE4_EQUATION_MATCH_ID]: "Compare Equations"
 });
+const GRADE5_COMPACT_RELATIONAL_TITLES = Object.freeze({
+  [GRADE5_EQUATION_MATCH_ID]: "Compare Equations",
+  [GRADE5_COMPARE_NUMBERS_ID]: "Compare Numbers"
+});
+const GRADE5_COMPACT_RELATIONAL_IDS = new Set(
+  Object.keys(GRADE5_COMPACT_RELATIONAL_TITLES)
+);
 const GRADE3_EQUAL_SHARING_ID = "g3_equal_sharing_division";
 const GRADE3_SHADE_FRACTION_ID = "grade3_fraction_equivalence_shade_fraction_models";
 const GRADE3_NUMBER_LINE_IDENTIFY_ID = "grade3_place_value_representation_number_line_identify";
@@ -1469,6 +1478,265 @@ function normalizeGrade4PlaceValueOptions(item, options = {}, rawOptions = {}) {
       grade4PlaceValueBoolean
     ) ?? true;
   }
+  return normalized;
+}
+
+function validateGrade5CompactRelationalRawOptions(item, options = {}) {
+  if (!GRADE5_COMPACT_RELATIONAL_IDS.has(item.id)) return;
+  const isEquation = item.id === GRADE5_EQUATION_MATCH_ID;
+  const defaultCount = 30;
+  const maximumCount = 60;
+  const perPageMaximum = 30;
+  const questionCount = grade4PlaceValueScalarAlias(
+    options,
+    ["questionCount"],
+    "Grade 5 compact-relational question count",
+    (value) => grade4PlaceValueInteger(value, "Grade 5 compact-relational question count", 1, maximumCount)
+  ) ?? defaultCount;
+  grade4PlaceValueScalarAlias(
+    options,
+    ["questionsPerPage"],
+    "Grade 5 compact-relational questions per page",
+    (value) => grade4PlaceValueInteger(value, "Grade 5 compact-relational questions per page", 1, perPageMaximum)
+  );
+  const includeExample = grade4PlaceValueScalarAlias(
+    options,
+    ["includeExample", "completedExample", "example"],
+    "Grade 5 compact-relational completed-example option",
+    (value) => grade4PlaceValueBoolean(value, "Grade 5 compact-relational completed-example option")
+  ) ?? false;
+
+  if (isEquation) {
+    const minimumResult = grade4PlaceValueScalarAlias(
+      options,
+      ["minimumResult", "minResult", "minimumValue"],
+      "Grade 5 equation-comparison minimum result",
+      (value) => grade4PlaceValueInteger(value, "Grade 5 equation-comparison minimum result", 0, 9999)
+    ) ?? 1000;
+    const maximumResult = grade4PlaceValueScalarAlias(
+      options,
+      ["maximumResult", "maxResult", "maxTotal", "maximumTotal", "maximumValue"],
+      "Grade 5 equation-comparison maximum result",
+      (value) => grade4PlaceValueInteger(value, "Grade 5 equation-comparison maximum result", 1, 10000)
+    ) ?? 10000;
+    if (minimumResult >= maximumResult) {
+      throw new Error("Grade 5 equation-comparison minimum result must be less than maximum result.");
+    }
+    const includeEqualPairs = grade4PlaceValueScalarAlias(
+      options,
+      ["includeEqualPairs"],
+      "Grade 5 equation-comparison equality option",
+      (value) => grade4PlaceValueBoolean(value, "Grade 5 equation-comparison equality option")
+    ) ?? true;
+    const equalPairs = grade4PlaceValueScalarAlias(
+      options,
+      ["equalPairs", "equalityCount"],
+      "Grade 5 equation-comparison equality count",
+      (value) => grade4PlaceValueInteger(value, "Grade 5 equation-comparison equality count", 0, questionCount)
+    );
+    if (!includeEqualPairs && equalPairs !== null && equalPairs !== 0) {
+      throw new Error("Grade 5 equation-comparison equality controls must agree.");
+    }
+    const operationMode = grade4PlaceValueScalarAlias(
+      options,
+      ["operationMode", "mode"],
+      "Grade 5 equation-comparison operation mode",
+      normalizeGrade4EquationOperationMode
+    );
+    const selectedOperations = grade4PlaceValueListAlias(
+      options,
+      ["selectedOperations", "operations"],
+      "Grade 5 equation-comparison operations",
+      normalizeGrade4EquationOperationMode
+    );
+    if (selectedOperations?.includes("mixed")) {
+      throw new Error("Grade 5 equation-comparison selected operations must list addition and/or subtraction.");
+    }
+    const selectedMode = selectedOperations
+      ? selectedOperations.length === 2 ? "mixed" : selectedOperations[0]
+      : null;
+    if (operationMode && selectedMode && operationMode !== selectedMode) {
+      throw new Error("Grade 5 equation-comparison operation aliases must agree.");
+    }
+    const resolvedEqualPairs = includeEqualPairs ? (equalPairs ?? Math.floor(questionCount / 2)) : 0;
+    const templateCount = (operationMode || selectedMode || "mixed") === "mixed" ? 3 : 1;
+    const resultCount = maximumResult - minimumResult + 1;
+    const exampleUsesEqual = includeExample && resolvedEqualPairs > 0 ? 1 : 0;
+    const exampleUsesNotEqual = includeExample && resolvedEqualPairs === 0 ? 1 : 0;
+    if (
+      resolvedEqualPairs + exampleUsesEqual > resultCount * templateCount ||
+      questionCount - resolvedEqualPairs + exampleUsesNotEqual > resultCount * templateCount
+    ) {
+      throw new Error("Grade 5 equation-comparison result range cannot support the requested unique pair contract.");
+    }
+    const unsupported = [
+      "minA", "maxA", "minB", "maxB", "minimumOperand", "maximumOperand",
+      "selectedNumbers", "selectedValues", "onlyNumbers", "relation", "relationSymbol",
+      "selectedRelations", "expression", "leftExpression", "rightExpression",
+      "leftOperands", "rightOperands", "leftValue", "rightValue", "expectedSymbol",
+      "expectedRelation", "comparisonResult", "equalityState", "prompt", "answer",
+      "answerState", "responseTarget", "duplicateSignature"
+    ];
+    if (unsupported.some((key) => Object.prototype.hasOwnProperty.call(options, key))) {
+      throw new Error("Grade 5 equation comparison does not accept operand selectors or caller-owned expression/answer truth.");
+    }
+    return;
+  }
+
+  const minimum = grade4PlaceValueScalarAlias(
+    options,
+    ["minValue", "minA", "minimumValue", "minimumNumber"],
+    "Grade 5 comparison minimum value",
+    (value) => grade4PlaceValueInteger(value, "Grade 5 comparison minimum value", 0, 100000)
+  ) ?? 10000;
+  const maximum = grade4PlaceValueScalarAlias(
+    options,
+    ["maxValue", "maxA", "maximumValue", "maximumNumber"],
+    "Grade 5 comparison maximum value",
+    (value) => grade4PlaceValueInteger(value, "Grade 5 comparison maximum value", 0, 100000)
+  ) ?? 100000;
+  if (minimum >= maximum) {
+    throw new Error("Grade 5 comparison minimum value must be less than maximum value.");
+  }
+  const selected = grade4PlaceValueListAlias(
+    options,
+    ["selectedNumbers", "selectedValues", "onlyNumbers"],
+    "Grade 5 comparison selected numbers",
+    (value) => grade4PlaceValueInteger(value, "Grade 5 comparison selected number", 0, 100000)
+  );
+  if (selected?.some((value) => value < minimum || value > maximum)) {
+    throw new Error("Grade 5 comparison selected numbers must remain inside the selected range.");
+  }
+  const includeEqualPairs = grade4PlaceValueScalarAlias(
+    options,
+    ["includeEqualPairs"],
+    "Grade 5 comparison equality option",
+    (value) => grade4PlaceValueBoolean(value, "Grade 5 comparison equality option")
+  ) ?? true;
+  const explicitEqualCount = grade4PlaceValueScalarAlias(
+    options,
+    ["equalPairs", "equalityCount"],
+    "Grade 5 comparison equality count",
+    (value) => grade4PlaceValueInteger(value, "Grade 5 comparison equality count", 0, questionCount)
+  );
+  if (!includeEqualPairs && explicitEqualCount !== null && explicitEqualCount !== 0) {
+    throw new Error("Grade 5 comparison equality controls must agree.");
+  }
+  const equalCount = includeEqualPairs
+    ? explicitEqualCount ?? Math.floor(questionCount / 3)
+    : 0;
+  if ((questionCount - equalCount) % 2 !== 0) {
+    throw new Error("Grade 5 comparison equality count must leave an even number of unequal pairs.");
+  }
+  const valueCount = selected?.length || maximum - minimum + 1;
+  const exampleEqualCount = includeExample && includeEqualPairs ? 1 : 0;
+  const exampleUnequalCount = includeExample && !includeEqualPairs ? 1 : 0;
+  if (
+    valueCount < equalCount + exampleEqualCount ||
+    valueCount * (valueCount - 1) / 2 < questionCount - equalCount + exampleUnequalCount
+  ) {
+    throw new Error("Grade 5 comparison value pool cannot support the requested unique pair contract.");
+  }
+  const unsupported = [
+    "operationMode", "selectedOperations", "relation", "relationSymbol", "selectedRelations",
+    "leftValue", "rightValue", "expectedSymbol", "comparisonResult", "equalityState",
+    "prompt", "answer", "answerState", "responseTarget", "duplicateSignature"
+  ];
+  if (unsupported.some((key) => Object.prototype.hasOwnProperty.call(options, key))) {
+    throw new Error("Grade 5 number comparison does not accept operation controls or caller-owned comparison truth.");
+  }
+}
+
+function normalizeGrade5CompactRelationalOptions(item, options = {}, rawOptions = {}) {
+  if (!GRADE5_COMPACT_RELATIONAL_IDS.has(item.id)) return options;
+  const isEquation = item.id === GRADE5_EQUATION_MATCH_ID;
+  const normalized = { ...options };
+  normalized.questionCount = Number(rawOptions.questionCount ?? 30);
+  normalized.questionsPerPage = Number(rawOptions.questionsPerPage ?? 30);
+  normalized.includeExample = grade4PlaceValueScalarAlias(
+    rawOptions,
+    ["includeExample", "completedExample", "example"],
+    "Grade 5 compact-relational completed-example option",
+    grade4PlaceValueBoolean
+  ) ?? false;
+
+  if (isEquation) {
+    normalized.minimumResult = Number(
+      rawOptions.minimumResult ?? rawOptions.minResult ?? rawOptions.minimumValue ?? 1000
+    );
+    normalized.maximumResult = Number(
+      rawOptions.maximumResult ?? rawOptions.maxResult ?? rawOptions.maxTotal ??
+      rawOptions.maximumTotal ?? rawOptions.maximumValue ?? 10000
+    );
+    normalized.includeEqualPairs = grade4PlaceValueScalarAlias(
+      rawOptions,
+      ["includeEqualPairs"],
+      "Grade 5 equation-comparison equality option",
+      grade4PlaceValueBoolean
+    ) ?? true;
+    normalized.equalPairs = normalized.includeEqualPairs
+      ? grade4PlaceValueScalarAlias(
+        rawOptions,
+        ["equalPairs", "equalityCount"],
+        "Grade 5 equation-comparison equality count",
+        Number
+      ) ?? Math.floor(normalized.questionCount / 2)
+      : 0;
+    const explicitMode = grade4PlaceValueScalarAlias(
+      rawOptions,
+      ["operationMode", "mode"],
+      "Grade 5 equation-comparison operation mode",
+      normalizeGrade4EquationOperationMode
+    );
+    const selectedOperations = grade4PlaceValueListAlias(
+      rawOptions,
+      ["selectedOperations", "operations"],
+      "Grade 5 equation-comparison operations",
+      normalizeGrade4EquationOperationMode
+    );
+    normalized.operationMode = explicitMode || (
+      selectedOperations
+        ? selectedOperations.length === 2 ? "mixed" : selectedOperations[0]
+        : "mixed"
+    );
+    return normalized;
+  }
+
+  normalized.minA = Number(
+    rawOptions.minValue ?? rawOptions.minA ?? rawOptions.minimumValue ??
+    rawOptions.minimumNumber ?? 10000
+  );
+  normalized.maxA = Number(
+    rawOptions.maxValue ?? rawOptions.maxA ?? rawOptions.maximumValue ??
+    rawOptions.maximumNumber ?? 100000
+  );
+  normalized.minValue = normalized.minA;
+  normalized.maxValue = normalized.maxA;
+  const selected = grade4PlaceValueListAlias(
+    rawOptions,
+    ["selectedNumbers", "selectedValues", "onlyNumbers"],
+    "Grade 5 comparison selected numbers",
+    Number
+  );
+  if (selected) {
+    normalized.selectedNumbers = selected;
+    normalized.selectedValues = selected;
+    normalized.onlyNumbers = selected.join(",");
+  }
+  normalized.includeEqualPairs = grade4PlaceValueScalarAlias(
+    rawOptions,
+    ["includeEqualPairs"],
+    "Grade 5 comparison equality option",
+    grade4PlaceValueBoolean
+  ) ?? true;
+  normalized.equalityCount = normalized.includeEqualPairs
+    ? grade4PlaceValueScalarAlias(
+      rawOptions,
+      ["equalPairs", "equalityCount"],
+      "Grade 5 comparison equality count",
+      Number
+    ) ?? Math.floor(normalized.questionCount / 3)
+    : 0;
   return normalized;
 }
 
@@ -2717,6 +2985,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
   validateGrade4StoryRawOptions(item, options);
   validateGrade4PlaceValueRawOptions(item, options);
   validateGrade4EquationMatchRawOptions(item, options);
+  validateGrade5CompactRelationalRawOptions(item, options);
   if (item.id === GRADE3_BASE_TEN_ID) {
     validateGrade3BaseTenRawOptions(options);
   }
@@ -2888,7 +3157,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     }
   }
 
-  const familyNormalized = normalizeGrade4PlaceValueOptions(item, normalizeGrade4StoryProblemOptions(item, normalizeGrade4StructuredFractionOptions(item, normalizeGrade5NumericPatterningOptions(item, normalizeGrade4NumericPatterningOptions(item, normalizeGrade3DataBatch7Options(
+  const lowerFamilyNormalized = normalizeGrade4PlaceValueOptions(item, normalizeGrade4StoryProblemOptions(item, normalizeGrade4StructuredFractionOptions(item, normalizeGrade5NumericPatterningOptions(item, normalizeGrade4NumericPatterningOptions(item, normalizeGrade3DataBatch7Options(
     item,
   normalizeGrade3FractionBatch6Options(
     item,
@@ -2935,6 +3204,11 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     )
     )
   ))))))))))))), options);
+  const familyNormalized = normalizeGrade5CompactRelationalOptions(
+    item,
+    lowerFamilyNormalized,
+    options
+  );
   return normalizeGrade4EquationMatchOptions(item, familyNormalized, options);
 }
 
@@ -3269,6 +3543,73 @@ function validateGrade4EquationMatchWorksheet(id, problems = []) {
   });
 }
 
+function validateGrade5CompactRelationalWorksheet(id, problems = []) {
+  if (!GRADE5_COMPACT_RELATIONAL_IDS.has(id)) return;
+  const signatures = new Set();
+  problems.forEach((problem) => {
+    if (id === GRADE5_EQUATION_MATCH_ID) {
+      const evaluate = (operation, operands) => {
+        if (!Array.isArray(operands) || operands.length !== 2 || operands.some((value) => !Number.isInteger(value))) {
+          throw new Error("Grade 5 equation comparison requires two whole-number operands per expression.");
+        }
+        if (operation === "addition") return operands[0] + operands[1];
+        if (operation === "subtraction") return operands[0] - operands[1];
+        throw new Error("Grade 5 equation comparison contains an unsupported operation.");
+      };
+      const leftValue = evaluate(problem.leftOperation, problem.leftOperands);
+      const rightValue = evaluate(problem.rightOperation, problem.rightOperands);
+      const expected = leftValue === rightValue ? "=" : "≠";
+      const canonical = `equation_match:${[problem.leftExpression, problem.rightExpression].sort().join(" :: ")}`;
+      if (
+        problem.leftValue !== leftValue ||
+        problem.rightValue !== rightValue ||
+        problem.expectedSymbol !== expected ||
+        problem.answer !== expected ||
+        problem.equalityState !== (expected === "=") ||
+        problem.responseTarget !== "equation_relation" ||
+        problem.answerState?.leftValue !== leftValue ||
+        problem.answerState?.rightValue !== rightValue ||
+        problem.answerState?.expectedRelation !== expected ||
+        problem.answerState?.equalityState !== (expected === "=") ||
+        problem.duplicateSignature !== canonical ||
+        problem.relatedDuplicateSignature !== canonical ||
+        signatures.has(canonical)
+      ) {
+        throw new Error("Grade 5 equation-comparison structured truth is inconsistent or duplicated.");
+      }
+      signatures.add(canonical);
+      return;
+    }
+
+    const expected = problem.leftValue < problem.rightValue
+      ? "<"
+      : problem.leftValue > problem.rightValue ? ">" : "=";
+    const low = Math.min(problem.leftValue, problem.rightValue);
+    const high = Math.max(problem.leftValue, problem.rightValue);
+    const canonical = expected === "="
+      ? `grade5_compare:${problem.leftValue}=${problem.rightValue}`
+      : `grade5_compare:${low}:${high}`;
+    if (
+      !Number.isInteger(problem.leftValue) ||
+      !Number.isInteger(problem.rightValue) ||
+      problem.expectedSymbol !== expected ||
+      problem.comparisonResult !== expected ||
+      problem.answer !== expected ||
+      problem.equalityState !== (expected === "=") ||
+      problem.responseTarget !== "comparison_symbol" ||
+      problem.answerState?.leftValue !== problem.leftValue ||
+      problem.answerState?.rightValue !== problem.rightValue ||
+      problem.answerState?.expectedSymbol !== expected ||
+      problem.answerState?.equalityState !== (expected === "=") ||
+      problem.duplicateSignature !== canonical ||
+      signatures.has(canonical)
+    ) {
+      throw new Error("Grade 5 number-comparison structured truth is inconsistent or duplicated.");
+    }
+    signatures.add(canonical);
+  });
+}
+
 function generateWorksheetFromCatalogId(id, options = {}) {
   const item = getAnyWorksheetCatalogById(id);
 
@@ -3354,6 +3695,7 @@ function generateWorksheetFromCatalogId(id, options = {}) {
     validateGrade4PlaceValueWorksheet(item.id, worksheet.problems);
     validateGrade4EquationMatchWorksheet(item.id, worksheet.problems);
     validateGrade5NumericPatternWorksheet(item.id, worksheet.problems);
+    validateGrade5CompactRelationalWorksheet(item.id, worksheet.problems);
     return worksheet;
   } catch (err) {
     if (/No addition facts are available/.test(err.message)) {
@@ -3430,6 +3772,14 @@ function buildStudentFacingInstruction(item, fallback = "") {
  }
 
  if (item.id === GRADE4_EQUATION_MATCH_ID) {
+  return "Write = or ≠ to compare each pair of equations.";
+ }
+
+ if (item.id === GRADE5_COMPARE_NUMBERS_ID) {
+  return "Write >, <, or = to compare each pair of numbers.";
+ }
+
+ if (item.id === GRADE5_EQUATION_MATCH_ID) {
   return "Write = or ≠ to compare each pair of equations.";
  }
 
@@ -3829,6 +4179,7 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
   GRADE3_STORY_PROBLEM_TITLES[item.id] ||
   GRADE4_STORY_PROBLEM_TITLES[item.id] ||
   GRADE4_BATCH5_TITLES[item.id] ||
+  GRADE5_COMPACT_RELATIONAL_TITLES[item.id] ||
   (item.id === GRADE4_NUMBER_WORD_ID
     ? isReverseNumberWordMode ? "Write the Numeral" : "Write Numbers in Words"
     : GRADE4_PLACE_VALUE_BATCH4_TITLES[item.id]) ||
@@ -4077,7 +4428,8 @@ if (GRADE4_PLACE_VALUE_BATCH4_IDS.has(item.id)) {
   });
 }
 
-if (item.id === GRADE4_EQUATION_MATCH_ID) {
+if ([GRADE4_EQUATION_MATCH_ID, GRADE5_EQUATION_MATCH_ID].includes(item.id)) {
+  const isGrade5Equation = item.id === GRADE5_EQUATION_MATCH_ID;
   layout.problems = layout.problems.map((problem, index) => {
     const truth = worksheet.problems?.[index] || {};
     return {
@@ -4100,7 +4452,7 @@ if (item.id === GRADE4_EQUATION_MATCH_ID) {
   });
   layout.template = {
     ...(layout.template || {}),
-    columns: 3,
+    columns: isGrade5Equation ? 2 : 3,
     maxProblemsPerPage: finiteNumber(normalizedOptions.questionsPerPage) || 30
   };
   layout.display = {
@@ -4111,7 +4463,7 @@ if (item.id === GRADE4_EQUATION_MATCH_ID) {
     answerTargetVariant: "comparisonSymbol",
     standardAnswerLineWidth: 18,
     equalHeightItems: true,
-    denseGridRows: 10,
+    denseGridRows: isGrade5Equation ? 15 : 10,
     sequentialColumnFill: true,
     equationComparisonLayout: true,
     equationComparisonExampleStrip: true,
@@ -4120,7 +4472,7 @@ if (item.id === GRADE4_EQUATION_MATCH_ID) {
     equationComparisonMinimumFontSize: 12,
     equationComparisonNumberGutter: 19,
     equationComparisonNumberFontSize: 11,
-    equationComparisonExpressionWidth: 56.5,
+    equationComparisonExpressionWidth: isGrade5Equation ? 92 : 56.5,
     equationComparisonTargetWidth: 18,
     equationComparisonGap: 1,
     equationComparisonCenteredTarget: true
@@ -4138,31 +4490,34 @@ if (["math.addition.basic", "related_subtraction", "missing_addend"].includes(it
 if (item.activityTypes?.[0] === "compare_numbers") {
   const isGrade2Comparison = GRADE2_COMPARISON_IDS.has(item.id);
   const isGrade4Comparison = item.id === GRADE4_COMPARE_NUMBERS_ID;
-  const isStructuredComparison = isGrade2Comparison || isGrade4Comparison;
+  const isGrade5Comparison = item.id === GRADE5_COMPARE_NUMBERS_ID;
+  const isUpperGradeComparison = isGrade4Comparison || isGrade5Comparison;
+  const isStructuredComparison = isGrade2Comparison || isUpperGradeComparison;
   layout.template = {
     ...(layout.template || {}),
-    columns: isGrade4Comparison ? 3 : isStructuredComparison ? 2 : 4,
-    maxProblemsPerPage: finiteNumber(normalizedOptions.questionsPerPage) || (isGrade4Comparison ? 30 : isStructuredComparison ? 12 : 60)
+    columns: isUpperGradeComparison ? 3 : isStructuredComparison ? 2 : 4,
+    maxProblemsPerPage: finiteNumber(normalizedOptions.questionsPerPage) || (isUpperGradeComparison ? 30 : isStructuredComparison ? 12 : 60)
   };
   layout.display = {
     ...(layout.display || {}),
-    hideSubtitle: isGrade4Comparison || layout.display?.hideSubtitle,
+    hideSubtitle: isUpperGradeComparison || layout.display?.hideSubtitle,
     answerTargetVariant: "comparisonSymbol",
     standardShortAnswerTarget: true,
-    standardAnswerLineWidth: isGrade4Comparison ? 24 : isStructuredComparison ? 52 : 34,
+    standardAnswerLineWidth: isUpperGradeComparison ? 24 : isStructuredComparison ? 52 : 34,
     standardAnswerBlankText: "___",
     hideItemSeparators: true,
     equalHeightItems: true,
-    denseGridRows: isGrade4Comparison ? 10 : isStructuredComparison ? 6 : 15,
+    denseGridRows: isUpperGradeComparison ? 10 : isStructuredComparison ? 6 : 15,
     sequentialColumnFill: isStructuredComparison,
     grade2ComparisonLayout: isGrade2Comparison,
     structuredComparisonLayout: isStructuredComparison,
-    comparisonTargetWidth: isGrade4Comparison ? 24 : isStructuredComparison ? 52 : 34,
-    comparisonFontSize: isGrade4Comparison ? 10.5 : isStructuredComparison ? 16 : 12,
-    comparisonNumberGutter: isGrade4Comparison ? 20 : 30,
-    comparisonOperandWidth: isGrade4Comparison ? 42 : 58,
-    comparisonGap: isGrade4Comparison ? 4 : 12,
-    comparisonThousandsSeparators: isGrade4Comparison
+    equationComparisonExampleStrip: isGrade5Comparison,
+    comparisonTargetWidth: isUpperGradeComparison ? 24 : isStructuredComparison ? 52 : 34,
+    comparisonFontSize: isUpperGradeComparison ? 10.5 : isStructuredComparison ? 16 : 12,
+    comparisonNumberGutter: isUpperGradeComparison ? 20 : 30,
+    comparisonOperandWidth: isGrade5Comparison ? 46 : isGrade4Comparison ? 42 : 58,
+    comparisonGap: isUpperGradeComparison ? 4 : 12,
+    comparisonThousandsSeparators: isUpperGradeComparison
   };
 }
 

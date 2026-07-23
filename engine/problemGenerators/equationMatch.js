@@ -4,6 +4,7 @@ const GRADE1_EQUATION_MATCH_ID = "grade1_addition_subtraction_facts_equation_mat
 const GRADE2_EQUATION_MATCH_ID = "grade2_addition_subtraction_facts_equation_match";
 const GRADE3_EQUATION_MATCH_ID = "grade3_addition_subtraction_facts_equation_match";
 const GRADE4_EQUATION_MATCH_ID = "grade4_addition_subtraction_facts_equation_match";
+const GRADE5_EQUATION_MATCH_ID = "grade5_addition_subtraction_facts_equation_match";
 
 function finiteInteger(value, fallback) {
   const number = Number(value);
@@ -252,8 +253,9 @@ function grade4ExpressionsForValue(value) {
 
 function buildGrade4Candidates(options = {}) {
   const minimumResult = Math.max(0, finiteInteger(options.minimumResult, 100));
+  const resultCap = finiteInteger(options.resultCap, 2000);
   const maximumResult = Math.min(
-    2000,
+    resultCap,
     Math.max(minimumResult + 1, finiteInteger(options.maximumResult ?? options.maxTotal, 1000))
   );
   const operationMode = ["addition", "subtraction", "mixed"].includes(options.operationMode)
@@ -358,7 +360,7 @@ function selectGrade4Candidates(source, templates, count, random, usedSignatures
 
 function buildGrade4BalancedPool(options = {}) {
   const random = options.random || Math.random;
-  const candidates = buildGrade4Candidates(options);
+  const candidates = (options.candidateBuilder || buildGrade4Candidates)(options);
   const studentCount = Math.max(
     1,
     finiteInteger(options.studentQuestionCount ?? options.questionCount, 30)
@@ -404,6 +406,28 @@ function buildGrade4BalancedPool(options = {}) {
     pool.push((preferred.length ? preferred : alternate).shift());
   }
   return { ...candidates, pool };
+}
+
+function buildGrade5Candidates(options = {}) {
+  const minimumResult = Math.max(0, finiteInteger(options.minimumResult, 1000));
+  const maximumResult = Math.min(
+    10000,
+    Math.max(minimumResult + 1, finiteInteger(options.maximumResult ?? options.maxTotal, 10000))
+  );
+  return buildGrade4Candidates({
+    ...options,
+    minimumResult,
+    maximumResult,
+    resultCap: 10000
+  });
+}
+
+function buildGrade5BalancedPool(options = {}) {
+  return buildGrade4BalancedPool({
+    ...options,
+    candidateBuilder: buildGrade5Candidates,
+    studentQuestionCount: options.studentQuestionCount ?? options.questionCount ?? 20
+  });
 }
 
 function buildGrade2BalancedPool(options = {}) {
@@ -580,6 +604,16 @@ function generateGrade4EquationMatch(options = {}) {
   });
 }
 
+function generateGrade5EquationMatch(options = {}) {
+  return generateRelationalEquationMatch(options, {
+    candidateBuilder: buildGrade5Candidates,
+    poolBuilder: buildGrade5BalancedPool,
+    poolPrefix: "grade5-equation-match",
+    gradeLabel: "Grade 5",
+    fullStructuredTruth: true
+  });
+}
+
 function generateEquationMatchProblem(options = {}) {
   if (options.worksheetId === GRADE1_EQUATION_MATCH_ID) {
     return generateGrade1EquationMatch(options);
@@ -592,6 +626,9 @@ function generateEquationMatchProblem(options = {}) {
   }
   if (options.worksheetId === GRADE4_EQUATION_MATCH_ID) {
     return generateGrade4EquationMatch(options);
+  }
+  if (options.worksheetId === GRADE5_EQUATION_MATCH_ID) {
+    return generateGrade5EquationMatch(options);
   }
 
   const random = options.random || Math.random;
@@ -617,3 +654,5 @@ module.exports.buildGrade3Candidates = buildGrade3Candidates;
 module.exports.buildGrade3BalancedPool = buildGrade3BalancedPool;
 module.exports.buildGrade4Candidates = buildGrade4Candidates;
 module.exports.buildGrade4BalancedPool = buildGrade4BalancedPool;
+module.exports.buildGrade5Candidates = buildGrade5Candidates;
+module.exports.buildGrade5BalancedPool = buildGrade5BalancedPool;
