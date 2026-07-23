@@ -89,7 +89,9 @@ Avoid:
 
 Each task family must have an intentional layout before implementation.
 
-Before implementing or approving a worksheet, compare both the nearest exact family and the nearest approved task/layout class for title pattern, columns, rows, density, response target, spacing, completed-example behaviour, key layout and maximum capacity. Preserve the densest safe established contract unless a documented instructional or print-safety reason requires otherwise. For Grade 4-6 work, the lower-grade exact-family comparison remains mandatory, but it is not sufficient by itself when an approved same-grade task/layout class safely supports greater density.
+Before implementing or approving a worksheet, compare both the nearest exact family and the nearest approved task/layout class for title pattern, columns, rows, density, response target, spacing, completed-example behaviour, key layout and maximum capacity. Preserve the densest safe established contract unless a documented instructional or print-safety reason requires otherwise.
+
+Before implementing any Grade 4–6 resource, compare the full approved family history across every lower grade, not only the most recent grade. Also compare the nearest approved task/layout class. Preserve the strongest safe established contract and record any lower-grade drift for later correction rather than inheriting it forward.
 
 Define:
 
