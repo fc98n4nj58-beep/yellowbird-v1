@@ -329,6 +329,15 @@ const GRADE4_COMPARE_NUMBERS_ID = "grade4_place_value_representation_compare_num
 const GRADE4_EQUATION_MATCH_ID = "grade4_addition_subtraction_facts_equation_match";
 const GRADE5_COMPARE_NUMBERS_ID = "grade5_place_value_representation_compare_numbers";
 const GRADE5_EQUATION_MATCH_ID = "grade5_addition_subtraction_facts_equation_match";
+const GRADE5_TEXT_DATA_INTERPRETATION_ID = "g5_interpret_graphs";
+const GRADE5_TEXT_DATA_MAXIMUM_QUESTION_COUNT = 17;
+const GRADE5_TEXT_DATA_MODE_CAPACITIES = Object.freeze({
+  default: GRADE5_TEXT_DATA_MAXIMUM_QUESTION_COUNT,
+  all: GRADE5_TEXT_DATA_MAXIMUM_QUESTION_COUNT,
+  difference: 4,
+  combined_total: 4,
+  ordering_true_false: 6
+});
 const GRADE4_PLACE_VALUE_BATCH4_IDS = new Set([
   GRADE4_NUMBER_LINE_ID,
   GRADE4_NUMBER_WORD_ID,
@@ -1645,6 +1654,82 @@ function validateGrade5CompactRelationalRawOptions(item, options = {}) {
   if (unsupported.some((key) => Object.prototype.hasOwnProperty.call(options, key))) {
     throw new Error("Grade 5 number comparison does not accept operation controls or caller-owned comparison truth.");
   }
+}
+
+function validateGrade5TextDataInterpretationRawOptions(item, options = {}) {
+  if (item.id !== GRADE5_TEXT_DATA_INTERPRETATION_ID) return;
+  const questionCount = grade4PlaceValueScalarAlias(
+    options,
+    ["questionCount"],
+    "Grade 5 text-data question count",
+    (value) => grade4PlaceValueInteger(
+      value,
+      "Grade 5 text-data question count",
+      1,
+      GRADE5_TEXT_DATA_MAXIMUM_QUESTION_COUNT
+    )
+  ) ?? 12;
+  grade4PlaceValueScalarAlias(
+    options,
+    ["questionsPerPage"],
+    "Grade 5 text-data questions per page",
+    (value) => grade4PlaceValueInteger(value, "Grade 5 text-data questions per page", 1, 6)
+  );
+  const includeExample = grade4PlaceValueScalarAlias(
+    options,
+    ["includeExample", "completedExample", "example"],
+    "Grade 5 text-data completed-example option",
+    (value) => grade4PlaceValueBoolean(value, "Grade 5 text-data completed-example option")
+  ) ?? false;
+  const mode = grade4PlaceValueScalarAlias(
+    options,
+    ["textDataQuestionMode", "questionMode"],
+    "Grade 5 text-data question mode",
+    (value) => {
+      const normalized = String(value).trim().toLowerCase().replaceAll("-", "_");
+      if (!GRADE5_TEXT_DATA_MODE_CAPACITIES[normalized]) {
+        throw new Error(
+          "Grade 5 text-data question mode must be default, all, difference, combined_total, or ordering_true_false."
+        );
+      }
+      return normalized;
+    }
+  ) ?? "default";
+  const reservedExampleCount = includeExample && ["default", "all"].includes(mode) ? 1 : 0;
+  const availableStudentQuestions =
+    GRADE5_TEXT_DATA_MODE_CAPACITIES[mode] - reservedExampleCount;
+  if (questionCount > availableStudentQuestions) {
+    throw new Error(
+      `Grade 5 text-data mode '${mode}' provides ${availableStudentQuestions} unique student questions` +
+      `${includeExample ? " after reserving the completed example" : ""}.`
+    );
+  }
+  const unsupported = [
+    "data", "dataSet", "dataSets", "sourceData", "selectedDataSets",
+    "categories", "categoryLabels", "selectedCategories", "values", "categoryValues",
+    "selectedValues", "questionType", "questionTypes", "selectedQuestionTypes",
+    "prompt", "answer", "answerState", "responseTarget", "duplicateSignature",
+    "graphData", "graphQuestionType", "graphCategory"
+  ];
+  if (unsupported.some((key) => Object.prototype.hasOwnProperty.call(options, key))) {
+    throw new Error("Grade 5 text-data interpretation does not accept caller-owned data, question selection, or answer truth.");
+  }
+}
+
+function normalizeGrade5TextDataInterpretationOptions(item, options = {}, rawOptions = {}) {
+  if (item.id !== GRADE5_TEXT_DATA_INTERPRETATION_ID) return options;
+  const mode = grade4PlaceValueScalarAlias(
+    rawOptions,
+    ["textDataQuestionMode", "questionMode"],
+    "Grade 5 text-data question mode",
+    (value) => String(value).trim().toLowerCase().replaceAll("-", "_")
+  ) ?? "default";
+  return {
+    ...options,
+    questionCount: Number(rawOptions.questionCount ?? 12),
+    questionsPerPage: Number(rawOptions.questionsPerPage ?? 6),
+    textDataQuestionMode: mode
+  };
 }
 
 function normalizeGrade5CompactRelationalOptions(item, options = {}, rawOptions = {}) {
@@ -2986,6 +3071,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
   validateGrade4PlaceValueRawOptions(item, options);
   validateGrade4EquationMatchRawOptions(item, options);
   validateGrade5CompactRelationalRawOptions(item, options);
+  validateGrade5TextDataInterpretationRawOptions(item, options);
   if (item.id === GRADE3_BASE_TEN_ID) {
     validateGrade3BaseTenRawOptions(options);
   }
@@ -3209,7 +3295,12 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     lowerFamilyNormalized,
     options
   );
-  return normalizeGrade4EquationMatchOptions(item, familyNormalized, options);
+  const grade5TextDataNormalized = normalizeGrade5TextDataInterpretationOptions(
+    item,
+    familyNormalized,
+    options
+  );
+  return normalizeGrade4EquationMatchOptions(item, grade5TextDataNormalized, options);
 }
 
 const NON_CUSTOMIZATION_QUERY_KEYS = new Set([
@@ -3610,6 +3701,104 @@ function validateGrade5CompactRelationalWorksheet(id, problems = []) {
   });
 }
 
+function validateGrade5TextDataInterpretationWorksheet(id, problems = []) {
+  if (id !== GRADE5_TEXT_DATA_INTERPRETATION_ID) return;
+  const prompts = new Set();
+  const signatures = new Set();
+  problems.forEach((problem) => {
+    const graphData = problem.graphData;
+    const categories = graphData?.categories;
+    const values = Array.isArray(categories) ? categories.map((category) => category.value) : [];
+    const answerState = problem.answerState;
+    const expectedSignature = [
+      "grade5_text_data",
+      "grade5_text_data:sport_choices",
+      problem.graphQuestionType,
+      answerState?.categoryIds?.join("+") || "",
+      answerState?.proposition || "",
+      problem.responseTarget
+    ].join(":");
+    const commonTruthIsValid = (
+      graphData?.datasetId !== "grade5_text_data:sport_choices" ||
+      graphData?.title !== "Student Sport Choices" ||
+      graphData?.graphType !== "text_data" ||
+      graphData?.modelType !== "text_described_quantities" ||
+      !Array.isArray(categories) ||
+      categories.map((category) => category.label).join("|") !== "Soccer|Basketball|Baseball" ||
+      values.join("|") !== "12|9|6" ||
+      graphData.totalValue !== 27 ||
+      answerState?.kind !== "grade5_text_data_answer" ||
+      answerState?.datasetId !== graphData.datasetId ||
+      answerState?.datasetTitle !== graphData.title ||
+      answerState?.questionType !== problem.graphQuestionType ||
+      answerState?.expectedAnswer !== problem.answer ||
+      !Array.isArray(problem.acceptedAnswerVariants) ||
+      !problem.acceptedAnswerVariants.some((variant) => variant === problem.answer) ||
+      JSON.stringify(answerState?.acceptedAnswerVariants) !==
+        JSON.stringify(problem.acceptedAnswerVariants) ||
+      problem.duplicateSignature !== expectedSignature ||
+      prompts.has(problem.prompt) ||
+      signatures.has(problem.duplicateSignature)
+    );
+    if (commonTruthIsValid) {
+      throw new Error("Grade 5 text-data interpretation structured truth is inconsistent.");
+    }
+
+    if (problem.responseTarget === "category_name") {
+      if (
+        answerState.selectedCategoryLabel !== problem.answer ||
+        answerState.selectedCategoryId !== answerState.categoryIds[0] ||
+        !Number.isInteger(answerState.selectedValue)
+      ) {
+        throw new Error("Grade 5 text-data category truth is inconsistent.");
+      }
+    } else if (problem.graphQuestionType.startsWith("difference_")) {
+      if (
+        answerState.minuendCategory?.value - answerState.subtrahendCategory?.value !==
+          problem.answer ||
+        answerState.difference !== problem.answer
+      ) {
+        throw new Error("Grade 5 text-data difference truth is inconsistent.");
+      }
+    } else if (
+      problem.graphQuestionType === "total_responses" ||
+      problem.graphQuestionType.startsWith("combined_")
+    ) {
+      if (
+        !Array.isArray(answerState.componentValues) ||
+        answerState.componentValues.reduce((sum, value) => sum + value, 0) !== problem.answer ||
+        answerState.total !== problem.answer
+      ) {
+        throw new Error("Grade 5 text-data combined-total truth is inconsistent.");
+      }
+    } else if (problem.graphQuestionType.startsWith("order_")) {
+      if (
+        problem.responseTarget !== "ordered_categories" ||
+        !Array.isArray(answerState.orderedCategoryIds) ||
+        !Array.isArray(answerState.orderedCategoryLabels) ||
+        answerState.orderedCategoryLabels.join(", ") !== problem.answer
+      ) {
+        throw new Error("Grade 5 text-data ordering truth is inconsistent.");
+      }
+    } else if (problem.graphQuestionType.startsWith("true_false_")) {
+      if (
+        problem.responseTarget !== "true_false" ||
+        typeof answerState.propositionTruth !== "boolean" ||
+        answerState.expectedBoolean !== answerState.propositionTruth ||
+        answerState.displayAnswer !== problem.answer ||
+        (answerState.expectedBoolean ? "True" : "False") !== problem.answer
+      ) {
+        throw new Error("Grade 5 text-data true/false truth is inconsistent.");
+      }
+    } else {
+      throw new Error(`Unsupported Grade 5 text-data question '${problem.graphQuestionType}'.`);
+    }
+
+    prompts.add(problem.prompt);
+    signatures.add(problem.duplicateSignature);
+  });
+}
+
 function generateWorksheetFromCatalogId(id, options = {}) {
   const item = getAnyWorksheetCatalogById(id);
 
@@ -3696,6 +3885,7 @@ function generateWorksheetFromCatalogId(id, options = {}) {
     validateGrade4EquationMatchWorksheet(item.id, worksheet.problems);
     validateGrade5NumericPatternWorksheet(item.id, worksheet.problems);
     validateGrade5CompactRelationalWorksheet(item.id, worksheet.problems);
+    validateGrade5TextDataInterpretationWorksheet(item.id, worksheet.problems);
     return worksheet;
   } catch (err) {
     if (/No addition facts are available/.test(err.message)) {
@@ -4179,6 +4369,7 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
   GRADE3_STORY_PROBLEM_TITLES[item.id] ||
   GRADE4_STORY_PROBLEM_TITLES[item.id] ||
   GRADE4_BATCH5_TITLES[item.id] ||
+  (item.id === GRADE5_TEXT_DATA_INTERPRETATION_ID ? "Interpret the Data" : "") ||
   GRADE5_COMPACT_RELATIONAL_TITLES[item.id] ||
   (item.id === GRADE4_NUMBER_WORD_ID
     ? isReverseNumberWordMode ? "Write the Numeral" : "Write Numbers in Words"
@@ -4353,6 +4544,49 @@ if (Number.isFinite(normalizedOptions.questionsPerPage) && normalizedOptions.que
   layout.template = {
     ...(layout.template || {}),
     maxProblemsPerPage: normalizedOptions.questionsPerPage
+  };
+}
+
+if (item.id === GRADE5_TEXT_DATA_INTERPRETATION_ID) {
+  const textData = layout.problems?.[0]?.graphData || null;
+  layout.instruction = "Use the data to answer each question.";
+  layout.template = {
+    ...(layout.template || {}),
+    columns: 1,
+    maxProblemsPerPage: finiteNumber(normalizedOptions.questionsPerPage) || 6
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    hideSubtitle: true,
+    suppressExampleLabel: false,
+    hideItemSeparators: true,
+    writingLine: true,
+    answerLineBelowPrompt: true,
+    sharedTextDataResponseLines: true,
+    dataResponseLineInset: 44,
+    dataResponsePromptGap: 20,
+    dataResponseLineWidths: {
+      number: 72,
+      category: 138,
+      ordering: 286,
+      true_false: 84
+    },
+    equalHeightItems: true,
+    denseGridRows: 6,
+    sequentialColumnFill: true,
+    sharedTextDataPanel: true,
+    sharedTextDataSummary: textData
+      ? {
+          datasetId: textData.datasetId,
+          title: textData.title,
+          categories: textData.categories.map(({ id, label, value }) => ({
+            id,
+            label,
+            value
+          }))
+        }
+      : null,
+    textDataExampleStrip: true
   };
 }
 

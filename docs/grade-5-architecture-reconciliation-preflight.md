@@ -1,6 +1,6 @@
 # Grade 5 Architecture Reconciliation Preflight
 
-Status: active reconciliation. Founder-approved Batches 1 and 2 are closed; later Grade 5 batches remain unimplemented. Catalog lifecycle statuses remain unchanged.
+Status: active reconciliation. Founder-approved Batches 1, 2, and 3 are closed; later Grade 5 batches remain unimplemented. Catalog lifecycle statuses remain unchanged.
 
 Starting checkpoint: `f1b04ee6d7f90789af46419947164fa84d5c320a`
 
@@ -51,7 +51,7 @@ Density notation is `questions / columns / questions-per-student-page / total PD
 | 17 | `grade5_data_display_graphing_graph_questions` | Graph Questions — Grade 5; Data & Graphing; practice/generated | generic data questions; full-width | 12/1/6/4 | overlaps curated data interpretation; title overclaims graph evidence | G |
 | 18 | `grade5_data_display_graphing_graph_word_problems` | Graph Word Problems — Grade 5; Data & Graphing; practice/generated | placeholder; generic practice | —/2/20/1 | zero-question output and no distinct approved role | G |
 | 19 | `grade5_data_display_graphing_interpret_data` | Interpret Data — Grade 5; Data & Graphing; practice/generated | text-data interpretation; full-width | 12/1/6/4 | duplicate of curated `g5_interpret_graphs` | G |
-| 20 | `g5_interpret_graphs` | Grade 5 Data Interpretation; Data & Graphing; practice/ready | text-data interpretation; full-width | 12/1/6/4 | honest text-based role, but same-seed item selection is not deterministic | D/B6 |
+| 20 | `g5_interpret_graphs` | Interpret the Data; Data & Graphing; practice/ready | text-data summary plus distinct interpretation questions; full-width | 12/1/6/4; unique max 17 | founder-approved seeded text-data interpretation contract; Batch 3 closed | A |
 | 21 | `grade5_data_display_graphing_match_data_to_graph` | Match Data to Graph — Grade 5; Data & Graphing; matching/generated | text fallback; full-width matching | 12/1/6/4 | needs unsupported genuine graph-choice architecture | G |
 | 22 | `grade5_data_display_graphing_read_graph` | Read a Graph — Grade 5; Data & Graphing; visual/generated | text fallback; full-width | 12/1/6/4 | graph title without structured graph truth; overlaps curated role | G |
 | 23 | `grade5_fraction_equivalence_compare_fractions` | Compare Fractions — Grade 5; Fractions; practice/ready | fraction comparison; two-column equations | 12/2/20/2 | bounded ready family remains classroom-usable; exact truth retained | A |
@@ -146,13 +146,13 @@ Grade 4’s closed A set is not reopened. These findings constrain Grade 5 inher
 
 ## Completed-work classification
 
-- **ALREADY COMPLETE (A, 8):** the four `g5_*` compact assessments, curated `g5_complete_graphs`, Grade 5 Compare Fractions, Missing Factors, and Multiplication Fact Review. Their ready state is supported by prior test/print evidence and an honest bounded review role.
+- **ALREADY COMPLETE (A, 14):** the original eight bounded review resources, three founder-approved Batch 1 numeric-pattern resources, two founder-approved Batch 2 compact relational resources, and founder-approved Batch 3 `g5_interpret_graphs`.
 - **NARROW CORRECTION NEEDED (D):** equation match, equivalent-fraction completion naming, place-value compare, and the representation/form resources whose generator is shared but public copy/range/density must be reconciled.
-- **NARROW RELIABILITY CORRECTION NEEDED (D):** `g5_interpret_graphs` has an honest reviewed role and stable answer truth, but its question-template selection bypasses the supplied seed. Its duplicate `grade5_data_display_graphing_interpret_data` exhibits the same defect and stays G.
+- **FOUNDER-APPROVED TEXT-DATA INTERPRETATION (A):** `g5_interpret_graphs` owns seeded selection, a quiet text-only data summary, 12 distinct balanced default questions, and a validated 17-question unique maximum. Its generic duplicate `grade5_data_display_graphing_interpret_data` remains G with separate legacy reliability drift.
 - **SHARED-FAMILY EXTENSION NEEDED (D):** three stories, three numeric-pattern resources, fraction number line/model, and place-value number line.
 - **NEW ARCHITECTURE NEEDED (E):** Function Table only.
 - **DUPLICATE or LOW-VALUE / OVERLAPPING — DEFER (G):** 21 records listed below.
-- **STALE RECONCILIATION:** none. The proposal is new and no Grade 5 movements have been applied.
+- **RECONCILIATION STATE:** founder-approved Batches 1–3 have moved exactly six resources D → A; no lifecycle status changed.
 
 ## Variable-contract reconciliation
 
@@ -168,7 +168,7 @@ No controls are publicly registered. Implementation batches must inventory exact
 | place value | `minA`, `maxA`; `selectedNumbers` / `onlyNumbers`; `numberWordMode` / `mode`; `promptStyle` / `promptType`; number-line range/interval/endpoint controls; expanded-form `answerStyle` | RAW RUNTIME ONLY; shared aliases must be reconciled | current Grade 5 defaults may be too small or silently inherited |
 | multiplication | factor/row/column/group/item min/max; `selectedFactors` / `onlyFactors`; side-specific selected aliases; `maxProduct`; `responseMode`; `showQuestionSentence`; `taskMode`; `equationSupport` | PRESERVED for the two A review resources; RAW RUNTIME ONLY | basic-model G resources must not create public controls |
 | structured data | `graphType`; scale/key aliases; category count; selected categories/values/question types; partial-symbol policy | UNSAFE or absent for generic Grade 5 IDs | do not expose until structured visual architecture exists |
-| curated text-data interpretation | seed, count/page, key inclusion | seed is BYPASSED in `g5_interpret_graphs` template selection | B6 must consume the supplied seed without changing reviewed copy, data truth, density, or pages |
+| curated text-data interpretation | seed, count/page, key inclusion | PRESERVED in the corrected `g5_interpret_graphs` distinct-question selection | B6 must retain seeded determinism without changing approved data truth, density, or pages |
 | function table | input set, rule/operation, output domain, row count, unknown mode | NEW CONTRACT REQUIRED | current sentence fallback does not consume a visible-table contract |
 
 Public readiness remains **none**. Controls become public only in a separate customization review after founder approval.
@@ -206,7 +206,7 @@ Catalog lifecycle statuses remain independent and unchanged.
 - `grade5_addition_subtraction_facts_equation_match`
 - `grade5_place_value_representation_compare_numbers`
 
-### D — 11
+### D — 10
 
 - `grade5_addition_subtraction_word_problems_addition_word_problem` — B5
 - `grade5_addition_subtraction_word_problems_missing_addend_word_problem` — B5
@@ -218,7 +218,6 @@ Catalog lifecycle statuses remain independent and unchanged.
 - `grade5_place_value_representation_number_line_identify` — B3
 - `grade5_place_value_representation_number_word_match` — B3
 - `grade5_place_value_representation_standard_form` — B3
-- `g5_interpret_graphs` — B6
 
 ### E — 1
 
@@ -248,9 +247,9 @@ Catalog lifecycle statuses remain independent and unchanged.
 - `grade5_patterning_and_algebra_pattern_word_problems`
 - `grade5_place_value_representation_base_ten_blocks`
 
-Total: **A13 / D11 / E1 / G21 / Total46**.
+Total: **A14 / D10 / E1 / G21 / Total46**.
 
-Projected scenario after the remaining four D batches: **A24 / D0 / E1 / G21 / Total46**. If the founder later approves and implements a genuine Function Table architecture: **A25 / D0 / E0 / G21 / Total46**. A founder decision to defer Function Table instead yields **A24 / D0 / E0 / G22 / Total46**.
+Projected scenario after the remaining three D batches: **A24 / D0 / E1 / G21 / Total46**. If the founder later approves and implements a genuine Function Table architecture: **A25 / D0 / E0 / G21 / Total46**. A founder decision to defer Function Table instead yields **A24 / D0 / E0 / G22 / Total46**.
 
 ## Duplicate and deferred analysis
 
@@ -283,9 +282,10 @@ Each implementation batch must run:
 
 - Batch 1 Numeric Patterning is founder-approved and closed at **A11 / D13 / E1 / G21 / Total46**.
 - Batch 2 Compact Relational Practice is founder-approved and closed at **A13 / D11 / E1 / G21 / Total46**.
+- Batch 3 Text-Data Interpretation is founder-approved and closed at **A14 / D10 / E1 / G21 / Total46**. `g5_interpret_graphs` moved D → A; lifecycle status remains `ready`.
 - Decide whether Grade 5 fraction number lines stay within 0–1 or add an approved 0–2/improper-fraction lane.
 - Approve honest “complete the equivalent fraction” positioning for ID 28, or require genuine matching architecture and move it to E.
 - Decide the exact Grade 5 story default (recommended 8 for the approved work-box geometry; current runtime is 12).
 - Decide whether Function Table should receive new visible-table architecture or move E → G.
 
-Batches 1 and 2 are closed without lifecycle movement or public customization. Grade 3 sparse comparison drift remains on the later K–6 consistency watchlist; no lower-grade resource was reopened. The next implementation action belongs to a separately authorized later Grade 5 batch.
+Batches 1, 2, and 3 are closed without lifecycle movement or public customization. Grade 3 sparse comparison drift remains on the later K–6 consistency watchlist; no lower-grade resource was reopened. The next implementation action belongs to a separately authorized later Grade 5 batch.

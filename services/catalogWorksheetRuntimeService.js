@@ -41,7 +41,8 @@ const PUBLIC_SKILL_LABEL_HIDDEN_IDS = new Set([
   "grade2_data_display_graphing_match_data_to_graph",
   "grade4_addition_subtraction_facts_equation_match",
   "grade5_addition_subtraction_facts_equation_match",
-  "grade5_place_value_representation_compare_numbers"
+  "grade5_place_value_representation_compare_numbers",
+  "g5_interpret_graphs"
 ]);
 
 const GRADE2_CATEGORY_D_FOOTER_LABELS = Object.freeze({
@@ -233,6 +234,9 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         answer: p.answer,
         responseMode: p.responseMode || null,
         responseType: p.responseType || null,
+        ...(Array.isArray(p.acceptedAnswerVariants)
+          ? { acceptedAnswerVariants: [...p.acceptedAnswerVariants] }
+          : {}),
         responseValues: Array.isArray(p.responseValues) ? p.responseValues : null,
         responseOperator: p.responseOperator || null,
         showQuestionSentence: Boolean(p.showQuestionSentence),

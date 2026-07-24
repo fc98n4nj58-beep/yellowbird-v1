@@ -1,8 +1,8 @@
 # Grade 5 Founder Review Batch Plan
 
-Status: active founder-review plan. Batches 1 and 2 are founder-approved and closed; later batches remain planning only.
+Status: active founder-review plan. Batches 1, 2, and 3 are founder-approved and closed; later batches remain planning only.
 
-Current reconciliation: **A13 / D11 / E1 / G21 / Total46**. The three Batch 1 records and two Batch 2 records moved from D to A; all 11 remaining D records are assigned exactly once. No G or E item is hidden inside a low-risk batch.
+Current reconciliation: **A14 / D10 / E1 / G21 / Total46**. The three Batch 1 records, two Batch 2 records, and one Batch 3 record moved from D to A; all 10 remaining D records are assigned exactly once. No G or E item is hidden inside a low-risk batch.
 
 ## Batch 1 — Numeric Patterning
 
@@ -287,7 +287,7 @@ Focused test/proof strategy: 30 seeds; arithmetic truth; name/object/template re
 
 Risk: **MODERATE**. Recommended fifth.
 
-## Batch 6 — Text-Data Interpretation Reliability
+## Batch 6 — Text-Data Interpretation Reliability (executed as Batch 3)
 
 Exact ID:
 
@@ -306,6 +306,61 @@ Variables to preserve: seed, count/page, key inclusion. No public customization 
 Focused test/proof strategy: 30 same-seed pairs with zero failures; different-seed variation; question/answer truth; mix bounds; duplicate control; student/key parity; exact four-page PDF; Grade 1–4 structured-data isolation. One default founder proof plus a same-seed signature report.
 
 Risk: **LOW**, but separate because its regression surface is data interpretation. Recommended after Batch 2 and before the larger representation batch.
+
+### Batch 3 closeout — founder approved
+
+Exact resource: `g5_interpret_graphs`. Completed-work classification: **NARROW CONTENT-CONTRACT CORRECTION NEEDED**. The founder accepted the seeded-random reliability correction, then rejected the repetitive three-template worksheet: it repeated one inline data sentence, falsely claimed a graph was shown, used teacher-facing instruction prose, leaked `data_display_graphing` in the footer, and did not provide sufficient Grade 5 interpretation value.
+
+The accepted reliability fix remains exact-ID scoped. Every Grade 5 content decision consumes the runtime-provided seeded random function; the renderer and answer key consume supplied truth only. The corrected public contract is:
+
+- title: **Interpret the Data**
+- instruction: **Use the data to answer each question.**
+- footer: **Grade 5 • Math • Data & Graphing**
+- one quiet text-only **Student Sport Choices** summary per student and key page, listing Soccer 12, Basketball 9, and Baseball 6
+- no graph claim, bars, icons, pictograph symbols, axes, shaded card, repeated inline data sentence, or public customization
+
+The validated bank contains **17 semantically distinct tasks**: three category-identification tasks, four differences, four combined/total tasks, two orderings, and four true/false propositions. The three reversed “how many fewer” wordings were not added because each duplicates an existing pairwise difference. The default seeded selection is 12 distinct prompts with the approved 2 category / 3 difference / 3 combined-total / 2 ordering / 2 true-false distribution. It includes one true and one false proposition. The explicit maximum is 17; requests above the available mode capacity throw rather than recycle questions.
+
+The founder accepted this distinct text-data contract and requested one final copy-only correction. Pair totals now use “Soccer **and** Basketball,” “Soccer **and** Baseball,” and “Basketball **and** Baseball” rather than the ambiguous word “or.” The overall-total prompt now asks, “How many student choices are recorded altogether?” rather than “recorded in all.” Arithmetic, answers, question IDs, category order, answer state, duplicate signatures, selection logic, counts, pagination, 17-question maximum, lifecycle status, and reconciliation are unchanged.
+
+Response lines are matched to the supplied response target: compact numeric and true/false lines, a category-name line, and a wider ordering line. The completed example remains additional, always uses “Which sport was chosen by the most students?” → “Soccer,” reserves that duplicate signature, and is rendered as a first-page example strip so 12 practice questions still occupy two student pages rather than creating a sparse third page.
+
+Each item stores dataset ID/title, category IDs/labels/values, question type, prompt, response type/target, expected answer, accepted variants, answer state, deterministic duplicate signature, and example state. Difference truth stores minuend/subtrahend categories and values; combined truth stores selected categories, components, and total; ordering truth stores ordered IDs and labels; true/false truth stores the proposition, boolean truth, expected boolean, and display answer. Caller-owned data or answer truth and unsupported modes fail explicitly.
+
+Lower-grade cross-reference:
+
+- `grade1_data_display_graphing_interpret_data` — approved structured pictograph interpretation, six questions, two-column student/key layout.
+- `grade2_data_display_graphing_interpret_data` — approved structured pictograph interpretation, six questions, two-column student/key layout.
+- `g3_interpret_data` — approved structured pictograph Yes/No interpretation, four questions, two-column student/key layout.
+- `grade3_data_display_graphing_interpret_data` and `grade4_data_display_graphing_interpret_data` — generic text fallbacks with separate seeded-reliability drift; they remain untouched for later K–6 consistency review.
+
+The correction preserves byte-identical normalized content for the three approved Grade 1–3 resources at the recorded guard seed. Grade 5 Batches 1 and 2 remain deterministic and unchanged.
+
+Reliability results: 100 repeated builds at one fixed seed and 30 additional paired seeds produce zero same-seed failures. Thirty different seeds produce meaningful selection/order variation. Normalized PDF bytes, pagination, source truth, answers, answer state, duplicate signatures, example placement, preview/key parity, and repeated-render state remain stable. PDF metadata normalization is limited to the volatile document ID and creation timestamp.
+
+Proof packet:
+
+- `review/grade-5-text-data-interpretation-batch-3/founder-review/01_interpret_the_data.pdf`
+- `review/grade-5-text-data-interpretation-batch-3/stress/01_same_seed_a.pdf`
+- `review/grade-5-text-data-interpretation-batch-3/stress/02_same_seed_b.pdf`
+- `review/grade-5-text-data-interpretation-batch-3/stress/03_different_seed.pdf`
+- `review/grade-5-text-data-interpretation-batch-3/stress/04_maximum_unique_question_count.pdf`
+- `review/grade-5-text-data-interpretation-batch-3/stress/05_completed_example.pdf`
+- `review/grade-5-text-data-interpretation-batch-3/stress/06_all_difference_questions.pdf`
+- `review/grade-5-text-data-interpretation-batch-3/stress/07_all_combined_total_questions.pdf`
+- `review/grade-5-text-data-interpretation-batch-3/stress/08_ordering_and_true_false_questions.pdf`
+- `review/grade-5-text-data-interpretation-batch-3/stress/09_answer_key_included.pdf`
+- `review/grade-5-text-data-interpretation-batch-3/stress/10_answer_key_excluded.pdf`
+
+The corrected stress packet exercises real supported question-selection contracts. Misleading largest/smallest/candidate-pool labels were removed; the resource still exposes no public data-set or numeric-range controls.
+
+The final copy correction regenerated only the affected founder/default, same-seed, different-seed, maximum, completed-example, combined-total, and answer-key-inclusion proofs listed above. The difference-only and ordering/true-false proofs contain none of the corrected prompt types and were left unchanged.
+
+Founder approval covers `g5_interpret_graphs`; there are no split, blocked, or deferred Batch 3 resources. The original same-seed defect was reproduced and traced to global `Math.random()` selection. The exact Grade 5 path now consumes seeded runtime randomness: 100 identical builds and 30 paired seeds pass, while renderer and key generation consume no randomness.
+
+The original three-template contract was rejected. The approved closeout removes false graph wording and the internal footer slug, applies the student-facing title and instruction, presents the text-data panel once per student and key page, supplies 12 distinct default prompts and a 17-question unique maximum without recycling, keeps the completed example additional, uses `and` for pair totals, and uses `recorded altogether` for the overall total.
+
+`g5_interpret_graphs` moved D → A. Reconciliation is **A14 / D10 / E1 / G21 / Total46**. Catalog status remains `ready`; no lifecycle movement or public customization occurred.
 
 ## Architecture gate — Function Table
 
@@ -334,7 +389,7 @@ No deferred item should be revived during a D batch. Reconsider only when its do
 
 1. Batch 1 Numeric Patterning
 2. Batch 2 Compact Relational Practice
-3. Batch 6 Text-Data Interpretation Reliability
+3. Batch 3 Text-Data Interpretation Reliability — founder-approved and closed
 4. Batch 3 Place-Value Representations
 5. Batch 4 Structured Fractions, after founder role decisions
 6. Batch 5 Addition/Subtraction Stories, after founder count/range decisions
@@ -348,6 +403,7 @@ The accelerated execution model is one full session per batch: completed-work re
 - initial proposal: **A8 / D16 / E1 / G21 / Total46**
 - after founder-approved Batch 1: **A11 / D13 / E1 / G21 / Total46**
 - after founder-approved Batch 2: **A13 / D11 / E1 / G21 / Total46**
+- after founder-approved Batch 3: **A14 / D10 / E1 / G21 / Total46**
 - after Batches 1–6: **A24 / D0 / E1 / G21 / Total46**
 - Function Table implemented: **A25 / D0 / E0 / G21 / Total46**
 - Function Table deferred: **A24 / D0 / E0 / G22 / Total46**

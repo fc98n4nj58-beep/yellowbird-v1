@@ -120,6 +120,9 @@ function normalizeItem(item = {}, index = 0, meta = {}) {
     answer: item.answer ?? "",
     responseMode: item.responseMode || null,
     responseType: item.responseType || null,
+    ...(Array.isArray(item.acceptedAnswerVariants)
+      ? { acceptedAnswerVariants: [...item.acceptedAnswerVariants] }
+      : {}),
     responseValues: Array.isArray(item.responseValues) ? item.responseValues : null,
     responseOperator: item.responseOperator || null,
     showQuestionSentence: Boolean(item.showQuestionSentence),

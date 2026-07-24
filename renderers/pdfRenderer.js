@@ -79,6 +79,9 @@ function buildAnswerKeyItems(items) {
     answer: it.answer,
     responseMode: it.responseMode || null,
     responseType: it.responseType || null,
+    ...(Array.isArray(it.acceptedAnswerVariants)
+      ? { acceptedAnswerVariants: [...it.acceptedAnswerVariants] }
+      : {}),
     responseValues: Array.isArray(it.responseValues) ? it.responseValues : null,
     responseOperator: it.responseOperator || null,
     showQuestionSentence: Boolean(it.showQuestionSentence),
@@ -2556,8 +2559,14 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
   if (!visual?.kind && display.writingLine) {
     const lineHeight = layout.typography.body?.lineHeight || 16;
     const isGrade1DataResponseLine = Boolean(
-      (display.sharedDataResponseLines || display.grade1DataResponseLines) &&
-      question.responseMode === "graph_short_answer"
+      (
+        (display.sharedDataResponseLines || display.grade1DataResponseLines) &&
+        question.responseMode === "graph_short_answer"
+      ) ||
+      (
+        display.sharedTextDataResponseLines &&
+        question.responseMode === "data_short_answer"
+      )
     );
     const lineWidth = display.shortWritingLine
       ? Number(display.reverseNumberWordLineWidth || 46)
@@ -4492,6 +4501,54 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     return y + height + (compact ? 8 : 14);
   }
 
+  function renderSharedTextDataPanel(startAtY) {
+    const summary = display.sharedTextDataSummary;
+    if (!display.sharedTextDataPanel || !summary) return startAtY;
+    const categories = Array.isArray(summary.categories) ? summary.categories : [];
+    if (!categories.length) return startAtY;
+
+    const x = layout.page.contentBox.x;
+    const titleWidth = 230;
+    const labelWidth = 116;
+    const valueWidth = 46;
+    const rowHeight = 16;
+    const titleY = startAtY;
+    const rowsY = titleY + 20;
+
+    setFont(doc, fonts.bold || fonts.regular, 11);
+    doc.fillColor(pdfDesignTokens.colors.text);
+    doc.text(String(summary.title || "Data"), x, titleY, {
+      width: titleWidth,
+      align: "left",
+      lineBreak: false
+    });
+
+    categories.forEach((category, index) => {
+      const rowY = rowsY + index * rowHeight;
+      setFont(doc, fonts.regular, 10);
+      doc.fillColor(pdfDesignTokens.colors.text);
+      doc.text(`${String(category.label)}:`, x + 8, rowY, {
+        width: labelWidth,
+        align: "left",
+        lineBreak: false
+      });
+      setFont(doc, fonts.bold || fonts.regular, 10);
+      doc.text(String(category.value), x + 8 + labelWidth, rowY, {
+        width: valueWidth,
+        align: "right",
+        lineBreak: false
+      });
+    });
+
+    const ruleY = rowsY + categories.length * rowHeight + 3;
+    doc.save();
+    doc.strokeColor(pdfDesignTokens.colors.lightRule);
+    doc.lineWidth(0.6);
+    doc.moveTo(x, ruleY).lineTo(x + titleWidth, ruleY).stroke();
+    doc.restore();
+    return ruleY + 15;
+  }
+
   function renderMatchItem(item, number, y) {
     const graph = item.graphData;
     const task = item.graphTaskData;
@@ -4549,7 +4606,10 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
   const equationComparisonExample = display.equationComparisonExampleStrip
     ? allItems.find((item) => item.isExample) || null
     : null;
-  const paginatedItems = equationComparisonExample
+  const textDataExample = display.textDataExampleStrip
+    ? allItems.find((item) => item.isExample) || null
+    : null;
+  const paginatedItems = equationComparisonExample || textDataExample
     ? allItems.filter((item) => !item.isExample)
     : allItems;
   const hasVisuals = paginatedItems.some((item) => item.visual);
@@ -4623,6 +4683,7 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
 
   startY = renderSharedDataScenario(startY);
   startY = renderSharedDataGraph(startY);
+  startY = renderSharedTextDataPanel(startY);
 
   setFont(doc, fonts.regular, bodyStyle.size);
   doc.fillColor(pdfDesignTokens.colors.text);
@@ -4662,6 +4723,7 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
 
       startY = renderSharedDataScenario(startY);
       startY = renderSharedDataGraph(startY);
+      startY = renderSharedTextDataPanel(startY);
 
       setFont(doc, fonts.regular, bodyStyle.size);
       doc.fillColor(pdfDesignTokens.colors.text);
@@ -4682,6 +4744,23 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
         display
       );
       startY += 64;
+    }
+
+    if (textDataExample && pageIndex === 0) {
+      renderQuestionItem(
+        doc,
+        textDataExample,
+        {
+          x: layout.page.contentBox.x,
+          y: startY + 10,
+          width: layout.page.contentBox.width,
+          height: 58,
+          dividerY: null
+        },
+        fonts,
+        display
+      );
+      startY += 76;
     }
 
     const pageCols = isReverseNumberWordLayout
