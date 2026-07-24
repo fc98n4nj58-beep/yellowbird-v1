@@ -332,6 +332,18 @@ const GRADE4_STORY_PROBLEM_IDS = new Set([
   GRADE4_MISSING_ADDEND_STORY_ID,
   GRADE4_SUBTRACTION_STORY_ID
 ]);
+const GRADE5_ADDITION_STORY_ID = "grade5_addition_subtraction_word_problems_addition_word_problem";
+const GRADE5_MISSING_ADDEND_STORY_ID = "grade5_addition_subtraction_word_problems_missing_addend_word_problem";
+const GRADE5_SUBTRACTION_STORY_ID = "grade5_addition_subtraction_word_problems_subtraction_word_problem";
+const GRADE5_STORY_PROBLEM_IDS = new Set([
+  GRADE5_ADDITION_STORY_ID,
+  GRADE5_MISSING_ADDEND_STORY_ID,
+  GRADE5_SUBTRACTION_STORY_ID
+]);
+const SHARED_UPPER_STORY_PROBLEM_IDS = new Set([
+  ...GRADE4_STORY_PROBLEM_IDS,
+  ...GRADE5_STORY_PROBLEM_IDS
+]);
 const GRADE4_NUMBER_LINE_ID = "grade4_place_value_representation_number_line_identify";
 const GRADE4_NUMBER_WORD_ID = "grade4_place_value_representation_number_word_match";
 const GRADE4_COMPARE_NUMBERS_ID = "grade4_place_value_representation_compare_numbers";
@@ -558,6 +570,11 @@ const GRADE4_STORY_PROBLEM_TITLES = Object.freeze({
   [GRADE4_ADDITION_STORY_ID]: "Addition Story Problems",
   [GRADE4_MISSING_ADDEND_STORY_ID]: "Missing Addend Story Problems",
   [GRADE4_SUBTRACTION_STORY_ID]: "Subtraction Story Problems"
+});
+const GRADE5_STORY_PROBLEM_TITLES = Object.freeze({
+  [GRADE5_ADDITION_STORY_ID]: "Addition Story Problems",
+  [GRADE5_MISSING_ADDEND_STORY_ID]: "Missing Addend Story Problems",
+  [GRADE5_SUBTRACTION_STORY_ID]: "Subtraction Story Problems"
 });
 
 const GRADE4_PLACE_VALUE_BATCH4_TITLES = Object.freeze({
@@ -889,6 +906,18 @@ function normalizeGrade3StoryProblemOptions(item, options = {}) {
 const GRADE4_STORY_NAMES = new Set(["maya", "leo", "ava", "noah", "ivy", "sam", "emma", "liam"]);
 const GRADE4_STORY_OBJECTS = new Set(["books", "tickets", "points", "notebooks", "pencils", "cans", "flyers", "badges", "seedlings", "bottles"]);
 
+function isAdditionStoryId(id) {
+  return [GRADE4_ADDITION_STORY_ID, GRADE5_ADDITION_STORY_ID].includes(id);
+}
+
+function isMissingAddendStoryId(id) {
+  return [GRADE4_MISSING_ADDEND_STORY_ID, GRADE5_MISSING_ADDEND_STORY_ID].includes(id);
+}
+
+function isSubtractionStoryId(id) {
+  return [GRADE4_SUBTRACTION_STORY_ID, GRADE5_SUBTRACTION_STORY_ID].includes(id);
+}
+
 function grade4StoryInteger(value, label, minimum, maximum) {
   const number = Number(value);
   if (!Number.isInteger(number) || number < minimum || number > maximum) {
@@ -944,9 +973,9 @@ function grade4StoryListAlias(options, aliases, label, normalize) {
 
 function normalizeGrade4StoryType(id, value) {
   const token = String(value).trim().toLowerCase().replace(/[\s-]+/g, "_");
-  const aliases = id === GRADE4_ADDITION_STORY_ID
+  const aliases = isAdditionStoryId(id)
     ? { join: "join_result", join_result: "join_result", combine: "combine_total", combine_total: "combine_total" }
-    : id === GRADE4_MISSING_ADDEND_STORY_ID
+    : isMissingAddendStoryId(id)
       ? { start: "first", start_unknown: "first", first: "first", change: "second", added_amount_unknown: "second", second: "second" }
       : { takeaway: "take_away", take_away: "take_away", compare: "compare" };
   if (!aliases[token]) throw new Error("Grade 4 story-problem selected story type is unsupported for this resource.");
@@ -965,7 +994,9 @@ function normalizeGrade4MissingPosition(value) {
 }
 
 function validateGrade4StoryRawOptions(item, options = {}) {
-  if (!GRADE4_STORY_PROBLEM_IDS.has(item.id)) return;
+  if (!SHARED_UPPER_STORY_PROBLEM_IDS.has(item.id)) return;
+  const isGrade5 = GRADE5_STORY_PROBLEM_IDS.has(item.id);
+  const valueMaximum = isGrade5 ? 100000 : 10000;
   const questionCount = grade4StoryScalarAlias(options, ["questionCount"], "question count", (value) => grade4StoryInteger(value, "question count", 1, 16)) ?? 8;
   grade4StoryScalarAlias(options, ["questionsPerPage"], "questions per page", (value) => grade4StoryInteger(value, "questions per page", 1, 3));
   const includeExample = grade4StoryScalarAlias(
@@ -979,21 +1010,22 @@ function validateGrade4StoryRawOptions(item, options = {}) {
     options,
     ["selectedNumbers", "onlyNumbers"],
     "selected numbers",
-    (value) => grade4StoryInteger(value, "selected number", 0, 10000)
+    (value) => grade4StoryInteger(value, "selected number", 0, valueMaximum)
   );
-  const minA = grade4StoryScalarAlias(options, ["minA", "minimumFirstOperand", "minimumOperand"], "minimum first operand", (value) => grade4StoryInteger(value, "minimum first operand", 0, 10000)) ?? (item.id === GRADE4_SUBTRACTION_STORY_ID ? 500 : 100);
-  const maxA = grade4StoryScalarAlias(options, ["maxA", "maximumFirstOperand", "maximumOperand"], "maximum first operand", (value) => grade4StoryInteger(value, "maximum first operand", 0, 10000)) ?? (item.id === GRADE4_SUBTRACTION_STORY_ID ? 5000 : 2500);
-  const minB = grade4StoryScalarAlias(options, ["minB", "minimumSecondOperand"], "minimum second operand", (value) => grade4StoryInteger(value, "minimum second operand", 0, 10000)) ?? 100;
-  const maxB = grade4StoryScalarAlias(options, ["maxB", "maximumSecondOperand"], "maximum second operand", (value) => grade4StoryInteger(value, "maximum second operand", 0, 10000)) ?? (item.id === GRADE4_SUBTRACTION_STORY_ID ? 4000 : 2500);
-  const minTotal = grade4StoryScalarAlias(options, ["minTotal", "minimumTotal"], "minimum total", (value) => grade4StoryInteger(value, "minimum total", 0, 10000)) ?? 500;
-  const maxTotal = grade4StoryScalarAlias(options, ["maxTotal", "maximumTotal"], "maximum total", (value) => grade4StoryInteger(value, "maximum total", 0, 10000)) ?? (item.id === GRADE4_SUBTRACTION_STORY_ID ? 10000 : 5000);
+  const isSubtraction = isSubtractionStoryId(item.id);
+  const minA = grade4StoryScalarAlias(options, ["minA", "minimumFirstOperand", "minimumOperand"], "minimum first operand", (value) => grade4StoryInteger(value, "minimum first operand", 0, valueMaximum)) ?? (isGrade5 ? isSubtraction ? 10000 : 1000 : isSubtraction ? 500 : 100);
+  const maxA = grade4StoryScalarAlias(options, ["maxA", "maximumFirstOperand", "maximumOperand"], "maximum first operand", (value) => grade4StoryInteger(value, "maximum first operand", 0, valueMaximum)) ?? (isGrade5 ? isSubtraction ? 100000 : 50000 : isSubtraction ? 5000 : 2500);
+  const minB = grade4StoryScalarAlias(options, ["minB", "minimumSecondOperand"], "minimum second operand", (value) => grade4StoryInteger(value, "minimum second operand", 0, valueMaximum)) ?? (isGrade5 ? 1000 : 100);
+  const maxB = grade4StoryScalarAlias(options, ["maxB", "maximumSecondOperand"], "maximum second operand", (value) => grade4StoryInteger(value, "maximum second operand", 0, valueMaximum)) ?? (isGrade5 ? isSubtraction ? 90000 : 50000 : isSubtraction ? 4000 : 2500);
+  const minTotal = grade4StoryScalarAlias(options, ["minTotal", "minimumTotal"], "minimum total", (value) => grade4StoryInteger(value, "minimum total", 0, valueMaximum)) ?? (isGrade5 ? 10000 : 500);
+  const maxTotal = grade4StoryScalarAlias(options, ["maxTotal", "maximumTotal"], "maximum total", (value) => grade4StoryInteger(value, "maximum total", 0, valueMaximum)) ?? (isGrade5 ? 100000 : isSubtraction ? 10000 : 5000);
   if (minA > maxA || minB > maxB || minTotal > maxTotal) {
     throw new Error("Grade 4 story-problem minimum values must not exceed maximum values.");
   }
-  if (item.id === GRADE4_SUBTRACTION_STORY_ID && minB > maxA) {
+  if (isSubtraction && minB > maxA) {
     throw new Error("Grade 4 subtraction stories require a possible non-negative difference.");
   }
-  if (item.id === GRADE4_SUBTRACTION_STORY_ID && ["minTotal", "minimumTotal", "maxTotal", "maximumTotal"].some((key) => Object.prototype.hasOwnProperty.call(options, key))) {
+  if (isSubtraction && ["minTotal", "minimumTotal", "maxTotal", "maximumTotal"].some((key) => Object.prototype.hasOwnProperty.call(options, key))) {
     throw new Error("Grade 4 subtraction stories do not support total controls.");
   }
   if (selectedNumbers && !selectedNumbers.some((value) => value >= minA && value <= maxA)) {
@@ -1023,10 +1055,10 @@ function validateGrade4StoryRawOptions(item, options = {}) {
     "missing-addend position",
     normalizeGrade4MissingPosition
   );
-  if (item.id !== GRADE4_MISSING_ADDEND_STORY_ID && position !== null) {
+  if (!isMissingAddendStoryId(item.id) && position !== null) {
     throw new Error("Grade 4 missing-addend position controls belong only to Missing Addend Story Problems.");
   }
-  if (item.id === GRADE4_MISSING_ADDEND_STORY_ID && storyTypes && position && position !== "mixed") {
+  if (isMissingAddendStoryId(item.id) && storyTypes && position && position !== "mixed") {
     if (storyTypes.some((storyType) => storyType !== position)) throw new Error("Grade 4 missing-addend story type and missing-position controls conflict.");
   }
 
@@ -1035,7 +1067,7 @@ function validateGrade4StoryRawOptions(item, options = {}) {
     [["regrouping", "allowRegrouping", "requireRegrouping", "regroupingMode"], "regrouping controls"],
     [["workSpaceBox", "workspaceBox", "showWorkBox", "workBox"], "workspace controls"],
     [["template", "templateId", "selectedTemplates", "sentenceTemplates"], "template overrides"],
-    [["answer", "answerState", "firstAddend", "secondAddend", "total", "minuend", "subtrahend", "difference", "knownAddend", "missingValue", "contextId", "duplicateSignature", "prompt"], "caller-owned structured truth"]
+    [["answer", "answerState", "firstAddend", "secondAddend", "total", "minuend", "subtrahend", "difference", "knownAddend", "missingValue", "contextId", "duplicateSignature", "responseTarget", "isExample", "prompt"], "caller-owned structured truth"]
   ];
   rejectedGroups.forEach(([keys, label]) => {
     if (keys.some((key) => Object.prototype.hasOwnProperty.call(options, key))) {
@@ -1045,21 +1077,22 @@ function validateGrade4StoryRawOptions(item, options = {}) {
 }
 
 function normalizeGrade4StoryProblemOptions(item, options = {}) {
-  if (!GRADE4_STORY_PROBLEM_IDS.has(item.id)) return options;
-  const isSubtraction = item.id === GRADE4_SUBTRACTION_STORY_ID;
+  if (!SHARED_UPPER_STORY_PROBLEM_IDS.has(item.id)) return options;
+  const isGrade5 = GRADE5_STORY_PROBLEM_IDS.has(item.id);
+  const isSubtraction = isSubtractionStoryId(item.id);
   const normalized = {
     ...options,
     questionCount: grade4StoryScalarAlias(options, ["questionCount"], "question count", Number) ?? 8,
     questionsPerPage: grade4StoryScalarAlias(options, ["questionsPerPage"], "questions per page", Number) ?? 3,
-    minA: grade4StoryScalarAlias(options, ["minA", "minimumFirstOperand", "minimumOperand"], "minimum first operand", Number) ?? (isSubtraction ? 500 : 100),
-    maxA: grade4StoryScalarAlias(options, ["maxA", "maximumFirstOperand", "maximumOperand"], "maximum first operand", Number) ?? (isSubtraction ? 5000 : 2500),
-    minB: grade4StoryScalarAlias(options, ["minB", "minimumSecondOperand"], "minimum second operand", Number) ?? 100,
-    maxB: grade4StoryScalarAlias(options, ["maxB", "maximumSecondOperand"], "maximum second operand", Number) ?? (isSubtraction ? 4000 : 2500),
+    minA: grade4StoryScalarAlias(options, ["minA", "minimumFirstOperand", "minimumOperand"], "minimum first operand", Number) ?? (isGrade5 ? isSubtraction ? 10000 : 1000 : isSubtraction ? 500 : 100),
+    maxA: grade4StoryScalarAlias(options, ["maxA", "maximumFirstOperand", "maximumOperand"], "maximum first operand", Number) ?? (isGrade5 ? isSubtraction ? 100000 : 50000 : isSubtraction ? 5000 : 2500),
+    minB: grade4StoryScalarAlias(options, ["minB", "minimumSecondOperand"], "minimum second operand", Number) ?? (isGrade5 ? 1000 : 100),
+    maxB: grade4StoryScalarAlias(options, ["maxB", "maximumSecondOperand"], "maximum second operand", Number) ?? (isGrade5 ? isSubtraction ? 90000 : 50000 : isSubtraction ? 4000 : 2500),
     includeExample: grade4StoryScalarAlias(options, ["includeExample", "completedExample", "example"], "completed-example", grade4StoryBoolean) ?? false
   };
   if (!isSubtraction) {
-    normalized.minTotal = grade4StoryScalarAlias(options, ["minTotal", "minimumTotal"], "minimum total", Number) ?? 500;
-    normalized.maxTotal = grade4StoryScalarAlias(options, ["maxTotal", "maximumTotal"], "maximum total", Number) ?? 5000;
+    normalized.minTotal = grade4StoryScalarAlias(options, ["minTotal", "minimumTotal"], "minimum total", Number) ?? (isGrade5 ? 10000 : 500);
+    normalized.maxTotal = grade4StoryScalarAlias(options, ["maxTotal", "maximumTotal"], "maximum total", Number) ?? (isGrade5 ? 100000 : 5000);
   }
   const selectedNumbers = grade4StoryListAlias(options, ["selectedNumbers", "onlyNumbers"], "selected numbers", Number);
   const selectedContexts = grade4StoryListAlias(options, ["selectedContexts", "contexts"], "selected contexts", (value) => String(value).trim().toLowerCase());
@@ -1068,7 +1101,7 @@ function normalizeGrade4StoryProblemOptions(item, options = {}) {
   if (selectedContexts) normalized.selectedContexts = selectedContexts;
   if (selectedObjects) normalized.selectedObjects = selectedObjects;
   const storyTypes = grade4StoryListAlias(options, ["selectedStoryTypes", "storyTypes"], "selected story types", (value) => normalizeGrade4StoryType(item.id, value));
-  if (item.id === GRADE4_MISSING_ADDEND_STORY_ID) {
+  if (isMissingAddendStoryId(item.id)) {
     const position = grade4StoryScalarAlias(options, ["missingPosition", "missingAddendPosition", "missingPartPosition", "unknownPosition"], "missing-addend position", normalizeGrade4MissingPosition) || "mixed";
     normalized.allowedMissingPositions = storyTypes || (position === "mixed" ? ["first", "second"] : [position]);
     normalized.missingPosition = position;
@@ -3940,24 +3973,31 @@ function getWorksheetCatalogFilters() {
 }
 
 function validateGrade4StoryWorksheet(id, problems = []) {
-  if (!GRADE4_STORY_PROBLEM_IDS.has(id)) return;
+  if (!SHARED_UPPER_STORY_PROBLEM_IDS.has(id)) return;
   const signatures = new Set();
   problems.forEach((problem) => {
     if (!problem.prompt || !problem.contextId || !problem.templateId || !problem.storyType || !problem.answerState) {
       throw new Error("Grade 4 story problems require complete structured context, template, and answer truth.");
     }
+    if (GRADE5_STORY_PROBLEM_IDS.has(id) && (
+      problem.responseTarget !== "whole_number" ||
+      problem.answerState.responseTarget !== "whole_number" ||
+      problem.answerState.answer !== problem.answer
+    )) {
+      throw new Error("Grade 4 story problems require a complete whole-number response contract.");
+    }
     if (!problem.duplicateSignature || signatures.has(problem.duplicateSignature)) {
       throw new Error("Grade 4 story problems require unique structured signatures.");
     }
     signatures.add(problem.duplicateSignature);
-    if (id === GRADE4_ADDITION_STORY_ID) {
+    if (isAdditionStoryId(id)) {
       if (
         problem.operation !== "add" || problem.operationFamily !== "addition" ||
         problem.unknownPosition !== "total" ||
         problem.firstAddend + problem.secondAddend !== problem.total ||
         problem.answer !== problem.total
       ) throw new Error("Grade 4 addition-story structured truth is inconsistent.");
-    } else if (id === GRADE4_MISSING_ADDEND_STORY_ID) {
+    } else if (isMissingAddendStoryId(id)) {
       const expected = problem.missingPosition === "first" ? problem.firstAddend : problem.secondAddend;
       const known = problem.missingPosition === "first" ? problem.secondAddend : problem.firstAddend;
       if (
@@ -4585,6 +4625,18 @@ function buildStudentFacingInstruction(item, fallback = "") {
   return "Solve each subtraction story problem. Show your work.";
  }
 
+ if (item.id === GRADE5_ADDITION_STORY_ID) {
+  return "Solve each addition story problem. Show your work.";
+ }
+
+ if (item.id === GRADE5_MISSING_ADDEND_STORY_ID) {
+  return "Find the missing amount in each story problem. Show your work.";
+ }
+
+ if (item.id === GRADE5_SUBTRACTION_STORY_ID) {
+  return "Solve each subtraction story problem. Show your work.";
+ }
+
  if (item.id === GRADE2_ADDITION_WORD_PROBLEMS_WITHIN_100_ID) {
   return "Solve each addition word problem. Show your thinking in the box.";
  }
@@ -4948,6 +5000,7 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
   GRADE3_ADDITION_SUBTRACTION_BATCH3_TITLES[item.id] ||
   GRADE3_STORY_PROBLEM_TITLES[item.id] ||
   GRADE4_STORY_PROBLEM_TITLES[item.id] ||
+  GRADE5_STORY_PROBLEM_TITLES[item.id] ||
   GRADE4_BATCH5_TITLES[item.id] ||
   (item.id === GRADE5_TEXT_DATA_INTERPRETATION_ID ? "Interpret the Data" : "") ||
   GRADE5_COMPACT_RELATIONAL_TITLES[item.id] ||
@@ -5206,7 +5259,7 @@ if (GRADE3_STORY_PROBLEM_IDS.has(item.id)) {
   };
 }
 
-if (GRADE4_STORY_PROBLEM_IDS.has(item.id)) {
+if (SHARED_UPPER_STORY_PROBLEM_IDS.has(item.id)) {
   layout.problems = layout.problems.map((problem, index) => {
     const truth = worksheet.problems?.[index] || {};
     return {

@@ -111,6 +111,15 @@ const GRADE4_STORY_PROBLEM_IDS = new Set([
   "grade4_addition_subtraction_word_problems_missing_addend_word_problem",
   "grade4_addition_subtraction_word_problems_subtraction_word_problem"
 ]);
+const GRADE5_STORY_PROBLEM_IDS = new Set([
+  "grade5_addition_subtraction_word_problems_addition_word_problem",
+  "grade5_addition_subtraction_word_problems_missing_addend_word_problem",
+  "grade5_addition_subtraction_word_problems_subtraction_word_problem"
+]);
+const SHARED_UPPER_STORY_PROBLEM_IDS = new Set([
+  ...GRADE4_STORY_PROBLEM_IDS,
+  ...GRADE5_STORY_PROBLEM_IDS
+]);
 
 const GRADE4_PLACE_VALUE_BATCH4_IDS = new Set([
   "grade4_place_value_representation_number_line_identify",
@@ -165,7 +174,7 @@ function publicSkillLabel(item) {
   if (GRADE3_PLACE_VALUE_BATCH2_IDS.has(item?.id)) return "";
   if (GRADE3_ADDITION_SUBTRACTION_BATCH3_IDS.has(item?.id)) return "";
   if (GRADE3_STORY_PROBLEM_IDS.has(item?.id)) return "";
-  if (GRADE4_STORY_PROBLEM_IDS.has(item?.id)) return "";
+  if (SHARED_UPPER_STORY_PROBLEM_IDS.has(item?.id)) return "";
   if (GRADE4_PLACE_VALUE_BATCH4_IDS.has(item?.id)) return "";
   if (GRADE5_PLACE_VALUE_BATCH4_IDS.has(item?.id)) return "";
   if (PUBLIC_SKILL_LABEL_HIDDEN_IDS.has(item?.id)) return "";
@@ -193,7 +202,7 @@ function publicDomainLabel(item) {
   if (GRADE3_STORY_PROBLEM_IDS.has(item?.id)) {
     return "Addition and Subtraction";
   }
-  if (GRADE4_STORY_PROBLEM_IDS.has(item?.id)) {
+  if (SHARED_UPPER_STORY_PROBLEM_IDS.has(item?.id)) {
     return "Addition & Subtraction";
   }
   if (item?.id === "grade4_addition_subtraction_facts_equation_match") {
@@ -375,7 +384,7 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
             ? { ...p.acceptedNormalizedRule }
             : null
         } : {}),
-        ...(GRADE4_STORY_PROBLEM_IDS.has(item.id) ? {
+        ...(SHARED_UPPER_STORY_PROBLEM_IDS.has(item.id) ? {
           contextId: p.contextId || null,
           templateId: p.templateId || null,
           storyType: p.storyType || null,

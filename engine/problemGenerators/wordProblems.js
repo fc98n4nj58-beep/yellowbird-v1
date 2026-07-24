@@ -22,6 +22,18 @@ const GRADE4_STORY_PROBLEM_IDS = new Set([
   GRADE4_MISSING_ADDEND_STORY_ID,
   GRADE4_SUBTRACTION_STORY_ID
 ]);
+const GRADE5_ADDITION_STORY_ID = "grade5_addition_subtraction_word_problems_addition_word_problem";
+const GRADE5_MISSING_ADDEND_STORY_ID = "grade5_addition_subtraction_word_problems_missing_addend_word_problem";
+const GRADE5_SUBTRACTION_STORY_ID = "grade5_addition_subtraction_word_problems_subtraction_word_problem";
+const GRADE5_STORY_PROBLEM_IDS = new Set([
+  GRADE5_ADDITION_STORY_ID,
+  GRADE5_MISSING_ADDEND_STORY_ID,
+  GRADE5_SUBTRACTION_STORY_ID
+]);
+const SHARED_UPPER_STORY_PROBLEM_IDS = new Set([
+  ...GRADE4_STORY_PROBLEM_IDS,
+  ...GRADE5_STORY_PROBLEM_IDS
+]);
 
 const GRADE3_STORY_NAMES = Object.freeze([
   { id: "maya", name: "Maya", pronoun: "she" },
@@ -453,6 +465,26 @@ function activeGrade4StoryTemplates(templates, options = {}) {
   return selected.length ? templates.filter((template) => selected.includes(template.storyType)) : templates;
 }
 
+function grade5StoryResponseContract(options = {}) {
+  return GRADE5_STORY_PROBLEM_IDS.has(options.worksheetId)
+    ? { responseTarget: "whole_number" }
+    : {};
+}
+
+function storyDisplayTruth(truth, options = {}) {
+  if (!GRADE5_STORY_PROBLEM_IDS.has(options.worksheetId)) return truth;
+  return Object.fromEntries(Object.entries(truth).map(([key, value]) => [
+    key,
+    Number.isInteger(value)
+      ? String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+      : value
+  ]));
+}
+
+function storyDuplicatePrefix(options = {}) {
+  return GRADE5_STORY_PROBLEM_IDS.has(options.worksheetId) ? "grade5_story" : "grade4_story";
+}
+
 function generateGrade4AdditionStory(options = {}) {
   const random = options.random || Math.random;
   const truth = pickGrade4UniqueTruth(options, "grade4_addition_story", () => sampleGrade4AdditionTruth(options));
@@ -514,9 +546,9 @@ function generateGrade4AdditionStory(options = {}) {
   const bItems = pluralize(truth.b, context.item);
   const items = pluralNoun(context.item);
   const addVerb = context.pronoun === "they" ? "add" : "adds";
-  const duplicateSignature = `grade4_story:add:${Math.min(truth.a, truth.b)}:${Math.max(truth.a, truth.b)}:${context.id}:${template.id}`;
+  const duplicateSignature = `${storyDuplicatePrefix(options)}:add:${Math.min(truth.a, truth.b)}:${Math.max(truth.a, truth.b)}:${context.id}:${template.id}`;
   return {
-    prompt: template.build({ context, ...truth, aItems, bItems, items, addVerb }),
+    prompt: template.build({ context, ...truth, ...storyDisplayTruth(truth, options), aItems, bItems, items, addVerb }),
     answer: truth.total,
     a: truth.a,
     b: truth.b,
@@ -527,6 +559,7 @@ function generateGrade4AdditionStory(options = {}) {
     secondAddend: truth.b,
     total: truth.total,
     unknownPosition: "total",
+    ...grade5StoryResponseContract(options),
     storyType: template.storyType,
     contextId: context.id,
     templateId: template.id,
@@ -537,6 +570,7 @@ function generateGrade4AdditionStory(options = {}) {
       secondAddend: truth.b,
       total: truth.total,
       unknownPosition: "total",
+      ...grade5StoryResponseContract(options),
       answer: truth.total
     }
   };
@@ -616,9 +650,9 @@ function generateGrade4MissingAddendStory(options = {}) {
   const answer = missingPosition === "first" ? truth.a : truth.b;
   const unknownPosition = missingPosition === "first" ? "first_addend" : "second_addend";
   const questionAux = context.pronoun === "they" ? "do" : "does";
-  const duplicateSignature = `grade4_story:missing:${truth.a}:${truth.b}:${missingPosition}:${context.id}:${template.id}`;
+  const duplicateSignature = `${storyDuplicatePrefix(options)}:missing:${truth.a}:${truth.b}:${missingPosition}:${context.id}:${template.id}`;
   return {
-    prompt: template.build({ context, ...truth, aItems, bItems, items, questionAux }),
+    prompt: template.build({ context, ...truth, ...storyDisplayTruth(truth, options), aItems, bItems, items, questionAux }),
     answer,
     a: truth.a,
     b: truth.b,
@@ -632,6 +666,7 @@ function generateGrade4MissingAddendStory(options = {}) {
     missingPosition,
     missingValue: answer,
     unknownPosition,
+    ...grade5StoryResponseContract(options),
     storyType: template.storyType,
     contextId: context.id,
     templateId: template.id,
@@ -644,6 +679,7 @@ function generateGrade4MissingAddendStory(options = {}) {
       missingAddend: answer,
       total: truth.total,
       unknownPosition,
+      ...grade5StoryResponseContract(options),
       answer
     }
   };
@@ -713,9 +749,9 @@ function generateGrade4SubtractionStory(options = {}) {
   const removedItems = pluralize(truth.subtrahend, context.item);
   const items = pluralNoun(context.item);
   const useVerb = context.pronoun === "they" ? "use" : "uses";
-  const duplicateSignature = `grade4_story:subtract:${truth.minuend}:${truth.subtrahend}:${storyType}:${context.id}:${template.id}`;
+  const duplicateSignature = `${storyDuplicatePrefix(options)}:subtract:${truth.minuend}:${truth.subtrahend}:${storyType}:${context.id}:${template.id}`;
   return {
-    prompt: template.build({ context, ...truth, startItems, removedItems, items, useVerb }),
+    prompt: template.build({ context, ...truth, ...storyDisplayTruth(truth, options), startItems, removedItems, items, useVerb }),
     answer: truth.difference,
     a: truth.minuend,
     b: truth.subtrahend,
@@ -726,6 +762,7 @@ function generateGrade4SubtractionStory(options = {}) {
     subtrahend: truth.subtrahend,
     difference: truth.difference,
     unknownPosition: "difference",
+    ...grade5StoryResponseContract(options),
     storyType,
     contextId: context.id,
     templateId: template.id,
@@ -736,6 +773,7 @@ function generateGrade4SubtractionStory(options = {}) {
       subtrahend: truth.subtrahend,
       difference: truth.difference,
       unknownPosition: "difference",
+      ...grade5StoryResponseContract(options),
       answer: truth.difference
     }
   };
@@ -1171,7 +1209,7 @@ function generateGrade3SubtractionWordProblem(options = {}) {
 }
 
 function generateAdditionWordProblem(options = {}) {
-  if (options.worksheetId === GRADE4_ADDITION_STORY_ID) {
+  if ([GRADE4_ADDITION_STORY_ID, GRADE5_ADDITION_STORY_ID].includes(options.worksheetId)) {
     return generateGrade4AdditionStory(options);
   }
   if (options.worksheetId === GRADE3_ADDITION_WORD_PROBLEMS_ID) {
@@ -1389,7 +1427,7 @@ function generateMultiplicationWordProblem(options = {}) {
 }
 
 function generateSubtractionWordProblem(options = {}) {
-  if (options.worksheetId === GRADE4_SUBTRACTION_STORY_ID) {
+  if ([GRADE4_SUBTRACTION_STORY_ID, GRADE5_SUBTRACTION_STORY_ID].includes(options.worksheetId)) {
     return generateGrade4SubtractionStory(options);
   }
   if (options.worksheetId === GRADE3_SUBTRACTION_WORD_PROBLEMS_ID) {
@@ -1448,7 +1486,7 @@ function generateSubtractionWordProblem(options = {}) {
 }
 
 function generateMissingAddendWordProblem(options = {}) {
-  if (options.worksheetId === GRADE4_MISSING_ADDEND_STORY_ID) {
+  if ([GRADE4_MISSING_ADDEND_STORY_ID, GRADE5_MISSING_ADDEND_STORY_ID].includes(options.worksheetId)) {
     return generateGrade4MissingAddendStory(options);
   }
   if (options.worksheetId === GRADE3_MISSING_ADDEND_WORD_PROBLEMS_ID) {
@@ -1508,9 +1546,13 @@ function generateMissingAddendWordProblem(options = {}) {
 function generateWordProblem(options = {}) {
   const context = getContext(options);
 
-  if (GRADE4_STORY_PROBLEM_IDS.has(options.worksheetId)) {
-    if (options.worksheetId === GRADE4_ADDITION_STORY_ID) return generateGrade4AdditionStory(options);
-    if (options.worksheetId === GRADE4_MISSING_ADDEND_STORY_ID) return generateGrade4MissingAddendStory(options);
+  if (SHARED_UPPER_STORY_PROBLEM_IDS.has(options.worksheetId)) {
+    if ([GRADE4_ADDITION_STORY_ID, GRADE5_ADDITION_STORY_ID].includes(options.worksheetId)) {
+      return generateGrade4AdditionStory(options);
+    }
+    if ([GRADE4_MISSING_ADDEND_STORY_ID, GRADE5_MISSING_ADDEND_STORY_ID].includes(options.worksheetId)) {
+      return generateGrade4MissingAddendStory(options);
+    }
     return generateGrade4SubtractionStory(options);
   }
 

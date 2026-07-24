@@ -1,8 +1,8 @@
 # Grade 5 Founder Review Batch Plan
 
-Status: active founder-review plan. Batches 1 through 5 are founder-approved and closed; Grade 5 remains open for later authorized work.
+Status: active founder-review plan. Batches 1 through 6 are founder-approved and closed; Grade 5 remains open for the Function Table E decision.
 
-Current reconciliation: **A21 / D3 / E1 / G21 / Total46**. Batch 5 moved exactly the three Structured Fractions records D → A. Catalog lifecycle statuses remain independent and unchanged.
+Current reconciliation: **A24 / D0 / E1 / G21 / Total46**. Batch 6 moved exactly the three Addition/Subtraction Story records D → A. Catalog lifecycle statuses remain independent and unchanged.
 
 ## Batch 1 — Numeric Patterning
 
@@ -265,7 +265,7 @@ Focused test/proof strategy: exact integer equivalence; selected-value consumpti
 
 Risk: **MODERATE**. Recommended fourth.
 
-## Later planned batch — Addition and Subtraction Stories
+## Batch 6 — Addition and Subtraction Stories (founder approved and closed)
 
 Exact IDs:
 
@@ -277,7 +277,38 @@ Shared family: one-step deterministic arithmetic contexts with full-width work b
 
 Inheritance: Grade 2 context diversity and deterministic controls, Grade 3 arithmetic/context truth, and founder-approved Grade 4 work-box geometry and pagination.
 
-Common correction: Grade 5 ranges and unknown positions, honest titles/instructions, natural context variety, repetition limits, and a founder-approved default count. Do not turn the work into unsupported multi-step problems.
+Completed-work classification: **SHARED-FAMILY EXTENSION NEEDED** for all three IDs. Before Batch 6, each resource still used the generic single-digit story path, catalog-generated public copy, incomplete structured truth, and the generic footer. None was already complete or stale reconciliation, and no new architecture was required.
+
+Implemented correction: exact-ID Grade 5 adapters now reuse the approved Grade 4 story generator, context balancing, template rotation, full-width work-box layout, and compact answer key. Public contracts are:
+
+- **Addition Story Problems** — “Solve each addition story problem. Show your work.”
+- **Missing Addend Story Problems** — “Find the missing amount in each story problem. Show your work.”
+- **Subtraction Story Problems** — “Solve each subtraction story problem. Show your work.”
+- shared footer: **Grade 5 • Math • Addition & Subtraction**
+
+The Grade 4 density remains strongest and safe: eight default questions, maximum 16, three questions per student page, three student pages and two compact key pages by default, and six student pages plus three key pages at the maximum. Completed examples remain additional; the normal eight practice questions are retained.
+
+Grade 5 difficulty comes only from whole-number magnitude. Addition and missing-addend defaults use addends from 1,000 through 50,000 with totals from 10,000 through 100,000. Subtraction defaults use minuends from 10,000 through 100,000 and subtrahends from 1,000 through 90,000, with non-negative differences enforced. Prompts use comma-grouped numerals. Decimals, fractions, negative answers, multi-step stories, irrelevant information, multiplication, and division remain outside the contract.
+
+Inherited Grade 1–4 variables and aliases: `questionCount`; `questionsPerPage`; `minA` / `minimumFirstOperand` / `minimumOperand`; `maxA` / `maximumFirstOperand` / `maximumOperand`; `minB` / `minimumSecondOperand`; `maxB` / `maximumSecondOperand`; addition-family `minTotal` / `minimumTotal` and `maxTotal` / `maximumTotal`; `selectedNumbers` / `onlyNumbers`; `selectedContexts` / `contexts`; `selectedObjects` / `onlyObjects`; `selectedStoryTypes` / `storyTypes`; missing-addend `missingPosition` / `missingAddendPosition` / `missingPartPosition` / `unknownPosition`; and `includeExample` / `completedExample` / `example`. Fixed-role resources reject operation-mode controls rather than silently changing roles. Answer-key inclusion and deterministic worksheet seeds remain runtime controls.
+
+Preserved story contracts: no repeated name/object pair, no adjacent or near-adjacent name/object/template reuse, at most two uses of a name or object, varied sentence structures, unique prompt prose and duplicate signatures, consistent work space, generator-owned arithmetic/context/answer truth, `whole_number` response targets, student/key parity, and no public customization.
+
+Focused verification: `scripts/testGrade5AdditionSubtractionStoriesBatch6.js` covers 30 deterministic seeds, different-seed variation, Grade 5 ranges, all supported aliases, selected-value consumption, fixed story roles, missing positions, invalid-input rejection, maximum pagination, additional examples, context/template repetition rules, pronoun agreement, student/key parity, and Grade 1–4 isolation. The compact proof generator is `scripts/generateGrade5AdditionSubtractionStoriesBatch6Proofs.js`.
+
+Founder-review proofs:
+
+- `review/grade-5-addition-subtraction-stories-batch-6/founder-review/01_addition_story_problems.pdf`
+- `review/grade-5-addition-subtraction-stories-batch-6/founder-review/02_missing_addend_story_problems.pdf`
+- `review/grade-5-addition-subtraction-stories-batch-6/founder-review/03_subtraction_story_problems.pdf`
+
+Stress proofs:
+
+- `review/grade-5-addition-subtraction-stories-batch-6/stress/01_shared_maximum_count.pdf`
+- `review/grade-5-addition-subtraction-stories-batch-6/stress/02_mixed_story_types_and_boundaries.pdf`
+- `review/grade-5-addition-subtraction-stories-batch-6/stress/03_completed_example_and_missing_positions.pdf`
+
+Founder approval covers all three resources with no split, blocked, or deferred resource. Lifecycle statuses remain `generated`. The three exact IDs move D → A, producing **A24 / D0 / E1 / G21 / Total46**. No new architecture or public customization was introduced. Function Table remains the only unresolved E item, so Grade 5 remains open.
 
 Likely reviewed files: shared story generator/context layer, normalization/layout, services, focused tests, proof generator, documentation.
 
@@ -392,7 +423,7 @@ No deferred item should be revived during a D batch. Reconsider only when its do
 3. Batch 3 Text-Data Interpretation Reliability — founder-approved and closed
 4. Batch 4 Place-Value Representations
 5. Batch 5 Structured Fractions — founder-approved and closed
-6. Addition/Subtraction Stories, after separate authorization and founder count/range decisions
+6. Batch 6 Addition/Subtraction Stories — founder-approved and closed
 7. Function Table architecture decision
 8. final A-resource regression sweep, exact reconciliation closeout, and local commit
 
@@ -406,7 +437,7 @@ The accelerated execution model is one full session per batch: completed-work re
 - after founder-approved Batch 3: **A14 / D10 / E1 / G21 / Total46**
 - after founder-approved Batch 4: **A18 / D6 / E1 / G21 / Total46**
 - after founder-approved Batch 5 Structured Fractions: **A21 / D3 / E1 / G21 / Total46**
-- after the remaining story-family D batch: **A24 / D0 / E1 / G21 / Total46**
+- after founder-approved Batch 6 Addition/Subtraction Stories: **A24 / D0 / E1 / G21 / Total46**
 - Function Table implemented: **A25 / D0 / E0 / G21 / Total46**
 - Function Table deferred: **A24 / D0 / E0 / G22 / Total46**
 

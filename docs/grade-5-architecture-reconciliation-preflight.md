@@ -1,6 +1,6 @@
 # Grade 5 Architecture Reconciliation Preflight
 
-Status: active reconciliation. Founder-approved Batches 1 through 5 are closed; Grade 5 remains open for the three story-family D records and the Function Table E decision. Catalog lifecycle statuses remain unchanged.
+Status: active reconciliation. Founder-approved Batches 1 through 6 are closed; Grade 5 remains open for the Function Table E decision. Catalog lifecycle statuses remain unchanged.
 
 Starting checkpoint: `f1b04ee6d7f90789af46419947164fa84d5c320a`
 
@@ -36,14 +36,14 @@ Density notation is `questions / columns / questions-per-student-page / total PD
 | 2 | `g5_equivalent_fractions_exit_ticket` | Equivalent Fractions Exit Ticket; Fractions; exit ticket/ready | equivalent-fraction completion; compact assessment | 3/2/20/2 | previously curated and print-QA’d | A |
 | 3 | `g5_place_value_to_100000_quick_check` | Compare Numbers to 100,000 Quick Check; Place Value; quick check/ready | compare numbers; compact assessment | 6/4/60/2 | previously curated and print-QA’d; honest bounded role | A |
 | 4 | `g5_equivalent_fractions_quick_check` | Equivalent Fractions Quick Check; Fractions; quick check/ready | equivalent-fraction completion; compact assessment | 6/2/20/2 | previously curated and print-QA’d | A |
-| 5 | `grade5_addition_subtraction_word_problems_addition_word_problem` | Addition Word Problem — Grade 5; Addition & Subtraction; practice/generated | addition story; full-width work box | 12/1/3/8 | shared-family Grade 5 extension and language/range review needed | D/later |
+| 5 | `grade5_addition_subtraction_word_problems_addition_word_problem` | Addition Story Problems; Addition & Subtraction; practice/generated | structured addition story; full-width work box | 8/1/3/5 | founder-approved Grade 5 shared-family extension with generator-owned truth | A |
 | 6 | `grade5_addition_subtraction_facts_equation_match` | Compare Equations; Addition & Subtraction; matching/generated | structured equation comparison; compact relation | 30/2/30/2 | founder-approved 2×15 Grade 5 extension with exact equality balance | A |
 | 7 | `grade5_addition_subtraction_facts_fact_family` | Fact Families — Grade 5; Addition & Subtraction; matching/generated | fact family; matching | 12/3/12/2 | primary-fact task has no natural Grade 5 distinction | G |
 | 8 | `grade5_addition_subtraction_facts_fact_fluency` | Fact Fluency — Grade 5; Addition & Subtraction; fluency/generated | fact fluency; fluency grid | 12/2/20/2 | overlaps approved multiplication review and lower-grade remediation | G |
-| 9 | `grade5_addition_subtraction_word_problems_missing_addend_word_problem` | Missing Addend Word Problem — Grade 5; Addition & Subtraction; practice/generated | missing-addend story; full-width work box | 12/1/3/8 | shared-family Grade 5 extension and language/range review needed | D/later |
+| 9 | `grade5_addition_subtraction_word_problems_missing_addend_word_problem` | Missing Addend Story Problems; Addition & Subtraction; practice/generated | structured missing-addend story; full-width work box | 8/1/3/5 | founder-approved balanced unknown-position extension with generator-owned truth | A |
 | 10 | `grade5_addition_subtraction_facts_missing_addend` | Missing Addends — Grade 5; Addition & Subtraction; fluency/generated | missing addend; fluency grid | 12/4/60/2 | lower-grade fact remediation with weak Grade 5 role | G |
 | 11 | `grade5_addition_subtraction_facts_related_subtraction` | Related Subtraction — Grade 5; Addition & Subtraction; fluency/generated | related subtraction; fluency grid | 12/4/60/2 | lower-grade fact remediation with weak Grade 5 role | G |
-| 12 | `grade5_addition_subtraction_word_problems_subtraction_word_problem` | Subtraction Word Problem — Grade 5; Addition & Subtraction; practice/generated | subtraction story; full-width work box | 12/1/3/8 | shared-family Grade 5 extension and language/range review needed | D/later |
+| 12 | `grade5_addition_subtraction_word_problems_subtraction_word_problem` | Subtraction Story Problems; Addition & Subtraction; practice/generated | structured subtraction story; full-width work box | 8/1/3/5 | founder-approved take-away/compare extension with non-negative truth | A |
 | 13 | `grade5_addition_subtraction_facts_ten_frame` | Ten Frame Practice — Grade 5; Addition & Subtraction; visual/generated | ten frame; full-width visual | 10/1/10/2 | unsupported Grade 5 difficulty; remediation overlap | G |
 | 14 | `grade5_addition_subtraction_facts_word_problems` | Word Problems — Grade 5; Addition & Subtraction; practice/generated | generic stories; full-width work box | 12/1/3/8 | duplicates the three explicit story roles | G |
 | 15 | `grade5_data_display_graphing_complete_graph` | Complete a Graph — Grade 5; Data & Graphing; visual/generated | text-data fallback; full-width | 12/1/6/4 | duplicate of curated `g5_complete_graphs`; title overclaims a visual | G |
@@ -190,7 +190,7 @@ Sparse current output is not evidence for a lower density. Conversely, story, nu
 
 Catalog lifecycle statuses remain independent and unchanged.
 
-### A — 21
+### A — 24
 
 - `g5_compare_numbers_to_100000_exit_ticket`
 - `g5_equivalent_fractions_exit_ticket`
@@ -213,12 +213,13 @@ Catalog lifecycle statuses remain independent and unchanged.
 - `grade5_fraction_equivalence_fraction_number_line`
 - `grade5_fraction_equivalence_match_equivalent_fractions`
 - `grade5_fraction_equivalence_shade_fraction_models`
+- `grade5_addition_subtraction_word_problems_addition_word_problem`
+- `grade5_addition_subtraction_word_problems_missing_addend_word_problem`
+- `grade5_addition_subtraction_word_problems_subtraction_word_problem`
 
-### D — 3
+### D — 0
 
-- `grade5_addition_subtraction_word_problems_addition_word_problem` — later authorized story batch
-- `grade5_addition_subtraction_word_problems_missing_addend_word_problem` — later authorized story batch
-- `grade5_addition_subtraction_word_problems_subtraction_word_problem` — later authorized story batch
+No unresolved existing-family implementation records remain.
 
 ### E — 1
 
@@ -248,9 +249,9 @@ Catalog lifecycle statuses remain independent and unchanged.
 - `grade5_patterning_and_algebra_pattern_word_problems`
 - `grade5_place_value_representation_base_ten_blocks`
 
-Total: **A21 / D3 / E1 / G21 / Total46**.
+Total: **A24 / D0 / E1 / G21 / Total46**.
 
-Projected scenario after the remaining story-family D batch: **A24 / D0 / E1 / G21 / Total46**. If the founder later approves and implements a genuine Function Table architecture: **A25 / D0 / E0 / G21 / Total46**. A founder decision to defer Function Table instead yields **A24 / D0 / E0 / G22 / Total46**.
+Function Table remains the only unresolved E item. If the founder later approves and implements a genuine Function Table architecture: **A25 / D0 / E0 / G21 / Total46**. A founder decision to defer Function Table instead yields **A24 / D0 / E0 / G22 / Total46**.
 
 ## Duplicate and deferred analysis
 
@@ -286,10 +287,10 @@ Each implementation batch must run:
 - Batch 3 Text-Data Interpretation is founder-approved and closed at **A14 / D10 / E1 / G21 / Total46**. `g5_interpret_graphs` moved D → A; lifecycle status remains `ready`.
 - Batch 4 Place-Value Representations is founder-approved and closed at **A18 / D6 / E1 / G21 / Total46**. The four exact-ID representation resources moved D → A; all lifecycle statuses remain `generated`.
 - Batch 5 Structured Fractions is founder-approved and closed at **A21 / D3 / E1 / G21 / Total46**. The three exact IDs moved D → A with no lifecycle movement, public customization, split, blocked resource, or deferral.
-- Decide the exact Grade 5 story default (recommended 8 for the approved work-box geometry; current runtime is 12).
+- Batch 6 Addition/Subtraction Stories is founder-approved and closed at **A24 / D0 / E1 / G21 / Total46**. The three exact IDs moved D → A with the approved eight-question default, maximum 16, inherited Grade 1–4 variables, and no lifecycle movement, public customization, or new architecture.
 - Decide whether Function Table should receive new visible-table architecture or move E → G.
 
-Batches 1 through 4 are closed without lifecycle movement or public customization. Grade 3 sparse comparison drift remains on the later K–6 consistency watchlist; no lower-grade resource was reopened. The next implementation action belongs to a separately authorized later Grade 5 batch.
+Batches 1 through 6 are closed without lifecycle movement or public customization. Grade 3 sparse comparison drift remains on the later K–6 consistency watchlist; no lower-grade resource was reopened. Grade 5 remains open only for the Function Table E decision.
 
 ## Batch 4 architecture clarification — Place-Value Representations
 
@@ -319,3 +320,15 @@ The Grade 5 scope remains proper fractions and one whole. Safe partition denomin
 No new visual primitive, public customization family, catalog lifecycle movement, or reconciliation movement is required for the review candidate. The lower-grade mislabelled Grade 3/4 “Match Equivalent Fractions” completion records remain a later K–6 consistency-review watchlist item and are not reopened.
 
 Founder approval closes Batch 5 with no split, blocked, or deferred resource. Exactly the three structured-fraction records move D → A, producing **A21 / D3 / E1 / G21 / Total46**. Lifecycle statuses remain `generated`, `ready`, and `generated`; Grade 5 remains open.
+
+## Batch 6 architecture clarification — Addition/Subtraction Stories
+
+The three final D records extend the founder-approved Grade 4 one-step story family without new architecture. Addition retains join-result and combine-total situations; Missing Addend balances first- and second-addend unknowns; Subtraction balances take-away and comparison situations while enforcing non-negative differences.
+
+All applicable Grade 1–4 runtime controls remain supported: question count, questions per page, multipage generation, operand/result ranges and aliases, selected numbers, selected contexts and objects, selected story types, missing-addend position controls, completed-example aliases, answer-key inclusion, deterministic seeds, and repetition controls. Fixed-role resources reject incompatible operation-mode inputs rather than changing roles or silently falling back. No public customization family was registered.
+
+The founder-approved default is eight questions with a maximum of 16 and three full-width work-box questions per student page. Default PDFs contain three student pages and two compact key pages; maximum PDFs contain six student pages and three key pages. Completed examples remain additional. Addition and Missing Addend use addends from 1,000 through 50,000 and totals from 10,000 through 100,000. Subtraction uses minuends from 10,000 through 100,000 and subtrahends from 1,000 through 90,000.
+
+The shared generator owns operations, operands, results, unknown positions, contexts, prompts, expected answers, whole-number response targets, answer states, and duplicate signatures. It prevents repeated name/object pairs, consecutive or near-consecutive context/template reuse, duplicate prompt prose, and negative subtraction answers. The renderer performs no arithmetic or prose parsing. Student/key parity, Grade 1–4 isolation, Grade 5 Batches 1–5, 30 deterministic seeds, audit totals, and the six-proof packet all pass.
+
+Founder approval closes Batch 6 with no split, blocked, or deferred resource. Exactly the three story records move D → A, producing **A24 / D0 / E1 / G21 / Total46**. Lifecycle statuses remain `generated`; Grade 5 remains open for the Function Table E decision.
