@@ -33,6 +33,12 @@ const {
 const {
   validateGrade3DataDisplayWorksheet
 } = require("../engine/problemGenerators/grade3DataDisplays");
+const {
+  grade5NumberToWords
+} = require("../engine/problemGenerators/numberWordMatch");
+const {
+  buildGrade5RepresentationTruth
+} = require("../engine/problemGenerators/grade5PlaceValueTruth");
 
 const MASTER_CATALOG_PATH = path.join(__dirname, "../data/worksheetCatalog.master.json");
 
@@ -328,6 +334,16 @@ const GRADE4_NUMBER_WORD_ID = "grade4_place_value_representation_number_word_mat
 const GRADE4_COMPARE_NUMBERS_ID = "grade4_place_value_representation_compare_numbers";
 const GRADE4_EQUATION_MATCH_ID = "grade4_addition_subtraction_facts_equation_match";
 const GRADE5_COMPARE_NUMBERS_ID = "grade5_place_value_representation_compare_numbers";
+const GRADE5_EXPANDED_FORM_ID = "grade5_place_value_representation_expanded_form";
+const GRADE5_NUMBER_LINE_ID = "grade5_place_value_representation_number_line_identify";
+const GRADE5_NUMBER_WORD_ID = "grade5_place_value_representation_number_word_match";
+const GRADE5_STANDARD_FORM_ID = "grade5_place_value_representation_standard_form";
+const GRADE5_PLACE_VALUE_BATCH4_IDS = new Set([
+  GRADE5_EXPANDED_FORM_ID,
+  GRADE5_NUMBER_LINE_ID,
+  GRADE5_NUMBER_WORD_ID,
+  GRADE5_STANDARD_FORM_ID
+]);
 const GRADE5_EQUATION_MATCH_ID = "grade5_addition_subtraction_facts_equation_match";
 const GRADE5_TEXT_DATA_INTERPRETATION_ID = "g5_interpret_graphs";
 const GRADE5_TEXT_DATA_MAXIMUM_QUESTION_COUNT = 17;
@@ -349,6 +365,12 @@ const GRADE4_BATCH5_TITLES = Object.freeze({
 const GRADE5_COMPACT_RELATIONAL_TITLES = Object.freeze({
   [GRADE5_EQUATION_MATCH_ID]: "Compare Equations",
   [GRADE5_COMPARE_NUMBERS_ID]: "Compare Numbers"
+});
+const GRADE5_PLACE_VALUE_BATCH4_TITLES = Object.freeze({
+  [GRADE5_EXPANDED_FORM_ID]: "Expanded Form",
+  [GRADE5_NUMBER_LINE_ID]: "Identify Numbers on a Number Line",
+  [GRADE5_NUMBER_WORD_ID]: "Write Numbers in Words",
+  [GRADE5_STANDARD_FORM_ID]: "Standard Form"
 });
 const GRADE5_COMPACT_RELATIONAL_IDS = new Set(
   Object.keys(GRADE5_COMPACT_RELATIONAL_TITLES)
@@ -1486,6 +1508,162 @@ function normalizeGrade4PlaceValueOptions(item, options = {}, rawOptions = {}) {
       "equality option",
       grade4PlaceValueBoolean
     ) ?? true;
+  }
+  return normalized;
+}
+
+const GRADE5_PLACE_VALUE_SAFE_INTERVALS = Object.freeze([100, 250, 500, 1000, 2500, 5000]);
+
+function validateGrade5PlaceValueRawOptions(item, options = {}) {
+  if (!GRADE5_PLACE_VALUE_BATCH4_IDS.has(item.id)) return;
+  const isLine = item.id === GRADE5_NUMBER_LINE_ID;
+  const isWords = item.id === GRADE5_NUMBER_WORD_ID;
+  const isForm = item.id === GRADE5_EXPANDED_FORM_ID || item.id === GRADE5_STANDARD_FORM_ID;
+  const defaultCount = isLine ? 6 : isWords ? 12 : 30;
+  const maximumCount = isLine ? 12 : isWords ? 20 : 60;
+  const perPageMaximum = isLine ? 6 : isWords ? 12 : 30;
+  const questionCount = grade4PlaceValueScalarAlias(
+    options, ["questionCount"], "question count",
+    (value) => grade4PlaceValueInteger(value, "question count", 1, maximumCount)
+  ) ?? defaultCount;
+  grade4PlaceValueScalarAlias(
+    options, ["questionsPerPage"], "questions per page",
+    (value) => grade4PlaceValueInteger(value, "questions per page", 1, perPageMaximum)
+  );
+  const includeExample = grade4PlaceValueScalarAlias(
+    options, ["includeExample", "completedExample", "example"], "completed-example",
+    (value) => grade4PlaceValueBoolean(value, "completed-example option")
+  ) ?? false;
+  const minimum = grade4PlaceValueScalarAlias(
+    options, ["minValue", "minA", "minimumValue", "minimumNumber"], "minimum value",
+    (value) => grade4PlaceValueInteger(value, "minimum value", 0, 100000)
+  ) ?? 10000;
+  const maximum = grade4PlaceValueScalarAlias(
+    options, ["maxValue", "maxA", "maximumValue", "maximumNumber"], "maximum value",
+    (value) => grade4PlaceValueInteger(value, "maximum value", 0, 100000)
+  ) ?? 100000;
+  if (minimum > maximum) throw new Error("Grade 5 place-value minimum value must not exceed maximum value.");
+  const selected = grade4PlaceValueListAlias(
+    options, ["selectedNumbers", "selectedValues", "onlyNumbers"], "selected numbers",
+    (value) => grade4PlaceValueInteger(value, "selected number", 0, 100000)
+  );
+  if (selected?.some((value) => value < minimum || value > maximum)) {
+    throw new Error("Grade 5 place-value selected numbers must remain inside the selected range.");
+  }
+  if ((selected?.length || maximum - minimum + 1) < questionCount + (includeExample ? 1 : 0)) {
+    throw new Error("Grade 5 place-value range must provide enough unique values.");
+  }
+
+  if (isLine) {
+    const intervals = grade4PlaceValueListAlias(
+      options, ["allowedIntervals", "intervals", "selectedIntervals", "numberLineIntervals"],
+      "number-line intervals",
+      (value) => grade4PlaceValueInteger(value, "number-line interval", 1, 5000)
+    ) || [...GRADE5_PLACE_VALUE_SAFE_INTERVALS];
+    if (intervals.some((value) => !GRADE5_PLACE_VALUE_SAFE_INTERVALS.includes(value))) {
+      throw new Error(`Grade 5 number lines support intervals ${GRADE5_PLACE_VALUE_SAFE_INTERVALS.join(", ")} only.`);
+    }
+    intervals.forEach((interval) => {
+      if (maximum - minimum < interval * 10) {
+        throw new Error("Grade 5 number-line range must support ten intervals.");
+      }
+    });
+    grade4PlaceValueScalarAlias(
+      options, ["tickCount"], "tick count",
+      (value) => grade4PlaceValueInteger(value, "tick count", 10, 10)
+    );
+    const endpointBoolean = grade4PlaceValueScalarAlias(
+      options, ["allowEndpointTargets"], "endpoint option",
+      (value) => grade4PlaceValueBoolean(value, "endpoint option")
+    );
+    const endpointPolicy = grade4PlaceValueScalarAlias(
+      options, ["endpointPolicy"], "endpoint policy", normalizeGrade4EndpointPolicy
+    );
+    if (endpointBoolean !== null && endpointPolicy !== null && endpointBoolean !== endpointPolicy) {
+      throw new Error("Grade 5 number-line endpoint aliases must agree.");
+    }
+    grade4PlaceValueScalarAlias(options, ["taskMode"], "task mode", normalizeGrade4NumberLineTask);
+  }
+
+  if (isWords) {
+    grade4PlaceValueScalarAlias(
+      options, ["numberWordMode", "numberWordDirection", "mode"],
+      "number-word direction", normalizeGrade4NumberWordMode
+    );
+    if (Object.prototype.hasOwnProperty.call(options, "locale") && options.locale !== "en-CA") {
+      throw new Error("Grade 5 number words use Canadian English (en-CA) only.");
+    }
+    if (["includeAnd", "useAnd"].some((key) => grade4PlaceValueEntries(options, [key]).length &&
+      grade4PlaceValueBoolean(options[key], key))) {
+      throw new Error("Grade 5 number words use the approved no-and convention.");
+    }
+  }
+  if (isForm && Object.prototype.hasOwnProperty.call(options, "answerStyle")) {
+    const style = String(options.answerStyle).trim().toLowerCase().replace(/[\s-]+/g, "_");
+    if (!["canonical", "expanded_sum", "place_value_sum"].includes(style)) {
+      throw new Error("Grade 5 forms support canonical place-value sums only.");
+    }
+  }
+  const truthKeys = [
+    "answer", "answerState", "prompt", "responseTarget", "duplicateSignature",
+    "targetValue", "targetIndex", "displayedLabels", "numberWord", "numeral",
+    "expandedForm", "expandedTerms", "placeValueDigits", "pageCount", "interval"
+  ];
+  if (truthKeys.some((key) => Object.prototype.hasOwnProperty.call(options, key))) {
+    throw new Error("Grade 5 place-value caller-owned answer truth is not supported.");
+  }
+}
+
+function normalizeGrade5PlaceValueOptions(item, options = {}, rawOptions = {}) {
+  if (!GRADE5_PLACE_VALUE_BATCH4_IDS.has(item.id)) return options;
+  const isLine = item.id === GRADE5_NUMBER_LINE_ID;
+  const isWords = item.id === GRADE5_NUMBER_WORD_ID;
+  const normalized = { ...options };
+  normalized.questionCount = Number(rawOptions.questionCount ?? (isLine ? 6 : isWords ? 12 : 30));
+  normalized.questionsPerPage = Number(rawOptions.questionsPerPage ?? (isLine ? 6 : isWords ? 12 : 30));
+  normalized.minA = Number(rawOptions.minValue ?? rawOptions.minA ?? rawOptions.minimumValue ?? rawOptions.minimumNumber ?? 10000);
+  normalized.maxA = Number(rawOptions.maxValue ?? rawOptions.maxA ?? rawOptions.maximumValue ?? rawOptions.maximumNumber ?? 100000);
+  normalized.minValue = normalized.minA;
+  normalized.maxValue = normalized.maxA;
+  const selected = grade4PlaceValueListAlias(
+    rawOptions, ["selectedNumbers", "selectedValues", "onlyNumbers"], "selected numbers", Number
+  );
+  if (selected) {
+    normalized.selectedNumbers = selected;
+    normalized.selectedValues = selected;
+    normalized.onlyNumbers = selected.join(",");
+  }
+  normalized.includeExample = grade4PlaceValueScalarAlias(
+    rawOptions, ["includeExample", "completedExample", "example"],
+    "completed-example", grade4PlaceValueBoolean
+  ) ?? false;
+  if (isLine) {
+    normalized.allowedIntervals = grade4PlaceValueListAlias(
+      rawOptions, ["allowedIntervals", "intervals", "selectedIntervals", "numberLineIntervals"],
+      "number-line intervals", Number
+    ) || [...GRADE5_PLACE_VALUE_SAFE_INTERVALS];
+    normalized.intervals = normalized.allowedIntervals;
+    normalized.selectedIntervals = normalized.allowedIntervals;
+    const endpointBoolean = grade4PlaceValueScalarAlias(
+      rawOptions, ["allowEndpointTargets"], "endpoint option", grade4PlaceValueBoolean
+    );
+    const endpointPolicy = grade4PlaceValueScalarAlias(
+      rawOptions, ["endpointPolicy"], "endpoint policy", normalizeGrade4EndpointPolicy
+    );
+    normalized.tickCount = 10;
+    normalized.allowEndpointTargets = endpointBoolean ?? endpointPolicy ?? true;
+    normalized.endpointPolicy = normalized.allowEndpointTargets ? "endpoints_allowed" : "interior_only";
+    normalized.taskMode = "identify_marked_number";
+  } else if (isWords) {
+    normalized.numberWordMode = grade4PlaceValueScalarAlias(
+      rawOptions, ["numberWordMode", "numberWordDirection", "mode"],
+      "number-word direction", normalizeGrade4NumberWordMode
+    ) || "numeral_to_word";
+    normalized.numberWordDirection = normalized.numberWordMode;
+    normalized.locale = "en-CA";
+    normalized.promptStyle = "number_only";
+  } else {
+    normalized.answerStyle = "canonical";
   }
   return normalized;
 }
@@ -3069,6 +3247,7 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
   validateGrade4StructuredFractionRawOptions(item, options);
   validateGrade4StoryRawOptions(item, options);
   validateGrade4PlaceValueRawOptions(item, options);
+  validateGrade5PlaceValueRawOptions(item, options);
   validateGrade4EquationMatchRawOptions(item, options);
   validateGrade5CompactRelationalRawOptions(item, options);
   validateGrade5TextDataInterpretationRawOptions(item, options);
@@ -3300,7 +3479,12 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     familyNormalized,
     options
   );
-  return normalizeGrade4EquationMatchOptions(item, grade5TextDataNormalized, options);
+  const grade5PlaceValueNormalized = normalizeGrade5PlaceValueOptions(
+    item,
+    grade5TextDataNormalized,
+    options
+  );
+  return normalizeGrade4EquationMatchOptions(item, grade5PlaceValueNormalized, options);
 }
 
 const NON_CUSTOMIZATION_QUERY_KEYS = new Set([
@@ -3510,6 +3694,59 @@ function validateGrade4PlaceValueWorksheet(id, problems = []) {
         problem.answerState?.expectedSymbol !== expected ||
         problem.responseTarget !== "comparison_symbol"
       ) throw new Error("Grade 4 comparison structured truth is inconsistent.");
+    }
+  });
+}
+
+function validateGrade5PlaceValueWorksheet(id, problems = []) {
+  if (!GRADE5_PLACE_VALUE_BATCH4_IDS.has(id)) return;
+  const signatures = new Set();
+  const values = new Set();
+  problems.forEach((problem) => {
+    if (!problem.duplicateSignature || signatures.has(problem.duplicateSignature)) {
+      throw new Error("Grade 5 place-value questions require unique structured signatures.");
+    }
+    signatures.add(problem.duplicateSignature);
+    if (!Number.isInteger(problem.representedValue) || values.has(problem.representedValue)) {
+      throw new Error("Grade 5 place-value represented values must be unique whole numbers.");
+    }
+    values.add(problem.representedValue);
+    if (id === GRADE5_NUMBER_LINE_ID) {
+      const labels = Array.from(
+        { length: problem.tickCount + 1 },
+        (_, index) => problem.minValue + index * problem.interval
+      );
+      if (
+        problem.taskMode !== "identify_marked_number" ||
+        problem.tickCount !== 10 ||
+        problem.targetValue !== labels[problem.targetIndex] ||
+        problem.maxValue !== labels[labels.length - 1] ||
+        problem.answer !== problem.targetValue ||
+        JSON.stringify(problem.displayedLabels) !== JSON.stringify(labels) ||
+        JSON.stringify(problem.answerState?.displayedLabels) !== JSON.stringify(labels)
+      ) throw new Error("Grade 5 number-line structured truth is inconsistent.");
+    } else if (id === GRADE5_NUMBER_WORD_ID) {
+      const expectedWord = grade5NumberToWords(problem.representedValue);
+      const isReverse = problem.numberWordMode === "word_to_numeral";
+      if (
+        !["numeral_to_word", "word_to_numeral"].includes(problem.numberWordMode) ||
+        problem.numberWord !== expectedWord ||
+        problem.numeral !== problem.representedValue.toLocaleString("en-CA") ||
+        problem.prompt !== (isReverse ? expectedWord : problem.numeral) ||
+        problem.answer !== (isReverse ? problem.representedValue : expectedWord) ||
+        problem.answerState?.expectedResponse !== problem.answer
+      ) throw new Error("Grade 5 number-word structured truth is inconsistent.");
+    } else {
+      const truth = buildGrade5RepresentationTruth(problem.representedValue);
+      const isExpanded = id === GRADE5_EXPANDED_FORM_ID;
+      if (
+        problem.numeral !== truth.numeral ||
+        problem.answerState?.expandedForm !== truth.expandedForm ||
+        JSON.stringify(problem.answerState?.expandedTerms) !== JSON.stringify(truth.expandedTerms) ||
+        JSON.stringify(problem.answerState?.placeValueDigits) !== JSON.stringify(truth.placeValueDigits) ||
+        problem.prompt !== (isExpanded ? truth.numeral : `${truth.expandedForm} = ___`) ||
+        problem.answer !== (isExpanded ? truth.expandedForm : problem.representedValue)
+      ) throw new Error("Grade 5 expanded/standard-form structured truth is inconsistent.");
     }
   });
 }
@@ -3882,6 +4119,7 @@ function generateWorksheetFromCatalogId(id, options = {}) {
     validateGrade3BaseTenWorksheet(item.id, worksheet.problems);
     validateGrade4StoryWorksheet(item.id, worksheet.problems);
     validateGrade4PlaceValueWorksheet(item.id, worksheet.problems);
+    validateGrade5PlaceValueWorksheet(item.id, worksheet.problems);
     validateGrade4EquationMatchWorksheet(item.id, worksheet.problems);
     validateGrade5NumericPatternWorksheet(item.id, worksheet.problems);
     validateGrade5CompactRelationalWorksheet(item.id, worksheet.problems);
@@ -3971,6 +4209,22 @@ function buildStudentFacingInstruction(item, fallback = "") {
 
  if (item.id === GRADE5_EQUATION_MATCH_ID) {
   return "Write = or ≠ to compare each pair of equations.";
+ }
+
+ if (item.id === GRADE5_EXPANDED_FORM_ID) {
+  return "Write each numeral in expanded form.";
+ }
+
+ if (item.id === GRADE5_STANDARD_FORM_ID) {
+  return "Write each number in standard form.";
+ }
+
+ if (item.id === GRADE5_NUMBER_LINE_ID) {
+  return "Write the number shown by the point on each number line.";
+ }
+
+ if (item.id === GRADE5_NUMBER_WORD_ID) {
+  return "Write each number in words.";
  }
 
  if ([GRADE3_COMPARE_FRACTIONS_ID, GRADE4_COMPARE_FRACTIONS_ID].includes(item.id)) {
@@ -4371,6 +4625,9 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
   GRADE4_BATCH5_TITLES[item.id] ||
   (item.id === GRADE5_TEXT_DATA_INTERPRETATION_ID ? "Interpret the Data" : "") ||
   GRADE5_COMPACT_RELATIONAL_TITLES[item.id] ||
+  (item.id === GRADE5_NUMBER_WORD_ID
+    ? isReverseNumberWordMode ? "Write the Numeral" : "Write Numbers in Words"
+    : GRADE5_PLACE_VALUE_BATCH4_TITLES[item.id]) ||
   (item.id === GRADE4_NUMBER_WORD_ID
     ? isReverseNumberWordMode ? "Write the Numeral" : "Write Numbers in Words"
     : GRADE4_PLACE_VALUE_BATCH4_TITLES[item.id]) ||
@@ -4658,6 +4915,20 @@ if (GRADE4_PLACE_VALUE_BATCH4_IDS.has(item.id)) {
       ...problem,
       numeral: truth.numeral || null,
       taskDirection: truth.taskDirection || null
+    };
+  });
+}
+
+if (GRADE5_PLACE_VALUE_BATCH4_IDS.has(item.id)) {
+  layout.problems = layout.problems.map((problem, index) => {
+    const truth = worksheet.problems?.[index] || {};
+    return {
+      ...problem,
+      representedValue: finiteNumber(truth.representedValue),
+      numeral: truth.numeral || null,
+      taskDirection: truth.taskDirection || null,
+      answerState: truth.answerState || null,
+      duplicateSignature: truth.duplicateSignature || null
     };
   });
 }
@@ -5000,6 +5271,14 @@ if (item.activityTypes?.[0] === "standard_form" && (item.resourceType || "worksh
     standardAnswerLineWidth,
     standardAnswerLineVisible: false
   };
+  if (item.id === GRADE5_STANDARD_FORM_ID) {
+    layout.template.columns = 2;
+    layout.template.maxProblemsPerPage = 30;
+    layout.display.denseGridRows = 15;
+    layout.display.standardAnswerLineWidth = 70;
+    layout.display.hideSubtitle = true;
+    layout.display.atomicWholeNumberAnswers = true;
+  }
 }
 
 if (item.activityTypes?.[0] === "expanded_form" && (item.resourceType || "worksheet") === "worksheet") {
@@ -5027,6 +5306,13 @@ if (item.activityTypes?.[0] === "expanded_form" && (item.resourceType || "worksh
       hideSubtitle: isGrade1Closure,
       suppressExampleLabel: isGrade1Closure
     };
+    if (item.id === GRADE5_EXPANDED_FORM_ID) {
+      layout.template.columns = 2;
+      layout.template.maxProblemsPerPage = 30;
+      layout.display.denseGridRows = 15;
+      layout.display.hideSubtitle = true;
+      layout.display.atomicNumeralFormatting = true;
+    }
   }
 }
 
@@ -5195,7 +5481,7 @@ if ([GRADE3_FACT_FLUENCY_ID, GRADE3_MISSING_ADDEND_ID].includes(item.id)) {
   };
 }
 
-if ([GRADE2_NUMBER_LINE_IDENTIFY_ID, GRADE3_NUMBER_LINE_IDENTIFY_ID, GRADE4_NUMBER_LINE_ID].includes(item.id)) {
+if ([GRADE2_NUMBER_LINE_IDENTIFY_ID, GRADE3_NUMBER_LINE_IDENTIFY_ID, GRADE4_NUMBER_LINE_ID, GRADE5_NUMBER_LINE_ID].includes(item.id)) {
   layout.template = {
     ...(layout.template || {}),
     columns: 1,
@@ -5681,7 +5967,8 @@ if (item.activityTypes?.[0] === "ten_frame") {
   }
 }
 
-if (isGrade1NumberWordMode || item.id === GRADE2_NUMBER_WORD_WRITE_ID || item.id === GRADE3_NUMBER_WORD_ID || item.id === GRADE4_NUMBER_WORD_ID) {
+if (isGrade1NumberWordMode || item.id === GRADE2_NUMBER_WORD_WRITE_ID || item.id === GRADE3_NUMBER_WORD_ID || item.id === GRADE4_NUMBER_WORD_ID || item.id === GRADE5_NUMBER_WORD_ID) {
+  const isUpperGradeNumberWord = [GRADE4_NUMBER_WORD_ID, GRADE5_NUMBER_WORD_ID].includes(item.id);
   const questionCount = Math.max(
     1,
     finiteNumber(normalizedOptions.questionCount) || worksheet.problems?.length || 20
@@ -5691,8 +5978,8 @@ if (isGrade1NumberWordMode || item.id === GRADE2_NUMBER_WORD_WRITE_ID || item.id
 
   layout.template = {
     ...(layout.template || {}),
-    columns: item.id === GRADE4_NUMBER_WORD_ID ? 2 : derivedColumns,
-    maxProblemsPerPage: item.id === GRADE4_NUMBER_WORD_ID
+    columns: isUpperGradeNumberWord ? 2 : derivedColumns,
+    maxProblemsPerPage: isUpperGradeNumberWord
       ? finiteNumber(normalizedOptions.questionsPerPage) || 10
       : [GRADE2_NUMBER_WORD_WRITE_ID, GRADE3_NUMBER_WORD_ID].includes(item.id)
       ? 12
@@ -5705,26 +5992,42 @@ if (isGrade1NumberWordMode || item.id === GRADE2_NUMBER_WORD_WRITE_ID || item.id
     writingLine: true,
     equalHeightItems: true,
     numberWordResponseTarget: isReverseNumberWordMode ? "shortNumeral" : "writtenWord",
-    numberWordPromptZoneWidth: item.id === GRADE4_NUMBER_WORD_ID && !isReverseNumberWordMode ? 52 : null,
-    answerLineBelowPrompt: item.id === GRADE4_NUMBER_WORD_ID && !isReverseNumberWordMode,
-    standardAnswerLineWidth: item.id === GRADE4_NUMBER_WORD_ID
+    numberWordPromptZoneWidth: isUpperGradeNumberWord && !isReverseNumberWordMode ? (item.id === GRADE5_NUMBER_WORD_ID ? 66 : 52) : null,
+    answerLineBelowPrompt: isUpperGradeNumberWord && !isReverseNumberWordMode,
+    standardAnswerLineWidth: isUpperGradeNumberWord
       ? 190
       : [GRADE2_NUMBER_WORD_WRITE_ID, GRADE3_NUMBER_WORD_ID].includes(item.id)
       ? 150
       : layout.display?.standardAnswerLineWidth,
     shortWritingLine: isReverseNumberWordMode,
     reverseNumberWordWriting: isReverseNumberWordMode,
-    reverseNumberWordRespectPageCapacity: item.id === GRADE4_NUMBER_WORD_ID,
+    reverseNumberWordRespectPageCapacity: isUpperGradeNumberWord,
     reverseNumberWordLineWidth: 46,
-    reverseNumberWordPromptZoneWidth: item.id === GRADE4_NUMBER_WORD_ID ? 142 : 70,
-    reverseNumberWordWrapPrompts: item.id === GRADE4_NUMBER_WORD_ID,
-    numberWordAnswerKeySingleColumn: item.id === GRADE4_NUMBER_WORD_ID,
-    reverseNumberWordRowsPerColumn: item.id === GRADE4_NUMBER_WORD_ID
+    reverseNumberWordPromptZoneWidth: isUpperGradeNumberWord ? (item.id === GRADE5_NUMBER_WORD_ID ? 174 : 142) : 70,
+    reverseNumberWordWrapPrompts: isUpperGradeNumberWord,
+    numberWordAnswerKeySingleColumn: isUpperGradeNumberWord,
+    reverseNumberWordRowsPerColumn: isUpperGradeNumberWord
       ? Math.ceil((finiteNumber(normalizedOptions.questionsPerPage) || 12) / 2)
       : 10,
-    denseGridRows: item.id === GRADE4_NUMBER_WORD_ID ? 6 : layout.display?.denseGridRows,
+    denseGridRows: isUpperGradeNumberWord ? 6 : layout.display?.denseGridRows,
     sequentialColumnFill: true
   };
+  if (item.id === GRADE5_NUMBER_WORD_ID) {
+    const baseCapacity = finiteNumber(normalizedOptions.questionsPerPage) || 12;
+    layout.template.columns = 1;
+    layout.template.maxProblemsPerPage = baseCapacity + (normalizedOptions.includeExample ? 1 : 0);
+    layout.display.denseGridRows = layout.template.maxProblemsPerPage;
+    layout.display.numberWordPromptZoneWidth = null;
+    layout.display.answerLineBelowPrompt = !isReverseNumberWordMode;
+    layout.display.shortWritingLine = isReverseNumberWordMode;
+    layout.display.reverseNumberWordWriting = isReverseNumberWordMode;
+    layout.display.reverseNumberWordPromptZoneWidth = 999;
+    layout.display.reverseNumberWordRowsPerColumn = layout.template.maxProblemsPerPage;
+    layout.display.atomicNumeralFormatting = true;
+    layout.display.atomicWholeNumberAnswers = true;
+    layout.display.grade5FullWidthNumberWordRows = !isReverseNumberWordMode;
+    layout.display.grade5FullWidthReverseNumberWordRows = isReverseNumberWordMode;
+  }
 }
 
 if (

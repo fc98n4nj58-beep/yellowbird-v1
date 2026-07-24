@@ -8,6 +8,7 @@ const GRADE1_NUMBER_WORD_RESOURCE_IDS = new Set([
   "grade2_place_value_representation_number_word_match"
 ]);
 const GRADE4_NUMBER_WORD_ID = "grade4_place_value_representation_number_word_match";
+const GRADE5_NUMBER_WORD_ID = "grade5_place_value_representation_number_word_match";
 
 function randInt(min, max, random = Math.random) {
   return Math.floor(random() * (max - min + 1)) + min;
@@ -49,6 +50,17 @@ function grade4NumberToWords(n) {
   const thousands = Math.floor(n / 1000);
   const rest = n % 1000;
   const prefix = thousands === 10 ? "ten thousand" : `${numberToWords(thousands)} thousand`;
+  return rest === 0 ? prefix : `${prefix} ${numberToWords(rest)}`;
+}
+
+function grade5NumberToWords(n) {
+  if (!Number.isInteger(n) || n < 0 || n > 100000) {
+    throw new Error("Grade 5 number words require a whole number from 0 through 100,000.");
+  }
+  if (n < 1000) return numberToWords(n);
+  const thousands = Math.floor(n / 1000);
+  const rest = n % 1000;
+  const prefix = `${numberToWords(thousands)} thousand`;
   return rest === 0 ? prefix : `${prefix} ${numberToWords(rest)}`;
 }
 
@@ -103,12 +115,71 @@ function generateGrade4NumberWordProblem(options = {}) {
   };
 }
 
+function generateGrade5NumberWordProblem(options = {}) {
+  const random = options.random || Math.random;
+  const generatorState = options.generatorState || {};
+  const min = Number(options.minA ?? options.minValue ?? 10000);
+  const max = Number(options.maxA ?? options.maxValue ?? 100000);
+  const selected = Array.isArray(options.selectedNumbers) ? options.selectedNumbers.map(Number) : [];
+  const mode = String(
+    options.numberWordMode || options.numberWordDirection || options.mode || "numeral_to_word"
+  );
+  const requestedCount = Number(options.questionCount || 12);
+  const key = JSON.stringify({ min, max, selected, mode, requestedCount });
+  if (!generatorState.grade5NumberWordPools) generatorState.grade5NumberWordPools = {};
+  if (!generatorState.grade5NumberWordPools[key]?.length) {
+    const candidates = selected.length
+      ? selected
+      : Array.from({ length: max - min + 1 }, (_, index) => min + index);
+    if (candidates.length < requestedCount) {
+      throw new Error(
+        `Grade 5 number words need ${requestedCount} unique values; the selected contract provides ${candidates.length}.`
+      );
+    }
+    generatorState.grade5NumberWordPools[key] = shuffle(candidates, random).slice(0, requestedCount);
+  }
+  const value = generatorState.grade5NumberWordPools[key].shift();
+  const word = grade5NumberToWords(value);
+  const isReverse = mode === "word_to_numeral";
+  const numeral = value.toLocaleString("en-CA");
+  const canonicalWordTokens = word.split(/[\s-]+/);
+  return {
+    type: "equation",
+    prompt: isReverse ? word : numeral,
+    answer: isReverse ? value : word,
+    value,
+    representedValue: value,
+    numeral,
+    numberWord: word,
+    numberWordMode: mode,
+    taskDirection: mode,
+    responseMode: isReverse ? "shortNumeral" : "writtenNumberWord",
+    responseType: isReverse ? "numeral" : "number_word",
+    responseTarget: isReverse ? "numeral" : "number_word",
+    responseValues: [isReverse ? value : word],
+    acceptedAnswerVariants: isReverse ? [value, numeral] : [word],
+    answerState: {
+      kind: "grade5_place_value_representation",
+      representedValue: value,
+      numeral,
+      numberWord: word,
+      canonicalWordTokens,
+      taskDirection: mode,
+      expectedResponse: isReverse ? value : word
+    },
+    duplicateSignature: `grade5_number_word:${mode}:${value}`
+  };
+}
+
 function generateNumberWordMatchProblem(options = {}) {
   if (GRADE1_NUMBER_WORD_RESOURCE_IDS.has(options.worksheetId)) {
     return generateNumberWordProblem(options);
   }
   if (options.worksheetId === GRADE4_NUMBER_WORD_ID) {
     return generateGrade4NumberWordProblem(options);
+  }
+  if (options.worksheetId === GRADE5_NUMBER_WORD_ID) {
+    return generateGrade5NumberWordProblem(options);
   }
 
   const random = options.random || Math.random;
@@ -144,3 +215,4 @@ function generateNumberWordMatchProblem(options = {}) {
 
 module.exports = generateNumberWordMatchProblem;
 module.exports.grade4NumberToWords = grade4NumberToWords;
+module.exports.grade5NumberToWords = grade5NumberToWords;

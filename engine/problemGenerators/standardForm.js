@@ -1,4 +1,7 @@
 const { nextPlaceValueFormValue } = require("./placeValueFormValues");
+const { buildGrade5RepresentationTruth } = require("./grade5PlaceValueTruth");
+
+const GRADE5_STANDARD_FORM_ID = "grade5_place_value_representation_standard_form";
 
 function expandedParts(value) {
   const digits = String(value).split("").map((d) => Number(d));
@@ -24,6 +27,37 @@ function generateStandardFormProblem(options = {}) {
     const exhaustedUniqueValues = [...usedProblemKeys].filter((usedKey) =>
       String(usedKey).startsWith("standard_form:")
     ).length >= uniqueAvailable;
+    if (options.worksheetId === GRADE5_STANDARD_FORM_ID) {
+      const truth = buildGrade5RepresentationTruth(value);
+      const problem = {
+        type: "equation",
+        prompt: `${truth.expandedForm} = ___`,
+        answer: value,
+        value,
+        representedValue: value,
+        numeral: truth.numeral,
+        taskDirection: "expanded_to_numeral",
+        responseMode: "shortNumeral",
+        responseType: "numeral",
+        responseTarget: "standard_form",
+        acceptedAnswerVariants: [value, truth.numeral],
+        answerState: {
+          kind: "grade5_place_value_representation",
+          promptMode: "expanded_to_numeral",
+          expectedResponse: value,
+          ...truth
+        },
+        duplicateSignature: `grade5_standard_form:${value}`
+      };
+
+      fallbackProblem = problem;
+      if (!usedProblemKeys.has(key) || exhaustedUniqueValues) {
+        usedProblemKeys.add(key);
+        return problem;
+      }
+      continue;
+    }
+
     const expanded = expandedParts(value).join(" + ");
     const problem = {
       prompt: `${expanded} = ___`,

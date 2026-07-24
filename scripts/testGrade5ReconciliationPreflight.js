@@ -28,7 +28,11 @@ const CATEGORIES = Object.freeze({
     "grade5_patterning_and_algebra_missing_value_pattern",
     "grade5_addition_subtraction_facts_equation_match",
     "grade5_place_value_representation_compare_numbers",
-    "g5_interpret_graphs"
+    "g5_interpret_graphs",
+    "grade5_place_value_representation_expanded_form",
+    "grade5_place_value_representation_number_line_identify",
+    "grade5_place_value_representation_number_word_match",
+    "grade5_place_value_representation_standard_form"
   ]),
   D: Object.freeze([
     "grade5_addition_subtraction_word_problems_addition_word_problem",
@@ -36,11 +40,7 @@ const CATEGORIES = Object.freeze({
     "grade5_addition_subtraction_word_problems_subtraction_word_problem",
     "grade5_fraction_equivalence_fraction_number_line",
     "grade5_fraction_equivalence_match_equivalent_fractions",
-    "grade5_fraction_equivalence_shade_fraction_models",
-    "grade5_place_value_representation_expanded_form",
-    "grade5_place_value_representation_number_line_identify",
-    "grade5_place_value_representation_number_word_match",
-    "grade5_place_value_representation_standard_form"
+    "grade5_fraction_equivalence_shade_fraction_models"
   ]),
   E: Object.freeze([
     "grade5_patterning_and_algebra_function_table"
@@ -85,13 +85,14 @@ const CLOSED_BATCH_THREE = Object.freeze([
   "g5_interpret_graphs"
 ]);
 
+const CLOSED_BATCH_FOUR = Object.freeze([
+  "grade5_place_value_representation_expanded_form",
+  "grade5_place_value_representation_number_line_identify",
+  "grade5_place_value_representation_number_word_match",
+  "grade5_place_value_representation_standard_form"
+]);
+
 const BATCHES = Object.freeze({
-  B3: Object.freeze([
-    "grade5_place_value_representation_expanded_form",
-    "grade5_place_value_representation_number_line_identify",
-    "grade5_place_value_representation_number_word_match",
-    "grade5_place_value_representation_standard_form"
-  ]),
   B4: Object.freeze([
     "grade5_fraction_equivalence_fraction_number_line",
     "grade5_fraction_equivalence_match_equivalent_fractions",
@@ -157,7 +158,7 @@ function run() {
   assert.strictEqual(categoryById.size, 46);
   assert.deepStrictEqual(
     Object.fromEntries(Object.entries(CATEGORIES).map(([category, ids]) => [category, ids.length])),
-    { A: 14, D: 10, E: 1, G: 21 }
+    { A: 18, D: 6, E: 1, G: 21 }
   );
   rows.forEach((row) => {
     assert.strictEqual(row.proposed, categoryById.get(row.id), `Inventory category mismatch: ${row.id}`);
@@ -194,6 +195,12 @@ function run() {
   assert(plan.includes("there are no split, blocked, or deferred Batch 3 resources"));
   assert(plan.includes("`g5_interpret_graphs` moved D → A"));
   assert(plan.includes("`grade5_patterning_and_algebra_function_table` remains E"));
+  CLOSED_BATCH_FOUR.forEach((id) => {
+    assert(CATEGORIES.A.includes(id), `Closed Batch 4 resource is not A: ${id}`);
+    assert(plan.includes(`\`${id}\``), `Batch 4 closeout documentation omits ${id}`);
+  });
+  assert(plan.includes("Founder approval covers all four resources"));
+  assert(plan.includes("no split, blocked, or deferred resource"));
 
   const grade5Statuses = grade5.reduce((counts, item) => {
     counts[item.status] = (counts[item.status] || 0) + 1;
@@ -245,7 +252,7 @@ function run() {
     "grade5_data_display_graphing_interpret_data"
   ]);
 
-  assert(preflight.includes("A14 / D10 / E1 / G21 / Total46"));
+  assert(preflight.includes("A18 / D6 / E1 / G21 / Total46"));
   assert(preflight.includes("CONFIRMED GRADE 4 DRIFT"));
   assert(preflight.includes("Grade 2–4 reconciliations"));
   assert(workflow.includes(
@@ -257,7 +264,7 @@ function run() {
     grade5Records: grade5.length,
     uniqueGrade5Ids: grade5Set.size,
     grade5Lifecycle: grade5Statuses,
-    proposedReconciliation: { A: 14, D: 10, E: 1, G: 21, Total: 46 },
+    proposedReconciliation: { A: 18, D: 6, E: 1, G: 21, Total: 46 },
     batches: Object.fromEntries(Object.entries(BATCHES).map(([batch, ids]) => [batch, ids.length])),
     expectedRuntimeGaps: runtimeFailures,
     documentedSameSeedDefects: nonDeterministic,

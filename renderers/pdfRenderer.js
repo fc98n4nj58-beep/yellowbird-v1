@@ -217,6 +217,30 @@ function formatAnswerValue(answer) {
   return answer ?? "";
 }
 
+function formatAtomicWholeNumber(value, enabled = false) {
+  if (!enabled) return formatAnswerValue(value);
+  const numeric = Number(value);
+  return Number.isInteger(numeric)
+    ? numeric.toLocaleString("en-CA")
+    : formatAnswerValue(value);
+}
+
+function buildGrade5NumberWordRowGeometry({ x, width, reverse = false }) {
+  const numberGutter = reverse ? 24 : 44;
+  const responseWidth = reverse ? 46 : Math.max(20, width - numberGutter);
+  const lineStartX = reverse ? x + width - responseWidth : x + numberGutter;
+  return {
+    numberGutter,
+    promptX: x + numberGutter,
+    promptWidth: reverse
+      ? Math.max(48, lineStartX - (x + numberGutter) - 6)
+      : Math.max(20, width - numberGutter),
+    lineStartX,
+    lineEndX: x + width,
+    lineWidth: responseWidth
+  };
+}
+
 function filledAnswerText(prompt, answer) {
   const rawPrompt = promptWithoutEquals(prompt);
   const answerText = formatAnswerValue(answer);
@@ -1253,7 +1277,7 @@ function drawTextOnLine(doc, text, x, y, width, fonts = {}, options = {}) {
   doc.fillColor(pdfDesignTokens.colors.text);
   const align = options.align || "center";
   const inset = align === "left" ? 4 : 0;
-  doc.text(String(formatAnswerValue(text)), x + inset, y - fontSize - 2, {
+  doc.text(String(formatAtomicWholeNumber(text, options.formatThousands)), x + inset, y - fontSize - 2, {
     width: Math.max(20, width - inset * 2),
     align,
     lineBreak: false
@@ -1626,7 +1650,11 @@ function splitAnswerParts(answer) {
 
 function drawInlineAnswerPrompt(doc, promptText, answers, x, y, width, fonts = {}, display = {}) {
   const parts = String(promptText || "").split(/_{2,}/);
-  const answerParts = Array.isArray(answers) ? answers : splitAnswerParts(answers);
+  const answerParts = Array.isArray(answers)
+    ? answers
+    : display.atomicWholeNumberAnswers && Number.isInteger(Number(answers))
+      ? [formatAtomicWholeNumber(answers, true)]
+      : splitAnswerParts(answers);
   const fontSize = Number(display.inlineEquationFontSize || 12);
   const requestedBlankWidth = Number(display.standardAnswerLineWidth || 0);
   const targetDefaults = answerTargetDefaults(display);
@@ -1804,9 +1832,14 @@ function renderCompactExpandedFormRow(doc, question, x, y, width, fonts = {}, op
     : layout.page.contentBox.width;
   const numberWidth = 24;
   const gutterWidth = 36;
-  const numeral = formatAnswerValue(question.value ?? question.prompt ?? "");
+  const numeral = options.atomicNumeralFormatting
+    ? safeStr(question.numeral || formatAtomicWholeNumber(question.value ?? question.prompt ?? "", true))
+    : formatAnswerValue(question.value ?? question.prompt ?? "");
   const measuredNumeralWidth = Number(doc.widthOfString(numeral));
-  const numeralWidth = Math.min(44, Math.max(28, (Number.isFinite(measuredNumeralWidth) ? measuredNumeralWidth : 28) + 6));
+  const numeralWidth = Math.min(
+    options.atomicNumeralFormatting ? 58 : 44,
+    Math.max(28, (Number.isFinite(measuredNumeralWidth) ? measuredNumeralWidth : 28) + 6)
+  );
   const lineX = safeX + gutterWidth + numeralWidth + 6;
   const lineWidth = Math.max(44, safeWidth - gutterWidth - numeralWidth - 8);
   const lineY = safeY + 15;
@@ -2549,7 +2582,8 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
       fonts,
       {
         answerKey: Boolean(display.answerKey),
-        isExample
+        isExample,
+        atomicNumeralFormatting: Boolean(display.atomicNumeralFormatting)
       }
     );
 
@@ -2570,6 +2604,16 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
     );
     const lineWidth = display.shortWritingLine
       ? Number(display.reverseNumberWordLineWidth || 46)
+      : null;
+    const grade5NumberWordGeometry = (
+      display.grade5FullWidthNumberWordRows ||
+      display.grade5FullWidthReverseNumberWordRows
+    )
+      ? buildGrade5NumberWordRowGeometry({
+          x,
+          width,
+          reverse: Boolean(display.grade5FullWidthReverseNumberWordRows)
+        })
       : null;
     const numberWidth = display.reverseNumberWordWriting ? 24 : 44;
     const measuredPromptHeight = isGrade1DataResponseLine
@@ -2596,7 +2640,9 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
         ? promptY + promptHeight + 18 + Number(display.answerLineExtraGap || 0)
         : promptY + lineHeight;
     const promptZoneWidth = display.reverseNumberWordWriting
-      ? Math.min(
+      ? grade5NumberWordGeometry
+        ? grade5NumberWordGeometry.promptWidth
+        : Math.min(
         Math.max(48, Number(display.reverseNumberWordPromptZoneWidth || 56)),
         Math.max(48, width - numberWidth - lineWidth - 10)
       )
@@ -2610,7 +2656,9 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
           Math.max(18, width * 0.28)
         )
       : null;
-    const lineStartX = dataResponseGeometry
+    const lineStartX = grade5NumberWordGeometry
+      ? grade5NumberWordGeometry.lineStartX
+      : dataResponseGeometry
       ? dataResponseGeometry.lineX
       : display.reverseNumberWordWriting
         ? x + numberWidth + promptZoneWidth + 6
@@ -2621,11 +2669,34 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
             : display.numberWordResponseTarget === "writtenWord"
               ? x + numberWidth + writtenNumberWordPromptWidth
               : x + Math.min(88, width * 0.18);
-    const lineEndX = dataResponseGeometry
+    const lineEndX = grade5NumberWordGeometry
+      ? grade5NumberWordGeometry.lineEndX
+      : dataResponseGeometry
       ? dataResponseGeometry.lineEndX
       : display.shortWritingLine
         ? lineStartX + lineWidth
         : x + width;
+
+    if (
+      display.grade5FullWidthNumberWordRows &&
+      !display.answerKey &&
+      !isExample &&
+      Array.isArray(display.grade5ForwardResponseLineGeometryRecords)
+    ) {
+      display.grade5ForwardResponseLineGeometryRecords.push({
+        representedValue: question.representedValue,
+        pageIndex: Number(display.grade5ResponseLinePageIndex || 0),
+        rowTop: y,
+        rowBottom: y + height,
+        promptTop: promptY,
+        promptBottom: promptY + promptHeight,
+        lineStartX,
+        lineEndX,
+        lineY,
+        lineWidth: lineEndX - lineStartX,
+        footerRuleY: doc.page.height - layout.page.margins.bottom
+      });
+    }
 
     if (display.reverseNumberWordWriting) {
       const wordX = x + numberWidth;
@@ -2670,7 +2741,8 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
         lineEndX - lineStartX,
         fonts,
         {
-          align: display.reverseNumberWordWriting ? "center" : "left"
+          align: display.reverseNumberWordWriting ? "center" : "left",
+          formatThousands: Boolean(display.atomicWholeNumberAnswers)
         }
       );
     }
@@ -4764,14 +4836,18 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     }
 
     const pageCols = isReverseNumberWordLayout
-      ? display.answerKey && display.numberWordAnswerKeySingleColumn
+      ? display.grade5FullWidthReverseNumberWordRows
+        ? 1
+        : display.answerKey && display.numberWordAnswerKeySingleColumn
         ? 1
         : display.reverseNumberWordRespectPageCapacity
           ? 2
           : clampCols(pageItems.length > 20 ? 3 : pageItems.length > 10 ? 2 : 1)
       : cols;
     const pageQuestionsPerColumn = isReverseNumberWordLayout
-      ? Number(display.reverseNumberWordRowsPerColumn || 10)
+      ? display.grade5FullWidthReverseNumberWordRows
+        ? Math.max(1, layoutMaxProblemsPerPage)
+        : Number(display.reverseNumberWordRowsPerColumn || 10)
       : questionsPerColumn;
     let { colW: pageColW, xForCol: pageXForCol } = pageCols === cols
       ? { colW, xForCol }
@@ -4785,6 +4861,12 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
           )
         }
       : display;
+    if (Array.isArray(pageDisplay.grade5ForwardResponseLineGeometryRecords)) {
+      pageDisplay = {
+        ...pageDisplay,
+        grade5ResponseLinePageIndex: pageIndex
+      };
+    }
     const sideWorkspaceGeometry = buildSideWorkspaceGeometry({
       contentBox: layout.page.contentBox,
       startY,
@@ -4875,6 +4957,10 @@ function renderAnswerKey(doc, fonts, contentObject, options, pageState, layoutOb
     worksheetType === "word_problem" && layoutObject?.display?.compactWordProblemAnswerKey
   );
   const numberWordSingleColumnKey = Boolean(layoutObject?.display?.numberWordAnswerKeySingleColumn);
+  const grade5NumberWordKey = Boolean(
+    layoutObject?.display?.grade5FullWidthNumberWordRows ||
+    layoutObject?.display?.grade5FullWidthReverseNumberWordRows
+  );
 
   doc.addPage();
   pageState.pageNum += 1;
@@ -4942,7 +5028,9 @@ function renderAnswerKey(doc, fonts, contentObject, options, pageState, layoutOb
           ? {
               ...(layoutObject?.template || {}),
               columns: 1,
-              maxProblemsPerPage: 12
+              maxProblemsPerPage: grade5NumberWordKey
+                ? Number(layoutObject?.template?.maxProblemsPerPage || 12)
+                : 12
             }
           : layoutObject?.template,
       display: {
@@ -4961,7 +5049,9 @@ function renderAnswerKey(doc, fonts, contentObject, options, pageState, layoutOb
         ...(numberWordSingleColumnKey
           ? {
               equalHeightItems: true,
-              denseGridRows: 12,
+              denseGridRows: grade5NumberWordKey
+                ? Number(layoutObject?.template?.maxProblemsPerPage || 12)
+                : 12,
               sequentialColumnFill: true,
               hideItemSeparators: true
             }
@@ -5009,6 +5099,11 @@ function renderWorksheetPDF({ res, contentObject, options = {}, layoutObject = n
   };
 
   const pageState = { pageNum: 1 };
+  const grade5ForwardGeometryRecords =
+    layoutObject?.display?.grade5ForwardResponseLineGeometryRecords;
+  if (Array.isArray(grade5ForwardGeometryRecords)) {
+    grade5ForwardGeometryRecords.length = 0;
+  }
 
   renderQuestionsPages(doc, fonts, contentObject, normalized, pageState, layoutObject);
 
@@ -5034,6 +5129,8 @@ module.exports = {
     buildNumberLineAnswerTargetGeometry,
     formatNumberLineDisplayValue,
     formatComparisonDisplayValue,
+    formatAtomicWholeNumber,
+    buildGrade5NumberWordRowGeometry,
     distributeSequential,
     buildSharedDataPictographGeometry,
     sharedDataSymbolCount,

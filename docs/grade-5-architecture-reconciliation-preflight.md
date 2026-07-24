@@ -74,10 +74,10 @@ Density notation is `questions / columns / questions-per-student-page / total PD
 | 40 | `grade5_patterning_and_algebra_pattern_word_problems` | Pattern Word Problems — Grade 5; Patterning & Algebra; practice/planned | missing generator; generic practice | — | established planned gap; no approved application architecture | G |
 | 41 | `grade5_place_value_representation_base_ten_blocks` | Base Ten Blocks — Grade 5; Place Value; visual/generated | base-ten model; full-width visual | 10/1/10/2 | current shared model does not establish a Grade 5 magnitude role | G |
 | 42 | `grade5_place_value_representation_compare_numbers` | Compare Numbers; Place Value; practice/generated | structured number comparison; compact relation | 30/3/30/2 | founder-approved 3×10 Grade 5 magnitude comparison through 100,000 | A |
-| 43 | `grade5_place_value_representation_expanded_form` | Expanded Form — Grade 5; Place Value; representation/generated | expanded form; three-column grid | 45/3/45/2 | reusable representation family; Grade 5 range/format QA needed | D/B3 |
-| 44 | `grade5_place_value_representation_number_line_identify` | Number Line — Grade 5; Place Value; visual/generated | place-value number line; full-width | 10/1/5/4 | structured interval family needs Grade 5 extension | D/B3 |
-| 45 | `grade5_place_value_representation_number_word_match` | Number Word Match — Grade 5; Place Value; matching/generated | number words; two-column matching | 12/2/12/2 | shared Grade 4 family needs Grade 5 range/format QA | D/B3 |
-| 46 | `grade5_place_value_representation_standard_form` | Standard Form — Grade 5; Place Value; representation/generated | standard form; three-column grid | 45/3/45/2 | reusable representation family; Grade 5 range/format QA needed | D/B3 |
+| 43 | `grade5_place_value_representation_expanded_form` | Expanded Form; Place Value; representation/generated | expanded form; two-column grid | 30/2/30/2 | founder-approved exact Grade 5 structured representation contract | A |
+| 44 | `grade5_place_value_representation_number_line_identify` | Identify Numbers on a Number Line; Place Value; visual/generated | place-value number line; full-width | 6/1/6/2 | founder-approved six-row equal-interval identification contract | A |
+| 45 | `grade5_place_value_representation_number_word_match` | Write Numbers in Words; Place Value; writing/generated | forward/reverse number-word writing; one full-width column | 12/1/12/2 | founder-approved distinct forward and reverse layouts with measured response geometry | A |
+| 46 | `grade5_place_value_representation_standard_form` | Standard Form; Place Value; representation/generated | standard form; two-column grid | 30/2/30/2 | founder-approved exact Grade 5 structured representation contract | A |
 
 ## Full lower-grade family cross-reference
 
@@ -190,7 +190,7 @@ Sparse current output is not evidence for a lower density. Conversely, story, nu
 
 Catalog lifecycle statuses remain independent and unchanged.
 
-### A — 13
+### A — 18
 
 - `g5_compare_numbers_to_100000_exit_ticket`
 - `g5_equivalent_fractions_exit_ticket`
@@ -205,8 +205,13 @@ Catalog lifecycle statuses remain independent and unchanged.
 - `grade5_patterning_and_algebra_missing_value_pattern`
 - `grade5_addition_subtraction_facts_equation_match`
 - `grade5_place_value_representation_compare_numbers`
+- `g5_interpret_graphs`
+- `grade5_place_value_representation_expanded_form`
+- `grade5_place_value_representation_number_line_identify`
+- `grade5_place_value_representation_number_word_match`
+- `grade5_place_value_representation_standard_form`
 
-### D — 10
+### D — 6
 
 - `grade5_addition_subtraction_word_problems_addition_word_problem` — B5
 - `grade5_addition_subtraction_word_problems_missing_addend_word_problem` — B5
@@ -214,10 +219,6 @@ Catalog lifecycle statuses remain independent and unchanged.
 - `grade5_fraction_equivalence_fraction_number_line` — B4
 - `grade5_fraction_equivalence_match_equivalent_fractions` — B4
 - `grade5_fraction_equivalence_shade_fraction_models` — B4
-- `grade5_place_value_representation_expanded_form` — B3
-- `grade5_place_value_representation_number_line_identify` — B3
-- `grade5_place_value_representation_number_word_match` — B3
-- `grade5_place_value_representation_standard_form` — B3
 
 ### E — 1
 
@@ -247,9 +248,9 @@ Catalog lifecycle statuses remain independent and unchanged.
 - `grade5_patterning_and_algebra_pattern_word_problems`
 - `grade5_place_value_representation_base_ten_blocks`
 
-Total: **A14 / D10 / E1 / G21 / Total46**.
+Total: **A18 / D6 / E1 / G21 / Total46**.
 
-Projected scenario after the remaining three D batches: **A24 / D0 / E1 / G21 / Total46**. If the founder later approves and implements a genuine Function Table architecture: **A25 / D0 / E0 / G21 / Total46**. A founder decision to defer Function Table instead yields **A24 / D0 / E0 / G22 / Total46**.
+Projected scenario after the remaining two D batches: **A24 / D0 / E1 / G21 / Total46**. If the founder later approves and implements a genuine Function Table architecture: **A25 / D0 / E0 / G21 / Total46**. A founder decision to defer Function Table instead yields **A24 / D0 / E0 / G22 / Total46**.
 
 ## Duplicate and deferred analysis
 
@@ -283,9 +284,25 @@ Each implementation batch must run:
 - Batch 1 Numeric Patterning is founder-approved and closed at **A11 / D13 / E1 / G21 / Total46**.
 - Batch 2 Compact Relational Practice is founder-approved and closed at **A13 / D11 / E1 / G21 / Total46**.
 - Batch 3 Text-Data Interpretation is founder-approved and closed at **A14 / D10 / E1 / G21 / Total46**. `g5_interpret_graphs` moved D → A; lifecycle status remains `ready`.
+- Batch 4 Place-Value Representations is founder-approved and closed at **A18 / D6 / E1 / G21 / Total46**. The four exact-ID representation resources moved D → A; all lifecycle statuses remain `generated`.
 - Decide whether Grade 5 fraction number lines stay within 0–1 or add an approved 0–2/improper-fraction lane.
 - Approve honest “complete the equivalent fraction” positioning for ID 28, or require genuine matching architecture and move it to E.
 - Decide the exact Grade 5 story default (recommended 8 for the approved work-box geometry; current runtime is 12).
 - Decide whether Function Table should receive new visible-table architecture or move E → G.
 
-Batches 1, 2, and 3 are closed without lifecycle movement or public customization. Grade 3 sparse comparison drift remains on the later K–6 consistency watchlist; no lower-grade resource was reopened. The next implementation action belongs to a separately authorized later Grade 5 batch.
+Batches 1 through 4 are closed without lifecycle movement or public customization. Grade 3 sparse comparison drift remains on the later K–6 consistency watchlist; no lower-grade resource was reopened. The next implementation action belongs to a separately authorized later Grade 5 batch.
+
+## Batch 4 architecture clarification — Place-Value Representations
+
+The four D records at rows 43–46 resolve to distinct existing-family roles:
+
+- `grade5_place_value_representation_expanded_form`: numeral → canonical expanded form;
+- `grade5_place_value_representation_standard_form`: canonical expanded form → numeral;
+- `grade5_place_value_representation_number_word_match`: numeral → number words, with an explicit reverse writing mode; the public task is writing, not matching;
+- `grade5_place_value_representation_number_line_identify`: marked equal-interval position → numeral.
+
+Completed-work review classifies all four as **SHARED-FAMILY EXTENSION NEEDED**. Exact-ID Grade 5 adapters can reuse the approved form grid, written-response, full-width number-line, answer-key, and renderer primitives. No duplicate, stale reconciliation, new renderer, route change, or public customization family is required.
+
+The Grade 5 contract is whole numbers through 100,000. Default generation uses 10,000–100,000; validated raw runtime selection may use 0–100,000. Forms use complete pre-rendered digit/place/term truth, atomic Canadian comma formatting, descending nonzero expanded terms, and a two-column 15-row grid for six-digit width. Their founder-corrected default is 30 at 30/page; explicit 45 and maximum 60 remain supported. Number words use Canadian English, hyphenated compound tens, no `and`, and one full-width column for both writing directions. Number lines use ten equal intervals with approved scales 100, 250, 500, 1,000, 2,500, and 5,000.
+
+Founder approval closes this batch with no split, blocked, or deferred resource. Rows 43–46 move D → A and all lifecycle statuses remain `generated`. Final Batch 4 reconciliation is **A18 / D6 / E1 / G21 / Total46**. Grade 5 remains open for the six D records and one E record assigned to later decisions.

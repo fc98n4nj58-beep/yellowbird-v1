@@ -1,8 +1,8 @@
 # Grade 5 Founder Review Batch Plan
 
-Status: active founder-review plan. Batches 1, 2, and 3 are founder-approved and closed; later batches remain planning only.
+Status: active founder-review plan. Batches 1 through 4 are founder-approved and closed; later batches remain planning only.
 
-Current reconciliation: **A14 / D10 / E1 / G21 / Total46**. The three Batch 1 records, two Batch 2 records, and one Batch 3 record moved from D to A; all 10 remaining D records are assigned exactly once. No G or E item is hidden inside a low-risk batch.
+Current reconciliation: **A18 / D6 / E1 / G21 / Total46**. The three Batch 1 records, two Batch 2 records, one Batch 3 record, and four Batch 4 records moved from D to A; all six remaining D records are assigned exactly once. No G or E item is hidden inside a low-risk batch.
 
 ## Batch 1 — Numeric Patterning
 
@@ -404,6 +404,7 @@ The accelerated execution model is one full session per batch: completed-work re
 - after founder-approved Batch 1: **A11 / D13 / E1 / G21 / Total46**
 - after founder-approved Batch 2: **A13 / D11 / E1 / G21 / Total46**
 - after founder-approved Batch 3: **A14 / D10 / E1 / G21 / Total46**
+- after founder-approved Batch 4: **A18 / D6 / E1 / G21 / Total46**
 - after Batches 1–6: **A24 / D0 / E1 / G21 / Total46**
 - Function Table implemented: **A25 / D0 / E0 / G21 / Total46**
 - Function Table deferred: **A24 / D0 / E0 / G22 / Total46**
@@ -413,3 +414,93 @@ Catalog lifecycle statuses remain independent and unchanged until separately app
 ## Batch 1 closeout
 
 Founder approval covers all three Numeric Patterning roles, Grade 5 rule/value difficulty, inherited density, raw variable inventory, structured truth, and the student-only `Work It Out` workspace. The approved packet contains three founder proofs and six stress proofs. Batch 1 has no split or deferred resource; the next implementation action belongs to Batch 2 under separate authorization.
+
+## Batch 4 closeout — Place-Value Representations
+
+Founder approval covers all four resources. They move D → A with no split, blocked, or deferred resource; lifecycle statuses remain `generated`.
+
+| Exact ID | Student conversion | Classification | Distinct teacher use |
+|---|---|---|---|
+| `grade5_place_value_representation_expanded_form` | numeral → expanded form | SHARED-FAMILY EXTENSION NEEDED | decomposes a whole number into nonzero place-value addends |
+| `grade5_place_value_representation_standard_form` | expanded form → numeral | SHARED-FAMILY EXTENSION NEEDED | composes canonical place-value addends into one numeral |
+| `grade5_place_value_representation_number_word_match` | numeral → number words; optional word → numeral | SHARED-FAMILY EXTENSION NEEDED | practises the linguistic representation in either explicit direction; public copy no longer implies matching |
+| `grade5_place_value_representation_number_line_identify` | marked position → numeral | SHARED-FAMILY EXTENSION NEEDED | reads scale, interval, and position rather than converting written forms |
+
+All four remain `generated`. None duplicates another Batch 4 role or the approved Grade 5 Compare Numbers task, and no new visual, renderer, route, or public customization architecture is required.
+
+### Full Grade 1–4 inheritance review
+
+| Contract | Grade 1 | Grade 2 | Grade 3 | Grade 4 | Strongest safe Grade 5 contract |
+|---|---|---|---|---|---|
+| public action copy | number words/numerals and foundational number-line reading | honest expanded/standard/word/line writing actions | honest representation writing and marked-number reading | task-matched number-line and number-word copy; curated large-number forms | `Expanded Form`, `Standard Form`, `Write Numbers in Words` / `Write the Numeral`, and `Identify Numbers on a Number Line` |
+| default count | task-specific early-number counts | forms up to dense 60; line/words task-specific | forms 45; words 12; line 6 | curated forms 45; words 12; line 6 | forms 30; words 12; line 6 |
+| maximum / per page | early-grade limits | four-column compact forms where response length permits | forms 45 per page; words 12; line 6 | forms 45 in 3×15; words 20 maximum at 12/page; line 12 maximum at 6/page | forms 60 maximum at 30/page; words 20 at 12/page; line 12 at 6/page |
+| geometry | broad early-writing space | compact short-number grids | 3×15 forms; wide words; full-width lines | 3×15 forms, 2×6 words, full-width lines | 2×15 forms for six-digit width; 1×12 full-width word rows; six full-width lines |
+| number range | foundational whole numbers | through 200 depending on task | three-digit representations | through 10,000 | default 10,000–100,000; validated runtime range 0–100,000 |
+| response target | writing line or short numeral | form-specific line/short numeral | structured form, word, or line response | structured response targets with shared key geometry | written expanded form, short numeral, written number word, or marked-line numeral |
+| examples | additional where supported | additional where supported | additional | additional | additional; never replaces a practice item |
+| truth | developing exact-family structure | increasingly structured | value/form or interval truth | strongest exact number-line/word truth plus curated form behaviour | complete value, numeral, digits, places, terms/words/line interval and target, expected response, variants, answer state, and signature |
+| variable contract | seed/count plus family controls | selected values/ranges and task controls | selected values, ranges, modes, intervals, examples | strict aliases, modes, endpoint policy, selected values, examples | preserves the strongest strict aliases and rejects unsupported or caller-owned truth |
+
+Nearest approved layout classes are the Grade 4 full-width number-line family, wide written-response rows, and the Grade 3/4 dense representation grids. Six-digit expanded expressions are not safe in the inherited 3×15 form grid, so Grade 5 uses the existing two-column grid primitive at 15 rows. Founder review further established that Grade 5 number words require one full-width column rather than the Grade 4 2×6 geometry. These are measured layout extensions, not new renderer architecture.
+
+Lower-grade drift retained for the later K–6 consistency review:
+
+- generic Grade 4 form records were deferred while curated large-number form records were approved;
+- older generic form generators retain less complete top-level truth than the new Grade 5 exact-ID adapters;
+- Grade 3/4 number-word canonical answer state is less complete than the Grade 5 tokenized contract.
+
+No lower-grade resource is reopened.
+
+### Grade 5 representation and range contract
+
+The default range is 10,000 through 100,000. Runtime range and selected-number inputs accept whole numbers from 0 through 100,000 so teacher-selected remediation remains possible without exceeding the Grade 5 contract. Negative, decimal, reversed, out-of-range, empty, duplicate, conflicting, or insufficient selections throw.
+
+Expanded form uses one canonical descending sum:
+
+`40,000 + 3,000 + 200 + 5`
+
+Zero-value terms are omitted; commas are retained; multiplication notation and powers of ten are unsupported. `100,000` remains `100,000`. Each nonzero term stores its digit, numeric place, place name, place value, and formatted value.
+
+Number words use Canadian English spelling with lowercase words, hyphenated compound tens, one space between tokens, and the approved omission of `and`. Internal and trailing zeros are represented by omission of empty places rather than spoken placeholders. The boundary `100,000` is supported. The canonical answer is the generated word form; reverse mode accepts the numeric value and comma-formatted numeral. Unsupported locale, matching mode, and `includeAnd`/`useAnd` variants throw.
+
+Number lines use ten equal intervals. Safe intervals are 100, 250, 500, 1,000, 2,500, and 5,000. Every item stores start, end, interval, tick count, target index/value, displayed labels, endpoint policy, visual data, answer state, and signature. Endpoints can be allowed or excluded explicitly.
+
+### Defaults, density, variables, and adversarial QA
+
+| Resource | Default / maximum | Page geometry | Default / maximum PDF |
+|---|---:|---|---:|
+| Expanded Form | 30 / 60 | 2 columns × 15 rows; 30/page | 2 / 4 pages including key |
+| Standard Form | 30 / 60 | 2 columns × 15 rows; 30/page | 2 / 4 pages including key |
+| Number Words | 12 / 20 | 1 full-width column × 12 rows; 12/page | 2 / 4 pages including key |
+| Number Line | 6 / 12 | 1 column × 6 full-width rows; 6/page | 2 / 4 pages including key |
+
+Preserved raw-runtime controls: `worksheetSeed`; `questionCount`; `questionsPerPage`; `minValue` / `minA` / `minimumValue` / `minimumNumber`; `maxValue` / `maxA` / `maximumValue` / `maximumNumber`; `selectedNumbers` / `selectedValues` / `onlyNumbers`; `includeExample` / `completedExample` / `example`; answer-key inclusion. Number lines additionally preserve interval aliases, endpoint aliases, and identify-task aliases. Number words preserve direction aliases. Forms accept only canonical expanded-sum style aliases. All are raw-runtime only; none is publicly registered.
+
+Unsupported inputs include `pageCount`, selected digits/places, arbitrary prompt or representation modes, caller-owned prompt/answer/answer state/representation truth, unsupported word locale or spelling policy, arbitrary line interval/target truth, powers, multiplication forms, and unsafe density. Explicit invalid inputs fail before generation and do not silently fall back.
+
+Focused verification in `scripts/testGrade5PlaceValueRepresentationsBatch4.js` covers 30 deterministic seeds, zero same-seed failures, different-seed variation, default and maximum pagination, examples additional, selected values and aliases, reverse number words, zero-place and 100,000 boundaries, complete structured truth, unique signatures/values, student/key parity, and adversarial rejection.
+
+Proof packet:
+
+- `review/grade-5-place-value-representations-batch-4/founder-review/01_expanded_form.pdf`
+- `review/grade-5-place-value-representations-batch-4/founder-review/02_identify_numbers_on_a_number_line.pdf`
+- `review/grade-5-place-value-representations-batch-4/founder-review/03_write_numbers_in_words.pdf`
+- `review/grade-5-place-value-representations-batch-4/founder-review/04_standard_form.pdf`
+- eleven corrected stress proofs in `review/grade-5-place-value-representations-batch-4/stress/` cover zeroes, atomic `100,000`, explicit 45 and maximum 60 form counts, full-width forward word rows, forward maximum 20, completed examples, reverse maximum 20, and the longest validated reverse prompts. The provisionally approved Number Line proofs were not regenerated.
+
+Corrected stress filenames are `01_expanded_form_zeroes_boundary_and_example.pdf`, `02_expanded_form_explicit_45.pdf`, `03_expanded_form_maximum_60.pdf`, `04_standard_form_explicit_45.pdf`, `05_standard_form_maximum_60.pdf`, `06_standard_form_100000_boundary.pdf`, `07_number_words_forward_zeroes_and_boundary.pdf`, `08_number_words_forward_maximum_20.pdf`, `09_number_words_completed_example.pdf`, `10_number_words_reverse_maximum_with_example.pdf`, and `11_number_words_reverse_longest_word_forms.pdf`.
+
+Founder correction changed the Expanded Form and Standard Form defaults from 45 to 30 while preserving explicit 45 and maximum 60 at 30/page. Both defaults now produce one student page and one matching key page. Grade 5 displayed numerals use a display-only atomic Canadian comma rule: Expanded Form prompts, Standard Form key answers, reverse Number Words answers, and examples render `100,000` as one non-wrapping unit without changing stored numeric truth.
+
+Forward Number Words uses one full-width column. On the Letter page the usable task width is 504 pt; 12 pt numerals begin at the normal 44 pt task indent; response rules run from x=98 to x=558 for a measured 460 pt width. Row pitch is 45.67 pt, and the final response rule retains 34.6 pt clearance to the footer rule. The longest validated Canadian word form is `seventy-seven thousand seven hundred seventy-seven`, measuring 272.80 pt at 12 pt, well within the full-width row.
+
+Reverse mode independently uses one full-width column, a 428 pt prompt zone, and a compact 46 pt numeral response rule aligned to the right task margin. Long prompts remain on one natural line. Default 12 remains one student and one key page; maximum 20 plus an additional completed example remains two student and two key pages without a sparse third page.
+
+All affected proof pages were rendered and visually inspected. Titles, instructions, comma use, atomic boundary numerals, response widths, student/key mirroring, examples, multipage geometry, and footer clearance are print-safe with no clipping, overlap, type reduction, or footer pressure. Number Line remains unchanged.
+
+Final Number Words proof correction reduced `07_number_words_forward_zeroes_and_boundary.pdf` from an accidental 13-value stress set to the approved 12-value set: 40,005; 50,505; 88,008; 30,003; 77,770; 70,040; 60,006; 88,080; 100,000; 80,808; 90,900; and 20,202. The corrected proof is exactly one student page and one answer-key page. Renderer instrumentation now records the page, row bounds, prompt bounds, rule endpoints, rule width, and footer position for every forward student item. Focused assertions confirm all 12 default and selected-value rows use the 460 pt full-width response rule from x=98 to x=558 beneath the numeral and within the same row, with at least 30 pt footer clearance. The regenerated default founder proof remains 12 rows and two pages. The maximum-20 proof remains four pages, balanced 10/10 across two student pages with all 20 response rules present. Reverse Number Words, both form resources, Number Line, structured truth, lifecycle status, reconciliation, and public customization remain unchanged.
+
+The Grade 1–4 family history, Grade 5 exact-ID structured truth, Canadian comma formatting, atomic `100,000`, and the separate forward/reverse Number Words layouts are founder-approved. Expanded Form and Standard Form retain the corrected 30-question defaults, explicit 45 support, and maximum 60. Number Line remains six full-width rows. Forward Number Words remains 12 full-width rows with response rules from x=98 to x=558; its zeroes-and-boundary proof is corrected from 13 to 12 values and maximum 20 remains balanced 10/10. Reverse mode retains its wide prompt zone and compact numeral response.
+
+Batch 4 is closed at **A18 / D6 / E1 / G21 / Total46**. Grade 5 is not closed; later batches and the Function Table decision remain separate.

@@ -1,4 +1,7 @@
 const { nextPlaceValueFormValue } = require("./placeValueFormValues");
+const { buildGrade5RepresentationTruth } = require("./grade5PlaceValueTruth");
+
+const GRADE5_EXPANDED_FORM_ID = "grade5_place_value_representation_expanded_form";
 
 function placeLabel(count, singular, plural) {
   return `${count} ${count === 1 ? singular : plural}`;
@@ -42,6 +45,37 @@ function generateExpandedFormProblem(options = {}) {
           placeLabel(tens, "ten", "tens"),
           placeLabel(ones, "one", "ones")
         ].join(", ")
+      };
+
+      fallbackProblem = problem;
+      if (!usedProblemKeys.has(key) || exhaustedUniqueValues) {
+        usedProblemKeys.add(key);
+        return problem;
+      }
+      continue;
+    }
+
+    if (options.worksheetId === GRADE5_EXPANDED_FORM_ID) {
+      const truth = buildGrade5RepresentationTruth(value);
+      const problem = {
+        type: "equation",
+        prompt: truth.numeral,
+        answer: truth.expandedForm,
+        value,
+        representedValue: value,
+        numeral: truth.numeral,
+        taskDirection: "numeral_to_expanded",
+        responseMode: "writtenExpandedForm",
+        responseType: "expanded_form",
+        responseTarget: "expanded_form",
+        acceptedAnswerVariants: [truth.expandedForm],
+        answerState: {
+          kind: "grade5_place_value_representation",
+          promptMode: "numeral_to_expanded",
+          expectedResponse: truth.expandedForm,
+          ...truth
+        },
+        duplicateSignature: `grade5_expanded_form:${value}`
       };
 
       fallbackProblem = problem;

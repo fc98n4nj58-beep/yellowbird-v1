@@ -10,8 +10,10 @@ function finiteNumber(value, fallback) {
 const GRADE2_NUMBER_LINE_IDENTIFY_ID = "grade2_place_value_representation_number_line_identify";
 const GRADE3_NUMBER_LINE_IDENTIFY_ID = "grade3_place_value_representation_number_line_identify";
 const GRADE4_NUMBER_LINE_IDENTIFY_ID = "grade4_place_value_representation_number_line_identify";
+const GRADE5_NUMBER_LINE_IDENTIFY_ID = "grade5_place_value_representation_number_line_identify";
 const GRADE3_SAFE_INTERVALS = Object.freeze([10, 25, 50, 100]);
 const GRADE4_SAFE_INTERVALS = Object.freeze([10, 25, 50, 100, 250, 500]);
+const GRADE5_SAFE_INTERVALS = Object.freeze([100, 250, 500, 1000, 2500, 5000]);
 
 function shuffle(values, random = Math.random) {
   const result = [...values];
@@ -415,6 +417,89 @@ function generateGrade4NumberLineIdentifyProblem(options = {}) {
   };
 }
 
+function buildGrade5NumberLinePool(options = {}) {
+  const grade5Options = {
+    ...options,
+    minValue: options.minValue ?? options.minA ?? 10000,
+    maxValue: options.maxValue ?? options.maxA ?? 100000,
+    allowedIntervals:
+      options.allowedIntervals || options.intervals || options.selectedIntervals || GRADE5_SAFE_INTERVALS
+  };
+  return buildGrade4NumberLinePool(grade5Options);
+}
+
+function generateGrade5NumberLineIdentifyProblem(options = {}) {
+  const generatorState = options.generatorState || {};
+  const key = JSON.stringify({
+    minValue: options.minValue ?? options.minA ?? 10000,
+    maxValue: options.maxValue ?? options.maxA ?? 100000,
+    allowedIntervals:
+      options.allowedIntervals || options.intervals || options.selectedIntervals || GRADE5_SAFE_INTERVALS,
+    allowEndpointTargets: options.allowEndpointTargets !== false,
+    selectedNumbers: options.selectedNumbers || options.onlyNumbers || [],
+    questionCount: options.questionCount || 6
+  });
+  if (!generatorState.grade5NumberLinePools) generatorState.grade5NumberLinePools = {};
+  if (!generatorState.grade5NumberLinePools[key]?.length) {
+    generatorState.grade5NumberLinePools[key] = buildGrade5NumberLinePool(options);
+  }
+  const item = generatorState.grade5NumberLinePools[key].shift();
+  if (!item) throw new Error("No Grade 5 number-line identification items are available.");
+  const displayedLabels = Array.from(
+    { length: item.tickCount + 1 },
+    (_, index) => item.start + index * item.interval
+  );
+  const endpointPolicy = options.allowEndpointTargets === false ? "interior_only" : "endpoints_allowed";
+  return {
+    type: "equation",
+    prompt: "",
+    answer: item.targetValue,
+    value: item.targetValue,
+    representedValue: item.targetValue,
+    targetValue: item.targetValue,
+    responseMode: "shortNumeral",
+    responseTarget: "number_line_value",
+    responseValues: [item.targetValue],
+    taskMode: "identify_marked_number",
+    minValue: item.start,
+    maxValue: item.end,
+    interval: item.interval,
+    tickCount: item.tickCount,
+    targetIndex: item.targetIndex,
+    endpointPolicy,
+    displayedLabels,
+    answerState: {
+      kind: "grade5_place_value_representation",
+      targetValue: item.targetValue,
+      start: item.start,
+      end: item.end,
+      interval: item.interval,
+      tickCount: item.tickCount,
+      targetIndex: item.targetIndex,
+      displayedLabels
+    },
+    duplicateSignature: `grade5_number_line_identify:${item.signature}`,
+    visual: {
+      kind: "number_line",
+      data: {
+        min: item.start,
+        max: item.end,
+        start: item.start,
+        end: item.end,
+        interval: item.interval,
+        tickCount: item.tickCount,
+        labelEvery: 1,
+        labelWidth: 48,
+        formatThousands: true,
+        targetIndex: item.targetIndex,
+        highlight: item.targetValue,
+        value: item.targetValue,
+        hideValueLabel: true
+      }
+    }
+  };
+}
+
 function generateNumberLineIdentifyProblem(options = {}) {
   if (options.worksheetId === GRADE2_NUMBER_LINE_IDENTIFY_ID) {
     return generateGrade2NumberLineIdentifyProblem(options);
@@ -424,6 +509,9 @@ function generateNumberLineIdentifyProblem(options = {}) {
   }
   if (options.worksheetId === GRADE4_NUMBER_LINE_IDENTIFY_ID) {
     return generateGrade4NumberLineIdentifyProblem(options);
+  }
+  if (options.worksheetId === GRADE5_NUMBER_LINE_IDENTIFY_ID) {
+    return generateGrade5NumberLineIdentifyProblem(options);
   }
   const random = options.random || Math.random;
   const hasExplicitMax =
@@ -467,5 +555,7 @@ module.exports = generateNumberLineIdentifyProblem;
 module.exports.buildGrade2NumberLinePool = buildGrade2NumberLinePool;
 module.exports.buildGrade3NumberLinePool = buildGrade3NumberLinePool;
 module.exports.buildGrade4NumberLinePool = buildGrade4NumberLinePool;
+module.exports.buildGrade5NumberLinePool = buildGrade5NumberLinePool;
 module.exports.GRADE3_SAFE_INTERVALS = GRADE3_SAFE_INTERVALS;
 module.exports.GRADE4_SAFE_INTERVALS = GRADE4_SAFE_INTERVALS;
+module.exports.GRADE5_SAFE_INTERVALS = GRADE5_SAFE_INTERVALS;

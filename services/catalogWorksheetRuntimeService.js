@@ -124,6 +124,13 @@ const GRADE5_NUMERIC_PATTERN_IDS = new Set([
   "grade5_patterning_and_algebra_missing_value_pattern"
 ]);
 
+const GRADE5_PLACE_VALUE_BATCH4_IDS = new Set([
+  "grade5_place_value_representation_expanded_form",
+  "grade5_place_value_representation_number_line_identify",
+  "grade5_place_value_representation_number_word_match",
+  "grade5_place_value_representation_standard_form"
+]);
+
 const GRADE3_CONCRETE_VISUAL_FOOTERS = Object.freeze({
   g3_equal_sharing_division: "Multiplication and Division",
   grade3_fraction_equivalence_shade_fraction_models: "Fractions",
@@ -157,6 +164,7 @@ function publicSkillLabel(item) {
   if (GRADE3_STORY_PROBLEM_IDS.has(item?.id)) return "";
   if (GRADE4_STORY_PROBLEM_IDS.has(item?.id)) return "";
   if (GRADE4_PLACE_VALUE_BATCH4_IDS.has(item?.id)) return "";
+  if (GRADE5_PLACE_VALUE_BATCH4_IDS.has(item?.id)) return "";
   if (PUBLIC_SKILL_LABEL_HIDDEN_IDS.has(item?.id)) return "";
   if (item?.skillKey === "patterning_and_algebra") return "";
   return item?.skillKey || "";
@@ -189,6 +197,7 @@ function publicDomainLabel(item) {
     return "Addition & Subtraction";
   }
   if (GRADE4_PLACE_VALUE_BATCH4_IDS.has(item?.id)) return "Place Value";
+  if (GRADE5_PLACE_VALUE_BATCH4_IDS.has(item?.id)) return "Place Value";
   if (EARLY_MULTIPLICATION_FOOTER_IDS.has(item?.id)) {
     return "Early Multiplication Thinking";
   }
