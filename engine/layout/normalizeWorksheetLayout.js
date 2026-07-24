@@ -158,6 +158,9 @@ function normalizeProblem(problem, index, context) {
     total: finiteOptionalNumber(problem.total),
     missingPosition: problem.missingPosition || null,
     missingValue: finiteOptionalNumber(problem.missingValue),
+    ...(problem.multiplier !== undefined
+      ? { multiplier: finiteOptionalNumber(problem.multiplier) }
+      : {}),
     leftValue: finiteOptionalNumber(problem.leftValue),
     rightValue: finiteOptionalNumber(problem.rightValue),
     expectedSymbol: problem.expectedSymbol || null,

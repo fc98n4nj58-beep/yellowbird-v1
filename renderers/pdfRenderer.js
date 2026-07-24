@@ -160,6 +160,9 @@ function buildAnswerKeyItems(items) {
     total: finiteOptionalNumber(it.total),
     missingPosition: it.missingPosition || null,
     missingValue: finiteOptionalNumber(it.missingValue),
+    ...(it.multiplier !== undefined
+      ? { multiplier: finiteOptionalNumber(it.multiplier) }
+      : {}),
     leftValue: finiteOptionalNumber(it.leftValue),
     rightValue: finiteOptionalNumber(it.rightValue),
     leftExpression: it.leftExpression || null,
@@ -4681,7 +4684,10 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
   const textDataExample = display.textDataExampleStrip
     ? allItems.find((item) => item.isExample) || null
     : null;
-  const paginatedItems = equationComparisonExample || textDataExample
+  const structuredFractionExample = display.structuredFractionExampleStrip
+    ? allItems.find((item) => item.isExample) || null
+    : null;
+  const paginatedItems = equationComparisonExample || textDataExample || structuredFractionExample
     ? allItems.filter((item) => !item.isExample)
     : allItems;
   const hasVisuals = paginatedItems.some((item) => item.visual);
@@ -4833,6 +4839,23 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
         display
       );
       startY += 76;
+    }
+
+    if (structuredFractionExample && pageIndex === 0) {
+      renderQuestionItem(
+        doc,
+        structuredFractionExample,
+        {
+          x: layout.page.contentBox.x,
+          y: startY + 10,
+          width: layout.page.contentBox.width,
+          height: 42,
+          dividerY: null
+        },
+        fonts,
+        display
+      );
+      startY += 60;
     }
 
     const pageCols = isReverseNumberWordLayout

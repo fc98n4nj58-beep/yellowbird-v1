@@ -204,6 +204,9 @@ function normalizeItem(item = {}, index = 0, meta = {}) {
     total: finiteOptionalNumber(item.total),
     missingPosition: item.missingPosition || null,
     missingValue: finiteOptionalNumber(item.missingValue),
+    ...(item.multiplier !== undefined
+      ? { multiplier: finiteOptionalNumber(item.multiplier) }
+      : {}),
     leftValue: finiteOptionalNumber(item.leftValue),
     rightValue: finiteOptionalNumber(item.rightValue),
     leftExpression: item.leftExpression || null,

@@ -140,6 +140,9 @@ const GRADE3_CONCRETE_VISUAL_FOOTERS = Object.freeze({
   grade4_fraction_equivalence_compare_fractions: "Fractions",
   grade4_fraction_equivalence_fraction_number_line: "Fractions",
   grade4_fraction_equivalence_shade_fraction_models: "Fractions",
+  grade5_fraction_equivalence_fraction_number_line: "Fractions",
+  grade5_fraction_equivalence_match_equivalent_fractions: "Fractions",
+  grade5_fraction_equivalence_shade_fraction_models: "Fractions",
   g3_complete_a_graph: "Data & Graphing",
   g3_graph_questions: "Data & Graphing",
   g3_interpret_data: "Data & Graphing",
@@ -328,6 +331,9 @@ function buildCatalogWorksheetRuntime(id, query = {}) {
         total: finiteOptionalNumber(p.total),
         missingPosition: p.missingPosition || null,
         missingValue: finiteOptionalNumber(p.missingValue),
+        ...(p.multiplier !== undefined
+          ? { multiplier: finiteOptionalNumber(p.multiplier) }
+          : {}),
         leftValue: finiteOptionalNumber(p.leftValue),
         rightValue: finiteOptionalNumber(p.rightValue),
         leftExpression: p.leftExpression || null,

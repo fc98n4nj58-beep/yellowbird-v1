@@ -32,15 +32,15 @@ const CATEGORIES = Object.freeze({
     "grade5_place_value_representation_expanded_form",
     "grade5_place_value_representation_number_line_identify",
     "grade5_place_value_representation_number_word_match",
-    "grade5_place_value_representation_standard_form"
+    "grade5_place_value_representation_standard_form",
+    "grade5_fraction_equivalence_fraction_number_line",
+    "grade5_fraction_equivalence_match_equivalent_fractions",
+    "grade5_fraction_equivalence_shade_fraction_models"
   ]),
   D: Object.freeze([
     "grade5_addition_subtraction_word_problems_addition_word_problem",
     "grade5_addition_subtraction_word_problems_missing_addend_word_problem",
-    "grade5_addition_subtraction_word_problems_subtraction_word_problem",
-    "grade5_fraction_equivalence_fraction_number_line",
-    "grade5_fraction_equivalence_match_equivalent_fractions",
-    "grade5_fraction_equivalence_shade_fraction_models"
+    "grade5_addition_subtraction_word_problems_subtraction_word_problem"
   ]),
   E: Object.freeze([
     "grade5_patterning_and_algebra_function_table"
@@ -92,18 +92,17 @@ const CLOSED_BATCH_FOUR = Object.freeze([
   "grade5_place_value_representation_standard_form"
 ]);
 
-const BATCHES = Object.freeze({
-  B4: Object.freeze([
-    "grade5_fraction_equivalence_fraction_number_line",
-    "grade5_fraction_equivalence_match_equivalent_fractions",
-    "grade5_fraction_equivalence_shade_fraction_models"
-  ]),
-  B5: Object.freeze([
-    "grade5_addition_subtraction_word_problems_addition_word_problem",
-    "grade5_addition_subtraction_word_problems_missing_addend_word_problem",
-    "grade5_addition_subtraction_word_problems_subtraction_word_problem"
-  ])
-});
+const CLOSED_BATCH_FIVE = Object.freeze([
+  "grade5_fraction_equivalence_fraction_number_line",
+  "grade5_fraction_equivalence_match_equivalent_fractions",
+  "grade5_fraction_equivalence_shade_fraction_models"
+]);
+
+const REMAINING_D = Object.freeze([
+  "grade5_addition_subtraction_word_problems_addition_word_problem",
+  "grade5_addition_subtraction_word_problems_missing_addend_word_problem",
+  "grade5_addition_subtraction_word_problems_subtraction_word_problem"
+]);
 
 function parseInventory(markdown) {
   return markdown
@@ -158,24 +157,16 @@ function run() {
   assert.strictEqual(categoryById.size, 46);
   assert.deepStrictEqual(
     Object.fromEntries(Object.entries(CATEGORIES).map(([category, ids]) => [category, ids.length])),
-    { A: 18, D: 6, E: 1, G: 21 }
+    { A: 21, D: 3, E: 1, G: 21 }
   );
   rows.forEach((row) => {
     assert.strictEqual(row.proposed, categoryById.get(row.id), `Inventory category mismatch: ${row.id}`);
   });
 
-  const batchById = new Map();
-  Object.entries(BATCHES).forEach(([batch, ids]) => {
-    const heading = `## Batch ${Number(batch.slice(1))} —`;
-    const section = plan.split(heading)[1]?.split("\n## ")[0] || "";
-    ids.forEach((id) => {
-      assert(CATEGORIES.D.includes(id), `${batch} contains a non-D resource: ${id}`);
-      assert(!batchById.has(id), `Resource appears in multiple batches: ${id}`);
-      assert(section.includes(`\`${id}\``), `${batch} documentation omits ${id}`);
-      batchById.set(id, batch);
-    });
+  assert.deepStrictEqual(new Set(REMAINING_D), new Set(CATEGORIES.D));
+  REMAINING_D.forEach((id) => {
+    assert(plan.includes(`\`${id}\``), `Remaining D documentation omits ${id}`);
   });
-  assert.deepStrictEqual(new Set(batchById.keys()), new Set(CATEGORIES.D));
   CLOSED_BATCH_ONE.forEach((id) => {
     assert(CATEGORIES.A.includes(id), `Closed Batch 1 resource is not A: ${id}`);
     assert(plan.includes(`\`${id}\``), `Batch 1 closeout documentation omits ${id}`);
@@ -200,6 +191,12 @@ function run() {
     assert(plan.includes(`\`${id}\``), `Batch 4 closeout documentation omits ${id}`);
   });
   assert(plan.includes("Founder approval covers all four resources"));
+  assert(plan.includes("no split, blocked, or deferred resource"));
+  CLOSED_BATCH_FIVE.forEach((id) => {
+    assert(CATEGORIES.A.includes(id), `Closed Batch 5 resource is not A: ${id}`);
+    assert(plan.includes(`\`${id}\``), `Batch 5 closeout documentation omits ${id}`);
+  });
+  assert(plan.includes("Batch 5 is founder-approved and closed"));
   assert(plan.includes("no split, blocked, or deferred resource"));
 
   const grade5Statuses = grade5.reduce((counts, item) => {
@@ -252,7 +249,7 @@ function run() {
     "grade5_data_display_graphing_interpret_data"
   ]);
 
-  assert(preflight.includes("A18 / D6 / E1 / G21 / Total46"));
+  assert(preflight.includes("A21 / D3 / E1 / G21 / Total46"));
   assert(preflight.includes("CONFIRMED GRADE 4 DRIFT"));
   assert(preflight.includes("Grade 2–4 reconciliations"));
   assert(workflow.includes(
@@ -264,8 +261,9 @@ function run() {
     grade5Records: grade5.length,
     uniqueGrade5Ids: grade5Set.size,
     grade5Lifecycle: grade5Statuses,
-    proposedReconciliation: { A: 18, D: 6, E: 1, G: 21, Total: 46 },
-    batches: Object.fromEntries(Object.entries(BATCHES).map(([batch, ids]) => [batch, ids.length])),
+    proposedReconciliation: { A: 21, D: 3, E: 1, G: 21, Total: 46 },
+    closedBatch5: CLOSED_BATCH_FIVE.length,
+    remainingD: REMAINING_D.length,
     expectedRuntimeGaps: runtimeFailures,
     documentedSameSeedDefects: nonDeterministic,
     publicCustomizationFamilies: 0

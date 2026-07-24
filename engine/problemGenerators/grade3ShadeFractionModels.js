@@ -1,9 +1,11 @@
 const RESOURCE_ID = "grade3_fraction_equivalence_shade_fraction_models";
 const GRADE4_RESOURCE_ID = "grade4_fraction_equivalence_shade_fraction_models";
+const GRADE5_RESOURCE_ID = "grade5_fraction_equivalence_shade_fraction_models";
 const TASK_MODE = "shade_equal_parts";
 const DEFAULT_QUESTION_COUNT = 8;
 const SAFE_DENOMINATORS = Object.freeze([2, 3, 4, 5, 6, 8]);
 const GRADE4_SAFE_DENOMINATORS = Object.freeze([2, 3, 4, 5, 6, 8, 10, 12]);
+const GRADE5_SAFE_DENOMINATORS = Object.freeze([2, 3, 4, 5, 6, 8, 9, 10, 11, 12]);
 
 function resourceProfile(resourceId) {
   if (resourceId === RESOURCE_ID) {
@@ -11,6 +13,9 @@ function resourceProfile(resourceId) {
   }
   if (resourceId === GRADE4_RESOURCE_ID) {
     return { gradeLabel: "Grade 4", denominators: GRADE4_SAFE_DENOMINATORS, signaturePrefix: "grade4_fraction:shade", wholeSizeId: "grade4-standard-strip", wholeIdPrefix: "grade4-shade" };
+  }
+  if (resourceId === GRADE5_RESOURCE_ID) {
+    return { gradeLabel: "Grade 5", denominators: GRADE5_SAFE_DENOMINATORS, signaturePrefix: "grade5_fraction:shade", wholeSizeId: "grade5-standard-strip", wholeIdPrefix: "grade5-shade" };
   }
   return null;
 }
@@ -189,7 +194,7 @@ function buildItem(target, index, includeWorkedModel = false, profile = resource
           answerState: { shadedParts: target.numerator }
         }
       : null,
-    answerState: profile.gradeLabel === "Grade 4"
+    answerState: ["Grade 4", "Grade 5"].includes(profile.gradeLabel)
       ? {
           numerator: target.numerator,
           denominator: target.denominator,
@@ -260,7 +265,7 @@ function validateGrade3ShadeFractionWorksheet(worksheetId, problems = []) {
       truth.shadeCount !== truth.numerator ||
       model?.partitionCount !== truth.denominator ||
       model?.shadedParts !== 0 ||
-      (worksheetId === GRADE4_RESOURCE_ID
+      ([GRADE4_RESOURCE_ID, GRADE5_RESOURCE_ID].includes(worksheetId)
         ? problem.answerState?.answerKeyShadedParts !== truth.numerator ||
           problem.answerState?.shadedParts !== truth.numerator ||
           problem.answerState?.studentShadedParts !== 0
@@ -280,10 +285,12 @@ function validateGrade3ShadeFractionWorksheet(worksheetId, problems = []) {
 module.exports = {
   RESOURCE_ID,
   GRADE4_RESOURCE_ID,
+  GRADE5_RESOURCE_ID,
   TASK_MODE,
   DEFAULT_QUESTION_COUNT,
   SAFE_DENOMINATORS,
   GRADE4_SAFE_DENOMINATORS,
+  GRADE5_SAFE_DENOMINATORS,
   buildCandidates,
   generateGrade3ShadeFractionProblem,
   validateGrade3ShadeFractionWorksheet

@@ -1,8 +1,8 @@
 # Grade 5 Founder Review Batch Plan
 
-Status: active founder-review plan. Batches 1 through 4 are founder-approved and closed; later batches remain planning only.
+Status: active founder-review plan. Batches 1 through 5 are founder-approved and closed; Grade 5 remains open for later authorized work.
 
-Current reconciliation: **A18 / D6 / E1 / G21 / Total46**. The three Batch 1 records, two Batch 2 records, one Batch 3 record, and four Batch 4 records moved from D to A; all six remaining D records are assigned exactly once. No G or E item is hidden inside a low-risk batch.
+Current reconciliation: **A21 / D3 / E1 / G21 / Total46**. Batch 5 moved exactly the three Structured Fractions records D → A. Catalog lifecycle statuses remain independent and unchanged.
 
 ## Batch 1 — Numeric Patterning
 
@@ -265,7 +265,7 @@ Focused test/proof strategy: exact integer equivalence; selected-value consumpti
 
 Risk: **MODERATE**. Recommended fourth.
 
-## Batch 5 — Addition and Subtraction Stories
+## Later planned batch — Addition and Subtraction Stories
 
 Exact IDs:
 
@@ -390,9 +390,9 @@ No deferred item should be revived during a D batch. Reconsider only when its do
 1. Batch 1 Numeric Patterning
 2. Batch 2 Compact Relational Practice
 3. Batch 3 Text-Data Interpretation Reliability — founder-approved and closed
-4. Batch 3 Place-Value Representations
-5. Batch 4 Structured Fractions, after founder role decisions
-6. Batch 5 Addition/Subtraction Stories, after founder count/range decisions
+4. Batch 4 Place-Value Representations
+5. Batch 5 Structured Fractions — founder-approved and closed
+6. Addition/Subtraction Stories, after separate authorization and founder count/range decisions
 7. Function Table architecture decision
 8. final A-resource regression sweep, exact reconciliation closeout, and local commit
 
@@ -405,7 +405,8 @@ The accelerated execution model is one full session per batch: completed-work re
 - after founder-approved Batch 2: **A13 / D11 / E1 / G21 / Total46**
 - after founder-approved Batch 3: **A14 / D10 / E1 / G21 / Total46**
 - after founder-approved Batch 4: **A18 / D6 / E1 / G21 / Total46**
-- after Batches 1–6: **A24 / D0 / E1 / G21 / Total46**
+- after founder-approved Batch 5 Structured Fractions: **A21 / D3 / E1 / G21 / Total46**
+- after the remaining story-family D batch: **A24 / D0 / E1 / G21 / Total46**
 - Function Table implemented: **A25 / D0 / E0 / G21 / Total46**
 - Function Table deferred: **A24 / D0 / E0 / G22 / Total46**
 
@@ -504,3 +505,80 @@ Final Number Words proof correction reduced `07_number_words_forward_zeroes_and_
 The Grade 1–4 family history, Grade 5 exact-ID structured truth, Canadian comma formatting, atomic `100,000`, and the separate forward/reverse Number Words layouts are founder-approved. Expanded Form and Standard Form retain the corrected 30-question defaults, explicit 45 support, and maximum 60. Number Line remains six full-width rows. Forward Number Words remains 12 full-width rows with response rules from x=98 to x=558; its zeroes-and-boundary proof is corrected from 13 to 12 values and maximum 20 remains balanced 10/10. Reverse mode retains its wide prompt zone and compact numeral response.
 
 Batch 4 is closed at **A18 / D6 / E1 / G21 / Total46**. Grade 5 is not closed; later batches and the Function Table decision remain separate.
+
+## Batch 5 closeout — Structured Fractions
+
+Founder approval covers all three exact resources. They move D → A with no split, blocked, or deferred resource, producing **A21 / D3 / E1 / G21 / Total46**. Lifecycle statuses remain `generated`, `ready`, and `generated`.
+
+### Exact records, completed work, and role gate
+
+| Exact ID | Catalog status | Prior output | Classification | Review-candidate role |
+|---|---|---|---|---|
+| `grade5_fraction_equivalence_fraction_number_line` | `generated` | generic adapter returned blank items in a generic equation grid | SHARED-FAMILY EXTENSION NEEDED | identify a marked proper fraction on a structured 0–1 number line |
+| `grade5_fraction_equivalence_match_equivalent_fractions` | `ready` | equation completion mislabeled as matching, without complete structured truth | NARROW HONEST-ROLE CORRECTION | complete one missing numerator or denominator in an equivalent-fraction equation |
+| `grade5_fraction_equivalence_shade_fraction_models` | `generated` | generic adapter returned blank items in a generic equation grid | SHARED-FAMILY EXTENSION NEEDED | shade a proper fraction on one partitioned strip |
+
+The three actions are distinct: position-to-fraction reading, multiplicative equivalence completion, and fraction-to-model construction. None duplicates Grade 5 Compare Fractions, the approved equivalent-fraction quick check, or the exit ticket. The `match_equivalent_fractions` slug is retained for catalog compatibility, but the student-facing title is `Complete Equivalent Fractions`; no unsupported two-set matching claim remains. Genuine matching remains a separate architecture question and was not introduced.
+
+### Full Grade 1–4 family cross-reference
+
+| Contract | Grade 1 | Grade 2 | Grade 3 | Grade 4 | Grade 5 review candidate |
+|---|---|---|---|---|---|
+| Number-line role | concrete early fraction support only | no approved general fraction-line family | approved identify-marked-fraction adapter, 0–1 | same structured adapter, extended through tenths | same adapter, extended through twelfths including ninths/elevenths |
+| Number-line geometry | early visual | n/a | six full-width rows | six full-width rows | six full-width rows; maximum twelve over two student pages |
+| Number-line truth | task-specific | n/a | partition count, target index, labels, endpoint policy | complete answer state and unsimplified partition answer | preserve all Grade 4 truth and answer-key geometry |
+| Equivalent role | special visual `One Half and Two Fourths` | generic advanced record deferred | generic equation completion rejected as “matching” | same mislabelled completion quarantined in G | honest equation completion under a corrected public title |
+| Equivalent geometry | special strip pair | n/a | no approved matching-set geometry | no approved matching-set geometry | established two-column short-equation grid; no new matching renderer |
+| Shade role | equal-parts visual foundation | approved `Shade Equal Parts` | approved proper-fraction strip task | approved proper-fraction strip task through twelfths | proper-fraction strip task with ninths/elevenths added |
+| Shade geometry | early two-column visual grid | 2×4 | 2×4 | 2×4 | 2×4, unchanged type and strip width |
+| Structured truth | model-owned partition/shading | model and key shading stored | requested fraction, model, shade count, signature | complete student/key answer state | preserve Grade 4 truth with Grade 5 resource identity |
+| Examples | family-specific | additional where supported | additional | additional | additional; off by default |
+| Public customization | none for this family | none | none | none | none |
+
+Nearest exact-family references are Grade 3/4 Fractions on a Number Line and Shade the Fraction. The nearest layout-class reference for equivalent completion is the approved compact two-column equation grid; the renderer only places generator-owned text and answers. Lower-grade drift remains on the K–6 consistency watchlist: Grade 3 and Grade 4 “Match Equivalent Fractions” records still expose equation completion under a matching label. Batch 5 does not reopen them.
+
+### Grade 5 scope and notation
+
+The safe Grade 5 visual scope is one whole, proper fractions, and denominators `2, 3, 4, 5, 6, 8, 9, 10, 11, 12`. Number lines run from 0 to 1; interior targets are the default and explicit endpoints are supported. Answers intentionally retain the partition denominator (`3/6`, not automatically `1/2`) because the task asks students to read the shown partition. Shade models use one equal-width strip and never ask the renderer to infer a fraction.
+
+Equivalent completion uses proper base fractions with multipliers `2, 3, 4, 5`, producing equivalent denominators up to 60. One value on the right-hand fraction is missing. Slash notation is retained because it is the established compact equation notation and remains readable at 12 points; number-line tick labels use the same unsimplified partition convention. Mixed numbers, improper-fraction models, 0–2 number lines, simplification tasks, fraction-of-a-set tasks, comparison/order controls, and genuine matching sets are not supported by these exact roles.
+
+### Defaults, capacity, and layout
+
+| Resource | Default / maximum | Page geometry | Default / maximum PDF including key | Measured boundary |
+|---|---:|---|---:|---|
+| Fractions on a Number Line | 6 / 12 | 1 column × 6 full-width rows | 2 / 4 pages | twelfths remain legible; answer line stays beneath the marked target |
+| Complete Equivalent Fractions | 36 / 36 | 3 columns × 12 rows per page | 2 / 2 pages | question numbers through 36, denominator 60, and inserted values through 60 fit the unchanged 42-point target at unchanged 12-point type |
+| Shade the Fraction | 8 / 8 | 2 columns × 4 rows | 2 / 2 pages | one-twelfth partitions remain visually distinct; key hatching preserves boundaries |
+
+Completed examples are additional. Number-line and equivalent-completion maxima repeat student and answer-key page geometry. Shade models stay at the approved eight-item visual capacity rather than shrinking strips or fraction type.
+
+### Structured truth
+
+Number-line items store whole bounds, numerator/denominator, partition/interval/tick count, target index/value, interval, endpoint policy, displayed fraction labels, unsimplified answer, simplified reference value, response target, visual data, answer state, and a unique signature.
+
+Equivalent-completion items store both numerators and denominators, exact integer cross-products, multiplier, missing position/value, normalized fraction, equality state, accepted answer variant, response target, answer state, and a unique signature. The generator calculates all truth before rendering; the renderer does no fraction arithmetic.
+
+Shade items store requested numerator/denominator, partition and shade counts, model type, unshaded student model, answer-key shaded count, response target, visual data, answer state, and a unique signature. Student and key pages share the same structured model.
+
+### Variable and adversarial contract
+
+Preserved raw-runtime controls are `worksheetSeed`; `questionCount`; `questionsPerPage`; `includeExample` / `completedExample` / `example`; `selectedDenominators` / `denominators` / `allowedDenominators`; `selectedFractions` / `fractions`; and answer-key inclusion. Number lines additionally preserve `allowEndpointTargets` / `allowEndpoints` / `endpointPolicy` and the identify-task alias. Equivalent completion preserves `selectedMultipliers` / `multipliers` / `factors` and `missingPosition` / `missingPositions`. Shade preserves strip model aliases and shade-task aliases. Numerator-selection/range controls remain supported for the two non-line resources. All controls remain raw-runtime/internal; none is publicly registered.
+
+Explicit invalid values reject before generation: zero, negative, decimal, unsupported or mixed-valid/invalid denominators; invalid or improper selected fractions; duplicate/conflicting aliases; reversed numerator ranges; excessive counts or unsafe density; unsupported endpoints, task modes, models, multipliers or missing positions; caller-owned shading; and insufficient unique candidate pools. Number-line numerator ranges are deliberately unsupported in favour of explicit selected fractions. Caller-owned prompt, answer, answer state, cross-product/model/partition truth, and page-count directives are unsafe and are not accepted.
+
+### Tests and proof packet
+
+`scripts/testGrade5StructuredFractionsBatch5.js` passes 30 deterministic seeds across all three resources with same-seed failures 0 and different-seed variation. Exact public copy/footer/status, counts, columns, pages, examples-additional behaviour, partition/equivalence/model truth, duplicate prevention, answer-key parity, alias consumption, invalid-input rejection, Grade 3/4 isolation, and absence of public customization pass.
+
+Founder proofs:
+
+- `review/grade-5-structured-fractions-batch-5/founder-review/01_fractions_on_a_number_line.pdf`
+- `review/grade-5-structured-fractions-batch-5/founder-review/02_complete_equivalent_fractions.pdf`
+- `review/grade-5-structured-fractions-batch-5/founder-review/03_shade_the_fraction.pdf`
+
+Seven stress proofs in the sibling `stress/` folder cover denominator boundaries, selected ninths/elevenths/twelfths, maximum number-line and completion counts, multiplier extremes, two-digit answers through 60, completed examples, and one-part/all-but-one-part shading boundaries. Fraction labels, response targets, partitions, hatching, student/key alignment, pagination, examples, and footers are print-safe with no clipping, overlap, tiny type, or footer pressure.
+
+Founder density correction: Fractions on a Number Line and Shade the Fraction retain their approved six- and eight-question defaults. After the earlier 12 → 24 correction, the founder requested a final 3-column × 12-row density test for Complete Equivalent Fractions. The measured 36-question result is print-safe on one student page and one mirrored answer-key page: all questions 1–36 are visible, denominator-60 equations and inserted values through 60 remain on one line, the existing 12-point fraction type and 42-point answer target are unchanged, and there is no clipping, collision, wrapping, footer pressure, or type reduction. The completed-example proof keeps the example additional and all 36 practice questions on the same student page. The accepted default and maximum are therefore both 36 with exact mixed-mode balance of 18 missing numerators and 18 missing denominators. No fraction range, multiplier, structured truth, response target, variable alias, lifecycle status, public customization, or reconciliation value changed.
+
+Batch 5 is founder-approved and closed. The Grade 1–4 family history was reviewed; proper-fraction scope and denominators `2, 3, 4, 5, 6, 8, 9, 10, 11, 12` are retained. Structured numerator/denominator truth and exact integer equivalence remain generator-owned; the renderer performs no arithmetic and no new visual architecture was introduced. The original 12-question completion default and interim 24-question default were rejected as sparse. The final approved completion contract is 36 questions in a 3×12 grid on one student page and one key page, with exact 18/18 missing-position balance, unchanged 12-point type and 42-point answer target, an additional completed example, and readable denominator-60 cases. Catalog statuses remain `generated`, `ready`, and `generated`; reconciliation is **A21 / D3 / E1 / G21 / Total46**. Grade 5 remains open.

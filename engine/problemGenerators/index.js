@@ -45,6 +45,9 @@ const { generateGrade3ShadeFractionProblem } = require("./grade3ShadeFractionMod
 const { generateGrade3CompareFractionsProblem } = require("./grade3CompareFractions");
 const { generateGrade3FractionNumberLineProblem } = require("./grade3FractionNumberLine");
 const { generateGrade3DataDisplayProblem } = require("./grade3DataDisplays");
+const {
+  generateGrade5EquivalentFractionCompletionProblem
+} = require("./grade5EquivalentFractionCompletion");
 
 function getGenerator(activityType) {
   const generators = {
@@ -69,6 +72,7 @@ function getGenerator(activityType) {
     grade3_compare_fractions: generateGrade3CompareFractionsProblem,
     grade3_fraction_number_line: generateGrade3FractionNumberLineProblem,
     grade3_data_displays: generateGrade3DataDisplayProblem,
+    grade5_equivalent_fraction_completion: generateGrade5EquivalentFractionCompletionProblem,
     match_data_to_graph: generateMatchDataToGraphProblem,
     graph_questions: generateGraphQuestionsProblem,
     interpret_data: generateInterpretDataProblem,

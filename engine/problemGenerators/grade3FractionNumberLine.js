@@ -1,7 +1,9 @@
 const RESOURCE_ID = "grade3_fraction_equivalence_fraction_number_line";
 const GRADE4_RESOURCE_ID = "grade4_fraction_equivalence_fraction_number_line";
+const GRADE5_RESOURCE_ID = "grade5_fraction_equivalence_fraction_number_line";
 const SAFE_DENOMINATORS = Object.freeze([2, 3, 4, 5, 6, 8]);
 const GRADE4_SAFE_DENOMINATORS = Object.freeze([2, 3, 4, 5, 6, 8, 10]);
+const GRADE5_SAFE_DENOMINATORS = Object.freeze([2, 3, 4, 5, 6, 8, 9, 10, 11, 12]);
 const DENOMINATOR_ERROR = "Grade 3 fractions support denominators 2, 3, 4, 5, 6, and 8 only.";
 
 function resourceProfile(resourceId) {
@@ -14,6 +16,14 @@ function resourceProfile(resourceId) {
       denominators: GRADE4_SAFE_DENOMINATORS,
       denominatorError: "Grade 4 Fractions on a Number Line supports denominators 2, 3, 4, 5, 6, 8, and 10 only.",
       signaturePrefix: "grade4_fraction_number_line"
+    };
+  }
+  if (resourceId === GRADE5_RESOURCE_ID) {
+    return {
+      gradeLabel: "Grade 5",
+      denominators: GRADE5_SAFE_DENOMINATORS,
+      denominatorError: "Grade 5 Fractions on a Number Line supports denominators 2, 3, 4, 5, 6, 8, 9, 10, 11, and 12 only.",
+      signaturePrefix: "grade5_fraction_number_line"
     };
   }
   return null;
@@ -202,7 +212,7 @@ function generateGrade3FractionNumberLineProblem(options = {}) {
     responseValues: [target.numerator, target.denominator],
     taskMode: "identify_marked_fraction",
     duplicateSignature: `${profile.signaturePrefix}:${target.numerator}/${target.denominator}`,
-    answerState: options.worksheetId === GRADE4_RESOURCE_ID
+    answerState: [GRADE4_RESOURCE_ID, GRADE5_RESOURCE_ID].includes(options.worksheetId)
       ? {
           wholeStart: 0,
           wholeEnd: 1,
@@ -266,8 +276,10 @@ function validateGrade3FractionNumberLineWorksheet(resourceId, problems = []) {
 module.exports = {
   RESOURCE_ID,
   GRADE4_RESOURCE_ID,
+  GRADE5_RESOURCE_ID,
   SAFE_DENOMINATORS,
   GRADE4_SAFE_DENOMINATORS,
+  GRADE5_SAFE_DENOMINATORS,
   generateGrade3FractionNumberLineProblem,
   validateGrade3FractionNumberLineWorksheet
 };
