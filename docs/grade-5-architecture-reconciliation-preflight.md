@@ -1,6 +1,6 @@
 # Grade 5 Architecture Reconciliation Preflight
 
-Status: active reconciliation. Founder-approved Batches 1 through 6 are closed; Grade 5 remains open for the Function Table E decision. Catalog lifecycle statuses remain unchanged.
+Status: Grade 5 founder review and architecture reconciliation are closed at **A24 / D0 / E0 / G22 / Total46**. Function Table is honestly deferred because no approved visible input/output-table architecture exists. Catalog lifecycle statuses remain unchanged.
 
 Starting checkpoint: `f1b04ee6d7f90789af46419947164fa84d5c320a`
 
@@ -68,7 +68,7 @@ Density notation is `questions / columns / questions-per-student-page / total PD
 | 34 | `grade5_multiplication_facts_skip_counting` | Skip Counting — Grade 5; Multiplication & Division; practice/generated | skip count; full-width sequence | 10/1/10/2 | lower-grade precursor without a natural Grade 5 distinction | G |
 | 35 | `grade5_multiplication_facts_word_problems` | Word Problems — Grade 5; Multiplication & Division; practice/generated | equal-groups stories; full-width work box | 12/1/3/8 | documented as too basic for Grade 5 except intervention | G |
 | 36 | `grade5_patterning_and_algebra_extend_pattern` | Extend the Pattern; Patterning & Algebra; practice/generated | numeric pattern; full-width sequence with student-only side workspace | 12/1/12/2 | founder-approved Grade 5 shared-family extension; Batch 1 closed | A |
-| 37 | `grade5_patterning_and_algebra_function_table` | Function Table — Grade 5; Patterning & Algebra; practice/generated | sentence fallback; full-width | 12/1/6/4 | no approved visible input/output-table architecture | E |
+| 37 | `grade5_patterning_and_algebra_function_table` | Function Table — Grade 5; Patterning & Algebra; practice/generated | sentence fallback; full-width | 12/1/6/4 | founder-approved deferral: no visible table, structured missing-cell truth, safe table layout, or mirrored table key | G |
 | 38 | `grade5_patterning_and_algebra_identify_pattern_rule` | Identify Pattern Rule — Grade 5; Patterning & Algebra; practice/generated | numeric pattern; full-width rule response with student-only side workspace | 10/1/10/2 | founder-approved Grade 5 shared-family extension; Batch 1 closed | A |
 | 39 | `grade5_patterning_and_algebra_missing_value_pattern` | Find the Missing Values; Patterning & Algebra; practice/generated | numeric pattern; full-width sequence with student-only side workspace | 12/1/12/2 | founder-approved Grade 5 shared-family extension; Batch 1 closed | A |
 | 40 | `grade5_patterning_and_algebra_pattern_word_problems` | Pattern Word Problems — Grade 5; Patterning & Algebra; practice/planned | missing generator; generic practice | — | established planned gap; no approved application architecture | G |
@@ -94,7 +94,7 @@ Every inventory row maps to one family below. “—” means no approved lower-
 | Fraction comparison/equivalence (23–29) | concrete equal parts | structured fraction models | exact comparisons and full-width number lines | structured compare/model/number-line families | exact integer truth, structured models, full-width six-question number-line class; honest completion role |
 | Multiplication facts/models (30–35) | — | concrete equal groups | arrays/equal groups and facts | fact review; basic story/model work explicitly bounded | retain approved 60-item review roles; defer unchanged primary models/stories |
 | Numeric patterning (36, 38–40) | simple sequence extension | numeric patterning | aligned extend/rule/missing-value families | same families with founder-approved copy and geometry | reuse strongest aligned sequence layouts; difficulty from rule complexity and values |
-| Function table (37) | — | — | — | deferred because visible input/output table architecture was absent | E: founder-approved table semantics, renderer, variables, and truth required first |
+| Function table (37) | — | — | — | deferred because visible input/output table architecture was absent | G: reconsider only after founder-approved table semantics, renderer, variables, and truth exist |
 | Place-value visual/representation (41, 43–46) | concrete tens/ones and forms | representation/shared families | structured hundreds base-ten and number lines | expanded/standard/word/number-line families; base-ten thousands extension absent | inherit compact representation grids and structured number line; do not inherit missing-magnitude block model |
 | Place-value comparison (42) | comparison symbols | compare within grade ranges | compact comparison | 30-question 3×10 relation class | use 3×10 safe density and genuine Grade 5 magnitude |
 
@@ -150,9 +150,9 @@ Grade 4’s closed A set is not reopened. These findings constrain Grade 5 inher
 - **NARROW CORRECTION NEEDED (D):** equation match, equivalent-fraction completion naming, place-value compare, and the representation/form resources whose generator is shared but public copy/range/density must be reconciled.
 - **FOUNDER-APPROVED TEXT-DATA INTERPRETATION (A):** `g5_interpret_graphs` owns seeded selection, a quiet text-only data summary, 12 distinct balanced default questions, and a validated 17-question unique maximum. Its generic duplicate `grade5_data_display_graphing_interpret_data` remains G with separate legacy reliability drift.
 - **SHARED-FAMILY EXTENSION NEEDED (D):** three stories, three numeric-pattern resources, fraction number line/model, and place-value number line.
-- **NEW ARCHITECTURE NEEDED (E):** Function Table only.
-- **DUPLICATE or LOW-VALUE / OVERLAPPING — DEFER (G):** 21 records listed below.
-- **RECONCILIATION STATE:** founder-approved Batches 1–3 have moved exactly six resources D → A; no lifecycle status changed.
+- **NEW ARCHITECTURE NEEDED — DEFERRED (G):** Function Table only.
+- **DUPLICATE, LOW-VALUE, OVERLAPPING, or ARCHITECTURE-DEFERRED (G):** 22 records listed below.
+- **RECONCILIATION STATE:** Batches 1–6 are founder-approved in A; Function Table is founder-approved for deferment in G; no lifecycle status changed.
 
 ## Variable-contract reconciliation
 
@@ -221,11 +221,11 @@ Catalog lifecycle statuses remain independent and unchanged.
 
 No unresolved existing-family implementation records remain.
 
-### E — 1
+### E — 0
 
-- `grade5_patterning_and_algebra_function_table`
+No unexplained design or architecture records remain.
 
-### G — 21
+### G — 22
 
 - `grade5_addition_subtraction_facts_fact_family`
 - `grade5_addition_subtraction_facts_fact_fluency`
@@ -246,12 +246,13 @@ No unresolved existing-family implementation records remain.
 - `grade5_multiplication_facts_equal_groups`
 - `grade5_multiplication_facts_skip_counting`
 - `grade5_multiplication_facts_word_problems`
+- `grade5_patterning_and_algebra_function_table`
 - `grade5_patterning_and_algebra_pattern_word_problems`
 - `grade5_place_value_representation_base_ten_blocks`
 
-Total: **A24 / D0 / E1 / G21 / Total46**.
+Total: **A24 / D0 / E0 / G22 / Total46**.
 
-Function Table remains the only unresolved E item. If the founder later approves and implements a genuine Function Table architecture: **A25 / D0 / E0 / G21 / Total46**. A founder decision to defer Function Table instead yields **A24 / D0 / E0 / G22 / Total46**.
+All 46 catalog IDs appear exactly once, all 46 IDs are unique, D and E are empty, and every A/G classification is documented. Function Table moved E → G without lifecycle movement. Reconsider it only after a founder-approved shared contract provides visible rule labels, multiple structured input/output rows, missing-input and missing-output state, generator-owned answer truth, duplicate control, safe pagination, and a mirrored table answer key.
 
 ## Duplicate and deferred analysis
 
@@ -288,9 +289,9 @@ Each implementation batch must run:
 - Batch 4 Place-Value Representations is founder-approved and closed at **A18 / D6 / E1 / G21 / Total46**. The four exact-ID representation resources moved D → A; all lifecycle statuses remain `generated`.
 - Batch 5 Structured Fractions is founder-approved and closed at **A21 / D3 / E1 / G21 / Total46**. The three exact IDs moved D → A with no lifecycle movement, public customization, split, blocked resource, or deferral.
 - Batch 6 Addition/Subtraction Stories is founder-approved and closed at **A24 / D0 / E1 / G21 / Total46**. The three exact IDs moved D → A with the approved eight-question default, maximum 16, inherited Grade 1–4 variables, and no lifecycle movement, public customization, or new architecture.
-- Decide whether Function Table should receive new visible-table architecture or move E → G.
+- Function Table is founder-approved for honest deferral from E → G; no production implementation or proof was created.
 
-Batches 1 through 6 are closed without lifecycle movement or public customization. Grade 3 sparse comparison drift remains on the later K–6 consistency watchlist; no lower-grade resource was reopened. Grade 5 remains open only for the Function Table E decision.
+Batches 1 through 6 are closed without lifecycle movement or public customization. The final Function Table decision closes Grade 5 at **A24 / D0 / E0 / G22 / Total46**. Grade 3 sparse comparison drift remains on the later K–6 consistency watchlist; no lower-grade resource was reopened.
 
 ## Batch 4 architecture clarification — Place-Value Representations
 
@@ -332,3 +333,15 @@ The founder-approved default is eight questions with a maximum of 16 and three f
 The shared generator owns operations, operands, results, unknown positions, contexts, prompts, expected answers, whole-number response targets, answer states, and duplicate signatures. It prevents repeated name/object pairs, consecutive or near-consecutive context/template reuse, duplicate prompt prose, and negative subtraction answers. The renderer performs no arithmetic or prose parsing. Student/key parity, Grade 1–4 isolation, Grade 5 Batches 1–5, 30 deterministic seeds, audit totals, and the six-proof packet all pass.
 
 Founder approval closes Batch 6 with no split, blocked, or deferred resource. Exactly the three story records move D → A, producing **A24 / D0 / E1 / G21 / Total46**. Lifecycle statuses remain `generated`; Grade 5 remains open for the Function Table E decision.
+
+## Final Function Table decision and Grade 5 closeout
+
+Completed-work classification: **DEFER — NEW ARCHITECTURE REQUIRED**.
+
+The exact record `grade5_patterning_and_algebra_function_table` remains lifecycle status `generated` and moves only from reconciliation E → G. The current default produces 12 sentence prompts in the generic equation layout, six per student page with a mirrored two-page key, for four total PDF pages. It supports only an output blank and additive sequence-rule compatibility. It has no visible table, multiple input/output rows, hidden-position model, missing-input mode, mixed missing-position balance, response target, answer state, duplicate signature, Function Table layout flag, or approved mirrored table-key contract.
+
+Grade 3 and Grade 4 do not provide an approved Function Table implementation. Both document the same sentence-only compatibility path as deferred. Consequently there is no approved lower-grade default count, maximum, density, missing-position balance, rule mix, or public variable contract to inherit. Generic controls such as question count, questions per page, seed, range/step aliases, and completed-example aliases are internal compatibility behavior, not evidence of a launch-safe family.
+
+No production generator, renderer, layout, catalog record, lifecycle status, public customization, proof, or existing Grades 1–5 review-library file changed. The protected founder-review library remains appendable, and the Grade 6 append begins at review number 152.
+
+Final reconciliation is **A24 / D0 / E0 / G22 / Total46**. The ledger contains 46 rows and 46 unique Grade 5 IDs. D and E are empty, every A/G classification is documented, and no unexplained architecture item remains. Grade 5 founder review and architecture reconciliation are closed.

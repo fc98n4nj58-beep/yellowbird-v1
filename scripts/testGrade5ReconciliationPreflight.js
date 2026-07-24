@@ -41,9 +41,7 @@ const CATEGORIES = Object.freeze({
     "grade5_addition_subtraction_word_problems_subtraction_word_problem"
   ]),
   D: Object.freeze([]),
-  E: Object.freeze([
-    "grade5_patterning_and_algebra_function_table"
-  ]),
+  E: Object.freeze([]),
   G: Object.freeze([
     "grade5_addition_subtraction_facts_fact_family",
     "grade5_addition_subtraction_facts_fact_fluency",
@@ -64,6 +62,7 @@ const CATEGORIES = Object.freeze({
     "grade5_multiplication_facts_equal_groups",
     "grade5_multiplication_facts_skip_counting",
     "grade5_multiplication_facts_word_problems",
+    "grade5_patterning_and_algebra_function_table",
     "grade5_patterning_and_algebra_pattern_word_problems",
     "grade5_place_value_representation_base_ten_blocks"
   ])
@@ -156,7 +155,7 @@ function run() {
   assert.strictEqual(categoryById.size, 46);
   assert.deepStrictEqual(
     Object.fromEntries(Object.entries(CATEGORIES).map(([category, ids]) => [category, ids.length])),
-    { A: 24, D: 0, E: 1, G: 21 }
+    { A: 24, D: 0, E: 0, G: 22 }
   );
   rows.forEach((row) => {
     assert.strictEqual(row.proposed, categoryById.get(row.id), `Inventory category mismatch: ${row.id}`);
@@ -181,7 +180,8 @@ function run() {
   });
   assert(plan.includes("there are no split, blocked, or deferred Batch 3 resources"));
   assert(plan.includes("`g5_interpret_graphs` moved D → A"));
-  assert(plan.includes("`grade5_patterning_and_algebra_function_table` remains E"));
+  assert(plan.includes("Completed-work classification: **DEFER — NEW ARCHITECTURE REQUIRED**"));
+  assert(plan.includes("`grade5_patterning_and_algebra_function_table` moves E → G"));
   CLOSED_BATCH_FOUR.forEach((id) => {
     assert(CATEGORIES.A.includes(id), `Closed Batch 4 resource is not A: ${id}`);
     assert(plan.includes(`\`${id}\``), `Batch 4 closeout documentation omits ${id}`);
@@ -200,7 +200,7 @@ function run() {
   });
   assert(plan.includes("Batch 6 — Addition and Subtraction Stories (founder approved and closed)"));
   assert(plan.includes("Founder approval covers all three resources with no split, blocked, or deferred resource"));
-  assert(plan.includes("Function Table remains the only unresolved E item"));
+  assert(plan.includes("Grade 5 is closed at **A24 / D0 / E0 / G22 / Total46**"));
 
   const grade5Statuses = grade5.reduce((counts, item) => {
     counts[item.status] = (counts[item.status] || 0) + 1;
@@ -252,7 +252,9 @@ function run() {
     "grade5_data_display_graphing_interpret_data"
   ]);
 
-  assert(preflight.includes("A24 / D0 / E1 / G21 / Total46"));
+  assert(preflight.includes("A24 / D0 / E0 / G22 / Total46"));
+  assert(preflight.includes("46 unique Grade 5 IDs"));
+  assert(preflight.includes("Grade 6 append begins at review number 152"));
   assert(preflight.includes("CONFIRMED GRADE 4 DRIFT"));
   assert(preflight.includes("Grade 2–4 reconciliations"));
   assert(workflow.includes(
@@ -264,7 +266,7 @@ function run() {
     grade5Records: grade5.length,
     uniqueGrade5Ids: grade5Set.size,
     grade5Lifecycle: grade5Statuses,
-    proposedReconciliation: { A: 24, D: 0, E: 1, G: 21, Total: 46 },
+    proposedReconciliation: { A: 24, D: 0, E: 0, G: 22, Total: 46 },
     closedBatch5: CLOSED_BATCH_FIVE.length,
     closedBatch6: CLOSED_BATCH_SIX.length,
     remainingD: CATEGORIES.D.length,

@@ -1,8 +1,8 @@
 # Grade 5 Founder Review Batch Plan
 
-Status: active founder-review plan. Batches 1 through 6 are founder-approved and closed; Grade 5 remains open for the Function Table E decision.
+Status: Grade 5 founder review is closed at **A24 / D0 / E0 / G22 / Total46**. Batches 1 through 6 are founder-approved; Function Table is founder-approved for honest deferment.
 
-Current reconciliation: **A24 / D0 / E1 / G21 / Total46**. Batch 6 moved exactly the three Addition/Subtraction Story records D → A. Catalog lifecycle statuses remain independent and unchanged.
+Final reconciliation: **A24 / D0 / E0 / G22 / Total46**. Batch 6 moved exactly the three Addition/Subtraction Story records D → A; the final Function Table decision moved its exact ID E → G. Catalog lifecycle statuses remain independent and unchanged.
 
 ## Batch 1 — Numeric Patterning
 
@@ -393,20 +393,21 @@ The original three-template contract was rejected. The approved closeout removes
 
 `g5_interpret_graphs` moved D → A. Reconciliation is **A14 / D10 / E1 / G21 / Total46**. Catalog status remains `ready`; no lifecycle movement or public customization occurred.
 
-## Architecture gate — Function Table
+## Final decision — Function Table
 
-`grade5_patterning_and_algebra_function_table` remains E. Its current sentence fallback is not an approved visible input/output table. It must not join Batch 1 merely because its catalog strand is Patterning & Algebra.
+Completed-work classification: **DEFER — NEW ARCHITECTURE REQUIRED**.
 
-Founder decision:
+`grade5_patterning_and_algebra_function_table` moves E → G. The exact catalog record remains `generated` and keeps its current internal compatibility output; it is not founder-approved for the launch review set.
 
-- approve a structured table row model, renderer/layout, input/rule/output variables, unknown modes, answer-key truth, and proof contract; or
-- defer it E → G.
+The current generator emits one sentence per item, such as `Function table: input 12, rule Add 5 each time, output = __`, through the generic equation layout. Each item exposes one input/output pair but has no visible input/output headers, multiple table rows, hidden-position state, response target, answer state, duplicate signature, Function Table layout flag, or mirrored table answer-key contract. Grade 3 and Grade 4 document and test the same limitation; both are deferrals, not approved architecture that Grade 5 can inherit.
 
-If approved, treat it as a separate architecture project rather than a low-risk founder batch.
+No Grade 3–4 Function Table variable contract is approved for launch. The generic numeric-pattern runtime happens to accept count, pagination, seed, additive sequence ranges, rule/step aliases, and completed-example aliases, but it does not support the required missing-input, missing-output, or mixed missing-position table semantics. Treating those compatibility inputs as an approved family contract would silently overstate the resource.
+
+Reconsider only after founder approval of a shared structured table-row model, visible rule and input/output headers, one-step additive and multiplicative rule contracts, missing-input/output modes, strict alias validation, generator-owned expected answers and duplicate state, safe pagination, and a mirrored answer key. This is a future architecture project, not a correction to force into Grade 5 closeout.
 
 ## Deferred set
 
-The 21 proposed G resources are listed exactly in `grade-5-architecture-reconciliation-preflight.md`. They fall into five lanes:
+The 22 final G resources are listed exactly in `grade-5-architecture-reconciliation-preflight.md`. They fall into five lanes:
 
 - lower-grade remediation without an honest Grade 5 distinction;
 - aliases/duplicates of approved curated resources;
@@ -424,8 +425,8 @@ No deferred item should be revived during a D batch. Reconsider only when its do
 4. Batch 4 Place-Value Representations
 5. Batch 5 Structured Fractions — founder-approved and closed
 6. Batch 6 Addition/Subtraction Stories — founder-approved and closed
-7. Function Table architecture decision
-8. final A-resource regression sweep, exact reconciliation closeout, and local commit
+7. Function Table architecture decision — founder-approved deferment
+8. exact reconciliation closeout and local commit
 
 The accelerated execution model is one full session per batch: completed-work reconciliation, full lower-grade cross-reference, variable preservation, implementation, adversarial QA, tests, proofs, visual self-review, founder correction if needed, documentation, then one closeout commit.
 
@@ -440,8 +441,9 @@ The accelerated execution model is one full session per batch: completed-work re
 - after founder-approved Batch 6 Addition/Subtraction Stories: **A24 / D0 / E1 / G21 / Total46**
 - Function Table implemented: **A25 / D0 / E0 / G21 / Total46**
 - Function Table deferred: **A24 / D0 / E0 / G22 / Total46**
+- final approved closeout: **A24 / D0 / E0 / G22 / Total46**
 
-Catalog lifecycle statuses remain independent and unchanged until separately approved.
+Catalog lifecycle statuses remain independent and unchanged. Grade 5 is closed.
 
 ## Batch 1 closeout
 
@@ -613,3 +615,13 @@ Seven stress proofs in the sibling `stress/` folder cover denominator boundaries
 Founder density correction: Fractions on a Number Line and Shade the Fraction retain their approved six- and eight-question defaults. After the earlier 12 → 24 correction, the founder requested a final 3-column × 12-row density test for Complete Equivalent Fractions. The measured 36-question result is print-safe on one student page and one mirrored answer-key page: all questions 1–36 are visible, denominator-60 equations and inserted values through 60 remain on one line, the existing 12-point fraction type and 42-point answer target are unchanged, and there is no clipping, collision, wrapping, footer pressure, or type reduction. The completed-example proof keeps the example additional and all 36 practice questions on the same student page. The accepted default and maximum are therefore both 36 with exact mixed-mode balance of 18 missing numerators and 18 missing denominators. No fraction range, multiplier, structured truth, response target, variable alias, lifecycle status, public customization, or reconciliation value changed.
 
 Batch 5 is founder-approved and closed. The Grade 1–4 family history was reviewed; proper-fraction scope and denominators `2, 3, 4, 5, 6, 8, 9, 10, 11, 12` are retained. Structured numerator/denominator truth and exact integer equivalence remain generator-owned; the renderer performs no arithmetic and no new visual architecture was introduced. The original 12-question completion default and interim 24-question default were rejected as sparse. The final approved completion contract is 36 questions in a 3×12 grid on one student page and one key page, with exact 18/18 missing-position balance, unchanged 12-point type and 42-point answer target, an additional completed example, and readable denominator-60 cases. Catalog statuses remain `generated`, `ready`, and `generated`; reconciliation is **A21 / D3 / E1 / G21 / Total46**. Grade 5 remains open.
+
+## Final Grade 5 closeout
+
+The corrected exact ID `grade5_patterning_and_algebra_function_table` was inspected against the only relevant lower-grade evidence. Completed-work classification is **DEFER — NEW ARCHITECTURE REQUIRED**. Grade 3 and Grade 4 Function Table records are sentence-only compatibility outputs and both close in G; neither supplies an approved shared table model, renderer, missing-cell contract, variables, or proof geometry.
+
+The current Grade 5 output has 12 questions, six per student page, two student pages and two key pages. All questions are additive output-blank sentences. There is no approved maximum beyond generic runtime behavior, no missing-input/output balance, no multiplicative rule mix, and no genuine table structure. No proof was generated because rendering this placeholder would not provide founder-review evidence for a valid Function Table.
+
+`grade5_patterning_and_algebra_function_table` moves E → G. Its lifecycle status remains `generated`; no production or catalog code, public customization, lower-grade resource, or Batch 1–6 contract changes. Reconsideration requires founder approval of structured input/output rows, visible rule and column labels, one-step additive and multiplicative rules, missing-input/output modes, strict aliases, answer state, duplicate prevention, pagination, renderer geometry, and mirrored keys.
+
+Grade 5 is closed at **A24 / D0 / E0 / G22 / Total46**. The reconciliation contains 46 rows and 46 unique IDs, with D0, E0, and every A/G disposition documented. The Grades 1–5 Family Review Library remains unchanged. Grade 6 remains scheduled to append beginning at review number 152.
