@@ -2070,3 +2070,12 @@ Founder review pause:
 * Skip Counting now uses structured sequence rows, curved left-to-right jump arrows, printable progressive fade, `showJumpVisuals`, `termCount`, `missingCount`, `missingPlacement`, seeded parity, completed examples, and answer-key baseline alignment.
 * Review proofs remain local QA artifacts under `review/` and should not be part of the production commit.
 * Counts remain: 103 / 103 ready resources working, 0 ready failures, 85 worksheets, 11 Quick Checks, 7 Exit Tickets.
+
+## August 11, 2026 — Grades 1–6 Full-Curriculum Direction Recorded
+
+* Founder-approved long-term destination: complete Ontario Mathematics curriculum coverage across Grades 1–6, with every expectation intentionally accounted for through an appropriate Yellow Bird resource pathway.
+* This destination does not require one worksheet per expectation, every family in every grade, treating every missing grade as a defect, or forcing every expectation into worksheet format.
+* Future pathways may use print-first worksheets, Quick Checks, Exit Tickets, investigations, open tasks, task cards, centres or activities, teacher-led resources, or another format that genuinely fits the expectation.
+* Current primary workstream remains the Grades 1–5 Founder Family Review: correct and approve current defaults, defer new teacher-variable ideas to the separate future inventory, do not create missing-grade resources by default, do not begin Grade 6 implementation without separate authorization, and do not reopen approved family contracts without current defect evidence.
+* A parallel read-only Grades 1–6 resource and family coverage inventory is authorized as preparation for later Curriculum Alignment reconciliation.
+* No curriculum-gap implementation, new family construction, missing-grade creation, Grade 6 implementation, lifecycle movement, or catalog change is authorized by this status update.

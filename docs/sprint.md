@@ -1701,3 +1701,11 @@ Guiding phrase: build the flight network before inviting passengers.
 - Skip Counting now has structured sequence rows, curved left-to-right arrows, printable progressive fade, visual toggle support, term-count and missing-value controls, beginning/end/random missing placement, seeded parity, completed examples, and aligned answer-key baselines.
 - Review PDFs remain local QA artifacts under `review/` and should not be staged with production files.
 - Counts remain 103 / 103 ready resources working, 0 ready failures, 85 worksheets, 11 Quick Checks, and 7 Exit Tickets.
+
+### Grades 1–6 Full-Curriculum Direction and Current Sequence
+
+- Long-term destination: complete Ontario Mathematics curriculum coverage across Grades 1–6, meaning every expectation is intentionally accounted for through an appropriate Yellow Bird resource pathway.
+- Complete coverage does not mean one worksheet per expectation, every family in every grade, every missing grade is a defect, or every expectation should be forced into worksheet format. Future pathways may include print-first worksheets, Quick Checks, Exit Tickets, investigations, open tasks, task cards, centres or activities, teacher-led resources, or other genuinely appropriate formats.
+- Active primary workstream: continue the Grades 1–5 Founder Family Review by correcting and approving current default resources. Keep new teacher-variable ideas deferred, do not create missing-grade resources by default, do not begin Grade 6 implementation without separate authorization, and do not reopen approved family contracts without current defect evidence.
+- Authorized parallel work: a read-only Grades 1–6 resource and family coverage inventory to prepare for later Curriculum Alignment reconciliation.
+- Not authorized in this sequence: curriculum-gap implementation, new resource-family construction, missing-grade resource creation, Grade 6 implementation, lifecycle or catalog changes, or public coverage claims.

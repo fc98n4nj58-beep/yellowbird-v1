@@ -450,3 +450,15 @@ Student-facing PDF footers use public-readable grade, subject, strand, and topic
 Arithmetic worksheet titles and directions must describe the generated task and range honestly. A take-away-only generator uses a take-away title; a facts-within-20 worksheet states that range. Four-equation fact-family practice suppresses equal addends when they would duplicate the commutative and inverse equations.
 
 Word-problem answer keys prioritize verification over unused writing space. They may use compact prompt-and-answer rows with quiet separators, while student pages retain the full approved work-box geometry. Student and answer-key modes must continue to display the same generator-owned truth.
+
+## August 11, 2026 — Grades 1–6 Full-Curriculum Direction
+
+Decision:
+Project Yellow Bird's long-term Grades 1–6 destination is complete Ontario Mathematics curriculum coverage. Every Grade 1–6 Ontario Mathematics expectation should be intentionally accounted for through an appropriate Yellow Bird resource pathway.
+
+Rules:
+- Complete curriculum coverage does not mean one worksheet per expectation, every family in every grade, every missing grade is a defect, or every expectation belongs in worksheet format.
+- Appropriate future pathways may include print-first worksheets, Quick Checks, Exit Tickets, investigations, open tasks, task cards, centres or activities, teacher-led resources, or other formats that genuinely fit the expectation.
+- The Grades 1–5 Founder Family Review remains the active primary workstream: continue correcting and approving current default resources, keep new teacher-variable ideas deferred to the separate future inventory, do not create missing-grade resources by default, do not begin Grade 6 implementation without separate authorization, and do not reopen approved family contracts without current defect evidence.
+- A parallel read-only Grades 1–6 resource and family coverage inventory is authorized to prepare for later Curriculum Alignment reconciliation.
+- This decision does not authorize curriculum-gap implementation, new resource families, missing-grade resources, Grade 6 implementation, lifecycle changes, or catalog changes.
