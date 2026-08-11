@@ -1,8 +1,8 @@
 # Grade 5 Founder Review Batch Plan
 
-Status: Grade 5 founder review is closed at **A24 / D0 / E0 / G22 / Total46**. Batches 1 through 6 are founder-approved; Function Table is founder-approved for honest deferment.
+Status: Grade 5 founder review is closed at **A23 / D0 / E0 / G23 / Total46**. Batches 1 through 6 remain founder-approved; the 2026-08-11 current-output review additionally deferred `g5_complete_graphs` because its questions have no displayed graph.
 
-Final reconciliation: **A24 / D0 / E0 / G22 / Total46**. Batch 6 moved exactly the three Addition/Subtraction Story records D → A; the final Function Table decision moved its exact ID E → G. Catalog lifecycle statuses remain independent and unchanged.
+Current reconciliation: **A23 / D0 / E0 / G23 / Total46**. The historical Batch 6 and Function Table decisions remain intact; `g5_complete_graphs` alone moved A → G and `ready` → `planned` during the current-output correction.
 
 ## Batch 1 — Numeric Patterning
 
@@ -624,4 +624,4 @@ The current Grade 5 output has 12 questions, six per student page, two student p
 
 `grade5_patterning_and_algebra_function_table` moves E → G. Its lifecycle status remains `generated`; no production or catalog code, public customization, lower-grade resource, or Batch 1–6 contract changes. Reconsideration requires founder approval of structured input/output rows, visible rule and column labels, one-step additive and multiplicative rules, missing-input/output modes, strict aliases, answer state, duplicate prevention, pagination, renderer geometry, and mirrored keys.
 
-Grade 5 is closed at **A24 / D0 / E0 / G22 / Total46**. The reconciliation contains 46 rows and 46 unique IDs, with D0, E0, and every A/G disposition documented. The Grades 1–5 Family Review Library remains unchanged. Grade 6 remains scheduled to append beginning at review number 152.
+Grade 5 is currently closed at **A23 / D0 / E0 / G23 / Total46**. The reconciliation contains 46 rows and 46 unique IDs, with D0, E0, and every A/G disposition documented. Historical founder-review PDFs remain unchanged. Grade 6 remains scheduled to append beginning at review number 152.

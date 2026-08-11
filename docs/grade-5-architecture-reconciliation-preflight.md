@@ -1,6 +1,6 @@
 # Grade 5 Architecture Reconciliation Preflight
 
-Status: Grade 5 founder review and architecture reconciliation are closed at **A24 / D0 / E0 / G22 / Total46**. Function Table is honestly deferred because no approved visible input/output-table architecture exists. Catalog lifecycle statuses remain unchanged.
+Status: Grade 5 founder review and architecture reconciliation are closed at **A23 / D0 / E0 / G23 / Total46**. Function Table remains deferred, and the 2026-08-11 current-output review moved `g5_complete_graphs` from A/`ready` to G/`planned` because it does not display the graph required by its questions.
 
 Starting checkpoint: `f1b04ee6d7f90789af46419947164fa84d5c320a`
 
@@ -20,7 +20,7 @@ Closed lower-grade baseline:
 
 - 46 Grade 5 catalog records
 - 46 unique IDs; no duplicate or missing catalog entries detected
-- lifecycle snapshot: 11 `ready`, 32 `generated`, 1 `partial`, 2 `planned`
+- current lifecycle snapshot: 10 `ready`, 32 `generated`, 1 `partial`, 3 `planned`
 - all 46 default runtimes build except the established planned `grade5_patterning_and_algebra_pattern_word_problems` generator gap
 - all successfully built resources include an answer key; the two zero-question placeholders produce one empty student page
 - no Grade 5 public customization family is registered
@@ -47,7 +47,7 @@ Density notation is `questions / columns / questions-per-student-page / total PD
 | 13 | `grade5_addition_subtraction_facts_ten_frame` | Ten Frame Practice — Grade 5; Addition & Subtraction; visual/generated | ten frame; full-width visual | 10/1/10/2 | unsupported Grade 5 difficulty; remediation overlap | G |
 | 14 | `grade5_addition_subtraction_facts_word_problems` | Word Problems — Grade 5; Addition & Subtraction; practice/generated | generic stories; full-width work box | 12/1/3/8 | duplicates the three explicit story roles | G |
 | 15 | `grade5_data_display_graphing_complete_graph` | Complete a Graph — Grade 5; Data & Graphing; visual/generated | text-data fallback; full-width | 12/1/6/4 | duplicate of curated `g5_complete_graphs`; title overclaims a visual | G |
-| 16 | `g5_complete_graphs` | Grade 5 Data Questions; Data & Graphing; visual/ready | text-data questions; full-width | 12/1/6/4 | previously browser/print-QA’d with an honest text-based role | A |
+| 16 | `g5_complete_graphs` | Grade 5 Data Questions; Data & Graphing; visual/planned | text-data questions; full-width | 12/1/6/4 | unfinished graph-construction role: no displayed graph or structured graph truth | G |
 | 17 | `grade5_data_display_graphing_graph_questions` | Graph Questions — Grade 5; Data & Graphing; practice/generated | generic data questions; full-width | 12/1/6/4 | overlaps curated data interpretation; title overclaims graph evidence | G |
 | 18 | `grade5_data_display_graphing_graph_word_problems` | Graph Word Problems — Grade 5; Data & Graphing; practice/generated | placeholder; generic practice | —/2/20/1 | zero-question output and no distinct approved role | G |
 | 19 | `grade5_data_display_graphing_interpret_data` | Interpret Data — Grade 5; Data & Graphing; practice/generated | text-data interpretation; full-width | 12/1/6/4 | duplicate of curated `g5_interpret_graphs` | G |
@@ -188,15 +188,14 @@ Sparse current output is not evidence for a lower density. Conversely, story, nu
 
 ## Current reconciliation
 
-Catalog lifecycle statuses remain independent and unchanged.
+Catalog lifecycle statuses remain independent of reconciliation categories. The current-output correction moves only `g5_complete_graphs` from `ready` to `planned`.
 
-### A — 24
+### A — 23
 
 - `g5_compare_numbers_to_100000_exit_ticket`
 - `g5_equivalent_fractions_exit_ticket`
 - `g5_place_value_to_100000_quick_check`
 - `g5_equivalent_fractions_quick_check`
-- `g5_complete_graphs`
 - `grade5_fraction_equivalence_compare_fractions`
 - `grade5_multiplication_facts_missing_factor`
 - `g5_multiplication_fact_review`
@@ -225,7 +224,7 @@ No unresolved existing-family implementation records remain.
 
 No unexplained design or architecture records remain.
 
-### G — 22
+### G — 23
 
 - `grade5_addition_subtraction_facts_fact_family`
 - `grade5_addition_subtraction_facts_fact_fluency`
@@ -239,6 +238,7 @@ No unexplained design or architecture records remain.
 - `grade5_data_display_graphing_interpret_data`
 - `grade5_data_display_graphing_match_data_to_graph`
 - `grade5_data_display_graphing_read_graph`
+- `g5_complete_graphs`
 - `g5_fraction_equivalence`
 - `grade5_fraction_equivalence_fraction_word_problems`
 - `g5_fraction_number_line`
@@ -250,9 +250,9 @@ No unexplained design or architecture records remain.
 - `grade5_patterning_and_algebra_pattern_word_problems`
 - `grade5_place_value_representation_base_ten_blocks`
 
-Total: **A24 / D0 / E0 / G22 / Total46**.
+Total: **A23 / D0 / E0 / G23 / Total46**.
 
-All 46 catalog IDs appear exactly once, all 46 IDs are unique, D and E are empty, and every A/G classification is documented. Function Table moved E → G without lifecycle movement. Reconsider it only after a founder-approved shared contract provides visible rule labels, multiple structured input/output rows, missing-input and missing-output state, generator-owned answer truth, duplicate control, safe pagination, and a mirrored table answer key.
+All 46 catalog IDs appear exactly once, all 46 IDs are unique, D and E are empty, and every A/G classification is documented. `g5_complete_graphs` remains deferred until a real structured graph model and renderer exist. Function Table remains deferred until a founder-approved shared contract provides visible rule labels, multiple structured input/output rows, missing-input and missing-output state, generator-owned answer truth, duplicate control, safe pagination, and a mirrored table answer key.
 
 ## Duplicate and deferred analysis
 

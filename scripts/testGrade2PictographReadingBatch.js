@@ -261,7 +261,7 @@ function assertCatalogAndReconciliationState() {
     result[item.status] = (result[item.status] || 0) + 1;
     return result;
   }, {});
-  assert.deepStrictEqual(counts, { ready: 104, partial: 5, generated: 213, planned: 9 });
+  assert.deepStrictEqual(counts, { ready: 102, partial: 5, generated: 213, planned: 11 });
   assert.strictEqual(master.length, 331);
 
   RESOURCES.forEach((resource) => {
@@ -296,8 +296,8 @@ function assertIsolation() {
   assert.strictEqual(grade1Graph.graphType, undefined);
   assert.strictEqual(grade1.layout.header.title, "Read the Graph");
   assert.strictEqual(grade1.contentObject.meta.curriculum.footerText, "Grade 1 • Math • Data & Graphing");
-  assert.strictEqual(grade1.layout.display.sharedDataSymbolStrokeColor, undefined);
-  assert.strictEqual(grade1.layout.display.sharedDataSymbolStrokeWidth, undefined);
+  assert.strictEqual(grade1.layout.display.sharedDataSymbolStrokeColor, "#4b5563");
+  assert.strictEqual(grade1.layout.display.sharedDataSymbolStrokeWidth, 1.15);
 
   for (const id of [
     "grade3_data_display_graphing_read_graph",
@@ -320,9 +320,9 @@ function assertIsolation() {
     "grade2_data_display_graphing_complete_graph",
     { worksheetSeed: "grade2-pictograph-reading-isolation" }
   );
-  assert.strictEqual(complete.normalizedContentObject.content.items.length, 1);
-  assert.strictEqual(complete.normalizedContentObject.content.items[0].taskMode, "complete_graph");
-  assert(complete.normalizedContentObject.content.items[0].graphTaskData);
+  assert.strictEqual(complete.normalizedContentObject.content.items.length, 2);
+  assert(complete.normalizedContentObject.content.items.every((item) => item.taskMode === "complete_graph"));
+  assert(complete.normalizedContentObject.content.items.every((item) => item.graphTaskData));
 
   const match = buildCatalogWorksheetRuntime(
     "grade2_data_display_graphing_match_data_to_graph",

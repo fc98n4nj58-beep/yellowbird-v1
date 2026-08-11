@@ -137,7 +137,7 @@ function assertCatalogAndDisposition() {
       master.filter((item) => item.status === status).length
     ])
   );
-  assert.deepStrictEqual(counts, { ready: 104, generated: 213, partial: 5, planned: 9 });
+  assert.deepStrictEqual(counts, { ready: 102, generated: 213, partial: 5, planned: 11 });
   assert.strictEqual(master.length, 331);
 
   const reconciliation = fs.readFileSync(

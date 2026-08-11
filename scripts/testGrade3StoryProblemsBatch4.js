@@ -446,7 +446,7 @@ function testCatalogIsolationAndRegistration() {
     status,
     master.filter((item) => item.status === status).length
   ]));
-  assert.deepStrictEqual(counts, { ready: 104, generated: 213, partial: 5, planned: 9 });
+  assert.deepStrictEqual(counts, { ready: 102, generated: 213, partial: 5, planned: 11 });
 
   const grade1 = buildCatalogWorksheetRuntime("g1_addition_word_problems", { worksheetSeed: "grade3-story-grade1-isolation" });
   assert.strictEqual(Boolean(grade1.layout.display.compactWordProblemAnswerKey), false);

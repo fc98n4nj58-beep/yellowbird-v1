@@ -164,7 +164,9 @@ const grade3Catalog = [
     hasAnswerKey: true,
     tags: ["graph", "complete graph", "grade 3"],
     curriculumTags: ["D1"],
-    description: "Students use provided data to complete a graph."
+    description: "Students use two provided data tables to complete two pictographs.",
+    generatorOptions: { questionCount: 2 },
+    pdfLayout: { columns: 1, maxProblemsPerPage: 2 }
   },
   {
     id: "g3_interpret_data",

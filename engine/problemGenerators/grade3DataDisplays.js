@@ -409,8 +409,12 @@ function buildQueue(options, task, random, state) {
       return buildMatchProblem(graph, random, correctChoice);
     });
   }
+  if (task === "complete") {
+    return Array.from({ length: count }, (_, index) =>
+      buildCompleteProblem(buildGraphData(options, random, state, `complete-${index + 1}`), random)
+    );
+  }
   const graph = buildGraphData(options, random, state, task);
-  if (task === "complete") return [buildCompleteProblem(graph, random)];
   const allowedTypes = resolveQuestionTypes(options, task);
   const pool = task === "read"
     ? buildReadQuestions(graph)

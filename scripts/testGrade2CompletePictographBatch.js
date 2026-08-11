@@ -35,8 +35,11 @@ function renderRuntime(runtime) {
 }
 
 function signature(runtime) {
-  const item = runtime.normalizedContentObject.content.items[0];
-  return JSON.stringify({ graphData: item.graphData, graphTaskData: item.graphTaskData, duplicateSignature: item.duplicateSignature });
+  return JSON.stringify(runtime.normalizedContentObject.content.items.map((item) => ({
+    graphData: item.graphData,
+    graphTaskData: item.graphTaskData,
+    duplicateSignature: item.duplicateSignature
+  })));
 }
 
 function validateRuntime(runtime) {
@@ -52,7 +55,8 @@ function validateRuntime(runtime) {
   assert.strictEqual(`${runtime.normalizedContentObject.meta.title} ANSWER KEY`, "Finish the Pictograph ANSWER KEY");
   assert.strictEqual(runtime.contentObject.meta.curriculum.footerText, EXPECTED_FOOTER);
   assert(!runtime.layout.header.title.includes("_") && !runtime.layout.instruction.includes("_"));
-  assert.strictEqual(runtime.normalizedContentObject.content.items.length, 1);
+  assert.strictEqual(runtime.normalizedContentObject.content.items.length, 2);
+  assert.strictEqual(new Set(runtime.normalizedContentObject.content.items.map((problem) => problem.graphData.topicId)).size, 2);
   assert.strictEqual(item.prompt, "");
   assert.strictEqual(item.taskMode, "complete_graph");
   assert.strictEqual(item.responseMode, "graph_drawing");
@@ -95,18 +99,32 @@ function validateRuntime(runtime) {
     task.requiredSymbolCounts
   );
   assert.strictEqual(runtime.layout.template.columns, 1);
-  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 1);
+  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 2);
   assert.strictEqual(runtime.layout.display.sharedDataTaskMode, "complete_graph");
   assert.strictEqual(runtime.layout.display.sharedDataSymbolStrokeColor, "#4b5563");
   assert.strictEqual(runtime.layout.display.sharedDataSymbolStrokeWidth, 1.15);
   assert.strictEqual(runtime.layout.display.constructionPictograph.width, 504);
-  assert.strictEqual(runtime.layout.display.constructionPictograph.height, 298);
+  assert.strictEqual(runtime.layout.display.constructionPictograph.height, 160);
+  assert.strictEqual(runtime.layout.display.constructionPictograph.symbolDiameter, 16);
+  assert.strictEqual(runtime.layout.display.constructionPictograph.tasksPerPage, 2);
   assert(!runtime.layout.display.grade1DataTaskMode);
-  const keyItems = buildAnswerKeyItems([item]);
-  assert.strictEqual(keyItems.length, 1);
-  assert.deepStrictEqual(keyItems[0].graphData, item.graphData);
-  assert.deepStrictEqual(keyItems[0].graphTaskData, item.graphTaskData);
-  assert.deepStrictEqual(keyItems[0].answerState, item.answerState);
+  const keyItems = buildAnswerKeyItems(runtime.normalizedContentObject.content.items);
+  assert.strictEqual(keyItems.length, 2);
+  assert.deepStrictEqual(
+    keyItems.map((keyItem) => keyItem.graphData),
+    runtime.normalizedContentObject.content.items.map((problem) => problem.graphData)
+  );
+  assert.deepStrictEqual(
+    keyItems.map((keyItem) => keyItem.graphTaskData),
+    runtime.normalizedContentObject.content.items.map((problem) => problem.graphTaskData)
+  );
+  runtime.normalizedContentObject.content.items.slice(1).forEach((problem) => {
+    assert.strictEqual(problem.taskMode, "complete_graph");
+    assert.strictEqual(problem.responseMode, "graph_drawing");
+    assert.strictEqual(problem.graphTaskData.rows.length, 4);
+    assert.strictEqual(problem.graphTaskData.rows.filter((row) => row.isIncomplete).length, 2);
+    assert.deepStrictEqual(problem.graphTaskData.missingCounts.slice().sort(), [2, 3]);
+  });
   assert.deepStrictEqual(runtime.contentObject.content.items[0].graphTaskData, task, "Preview and PDF normalize the same truth.");
 }
 
@@ -114,7 +132,8 @@ function assertIsolation() {
   const grade1 = buildCatalogWorksheetRuntime("grade1_data_display_graphing_complete_graph", { worksheetSeed: "g2-complete-isolation" });
   assert.strictEqual(grade1.layout.display.grade1DataTaskMode, "complete_graph");
   assert.strictEqual(grade1.layout.display.sharedDataTaskMode, undefined);
-  assert.strictEqual(grade1.layout.display.sharedDataSymbolStrokeColor, undefined);
+  assert.strictEqual(grade1.layout.display.sharedDataSymbolStrokeColor, "#4b5563");
+  assert.strictEqual(grade1.normalizedContentObject.content.items.length, 2);
   assert.deepStrictEqual(grade1.normalizedContentObject.content.items[0].graphTaskData.rows.map((row) => row.missingCount).filter(Boolean).sort(), [1, 2]);
 
   const grade3 = buildCatalogWorksheetRuntime("grade3_data_display_graphing_complete_graph", { worksheetSeed: "g2-complete-isolation" });
@@ -140,7 +159,7 @@ function assertCatalogBoundary() {
   assert.strictEqual(item.status, "generated");
   const master = JSON.parse(fs.readFileSync("data/worksheetCatalog.master.json", "utf8")).items;
   assert.strictEqual(master.filter((record) => record.id === RESOURCE_ID).length, 1);
-  assert.strictEqual(master.filter((record) => record.status === "ready").length, 104);
+  assert.strictEqual(master.filter((record) => record.status === "ready").length, 102);
   const reconciliation = fs.readFileSync("docs/grade-2-architecture-reconciliation-preflight.md", "utf8");
   const categoryA = reconciliation.match(/\*\*A \(35\):\*\*[^\n]+/)?.[0] || "";
   const categoryD = reconciliation.match(/\*\*D \(0\):\*\*[^\n]+/)?.[0] || "";

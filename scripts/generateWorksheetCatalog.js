@@ -10,6 +10,21 @@ const grade5 = require("../config/worksheetCatalog/grade5");
 const grade6 = require("../config/worksheetCatalog/grade6");
 const { applyWorksheetPublicCopy } = require("../config/worksheetPublicCopy");
 
+const GENERATED_ENTRY_OVERRIDES = Object.freeze({
+  grade1_data_display_graphing_complete_graph: Object.freeze({
+    generatorOptions: Object.freeze({ questionCount: 2 }),
+    pdfLayout: Object.freeze({ columns: 1, maxProblemsPerPage: 2 })
+  }),
+  grade2_data_display_graphing_complete_graph: Object.freeze({
+    generatorOptions: Object.freeze({ questionCount: 2 }),
+    pdfLayout: Object.freeze({ columns: 1, maxProblemsPerPage: 2 })
+  })
+});
+
+function applyGeneratedEntryOverrides(item) {
+  return { ...item, ...(GENERATED_ENTRY_OVERRIDES[item.id] || {}) };
+}
+
 const skillsDir = path.join(__dirname, "..", "engine", "skills");
 const recipesDir = path.join(__dirname, "..", "engine", "activityRecipes");
 const outputPath = path.join(__dirname, "..", "data", "worksheetCatalog.generated.json");
@@ -401,7 +416,7 @@ function generateDraftCatalog() {
         });
 
         if (!curatedIds.has(entry.id)) {
-          generated.push(applyWorksheetPublicCopy(entry));
+          generated.push(applyWorksheetPublicCopy(applyGeneratedEntryOverrides(entry)));
         }
       });
     });

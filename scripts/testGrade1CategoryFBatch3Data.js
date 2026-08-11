@@ -20,9 +20,10 @@ const {
   supportsGraphApplicationTopic
 } = require("../engine/problemGenerators/grade1DataGraph");
 const { renderWorksheetPDF, buildAnswerKeyItems, __test: rendererTest } = require("../renderers/pdfRenderer");
+const { DATA_DISPLAY_VISUAL_SPECS } = require("../config/layout/dataDisplayVisualSpecs");
 
 const RESOURCES = Object.freeze([
-  { id: "grade1_data_display_graphing_complete_graph", title: "Complete the Pictograph", instruction: "Use the data table. Draw circles to complete the pictograph.", task: "complete_graph", count: 1 },
+  { id: "grade1_data_display_graphing_complete_graph", title: "Complete the Pictograph", instruction: "Use the data table. Draw circles to complete the pictograph.", task: "complete_graph", count: 2 },
   { id: "grade1_data_display_graphing_match_data_to_graph", title: "Choose the Matching Graph", instruction: "Look at each data set. Circle the graph that matches.", task: "match_graph", count: 2 },
   { id: "grade1_data_display_graphing_graph_word_problems", title: "Use the Graph to Solve", instruction: "Use the graph and the new information to answer each question.", task: "graph_application", count: 4 }
 ]);
@@ -83,10 +84,13 @@ async function run() {
     first.contentObject.content.items.forEach((problem) => {
       assert.strictEqual(problem.taskMode, resource.task);
       validateGraph(problem.graphData);
-      if (resource.task !== "match_graph") {
+      if (!["match_graph", "complete_graph"].includes(resource.task)) {
         assert.strictEqual(problem.graphData.scenario, first.layout.display.sharedDataScenario);
       }
     });
+    if (resource.task === "complete_graph") {
+      assert.strictEqual(new Set(first.contentObject.content.items.map((problem) => problem.graphData.topicId)).size, 2);
+    }
     const answers = buildAnswerKeyItems(first.contentObject.content.items);
     assert.deepStrictEqual(answers.map((answer) => answer.graphData), first.contentObject.content.items.map((problem) => problem.graphData));
     assert.deepStrictEqual(answers.map((answer) => answer.graphTaskData), first.contentObject.content.items.map((problem) => problem.graphTaskData));
@@ -94,6 +98,7 @@ async function run() {
 
   const complete = buildCatalogWorksheetRuntime(RESOURCES[0].id, { worksheetSeed: "batch3-complete", includeExample: true });
   const completeProblem = complete.contentObject.content.items[0];
+  assert.strictEqual(complete.contentObject.content.items.length, 2);
   assert.strictEqual(completeProblem.isExample, false);
   assert.strictEqual(completeProblem.prompt, "");
   assert.strictEqual(completeProblem.graphTaskData.dataTable.length, 4);
@@ -106,20 +111,17 @@ async function run() {
   });
   assert.strictEqual(new Set(incomplete.map((row) => row.missingCount)).size, 2);
   const construction = complete.layout.display.constructionPictograph;
-  assert.deepStrictEqual(construction, {
-    width: 504,
-    height: 298,
-    headerHeight: 42,
-    bodyHeight: 256,
-    categoryHeight: 64,
-    labelWidth: 112,
-    symbolDiameter: 22,
-    symbolGap: 38,
-    symbolInset: 28,
-    placement: "after_scenario_and_data_table"
-  });
-  assert(construction.height > 218);
-  assert(construction.symbolDiameter >= 22);
+  assert.strictEqual(construction.width, DATA_DISPLAY_VISUAL_SPECS.standard.width);
+  assert.strictEqual(construction.height, 160);
+  assert.strictEqual(construction.headerHeight, 32);
+  assert.strictEqual(construction.bodyHeight, 128);
+  assert.strictEqual(construction.categoryHeight, 32);
+  assert.strictEqual(construction.labelWidth, DATA_DISPLAY_VISUAL_SPECS.standard.labelWidth);
+  assert.strictEqual(construction.symbolDiameter, DATA_DISPLAY_VISUAL_SPECS.standard.symbolDiameter);
+  assert.strictEqual(construction.symbolGap, DATA_DISPLAY_VISUAL_SPECS.standard.symbolGap);
+  assert.strictEqual(construction.symbolInset, DATA_DISPLAY_VISUAL_SPECS.standard.symbolInset);
+  assert.strictEqual(construction.tasksPerPage, 2);
+  assert.strictEqual(construction.placement, "after_scenario_and_data_table");
   assert(construction.symbolGap > construction.symbolDiameter);
   const constructionGeometry = rendererTest.buildSharedDataPictographGeometry({
     x: 54,
@@ -132,7 +134,7 @@ async function run() {
   });
   assert.strictEqual(constructionGeometry.body.height, construction.bodyHeight);
   assert.strictEqual(constructionGeometry.categoryHeight, construction.categoryHeight);
-  assert.strictEqual(constructionGeometry.y + constructionGeometry.height, 544);
+  assert.strictEqual(constructionGeometry.y + constructionGeometry.height, 406);
   const lastCircleRight = construction.labelWidth + construction.symbolInset + 6 * construction.symbolGap + construction.symbolDiameter / 2;
   assert(lastCircleRight < construction.width);
   assert.deepStrictEqual(
@@ -334,11 +336,11 @@ async function run() {
   const rendererSource = fs.readFileSync(path.join(__dirname, "..", "renderers", "pdfRenderer.js"), "utf8");
   assert(!/favourite fruit|class voted|animals seen at a pond/i.test(rendererSource));
   assert(!/Graph \$\{choice\.id\}/.test(rendererSource));
-  assert(/showHeader: false/.test(rendererSource));
+  assert(/matchDataVisualSpec/.test(rendererSource));
 
   const catalog = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "data", "worksheetCatalog.master.json"), "utf8"));
   const statusCounts = catalog.items.reduce((counts, item) => ({ ...counts, [item.status]: (counts[item.status] || 0) + 1 }), {});
-  assert.strictEqual(statusCounts.ready, 104);
+  assert.strictEqual(statusCounts.ready, 102);
   assert.strictEqual(statusCounts.generated, 213);
   assert.strictEqual(statusCounts.partial, 5);
   assert.strictEqual(catalog.items.filter((item) => item.activityTypes?.includes("pattern_word_problems")).length, 7);

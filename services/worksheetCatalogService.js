@@ -46,6 +46,9 @@ const {
   getWorksheetPublicCopy,
   applyWorksheetPublicCopy
 } = require("../config/worksheetPublicCopy");
+const {
+  DATA_DISPLAY_VISUAL_SPECS
+} = require("../config/layout/dataDisplayVisualSpecs");
 
 const MASTER_CATALOG_PATH = path.join(__dirname, "../data/worksheetCatalog.master.json");
 
@@ -430,14 +433,14 @@ const GRADE3_DATA_BATCH7_TASKS = Object.freeze({
 });
 const GRADE3_DATA_BATCH7_IDS = new Set(Object.keys(GRADE3_DATA_BATCH7_TASKS));
 const GRADE3_DATA_BATCH7_DEFAULT_COUNTS = Object.freeze({
-  complete: 1,
+  complete: 2,
   questions: 6,
   interpret: 4,
   match: 2,
   read: 6
 });
 const GRADE3_DATA_BATCH7_MAX_COUNTS = Object.freeze({
-  complete: 1,
+  complete: 2,
   questions: 6,
   interpret: 4,
   match: 2,
@@ -495,7 +498,7 @@ const GRADE1_DATA_QUESTION_COUNTS = Object.freeze({
   grade1_data_display_graphing_read_graph: 6,
   grade1_data_display_graphing_interpret_data: 6,
   grade1_data_display_graphing_graph_questions: 8,
-  grade1_data_display_graphing_complete_graph: 1,
+  grade1_data_display_graphing_complete_graph: 2,
   grade1_data_display_graphing_match_data_to_graph: 2,
   grade1_data_display_graphing_graph_word_problems: 4
 });
@@ -760,7 +763,7 @@ function normalizeGrade2PictographReadingOptions(item, options = {}) {
   return {
     ...options,
     questionCount: item.id === GRADE2_COMPLETE_PICTOGRAPH_ID
-      ? 1
+      ? 2
       : item.id === GRADE2_MATCHING_PICTOGRAPH_ID ? 2 : 6,
     includeExample: false
   };
@@ -5964,6 +5967,7 @@ if (item.id === GRADE5_EQUIVALENT_FRACTION_COMPLETION_ID) {
 
 if (["g3_read_a_graph", "g3_graph_questions", "g3_interpret_data"].includes(item.id)) {
   const graphData = layout.problems?.[0]?.graphData || null;
+  const visualSpec = DATA_DISPLAY_VISUAL_SPECS.standard;
   const questionCount = finiteNumber(normalizedOptions.questionCount) || GRADE3_DATA_BATCH7_DEFAULT_COUNTS[GRADE3_DATA_BATCH7_TASKS[item.id]];
   layout.template = {
     ...(layout.template || {}),
@@ -5986,9 +5990,10 @@ if (["g3_read_a_graph", "g3_graph_questions", "g3_interpret_data"].includes(item
     sequentialColumnFill: false,
     sharedDataPictograph: true,
     sharedDataGraph: graphData,
-    sharedDataGraphHeight: 218,
-    sharedDataSymbolStrokeColor: "#4b5563",
-    sharedDataSymbolStrokeWidth: 1.15,
+    sharedDataGraphHeight: visualSpec.height,
+    sharedDataVisualSpec: visualSpec,
+    sharedDataSymbolStrokeColor: visualSpec.symbolStrokeColor,
+    sharedDataSymbolStrokeWidth: visualSpec.symbolStrokeWidth,
     sharedDataScenario: graphData?.scenario || "",
     sharedDataScenarioPlacement: "between_instruction_and_graph",
     sharedDataScenarioAlign: "left",
@@ -6000,18 +6005,12 @@ if (["g3_read_a_graph", "g3_graph_questions", "g3_interpret_data"].includes(item
 if (item.id === "g3_complete_a_graph") {
   const graphData = layout.problems?.[0]?.graphData || null;
   const constructionPictograph = {
-    width: 504,
-    height: 298,
-    headerHeight: 42,
-    bodyHeight: 256,
-    categoryHeight: 64,
-    labelWidth: 112,
-    symbolDiameter: 22,
-    symbolGap: 38,
-    symbolInset: 28,
+    ...DATA_DISPLAY_VISUAL_SPECS.construction,
+    bodyHeight: DATA_DISPLAY_VISUAL_SPECS.construction.height - DATA_DISPLAY_VISUAL_SPECS.construction.headerHeight,
+    categoryHeight: DATA_DISPLAY_VISUAL_SPECS.construction.minimumCategoryHeight,
     placement: "after_scenario_and_data_table"
   };
-  layout.template = { ...(layout.template || {}), columns: 1, maxProblemsPerPage: 1 };
+  layout.template = { ...(layout.template || {}), columns: 1, maxProblemsPerPage: constructionPictograph.tasksPerPage };
   layout.display = {
     ...(layout.display || {}),
     hideSubtitle: true,
@@ -6021,9 +6020,10 @@ if (item.id === "g3_complete_a_graph") {
     sharedDataPictograph: true,
     sharedDataGraph: graphData,
     sharedDataGraphHeight: constructionPictograph.height,
+    sharedDataVisualSpec: DATA_DISPLAY_VISUAL_SPECS.standard,
     constructionPictograph,
-    sharedDataSymbolStrokeColor: "#4b5563",
-    sharedDataSymbolStrokeWidth: 1.15,
+    sharedDataSymbolStrokeColor: constructionPictograph.symbolStrokeColor,
+    sharedDataSymbolStrokeWidth: constructionPictograph.symbolStrokeWidth,
     sharedDataScenario: graphData?.scenario || "",
     sharedDataScenarioPlacement: "between_instruction_and_graph",
     sharedDataScenarioAlign: "left",
@@ -6042,8 +6042,10 @@ if (item.id === "g3_match_data_to_graph") {
     hideItemSeparators: false,
     sharedDataTaskMode: "match_graph",
     sharedDataPictograph: true,
-    sharedDataSymbolStrokeColor: "#4b5563",
-    sharedDataSymbolStrokeWidth: 1.15,
+    sharedDataVisualSpec: DATA_DISPLAY_VISUAL_SPECS.standard,
+    matchDataVisualSpec: DATA_DISPLAY_VISUAL_SPECS.match,
+    sharedDataSymbolStrokeColor: DATA_DISPLAY_VISUAL_SPECS.standard.symbolStrokeColor,
+    sharedDataSymbolStrokeWidth: DATA_DISPLAY_VISUAL_SPECS.standard.symbolStrokeWidth,
     sequentialColumnFill: true
   };
 }
@@ -6051,6 +6053,7 @@ if (item.id === "g3_match_data_to_graph") {
 if (GRADE1_DATA_READING_IDS.has(item.id)) {
   const questionCount = GRADE1_DATA_QUESTION_COUNTS[item.id];
   const graphData = layout.problems?.[0]?.graphData || null;
+  const visualSpec = DATA_DISPLAY_VISUAL_SPECS.standard;
   layout.template = {
     ...(layout.template || {}),
     columns: 2,
@@ -6076,7 +6079,10 @@ if (GRADE1_DATA_READING_IDS.has(item.id)) {
     sequentialColumnFill: true,
     sharedDataPictograph: true,
     sharedDataGraph: graphData,
-    sharedDataGraphHeight: 218,
+    sharedDataGraphHeight: visualSpec.height,
+    sharedDataVisualSpec: visualSpec,
+    sharedDataSymbolStrokeColor: visualSpec.symbolStrokeColor,
+    sharedDataSymbolStrokeWidth: visualSpec.symbolStrokeWidth,
     sharedDataScenario: graphData?.scenario || "",
     sharedDataScenarioPlacement: "between_instruction_and_graph",
     sharedDataScenarioAlign: "left",
@@ -6088,6 +6094,7 @@ if (GRADE1_DATA_READING_IDS.has(item.id)) {
 if (GRADE2_PICTOGRAPH_READING_IDS.has(item.id)) {
   const questionCount = 6;
   const graphData = layout.problems?.[0]?.graphData || null;
+  const visualSpec = DATA_DISPLAY_VISUAL_SPECS.standard;
   layout.template = {
     ...(layout.template || {}),
     columns: 2,
@@ -6113,9 +6120,10 @@ if (GRADE2_PICTOGRAPH_READING_IDS.has(item.id)) {
     sequentialColumnFill: true,
     sharedDataPictograph: true,
     sharedDataGraph: graphData,
-    sharedDataGraphHeight: 218,
-    sharedDataSymbolStrokeColor: "#4b5563",
-    sharedDataSymbolStrokeWidth: 1.15,
+    sharedDataGraphHeight: visualSpec.height,
+    sharedDataVisualSpec: visualSpec,
+    sharedDataSymbolStrokeColor: visualSpec.symbolStrokeColor,
+    sharedDataSymbolStrokeWidth: visualSpec.symbolStrokeWidth,
     sharedDataScenario: graphData?.scenario || "",
     sharedDataScenarioPlacement: "between_instruction_and_graph",
     sharedDataScenarioAlign: "left",
@@ -6127,18 +6135,12 @@ if (GRADE2_PICTOGRAPH_READING_IDS.has(item.id)) {
 if (item.id === GRADE2_COMPLETE_PICTOGRAPH_ID) {
   const graphData = layout.problems?.[0]?.graphData || null;
   const constructionPictograph = {
-    width: 504,
-    height: 298,
-    headerHeight: 42,
-    bodyHeight: 256,
-    categoryHeight: 64,
-    labelWidth: 112,
-    symbolDiameter: 22,
-    symbolGap: 38,
-    symbolInset: 28,
+    ...DATA_DISPLAY_VISUAL_SPECS.construction,
+    bodyHeight: DATA_DISPLAY_VISUAL_SPECS.construction.height - DATA_DISPLAY_VISUAL_SPECS.construction.headerHeight,
+    categoryHeight: DATA_DISPLAY_VISUAL_SPECS.construction.minimumCategoryHeight,
     placement: "after_scenario_and_data_table"
   };
-  layout.template = { ...(layout.template || {}), columns: 1, maxProblemsPerPage: 1 };
+  layout.template = { ...(layout.template || {}), columns: 1, maxProblemsPerPage: constructionPictograph.tasksPerPage };
   layout.display = {
     ...(layout.display || {}),
     hideSubtitle: true,
@@ -6148,9 +6150,10 @@ if (item.id === GRADE2_COMPLETE_PICTOGRAPH_ID) {
     sharedDataPictograph: true,
     sharedDataGraph: graphData,
     sharedDataGraphHeight: constructionPictograph.height,
+    sharedDataVisualSpec: DATA_DISPLAY_VISUAL_SPECS.standard,
     constructionPictograph,
-    sharedDataSymbolStrokeColor: "#4b5563",
-    sharedDataSymbolStrokeWidth: 1.15,
+    sharedDataSymbolStrokeColor: constructionPictograph.symbolStrokeColor,
+    sharedDataSymbolStrokeWidth: constructionPictograph.symbolStrokeWidth,
     sharedDataScenario: graphData?.scenario || "",
     sharedDataScenarioPlacement: "between_instruction_and_graph",
     sharedDataScenarioAlign: "left",
@@ -6169,8 +6172,10 @@ if (item.id === GRADE2_MATCHING_PICTOGRAPH_ID) {
     hideItemSeparators: false,
     sharedDataTaskMode: "match_graph",
     sharedDataPictograph: true,
-    sharedDataSymbolStrokeColor: "#4b5563",
-    sharedDataSymbolStrokeWidth: 1.15,
+    sharedDataVisualSpec: DATA_DISPLAY_VISUAL_SPECS.standard,
+    matchDataVisualSpec: DATA_DISPLAY_VISUAL_SPECS.match,
+    sharedDataSymbolStrokeColor: DATA_DISPLAY_VISUAL_SPECS.standard.symbolStrokeColor,
+    sharedDataSymbolStrokeWidth: DATA_DISPLAY_VISUAL_SPECS.standard.symbolStrokeWidth,
     sequentialColumnFill: true
   };
 }
@@ -6181,15 +6186,9 @@ if (GRADE1_DATA_BATCH3_IDS.has(item.id)) {
   const graphData = layout.problems?.[0]?.graphData || null;
   const constructionPictograph = taskMode === "complete_graph"
     ? {
-        width: 504,
-        height: 298,
-        headerHeight: 42,
-        bodyHeight: 256,
-        categoryHeight: 64,
-        labelWidth: 112,
-        symbolDiameter: 22,
-        symbolGap: 38,
-        symbolInset: 28,
+        ...DATA_DISPLAY_VISUAL_SPECS.construction,
+        bodyHeight: DATA_DISPLAY_VISUAL_SPECS.construction.height - DATA_DISPLAY_VISUAL_SPECS.construction.headerHeight,
+        categoryHeight: DATA_DISPLAY_VISUAL_SPECS.construction.minimumCategoryHeight,
         placement: "after_scenario_and_data_table"
       }
     : null;
@@ -6206,8 +6205,12 @@ if (GRADE1_DATA_BATCH3_IDS.has(item.id)) {
     grade1DataTaskMode: taskMode,
     sharedDataPictograph: taskMode !== "match_graph",
     sharedDataGraph: graphData,
-    sharedDataGraphHeight: constructionPictograph?.height || 218,
+    sharedDataGraphHeight: constructionPictograph?.height || DATA_DISPLAY_VISUAL_SPECS.standard.height,
+    sharedDataVisualSpec: DATA_DISPLAY_VISUAL_SPECS.standard,
+    matchDataVisualSpec: DATA_DISPLAY_VISUAL_SPECS.match,
     constructionPictograph,
+    sharedDataSymbolStrokeColor: DATA_DISPLAY_VISUAL_SPECS.standard.symbolStrokeColor,
+    sharedDataSymbolStrokeWidth: DATA_DISPLAY_VISUAL_SPECS.standard.symbolStrokeWidth,
     sharedDataScenario: graphData?.scenario || "",
     sharedDataScenarioPlacement: "between_instruction_and_graph",
     sharedDataScenarioAlign: "left",

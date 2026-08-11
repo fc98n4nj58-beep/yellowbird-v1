@@ -238,7 +238,7 @@ function assertCatalogCounts() {
   ).items;
   const count = (status) => catalog.filter((item) => item.status === status).length;
   assert.strictEqual(catalog.length, 331);
-  assert.strictEqual(count("ready"), 104);
+  assert.strictEqual(count("ready"), 102);
   assert.strictEqual(count("generated"), 213);
   assert.strictEqual(count("partial"), 5);
   Object.values(IDS).forEach((id) => {

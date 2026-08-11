@@ -19,7 +19,6 @@ const CATEGORIES = Object.freeze({
     "g5_equivalent_fractions_exit_ticket",
     "g5_place_value_to_100000_quick_check",
     "g5_equivalent_fractions_quick_check",
-    "g5_complete_graphs",
     "grade5_fraction_equivalence_compare_fractions",
     "grade5_multiplication_facts_missing_factor",
     "g5_multiplication_fact_review",
@@ -55,6 +54,7 @@ const CATEGORIES = Object.freeze({
     "grade5_data_display_graphing_interpret_data",
     "grade5_data_display_graphing_match_data_to_graph",
     "grade5_data_display_graphing_read_graph",
+    "g5_complete_graphs",
     "g5_fraction_equivalence",
     "grade5_fraction_equivalence_fraction_word_problems",
     "g5_fraction_number_line",
@@ -155,7 +155,7 @@ function run() {
   assert.strictEqual(categoryById.size, 46);
   assert.deepStrictEqual(
     Object.fromEntries(Object.entries(CATEGORIES).map(([category, ids]) => [category, ids.length])),
-    { A: 24, D: 0, E: 0, G: 22 }
+    { A: 23, D: 0, E: 0, G: 23 }
   );
   rows.forEach((row) => {
     assert.strictEqual(row.proposed, categoryById.get(row.id), `Inventory category mismatch: ${row.id}`);
@@ -200,13 +200,13 @@ function run() {
   });
   assert(plan.includes("Batch 6 — Addition and Subtraction Stories (founder approved and closed)"));
   assert(plan.includes("Founder approval covers all three resources with no split, blocked, or deferred resource"));
-  assert(plan.includes("Grade 5 is closed at **A24 / D0 / E0 / G22 / Total46**"));
+  assert(plan.includes("Grade 5 is currently closed at **A23 / D0 / E0 / G23 / Total46**"));
 
   const grade5Statuses = grade5.reduce((counts, item) => {
     counts[item.status] = (counts[item.status] || 0) + 1;
     return counts;
   }, {});
-  assert.deepStrictEqual(grade5Statuses, { ready: 11, generated: 32, partial: 1, planned: 2 });
+  assert.deepStrictEqual(grade5Statuses, { ready: 10, generated: 32, partial: 1, planned: 3 });
 
   const allStatuses = catalog.reduce((counts, item) => {
     counts[item.status] = (counts[item.status] || 0) + 1;
@@ -219,7 +219,7 @@ function run() {
       partial: allStatuses.partial,
       total: catalog.length
     },
-    { ready: 104, generated: 213, partial: 5, total: 331 }
+    { ready: 102, generated: 213, partial: 5, total: 331 }
   );
 
   grade5.forEach((item) => {
@@ -252,7 +252,7 @@ function run() {
     "grade5_data_display_graphing_interpret_data"
   ]);
 
-  assert(preflight.includes("A24 / D0 / E0 / G22 / Total46"));
+  assert(preflight.includes("A23 / D0 / E0 / G23 / Total46"));
   assert(preflight.includes("46 unique Grade 5 IDs"));
   assert(preflight.includes("Grade 6 append begins at review number 152"));
   assert(preflight.includes("CONFIRMED GRADE 4 DRIFT"));
@@ -266,7 +266,7 @@ function run() {
     grade5Records: grade5.length,
     uniqueGrade5Ids: grade5Set.size,
     grade5Lifecycle: grade5Statuses,
-    proposedReconciliation: { A: 24, D: 0, E: 0, G: 22, Total: 46 },
+    proposedReconciliation: { A: 23, D: 0, E: 0, G: 23, Total: 46 },
     closedBatch5: CLOSED_BATCH_FIVE.length,
     closedBatch6: CLOSED_BATCH_SIX.length,
     remainingD: CATEGORIES.D.length,

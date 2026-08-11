@@ -131,13 +131,13 @@ const grade4Catalog = [
     worksheetFamily: "data_graphing",
     activityTypes: ["read_graph", "interpret_data"],
     templateId: "equation_practice",
-    status: "ready",
+    status: "planned",
     difficulty: "medium",
     estimatedTimeMinutes: 12,
     hasAnswerKey: true,
     tags: ["graphs", "interpret data", "grade 4"],
     curriculumTags: ["D1"],
-    description: "Students read graphs and answer interpretation questions in context."
+    description: "Deferred until structured graph truth and a genuine graph renderer are approved; the current text-only candidate duplicates interpretation work."
   }
 ];
 

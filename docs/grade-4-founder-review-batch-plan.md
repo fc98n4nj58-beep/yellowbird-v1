@@ -2,7 +2,7 @@
 
 Date: 2026-07-22
 
-Status: Batches 1-5, the A-resource confirmation sweep and final reconciliation are complete. Grade 4 founder review is closed at A24 / D0 / E0 / G24 / Total48; lifecycle statuses remain unchanged and Grade 5 has not started.
+Status: Batches 1-5, the A-resource confirmation sweep and final reconciliation are complete. Grade 4 remains closed at A24 / D0 / E0 / G24 / Total48. The 2026-08-11 current-output review moved the already-deferred `g4_read_and_interpret_graphs` record from `ready` to `planned`; no reconciliation category changed.
 
 ## Planning rules
 

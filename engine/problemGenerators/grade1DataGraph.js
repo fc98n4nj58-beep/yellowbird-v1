@@ -465,6 +465,20 @@ function generateGrade1DataGraphProblem(options = {}) {
   const generatorState = options.generatorState || {};
   generatorState.grade1DataGraphs = generatorState.grade1DataGraphs || {};
   generatorState.grade1GraphTopicSelection = generatorState.grade1GraphTopicSelection || {};
+  if (task === "complete_graph") {
+    const completeIndex = generatorState.grade1GraphCompleteIndex || 0;
+    if (completeIndex >= 2) throw new Error("No unused Grade 1 complete-graph tasks remain.");
+    const topic = selectGraphTopic({
+      worksheetSeed: `${options.worksheetSeed || "yellowbird-default"}:complete:${completeIndex}`,
+      graphTopicId: completeIndex === 0 ? options.graphTopicId : null,
+      selectionState: generatorState.grade1GraphTopicSelection
+    });
+    generatorState.grade1GraphCompleteIndex = completeIndex + 1;
+    return buildCompleteGraphProblem(
+      buildGraphData(topic, options.random || Math.random),
+      options.random || Math.random
+    );
+  }
   if (task === "match_graph") {
     const matchIndex = generatorState.grade1GraphMatchIndex || 0;
     const topic = selectGraphTopic({
@@ -495,9 +509,7 @@ function generateGrade1DataGraphProblem(options = {}) {
         ? buildInterpretQuestions(graphData)
         : task === "mixed"
           ? buildMixedQuestions(graphData)
-          : task === "complete_graph"
-            ? [buildCompleteGraphProblem(graphData, options.random || Math.random)]
-            : buildGraphApplicationQuestions(graphData, options.random || Math.random);
+          : buildGraphApplicationQuestions(graphData, options.random || Math.random);
     generatorState.grade1DataGraphs[task] = { graphData, questions };
   }
 

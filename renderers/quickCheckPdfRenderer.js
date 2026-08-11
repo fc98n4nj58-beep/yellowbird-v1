@@ -28,7 +28,12 @@ const GRADE2_QUICK_CHECK_LAYOUT = Object.freeze({
   preciseTimeEstimate: false,
   teacherPanel: false,
   ratingStrip: false,
-  usesSecondaryAnswerLines: false
+  usesSecondaryAnswerLines: false,
+  dividerY: 120,
+  nameDateY: 135,
+  instructionY: 170,
+  questionGridY: 206,
+  footerResourceKind: "Quick Check"
 });
 
 function safeStr(value) {
@@ -222,22 +227,23 @@ function drawCompactHeader(doc, fonts, item, contentObject, options = {}) {
     lineBreak: false
   });
 
-  drawAssessmentRule(doc, left, left + width, top + 52, { color: COLORS.rule, width: 0.7 });
+  drawAssessmentRule(doc, left, left + width, GRADE2_QUICK_CHECK_LAYOUT.dividerY, { color: COLORS.rule, width: 0.7 });
+
+  if (!options.answerKey) {
+    setAssessmentFont(doc, fonts.regular, 10);
+    doc.fillColor(COLORS.text).text("Name:", left, GRADE2_QUICK_CHECK_LAYOUT.nameDateY, { width: 36, lineBreak: false });
+    drawAssessmentRule(doc, left + 40, left + 250, GRADE2_QUICK_CHECK_LAYOUT.nameDateY + 12, { color: "#a8a29e", width: 0.7 });
+    doc.text("Date:", left + 286, GRADE2_QUICK_CHECK_LAYOUT.nameDateY, { width: 34, lineBreak: false });
+    drawAssessmentRule(doc, left + 322, left + width, GRADE2_QUICK_CHECK_LAYOUT.nameDateY + 12, { color: "#a8a29e", width: 0.7 });
+  }
+
   setAssessmentFont(doc, fonts.regular, 11.5);
-  doc.fillColor(COLORS.text).text(instruction, left, top + 70, {
+  doc.fillColor(COLORS.text).text(instruction, left, GRADE2_QUICK_CHECK_LAYOUT.instructionY, {
     width,
     lineBreak: false
   });
 
-  if (!options.answerKey) {
-    setAssessmentFont(doc, fonts.regular, 10);
-    doc.fillColor(COLORS.text).text("Name:", left, top + 104, { width: 36, lineBreak: false });
-    drawAssessmentRule(doc, left + 40, left + 250, top + 116, { color: "#a8a29e", width: 0.7 });
-    doc.text("Date:", left + 286, top + 104, { width: 34, lineBreak: false });
-    drawAssessmentRule(doc, left + 322, left + width, top + 116, { color: "#a8a29e", width: 0.7 });
-  }
-
-  return top + 150;
+  return GRADE2_QUICK_CHECK_LAYOUT.questionGridY;
 }
 
 function drawCompactQuestionGrid(doc, fonts, items, startY, options = {}) {
@@ -283,13 +289,13 @@ function renderGrade2CompactQuickCheckPDF({ res, item, contentObject, options = 
 
   let startY = drawCompactHeader(doc, fonts, item, contentObject);
   drawCompactQuestionGrid(doc, fonts, items, startY);
-  drawStandardFooter(doc, fonts, item);
+  drawStandardFooter(doc, fonts, item, { resourceKindLabel: GRADE2_QUICK_CHECK_LAYOUT.footerResourceKind });
 
   if (options.includeAnswerKey !== false && item.hasAnswerKey !== false) {
     doc.addPage();
     startY = drawCompactHeader(doc, fonts, item, contentObject, { answerKey: true });
     drawCompactQuestionGrid(doc, fonts, items, startY, { answerKey: true });
-    drawStandardFooter(doc, fonts, item);
+    drawStandardFooter(doc, fonts, item, { resourceKindLabel: GRADE2_QUICK_CHECK_LAYOUT.footerResourceKind });
   }
 
   doc.end();

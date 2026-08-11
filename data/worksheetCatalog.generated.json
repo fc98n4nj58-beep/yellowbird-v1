@@ -387,8 +387,8 @@
       "curriculumTags": [],
       "description": "Students use a numeral data table to complete two rows of a one-to-one pictograph.",
       "studentInstruction": "Use the data table. Draw circles to complete the pictograph.",
-      "generatorOptions": { "questionCount": 1 },
-      "pdfLayout": { "columns": 1, "maxProblemsPerPage": 1 }
+      "generatorOptions": { "questionCount": 2 },
+      "pdfLayout": { "columns": 1, "maxProblemsPerPage": 2 }
     },
     {
       "id": "grade1_data_display_graphing_graph_questions",
@@ -1676,7 +1676,9 @@
         "complete graph"
       ],
       "curriculumTags": [],
-      "description": "Students complete graph displays from data."
+      "description": "Students complete graph displays from data.",
+      "generatorOptions": { "questionCount": 2 },
+      "pdfLayout": { "columns": 1, "maxProblemsPerPage": 2 }
     },
     {
       "id": "grade2_data_display_graphing_graph_questions",

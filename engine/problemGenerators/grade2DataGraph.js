@@ -360,6 +360,18 @@ function generateGrade2DataGraphProblem(options = {}) {
   generatorState.grade2DataGraphs = generatorState.grade2DataGraphs || {};
   generatorState.grade2GraphTopicSelection = generatorState.grade2GraphTopicSelection || {};
 
+  if (task === "complete") {
+    const completeIndex = generatorState.grade2GraphCompleteIndex || 0;
+    if (completeIndex >= 2) throw new Error("No unused Grade 2 complete-pictograph tasks remain.");
+    const topic = selectGraphTopic({
+      worksheetSeed: `${options.worksheetSeed || "yellowbird-default"}:complete:${completeIndex}`,
+      graphTopicId: completeIndex === 0 ? options.graphTopicId : null,
+      selectionState: generatorState.grade2GraphTopicSelection
+    });
+    generatorState.grade2GraphCompleteIndex = completeIndex + 1;
+    return buildCompletePictographProblem(buildGrade2GraphData(topic, random), random);
+  }
+
   if (task === "match") {
     const matchIndex = generatorState.grade2GraphMatchIndex || 0;
     if (matchIndex >= 2) throw new Error("No unused Grade 2 matching pictograph items remain.");
@@ -388,9 +400,7 @@ function generateGrade2DataGraphProblem(options = {}) {
     const graphData = buildGrade2GraphData(topic, random);
     const questions = task === "read"
       ? buildReadQuestions(graphData, random)
-      : task === "interpret"
-        ? buildInterpretQuestions(graphData, random)
-        : [buildCompletePictographProblem(graphData, random)];
+      : buildInterpretQuestions(graphData, random);
     if (READING_TASKS.has(task)) attachQuestionTruth(graphData, questions);
     generatorState.grade2DataGraphs[task] = { graphData, questions };
   }

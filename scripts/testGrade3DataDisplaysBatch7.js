@@ -19,7 +19,7 @@ const IDS = Object.freeze({
   read: "g3_read_a_graph"
 });
 const CONTRACTS = Object.freeze({
-  [IDS.complete]: ["Complete the Graph", "Use the data table to complete the pictograph.", 1],
+  [IDS.complete]: ["Complete the Graph", "Use the data table to complete the pictograph.", 2],
   [IDS.questions]: ["Answer Questions About a Graph", "Use the graph to answer each question.", 6],
   [IDS.interpret]: ["Interpret the Data", "Read each statement. Write Yes if the graph supports it or No if it does not.", 4],
   [IDS.match]: ["Choose the Matching Pictograph", "Use the table. Circle A or B to show which pictograph matches the data.", 2],
@@ -137,24 +137,27 @@ function assertQuestionTruth(item) {
 }
 
 function assertComplete(runtime) {
-  const [item] = items(runtime);
-  assert.strictEqual(item.taskAction, "complete");
   assert.strictEqual(runtime.layout.display.sharedDataTaskMode, "complete_graph");
-  assert.deepStrictEqual(
-    item.graphTaskData.dataTable.map(({ label, value }) => ({ label, value })),
-    item.graphData.categories.map(({ label, value }) => ({ label, value }))
-  );
-  const incomplete = item.graphTaskData.graphRows.filter((row) => row.isIncomplete);
-  assert.strictEqual(incomplete.length, 2);
-  assert.deepStrictEqual(incomplete.map((row) => row.missingCount).sort(), [1, 2]);
-  item.graphTaskData.graphRows.forEach((row) => {
-    assert.strictEqual(row.visibleSymbolCount + row.missingCount, row.requiredSymbolCount);
-  });
-  for (const answerKey of [false, true]) {
-    rendererTest.buildConstructionGraphCategories(item.graphTaskData, answerKey).forEach((category) => {
-      assert.strictEqual(rendererTest.sharedDataSymbolCount(category.value), category.value);
+  assert.strictEqual(items(runtime).length, 2);
+  assert.strictEqual(new Set(items(runtime).map((item) => item.graphData.topicId)).size, 2);
+  items(runtime).forEach((item) => {
+    assert.strictEqual(item.taskAction, "complete");
+    assert.deepStrictEqual(
+      item.graphTaskData.dataTable.map(({ label, value }) => ({ label, value })),
+      item.graphData.categories.map(({ label, value }) => ({ label, value }))
+    );
+    const incomplete = item.graphTaskData.graphRows.filter((row) => row.isIncomplete);
+    assert.strictEqual(incomplete.length, 2);
+    assert.deepStrictEqual(incomplete.map((row) => row.missingCount).sort(), [1, 2]);
+    item.graphTaskData.graphRows.forEach((row) => {
+      assert.strictEqual(row.visibleSymbolCount + row.missingCount, row.requiredSymbolCount);
     });
-  }
+    for (const answerKey of [false, true]) {
+      rendererTest.buildConstructionGraphCategories(item.graphTaskData, answerKey).forEach((category) => {
+        assert.strictEqual(rendererTest.sharedDataSymbolCount(category.value), category.value);
+      });
+    }
+  });
 }
 
 function assertMatch(runtime) {

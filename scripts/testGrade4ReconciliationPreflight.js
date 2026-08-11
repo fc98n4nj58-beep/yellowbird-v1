@@ -191,7 +191,7 @@ function run() {
   }, {});
   assert.deepStrictEqual(
     { ready: statuses.ready, generated: statuses.generated, partial: statuses.partial, planned: statuses.planned, total: catalog.length },
-    { ready: 104, generated: 213, partial: 5, planned: 9, total: 331 }
+    { ready: 102, generated: 213, partial: 5, planned: 11, total: 331 }
   );
   assert(preflight.includes("Grade 2 remains A35 / D0 / E0 / G17 / Total52."));
   assert(preflight.includes("Grade 3 remains A36 / D0 / E0 / G17 / Total53."));
@@ -216,10 +216,10 @@ function run() {
   console.log(JSON.stringify({
     grade4Records: grade4.length,
     uniqueGrade4Ids: grade4Set.size,
-    catalogStatuses: { ready: 18, generated: 29, planned: 1 },
+    catalogStatuses: { ready: 17, generated: 29, planned: 2 },
     currentReconciliation: { A: 24, D: 0, E: 0, G: 24, Total: 48 },
     batches: Object.fromEntries(Object.entries(BATCHES).map(([batch, ids]) => [batch, ids.length])),
-    readyRuntimeDeterminism: "18/18",
+    readyRuntimeDeterminism: "17/17",
     publicGrade4CustomizationFamilies: 0,
     grade2Closed: "A35/D0/E0/G17/Total52",
     grade3Closed: "A36/D0/E0/G17/Total53"

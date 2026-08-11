@@ -2,6 +2,7 @@
 
 const layout = require("../config/layout/layoutSpec.json");
 const { pdfDesignTokens } = require("../config/layout/pdfDesignTokens");
+const { DATA_DISPLAY_VISUAL_SPECS } = require("../config/layout/dataDisplayVisualSpecs");
 const path = require("path");
 const PDFDocument = require("pdfkit");
 const {
@@ -4552,33 +4553,37 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     const categories = Array.isArray(graph.categories) ? graph.categories : [];
     if (!categories.length) return startAtY;
 
+    const visualSpec = config.visualSpec || display.sharedDataVisualSpec || DATA_DISPLAY_VISUAL_SPECS.standard;
+    const compact = config.compact ?? visualSpec.compact ?? false;
     const x = config.x ?? layout.page.contentBox.x;
-    const width = config.width ?? layout.page.contentBox.width;
+    const width = config.width ?? visualSpec.width ?? layout.page.contentBox.width;
     const geometry = buildSharedDataPictographGeometry({
       x,
       y: startAtY,
       width,
-      height: config.height || display.sharedDataGraphHeight || 218,
+      height: config.height ?? display.sharedDataGraphHeight ?? visualSpec.height,
       categoryCount: categories.length,
-      headerHeight: config.headerHeight ?? 42,
-      minimumCategoryHeight: config.minimumCategoryHeight ?? 37
+      headerHeight: config.headerHeight ?? visualSpec.headerHeight,
+      minimumCategoryHeight: config.minimumCategoryHeight ?? visualSpec.minimumCategoryHeight
     });
     const height = geometry.height;
     const rowTop = geometry.body.top;
-    const labelWidth = config.labelWidth || 104;
-    const symbolStrokeColor = config.symbolStrokeColor || display.sharedDataSymbolStrokeColor || pdfDesignTokens.colors.lightRule;
-    const symbolStrokeWidth = config.symbolStrokeWidth ?? display.sharedDataSymbolStrokeWidth ?? 0.8;
+    const labelWidth = config.labelWidth ?? visualSpec.labelWidth;
+    const symbolStrokeColor = config.symbolStrokeColor || display.sharedDataSymbolStrokeColor || visualSpec.symbolStrokeColor || pdfDesignTokens.colors.lightRule;
+    const symbolStrokeWidth = config.symbolStrokeWidth ?? display.sharedDataSymbolStrokeWidth ?? visualSpec.symbolStrokeWidth ?? 0.8;
 
     doc.save();
     doc.lineWidth(0.8);
     doc.strokeColor(pdfDesignTokens.colors.lightRule);
     doc.roundedRect(x, startAtY, width, height, 4).stroke();
 
-    if (config.showHeader !== false) {
-      setFont(doc, fonts.bold || fonts.regular, config.titleSize || 12);
+    const showHeader = config.showHeader ?? visualSpec.showHeader ?? true;
+    const showKey = config.showKey ?? visualSpec.showKey ?? true;
+    if (showHeader) {
+      setFont(doc, fonts.bold || fonts.regular, config.titleSize ?? visualSpec.titleSize ?? 12);
       doc.fillColor(pdfDesignTokens.colors.text);
       const title = config.title || graph.title || "Pictograph";
-      const titleWidth = config.showKey === false ? width - 24 : width * 0.58;
+      const titleWidth = showKey ? width * 0.58 : width - 24;
       const titleHeight = doc.heightOfString(title, { width: titleWidth, lineBreak: false });
       const titleY = geometry.header.centerY - titleHeight / 2;
       doc.text(title, x + 12, titleY, {
@@ -4587,15 +4592,15 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
         lineBreak: false
       });
 
-      if (config.showKey !== false) {
+      if (showKey) {
         const keyX = x + width - 126;
         const keyY = geometry.header.centerY;
         doc.save();
         doc.strokeColor(symbolStrokeColor);
         doc.lineWidth(symbolStrokeWidth);
-        doc.circle(keyX, keyY, config.compact ? 5 : 7).stroke();
+        doc.circle(keyX, keyY, (config.symbolDiameter ?? visualSpec.symbolDiameter) / 2).stroke();
         doc.restore();
-        setFont(doc, fonts.regular, config.compact ? 8.5 : 10);
+        setFont(doc, fonts.regular, config.keyFontSize ?? visualSpec.keyFontSize ?? (compact ? 8.5 : 10));
         const keyText = String(graph.keyText || "= 1 unit");
         const keyTextHeight = doc.heightOfString(keyText, { width: 94, lineBreak: false });
         doc.text(keyText, keyX + 13, geometry.header.centerY - keyTextHeight / 2, {
@@ -4606,7 +4611,7 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
       }
     }
 
-    if (config.showHeader !== false) doc.moveTo(x, rowTop).lineTo(x + width, rowTop).stroke();
+    if (showHeader) doc.moveTo(x, rowTop).lineTo(x + width, rowTop).stroke();
     doc.moveTo(x + labelWidth, rowTop).lineTo(x + labelWidth, startAtY + height).stroke();
 
     categories.forEach((category, index) => {
@@ -4617,7 +4622,7 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
         doc.moveTo(x, rowY).lineTo(x + width, rowY).stroke();
       }
 
-      setFont(doc, fonts.regular, config.compact ? 8.5 : 11);
+      setFont(doc, fonts.regular, config.labelSize ?? visualSpec.labelSize ?? (compact ? 8.5 : 11));
       doc.fillColor(pdfDesignTokens.colors.text);
       doc.text(String(category.label || ""), x + 10, centerY - 7, {
         width: labelWidth - 18,
@@ -4626,9 +4631,9 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
       });
 
       const count = sharedDataSymbolCount(category.value);
-      const symbolStartX = x + labelWidth + (config.symbolInset ?? (config.compact ? 14 : 24));
-      const symbolGap = config.symbolGap ?? (config.compact ? 18 : 31);
-      const symbolRadius = (config.symbolDiameter ?? (config.compact ? 10 : 16)) / 2;
+      const symbolStartX = x + labelWidth + (config.symbolInset ?? visualSpec.symbolInset);
+      const symbolGap = config.symbolGap ?? visualSpec.symbolGap;
+      const symbolRadius = (config.symbolDiameter ?? visualSpec.symbolDiameter) / 2;
       doc.save();
       doc.strokeColor(symbolStrokeColor);
       doc.lineWidth(symbolStrokeWidth);
@@ -4639,13 +4644,14 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     });
 
     doc.restore();
-    return startAtY + height + 14;
+    return startAtY + height + (config.gapAfter ?? visualSpec.gapAfter ?? 14);
   }
 
-  function renderDataTable(rows, y, { compact = false } = {}) {
+  function renderDataTable(rows, y, { compact = false, visualSpec = null } = {}) {
+    const tableSpec = visualSpec?.dataTable || {};
     const x = layout.page.contentBox.x;
     const width = layout.page.contentBox.width;
-    const height = compact ? 34 : 52;
+    const height = tableSpec.height ?? (compact ? 34 : 52);
     const cellWidth = width / rows.length;
     doc.save();
     doc.strokeColor(pdfDesignTokens.colors.lightRule).lineWidth(0.7);
@@ -4653,15 +4659,15 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     rows.forEach((row, index) => {
       const cellX = x + index * cellWidth;
       if (index) doc.moveTo(cellX, y).lineTo(cellX, y + height).stroke();
-      setFont(doc, fonts.regular, compact ? 8.5 : 10);
+      setFont(doc, fonts.regular, tableSpec.labelSize ?? (compact ? 8.5 : 10));
       doc.fillColor(pdfDesignTokens.colors.muted);
-      doc.text(String(row.label), cellX + 4, y + (compact ? 5 : 8), { width: cellWidth - 8, align: "center", lineBreak: false });
-      setFont(doc, fonts.bold || fonts.regular, compact ? 11 : 14);
+      doc.text(String(row.label), cellX + 4, y + (tableSpec.labelY ?? (compact ? 5 : 8)), { width: cellWidth - 8, align: "center", lineBreak: false });
+      setFont(doc, fonts.bold || fonts.regular, tableSpec.valueSize ?? (compact ? 11 : 14));
       doc.fillColor(pdfDesignTokens.colors.text);
-      doc.text(String(row.value), cellX + 4, y + (compact ? 18 : 28), { width: cellWidth - 8, align: "center", lineBreak: false });
+      doc.text(String(row.value), cellX + 4, y + (tableSpec.valueY ?? (compact ? 18 : 28)), { width: cellWidth - 8, align: "center", lineBreak: false });
     });
     doc.restore();
-    return y + height + (compact ? 8 : 14);
+    return y + height + (tableSpec.gapAfter ?? (compact ? 8 : 14));
   }
 
   function renderSharedTextDataPanel(startAtY) {
@@ -4723,12 +4729,13 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     setFont(doc, fonts.regular, 9.5);
     doc.fillColor(pdfDesignTokens.colors.muted);
     doc.text(graph.scenario, x, y + 17, { width, lineBreak: false });
-    let nextY = renderDataTable(task.dataTable, y + 34, { compact: true });
+    const matchSpec = display.matchDataVisualSpec || DATA_DISPLAY_VISUAL_SPECS.match;
+    let nextY = renderDataTable(task.dataTable, y + 34, { compact: true, visualSpec: matchSpec });
     doc.save();
     doc.strokeColor(display.sharedDataSymbolStrokeColor || pdfDesignTokens.colors.text)
       .lineWidth(display.sharedDataSymbolStrokeWidth ?? 0.8);
-    doc.circle(x + 8, nextY + 5, 5).stroke();
-    setFont(doc, fonts.regular, 8.5);
+    doc.circle(x + 8, nextY + 5, matchSpec.symbolDiameter / 2).stroke();
+    setFont(doc, fonts.regular, matchSpec.keyFontSize);
     doc.fillColor(pdfDesignTokens.colors.text);
     doc.text(String(graph.keyText), x + 18, nextY, { width: width - 18, lineBreak: false });
     doc.restore();
@@ -4754,16 +4761,43 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
         graph: { ...graph, categories: choice.categories },
         x: choiceX,
         width: choiceWidth,
-        height: 138,
-        headerHeight: 0,
-        minimumCategoryHeight: 34.5,
-        labelWidth: 70,
-        showHeader: false,
-        showKey: false,
-        compact: true
+        visualSpec: matchSpec
       });
     });
-    return nextY + 176;
+    return nextY + 22 + matchSpec.height + 16;
+  }
+
+  function renderCompleteGraphTask(item, number, y) {
+    const graph = item?.graphData || {};
+    const task = item?.graphTaskData || {};
+    const construction = display.constructionPictograph || DATA_DISPLAY_VISUAL_SPECS.construction;
+    const x = layout.page.contentBox.x;
+    const width = layout.page.contentBox.width;
+    const title = String(graph.title || "Pictograph");
+    const scenario = String(graph.scenario || "").trim();
+
+    setFont(doc, fonts.bold || fonts.regular, 11);
+    doc.fillColor(pdfDesignTokens.colors.text);
+    doc.text(`${number}. ${title}`, x, y, { width, lineBreak: false });
+
+    setFont(doc, fonts.regular, 10);
+    doc.fillColor(pdfDesignTokens.colors.muted);
+    const scenarioY = y + 17;
+    const scenarioHeight = scenario
+      ? Math.min(26, Math.max(13, doc.heightOfString(scenario, { width, lineGap: 0 })))
+      : 0;
+    if (scenario) {
+      doc.text(scenario, x, scenarioY, { width, lineGap: 0 });
+    }
+
+    let nextY = scenarioY + scenarioHeight + 8;
+    nextY = renderDataTable(task.dataTable || [], nextY, { visualSpec: construction });
+    const rows = buildConstructionGraphCategories(task, display.answerKey);
+    return renderSharedDataGraph(nextY, {
+      graph: { ...graph, categories: rows },
+      width: construction.width,
+      visualSpec: construction
+    });
   }
 
   const equationComparisonExample = display.equationComparisonExampleStrip
@@ -4819,23 +4853,36 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
   }
 
   if ((display.sharedDataTaskMode || display.grade1DataTaskMode) === "complete_graph") {
-    startY = renderSharedDataScenario(startY);
-    const task = allItems[0]?.graphTaskData;
-    startY = renderDataTable(task.dataTable, startY);
-    const rows = buildConstructionGraphCategories(task, display.answerKey);
     const construction = display.constructionPictograph || {};
-    renderSharedDataGraph(startY, {
-      graph: { ...allItems[0].graphData, categories: rows },
-      width: construction.width,
-      height: construction.height,
-      headerHeight: construction.headerHeight,
-      minimumCategoryHeight: construction.categoryHeight,
-      labelWidth: construction.labelWidth,
-      symbolDiameter: construction.symbolDiameter,
-      symbolGap: construction.symbolGap,
-      symbolInset: construction.symbolInset
+    const tasksPerPage = Math.max(1, Number(construction.tasksPerPage || 2));
+    const pages = Array.from({ length: Math.ceil(allItems.length / tasksPerPage) }, (_, index) =>
+      allItems.slice(index * tasksPerPage, (index + 1) * tasksPerPage)
+    );
+    pages.forEach((pageItems, pageIndex) => {
+      if (pageIndex > 0) {
+        doc.addPage();
+        pageState.pageNum += 1;
+        startY = renderHeader(doc, fonts, meta);
+        if (instruction) {
+          setFont(doc, fonts.light || fonts.regular, 11);
+          doc.fillColor(pdfDesignTokens.colors.muted);
+          doc.text(instruction, layout.page.contentBox.x, startY - 12, {
+            width: layout.page.contentBox.width,
+            align: "left"
+          });
+          startY += 18;
+        }
+      }
+      let taskY = startY;
+      pageItems.forEach((item, itemIndex) => {
+        taskY = renderCompleteGraphTask(item, pageIndex * tasksPerPage + itemIndex + 1, taskY);
+        if (itemIndex < pageItems.length - 1) taskY += Number(construction.taskGap || 0);
+      });
+      if (taskY - Number(construction.gapAfter || 0) > bottomContentY) {
+        throw new Error("Complete-graph task geometry exceeds the printable content area.");
+      }
+      drawFooter(doc, fonts, pageState.pageNum, meta);
     });
-    drawFooter(doc, fonts, pageState.pageNum, meta);
     return;
   }
 

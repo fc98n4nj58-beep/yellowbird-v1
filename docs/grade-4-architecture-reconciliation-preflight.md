@@ -2,12 +2,12 @@
 
 Date: 2026-07-22
 
-Status: Grade 4 founder review and architecture reconciliation are closed at A24 / D0 / E0 / G24 / Total48. Lifecycle statuses remain unchanged, Grade 5 has not started, and G remains an intentional defer lane rather than a failure state.
+Status: Grade 4 founder review and architecture reconciliation remain closed at A24 / D0 / E0 / G24 / Total48. The 2026-08-11 current-output review moved `g4_read_and_interpret_graphs` from `ready` to `planned` because its text-only output duplicates interpretation work and does not contain structured graph truth. G remains an intentional defer lane rather than a failure state.
 
 ## Baseline and method
 
 - Baseline HEAD: `22e099a322f7695f37cddf9204982fe240e3e5b7` (`feat: close grade 3 final reconciliation`).
-- Catalog: 48 Grade 4 records, 48 unique IDs, 18 `ready`, 29 `generated`, one `planned`; 11 `g4_` curated/legacy IDs and 37 `grade4_` generated-family IDs.
+- Current catalog: 48 Grade 4 records, 48 unique IDs, 17 `ready`, 29 `generated`, two `planned`; 11 `g4_` curated/legacy IDs and 37 `grade4_` generated-family IDs.
 - Metadata: every record has `grades: ["grade4"]`, `gradeLabels: ["Grade 4"]`, a Grade 4 prefix, subject Math and `hasAnswerKey: true`. No missing, duplicate, cross-grade or internal-only Grade 4 record was found.
 - Runtime: 47 IDs build; `grade4_patterning_and_algebra_pattern_word_problems` is the established planned missing-generator gap. Two generated records build zero items and a one-page shell. The formerly blank Grade 4 fraction-number-line and shade-model paths now use the approved structured Grade 3 families through exact-ID Grade 4 adapters.
 - Default page counts below include the answer key. The shared renderer derives key pages from the same generated items, but that does not make unstructured or blank truth dependable.

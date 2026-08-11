@@ -65,6 +65,13 @@ const EARLY_MULTIPLICATION_FOOTER_IDS = new Set([
   "grade1_multiplication_facts_equal_groups"
 ]);
 
+const ARRAY_FAMILY_FOOTER_LABELS = Object.freeze({
+  grade1_multiplication_facts_arrays: "Early Multiplication Thinking",
+  grade2_multiplication_facts_arrays: "Multiplication & Division",
+  g3_multiplication_arrays: "Multiplication & Division",
+  g4_array_interpretation: "Multiplication & Division"
+});
+
 const NUMBER_PATTERN_FOOTER_IDS = new Set([
   "grade1_multiplication_facts_skip_counting"
 ]);
@@ -167,6 +174,7 @@ function finiteOptionalNumber(value) {
 }
 
 function publicSkillLabel(item) {
+  if (ARRAY_FAMILY_FOOTER_LABELS[item?.id]) return "";
   if (GRADE3_CONCRETE_VISUAL_FOOTERS[item?.id]) return "";
   if (GRADE2_COMPARISON_FOOTER_IDS.has(item?.id)) return "";
   if (GRADE2_ADDITION_SUBTRACTION_CATEGORY_C_IDS.has(item?.id)) return "";
@@ -183,6 +191,9 @@ function publicSkillLabel(item) {
 }
 
 function publicDomainLabel(item) {
+  if (ARRAY_FAMILY_FOOTER_LABELS[item?.id]) {
+    return ARRAY_FAMILY_FOOTER_LABELS[item.id];
+  }
   if (GRADE3_CONCRETE_VISUAL_FOOTERS[item?.id]) {
     return GRADE3_CONCRETE_VISUAL_FOOTERS[item.id];
   }

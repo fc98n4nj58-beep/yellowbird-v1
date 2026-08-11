@@ -160,7 +160,7 @@ function assertCatalogAndIsolation() {
   assert.strictEqual(item.status, "generated");
   const master = JSON.parse(fs.readFileSync("data/worksheetCatalog.master.json", "utf8")).items;
   assert.strictEqual(master.filter((record) => record.id === RESOURCE_ID).length, 1);
-  assert.strictEqual(master.filter((record) => record.status === "ready").length, 104);
+  assert.strictEqual(master.filter((record) => record.status === "ready").length, 102);
   const reconciliation = fs.readFileSync("docs/grade-2-architecture-reconciliation-preflight.md", "utf8");
   const categoryA = reconciliation.match(/\*\*A \(35\):\*\*[^\n]+/)?.[0] || "";
   const categoryD = reconciliation.match(/\*\*D \(0\):\*\*[^\n]+/)?.[0] || "";
@@ -171,14 +171,14 @@ function assertCatalogAndIsolation() {
   assert.strictEqual(grade1.normalizedContentObject.content.items.length, 2);
   assert.strictEqual(grade1.layout.display.grade1DataTaskMode, "match_graph");
   assert.strictEqual(grade1.layout.display.sharedDataTaskMode, undefined);
-  assert.strictEqual(grade1.layout.display.sharedDataSymbolStrokeColor, undefined);
+  assert.strictEqual(grade1.layout.display.sharedDataSymbolStrokeColor, "#4b5563");
   const grade3 = buildCatalogWorksheetRuntime("grade3_data_display_graphing_match_data_to_graph", { worksheetSeed: "g2-match-isolation" });
   assert.strictEqual(grade3.normalizedContentObject.content.items.length, 12);
   assert(grade3.normalizedContentObject.content.items.every((problem) => problem.graphData === null));
   for (const [id, count, taskMode] of [
     ["grade2_data_display_graphing_read_graph", 6, "read_pictograph"],
     ["grade2_data_display_graphing_interpret_data", 6, "interpret_pictograph"],
-    ["grade2_data_display_graphing_complete_graph", 1, "complete_graph"]
+    ["grade2_data_display_graphing_complete_graph", 2, "complete_graph"]
   ]) {
     const runtime = buildCatalogWorksheetRuntime(id, { worksheetSeed: "g2-match-isolation" });
     assert.strictEqual(runtime.normalizedContentObject.content.items.length, count);

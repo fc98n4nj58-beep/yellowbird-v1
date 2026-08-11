@@ -93,7 +93,12 @@ async function testQuickChecks() {
     preciseTimeEstimate: false,
     teacherPanel: false,
     ratingStrip: false,
-    usesSecondaryAnswerLines: false
+    usesSecondaryAnswerLines: false,
+    dividerY: 120,
+    nameDateY: 135,
+    instructionY: 170,
+    questionGridY: 206,
+    footerResourceKind: "Quick Check"
   });
 
   for (const [id, spec] of Object.entries(QUICK_CHECKS)) {

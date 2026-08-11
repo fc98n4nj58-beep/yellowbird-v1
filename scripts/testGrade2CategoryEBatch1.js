@@ -156,7 +156,7 @@ function assertCatalogReconciliationAndIsolation() {
     result[item.status] = (result[item.status] || 0) + 1;
     return result;
   }, {});
-  assert.deepStrictEqual(counts, { ready: 104, partial: 5, generated: 213, planned: 9 });
+  assert.deepStrictEqual(counts, { ready: 102, partial: 5, generated: 213, planned: 11 });
   assert.strictEqual(master.length, 331);
 
   const reconciliation = fs.readFileSync("docs/grade-2-architecture-reconciliation-preflight.md", "utf8");

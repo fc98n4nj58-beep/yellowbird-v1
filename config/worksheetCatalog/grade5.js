@@ -91,13 +91,13 @@ const grade5Catalog = [
     worksheetFamily: "data_graphing",
     activityTypes: ["complete_graph"],
     templateId: "visual_model",
-    status: "ready",
+    status: "planned",
     difficulty: "medium",
     estimatedTimeMinutes: 12,
     hasAnswerKey: true,
     tags: ["graphs", "complete graph", "grade 5"],
     curriculumTags: ["D1"],
-    description: "Students use provided data to complete graph displays."
+    description: "Deferred until structured graph truth and a genuine graph renderer are approved; the current candidate does not display the graph required by its questions."
   }
 ];
 

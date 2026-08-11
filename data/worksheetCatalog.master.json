@@ -734,8 +734,8 @@
       "description": "Students use a numeral data table to complete two rows of a one-to-one pictograph.",
       "sourceType": "generated",
       "studentInstruction": "Use the data table. Draw circles to complete the pictograph.",
-      "generatorOptions": { "questionCount": 1 },
-      "pdfLayout": { "columns": 1, "maxProblemsPerPage": 1 }
+      "generatorOptions": { "questionCount": 2 },
+      "pdfLayout": { "columns": 1, "maxProblemsPerPage": 2 }
     },
     {
       "id": "grade1_data_display_graphing_graph_questions",
@@ -2405,7 +2405,9 @@
       ],
       "curriculumTags": [],
       "description": "Students complete graph displays from data.",
-      "sourceType": "generated"
+      "sourceType": "generated",
+      "generatorOptions": { "questionCount": 2 },
+      "pdfLayout": { "columns": 1, "maxProblemsPerPage": 2 }
     },
     {
       "id": "grade2_data_display_graphing_graph_questions",
@@ -3883,7 +3885,9 @@
       "curriculumTags": [
         "D1"
       ],
-      "description": "Students use information from a provided data set to answer text-based questions.",
+      "description": "Students use two provided data tables to complete two pictographs.",
+      "generatorOptions": { "questionCount": 2 },
+      "pdfLayout": { "columns": 1, "maxProblemsPerPage": 2 },
       "sourceType": "curated"
     },
     {
@@ -6408,7 +6412,7 @@
         "interpret_data"
       ],
       "templateId": "equation_practice",
-      "status": "ready",
+      "status": "planned",
       "difficulty": "medium",
       "estimatedTimeMinutes": 12,
       "hasAnswerKey": true,
@@ -6420,7 +6424,7 @@
       "curriculumTags": [
         "D1"
       ],
-      "description": "Students read data and answer interpretation questions in context.",
+      "description": "Deferred until structured graph truth and a genuine graph renderer are approved; the current text-only candidate duplicates interpretation work.",
       "sourceType": "curated"
     },
     {
@@ -7666,7 +7670,7 @@
         "complete_graph"
       ],
       "templateId": "visual_model",
-      "status": "ready",
+      "status": "planned",
       "difficulty": "medium",
       "estimatedTimeMinutes": 12,
       "hasAnswerKey": true,
@@ -7678,7 +7682,7 @@
       "curriculumTags": [
         "D1"
       ],
-      "description": "Students use information from a provided data set to answer text-based questions.",
+      "description": "Deferred until structured graph truth and a genuine graph renderer are approved; the current candidate does not display the graph required by its questions.",
       "sourceType": "curated"
     },
     {

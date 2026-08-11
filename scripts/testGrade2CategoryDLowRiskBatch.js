@@ -220,7 +220,7 @@ function assertCatalogParityAndCounts() {
   const generated = JSON.parse(fs.readFileSync(path.join(ROOT, "data/worksheetCatalog.generated.json"), "utf8")).items;
   const count = (status) => master.filter((item) => item.status === status).length;
   assert.strictEqual(master.length, 331);
-  assert.strictEqual(count("ready"), 104);
+  assert.strictEqual(count("ready"), 102);
   assert.strictEqual(count("generated"), 213);
   assert.strictEqual(count("partial"), 5);
   Object.values(IDS).forEach((id) => {

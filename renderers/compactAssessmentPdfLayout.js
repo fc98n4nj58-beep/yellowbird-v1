@@ -112,19 +112,24 @@ function drawInlineEquation(doc, fonts, problem, box, options = {}) {
   });
 }
 
-function footerText(item) {
-  return [item.gradeLabels?.[0] || "", item.subject || "Math", item.domain || ""]
+function footerText(item, options = {}) {
+  return [
+    item.gradeLabels?.[0] || "",
+    item.subject || "Math",
+    item.domain || "",
+    options.resourceKindLabel || ""
+  ]
     .filter(Boolean)
     .join(" • ");
 }
 
-function drawStandardFooter(doc, fonts, item) {
+function drawStandardFooter(doc, fonts, item, options = {}) {
   const left = 54;
   const width = 504;
   const y = 742;
   drawRule(doc, left, left + width, y, { color: COLORS.rule, width: 0.6 });
   setFont(doc, fonts.regular, 9);
-  doc.fillColor(COLORS.muted).text(footerText(item), left, y + 8, {
+  doc.fillColor(COLORS.muted).text(footerText(item, options), left, y + 8, {
     width,
     align: "center",
     lineBreak: false
