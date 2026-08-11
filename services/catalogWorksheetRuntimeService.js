@@ -42,7 +42,26 @@ const PUBLIC_SKILL_LABEL_HIDDEN_IDS = new Set([
   "grade4_addition_subtraction_facts_equation_match",
   "grade5_addition_subtraction_facts_equation_match",
   "grade5_place_value_representation_compare_numbers",
-  "g5_interpret_graphs"
+  "g5_interpret_graphs",
+  "grade3_multiplication_facts_equal_groups",
+  "g3_equal_groups_multiplication",
+  "g4_equal_groups_interpretation",
+  "g2_expanded_form_to_100",
+  "g4_expanded_form_large_numbers",
+  "grade1_addition_subtraction_word_problems_missing_addend_word_problem",
+  "g1_missing_addends_within_20",
+  "g3_fact_families_multiplication_division",
+  "g3_multiplication_facts",
+  "g4_multiplication_fact_fluency",
+  "g5_multiplication_fact_review",
+  "g1_number_line_identify_to_20",
+  "g2_skip_counting_by_10",
+  "g2_skip_counting_by_2",
+  "g2_skip_counting_by_5",
+  "g2_standard_form_to_100",
+  "g4_standard_form_large_numbers",
+  "g1_subtraction_facts_within_20",
+  "grade1_addition_subtraction_word_problems_subtraction_word_problem"
 ]);
 
 const GRADE2_CATEGORY_D_FOOTER_LABELS = Object.freeze({

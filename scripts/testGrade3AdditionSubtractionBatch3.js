@@ -13,10 +13,10 @@ const IDS = Object.freeze({
 });
 const FOOTER = "Grade 3 • Math • Addition and Subtraction";
 const SPECS = Object.freeze({
-  [IDS.equation]: { title: "Equal or Not Equal?", instruction: "Solve both sides. Write = if they have the same value. Write ≠ if they have different values.", count: 12 },
+  [IDS.equation]: { title: "Equal or Not Equal?", instruction: "Solve both sides. Write = if they have the same value. Write ≠ if they have different values.", count: 20 },
   [IDS.family]: { title: "Fact Families Within 100", instruction: "Complete the fact family.", count: 12 },
-  [IDS.fluency]: { title: "Addition and Subtraction Facts", instruction: "Solve each addition or subtraction fact.", count: 24 },
-  [IDS.missing]: { title: "Missing Addends", instruction: "Write the missing number in each equation.", count: 24 }
+  [IDS.fluency]: { title: "Addition and Subtraction Facts", instruction: "Solve each addition or subtraction fact.", count: 30 },
+  [IDS.missing]: { title: "Missing Addends", instruction: "Write the missing number in each equation.", count: 30 }
 });
 
 class MemoryResponse extends Writable {
@@ -142,7 +142,7 @@ async function testDefaults() {
     if (id === IDS.equation) {
       first.normalizedContentObject.content.items.forEach(assertEquationTruth);
       const equalCount = first.normalizedContentObject.content.items.filter((item) => item.answer === "=").length;
-      assert.strictEqual(equalCount, 6);
+      assert.strictEqual(equalCount, 10);
       assert.strictEqual(first.layout.display.answerTargetVariant, "comparisonSymbol");
     }
     if (id === IDS.family) {
@@ -154,13 +154,13 @@ async function testDefaults() {
     }
     if (id === IDS.fluency) {
       first.normalizedContentObject.content.items.forEach(assertFluencyTruth);
-      assert.strictEqual(first.normalizedContentObject.content.items.filter((item) => item.op === "+").length, 12);
-      assert.strictEqual(first.normalizedContentObject.content.items.filter((item) => item.op === "-").length, 12);
+      assert.strictEqual(first.normalizedContentObject.content.items.filter((item) => item.op === "+").length, 15);
+      assert.strictEqual(first.normalizedContentObject.content.items.filter((item) => item.op === "-").length, 15);
     }
     if (id === IDS.missing) {
       first.normalizedContentObject.content.items.forEach(assertMissingTruth);
-      assert.strictEqual(first.normalizedContentObject.content.items.filter((item) => item.missingPosition === "first_addend").length, 12);
-      assert.strictEqual(first.normalizedContentObject.content.items.filter((item) => item.missingPosition === "second_addend").length, 12);
+      assert.strictEqual(first.normalizedContentObject.content.items.filter((item) => item.missingPosition === "first_addend").length, 15);
+      assert.strictEqual(first.normalizedContentObject.content.items.filter((item) => item.missingPosition === "second_addend").length, 15);
     }
     const pdf = await render(first, true);
     assert.strictEqual(pageCount(pdf), 2);
@@ -286,10 +286,10 @@ function testCompletedExamplesAndPagination() {
 function testCrossGradeIsolationAndRegistration() {
   const grade1Equation = buildCatalogWorksheetRuntime("grade1_addition_subtraction_facts_equation_match", { worksheetSeed: "grade3-b3-isolation" });
   assert.strictEqual(grade1Equation.layout.header.title, "Equal or Not Equal?");
-  assert.strictEqual(grade1Equation.normalizedContentObject.content.items.length, 12);
+  assert.strictEqual(grade1Equation.normalizedContentObject.content.items.length, 20);
   const grade2Equation = buildCatalogWorksheetRuntime("grade2_addition_subtraction_facts_equation_match", { worksheetSeed: "grade3-b3-isolation" });
   assert.strictEqual(grade2Equation.layout.header.title, "Equal or Not Equal?");
-  assert.strictEqual(grade2Equation.normalizedContentObject.content.items.length, 12);
+  assert.strictEqual(grade2Equation.normalizedContentObject.content.items.length, 20);
   const grade2Fluency = buildCatalogWorksheetRuntime("g2_addition_fluency_within_100", { worksheetSeed: "grade3-b3-isolation" });
   assert.strictEqual(grade2Fluency.layout.header.title, "Addition Facts Within 100");
   assert.strictEqual(grade2Fluency.normalizedContentObject.content.items.length, 12);

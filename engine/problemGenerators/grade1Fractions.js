@@ -7,8 +7,8 @@ const RESOURCE_TASKS = Object.freeze({
 
 const TASK_COUNTS = Object.freeze({
   shade_equal_parts: 6,
-  half_two_fourths: 4,
-  compare_fair_shares: 6,
+  half_two_fourths: 6,
+  compare_fair_shares: 8,
   share_fairly: 3
 });
 
@@ -153,7 +153,9 @@ function buildMatchItems(random) {
     { left: fraction(1, 2), right: fraction(2, 4), answer: "Yes" },
     { left: fraction(1, 2), right: fraction(1, 4), answer: "No" },
     { left: fraction(1, 2), right: fraction(3, 4), answer: "No" },
-    { left: fraction(2, 4), right: fraction(1, 2), answer: "Yes" }
+    { left: fraction(2, 4), right: fraction(1, 2), answer: "Yes" },
+    { left: fraction(1, 4), right: fraction(1, 2), answer: "No" },
+    { left: fraction(3, 4), right: fraction(1, 2), answer: "No" }
   ], random);
 
   return definitions.map((definition, index) => {
@@ -198,7 +200,9 @@ function buildCompareItems(random) {
     [fraction(1, 4), fraction(1, 4)],
     [fraction(2, 4), fraction(1, 2)],
     [fraction(1, 3), fraction(1, 4)],
-    [fraction(1, 4), fraction(1, 3)]
+    [fraction(1, 4), fraction(1, 3)],
+    [fraction(2, 4), fraction(1, 4)],
+    [fraction(1, 4), fraction(2, 4)]
   ], random);
 
   return definitions.map(([left, right], index) => {

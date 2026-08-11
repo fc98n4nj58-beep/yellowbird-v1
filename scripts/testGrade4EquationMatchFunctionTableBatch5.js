@@ -150,9 +150,9 @@ function assertPublicContract(runtime) {
   assert.strictEqual(runtime.layout.instruction, INSTRUCTION);
   assert.strictEqual(runtime.contentObject.meta.curriculum.footerText, FOOTER);
   assert.strictEqual(items(runtime).length, 30);
-  assert.strictEqual(runtime.layout.template.columns, 3);
+  assert.strictEqual(runtime.layout.template.columns, 2);
   assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 30);
-  assert.strictEqual(runtime.layout.display.denseGridRows, 10);
+  assert.strictEqual(runtime.layout.display.denseGridRows, 15);
   assert.strictEqual(runtime.layout.display.equalHeightItems, true);
   assert.strictEqual(runtime.layout.display.sequentialColumnFill, true);
   assert.strictEqual(runtime.layout.display.hideItemSeparators, true);
@@ -187,8 +187,8 @@ function assertFamilyLayoutInheritance() {
   }).layout);
   lowerLayouts.forEach((layout) => {
     assert.strictEqual(layout.template.columns, 2);
-    assert.strictEqual(layout.template.maxProblemsPerPage, 12);
-    assert.strictEqual(layout.display.denseGridRows, 6);
+    assert.strictEqual(layout.template.maxProblemsPerPage, 20);
+    assert.strictEqual(layout.display.denseGridRows, 10);
     assert.strictEqual(layout.display.answerTargetVariant, "comparisonSymbol");
     assert.strictEqual(layout.display.standardShortAnswerTarget, true);
     assert.strictEqual(layout.display.equalHeightItems, true);
@@ -199,9 +199,9 @@ function assertFamilyLayoutInheritance() {
   const grade4 = buildCatalogWorksheetRuntime(EQUATION_ID, {
     worksheetSeed: "grade4-batch5-family-inheritance"
   }).layout;
-  assert.strictEqual(grade4.template.columns, 3);
+  assert.strictEqual(grade4.template.columns, 2);
   assert.strictEqual(grade4.template.maxProblemsPerPage, 30);
-  assert.strictEqual(grade4.display.denseGridRows, 10);
+  assert.strictEqual(grade4.display.denseGridRows, 15);
   for (const property of [
     "answerTargetVariant",
     "standardShortAnswerTarget",
@@ -224,9 +224,7 @@ function assertFamilyLayoutInheritance() {
   assert.strictEqual(compareNumbers.layout.template.maxProblemsPerPage, 30);
   assert.strictEqual(compareNumbers.layout.display.denseGridRows, 10);
   assert.strictEqual(compareNumbers.layout.display.sequentialColumnFill, true);
-  assert.strictEqual(grade4.template.columns, compareNumbers.layout.template.columns);
   assert.strictEqual(grade4.template.maxProblemsPerPage, compareNumbers.layout.template.maxProblemsPerPage);
-  assert.strictEqual(grade4.display.denseGridRows, compareNumbers.layout.display.denseGridRows);
 }
 
 function assertExpressionWidthSafety() {
@@ -290,7 +288,7 @@ function assertExpressionWidthSafety() {
   const footerAllowance = 62;
   const availableGridHeight = letterHeight - headerAndInstructionAllowance - footerAllowance;
   const rowHeight = availableGridHeight / display.denseGridRows;
-  assert(rowHeight >= 50, "The 3×10 grid must retain at least 50 points per row.");
+  assert(rowHeight >= 38, "The 2×15 grid must retain at least 38 points per row.");
   assert(rowHeight > display.equationComparisonFontSize * 3);
 }
 
@@ -416,9 +414,9 @@ async function assertVariablesAndExamples() {
     assert.strictEqual(items(runtime).length, 31);
     assert.strictEqual(items(runtime).filter((item) => item.isExample).length, 1);
     assert.strictEqual(items(runtime).filter((item) => !item.isExample).length, 30);
-    assert.strictEqual(runtime.layout.template.columns, 3);
+    assert.strictEqual(runtime.layout.template.columns, 2);
     assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 30);
-    assert.strictEqual(runtime.layout.display.denseGridRows, 10);
+    assert.strictEqual(runtime.layout.display.denseGridRows, 15);
     assertEquationTruth(runtime, 15);
     assert.strictEqual(pageCount(await render(runtime)), 2);
   }
@@ -529,7 +527,7 @@ function assertFunctionTableDecisionAndIsolation() {
   );
   assert.strictEqual(grade3Equation.layout.header.title, "Equal or Not Equal?");
   assert.strictEqual(grade3Equation.layout.template.columns, 2);
-  assert.strictEqual(items(grade3Equation).length, 12);
+  assert.strictEqual(items(grade3Equation).length, 20);
   items(grade3Equation).forEach((item) => {
     assert(item.leftValue >= 0 && item.leftValue <= 100);
     assert(item.rightValue >= 0 && item.rightValue <= 100);
@@ -552,7 +550,7 @@ async function run() {
   assertInvalidInputs();
   assertFunctionTableDecisionAndIsolation();
   assertDocumentationDecision();
-  console.log("Grade 4 Batch 5 focused checks passed: Equation Match 30 seeds, same-seed failures 0, defaults 30 questions in a 3×10 grid and 2 PDF pages, maximum 60 questions; Function Table remains an architecture deferral.");
+  console.log("Grade 4 Batch 5 focused checks passed: Equation Match 30 seeds, same-seed failures 0, defaults 30 questions in a 2×15 grid and 2 PDF pages, maximum 60 questions; Function Table remains an architecture deferral.");
 }
 
 run().catch((error) => {

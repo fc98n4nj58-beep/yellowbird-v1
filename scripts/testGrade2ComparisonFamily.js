@@ -97,9 +97,9 @@ async function testGrade2ComparisonFamily() {
       assert(!runtime.contentObject.meta.title.includes("Grade 2 Extension"));
       assert.strictEqual(runtime.layout.instruction, "Write >, <, or = to compare each pair of numbers.");
       assert.strictEqual(runtime.layout.template.columns, 2);
-      assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 12);
+      assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 20);
       assert.strictEqual(runtime.layout.display.grade2ComparisonLayout, true);
-      assert.strictEqual(runtime.layout.display.denseGridRows, 6);
+      assert.strictEqual(runtime.layout.display.denseGridRows, 10);
       assert.strictEqual(runtime.layout.display.sequentialColumnFill, true);
       assert.strictEqual(runtime.layout.display.comparisonTargetWidth, 52);
       assert.strictEqual(
@@ -109,7 +109,7 @@ async function testGrade2ComparisonFamily() {
       assert(!runtime.contentObject.meta.curriculum.footerText.includes("place_value_representation"));
       assert(!runtime.contentObject.meta.curriculum.footerText.includes("number_relationships"));
       assert(!/[a-z]+_[a-z_]+/.test(runtime.contentObject.meta.curriculum.footerText));
-      assert.strictEqual(items.length, 12);
+      assert.strictEqual(items.length, 20);
       assert(items.every((item) => !item.isExample));
       assert.deepStrictEqual(signatures(runtime), signatures(repeat));
       items.forEach((item) => assertComparisonTruth(item, spec));

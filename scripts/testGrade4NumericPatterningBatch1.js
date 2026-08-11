@@ -311,11 +311,11 @@ function testCrossGradeIsolation() {
     worksheetSeed: "grade4-batch1-grade3-isolation"
   });
   assert.strictEqual(grade2.layout.header.title, "Identify Pattern Rule");
-  assert.strictEqual(grade2.layout.instruction, "Write the number that is added each time.");
+  assert.strictEqual(grade2.layout.instruction, "Write the rule for each pattern.");
   assert.strictEqual(grade2.contentObject.content.items.length, 12);
   assert.strictEqual(grade3.layout.header.title, "Extend the Pattern");
   assert.strictEqual(grade3.layout.instruction, "Extend each pattern. Write the next number.");
-  assert.strictEqual(grade3.contentObject.content.items.length, 12);
+  assert.strictEqual(grade3.contentObject.content.items.length, 30);
   assert.strictEqual(grade3.contentObject.content.items[0].answerState.visibleTermCount, 4);
 }
 

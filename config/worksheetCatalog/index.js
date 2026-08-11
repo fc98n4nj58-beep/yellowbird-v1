@@ -6,6 +6,7 @@ const grade4 = require("./grade4");
 const grade5 = require("./grade5");
 const grade6 = require("./grade6");
 const { applyWorksheetPublicCopy } = require("../worksheetPublicCopy");
+const { applyFounderReviewCurrentOutput } = require("../founderReviewCurrentOutput");
 
 const worksheetCatalog = [
   ...kindergarten,
@@ -15,7 +16,7 @@ const worksheetCatalog = [
   ...grade4,
   ...grade5,
   ...grade6
-].map(applyWorksheetPublicCopy);
+].map(applyWorksheetPublicCopy).map(applyFounderReviewCurrentOutput);
 
 function listWorksheetCatalog() {
   return worksheetCatalog;

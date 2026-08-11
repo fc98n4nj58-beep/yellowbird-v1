@@ -284,7 +284,7 @@ async function testGrade2ControlledCorrection() {
     },
     grade2_patterning_and_algebra_identify_pattern_rule: {
       title: "Identify Pattern Rule",
-      instruction: "Write the number that is added each time.",
+      instruction: "Write the rule for each pattern.",
       mode: "identify_pattern_rule"
     },
     grade2_patterning_and_algebra_missing_value_pattern: {
@@ -348,13 +348,12 @@ async function testGrade2ControlledCorrection() {
     }
 
     if (spec.mode === "identify_pattern_rule") {
-      assert.strictEqual(runtime.layout.display.patterningRuleResponseMode, "add_step");
+      assert.strictEqual(runtime.layout.display.patterningRuleResponseMode, "written_rule");
       items.forEach((item) => {
         assert.strictEqual(item.patternOperation, "add");
         assert.strictEqual(item.sequence[1] - item.sequence[0], item.step);
         const response = rendererTest.patterningRuleResponseParts(item, runtime.layout.display);
-        assert.deepStrictEqual(response, { prefix: "Add", answer: item.step, suffix: "each time." });
-        assert(!response.prefix.includes("Rule:"));
+        assert.deepStrictEqual(response, { prefix: "Rule:", answer: item.patternRule, suffix: "" });
       });
     }
 
@@ -368,7 +367,7 @@ async function testGrade2ControlledCorrection() {
     worksheetSeed: "grade1-isolation",
     questionCount: 12
   });
-  assert.strictEqual(grade1.layout.header.title, "Extend Pattern — Grade 1");
+  assert.strictEqual(grade1.layout.header.title, "Extend Pattern");
   assert.notStrictEqual(grade1.layout.display.patterningSequenceFontSize, 16);
 
   const grade3 = buildCatalogWorksheetRuntime("grade3_patterning_and_algebra_identify_pattern_rule", {
@@ -555,7 +554,8 @@ function testMultiPageAndSkipCountingRegression() {
   assert.strictEqual(skip.contentObject.content.items.length, 10);
   assert.strictEqual(skip.layout.display.skipCountingRow, true);
   assert.strictEqual(skip.layout.display.patterningLayout, undefined);
-  assert(skip.contentObject.meta.curriculum.footerText.includes("counting_patterns"));
+  assert(!skip.contentObject.meta.curriculum.footerText.includes("counting_patterns"));
+  assert(!skip.contentObject.meta.curriculum.footerText.includes("_"));
   skip.contentObject.content.items.forEach((item) => {
     assert.strictEqual(item.step, 2);
     assert(Array.isArray(item.sequence));

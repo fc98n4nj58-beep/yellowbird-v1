@@ -15,6 +15,7 @@ const SPECS = Object.freeze({
     title: "Extend the Pattern",
     instruction: "Extend each pattern. Write the next number.",
     layout: "extend_pattern",
+    count: 30,
     studentPages: 1,
     totalPdfPages: 2
   }),
@@ -22,6 +23,7 @@ const SPECS = Object.freeze({
     title: "Identify the Pattern Rule",
     instruction: "Write the rule for each pattern.",
     layout: "identify_pattern_rule",
+    count: 12,
     studentPages: 2,
     totalPdfPages: 4
   }),
@@ -29,6 +31,7 @@ const SPECS = Object.freeze({
     title: "Find the Missing Number",
     instruction: "Write the missing number in each pattern.",
     layout: "missing_value_pattern",
+    count: 20,
     studentPages: 1,
     totalPdfPages: 2
   })
@@ -138,7 +141,7 @@ async function testDefaultContracts() {
     assert.strictEqual(runtime.item.status, "ready");
     assertPublicCopy(runtime, resourceId, spec);
     assert.strictEqual(runtime.layout.display.patterningLayout, spec.layout);
-    assert.strictEqual(runtime.contentObject.content.items.length, 12);
+    assert.strictEqual(runtime.contentObject.content.items.length, spec.count);
     assert(runtime.contentObject.content.items.every((item) => !item.isExample));
     assert.deepStrictEqual(itemTruth(runtime), itemTruth(repeat));
     assertAnswerKeyParity(runtime);
@@ -236,10 +239,10 @@ function testGradeIsolation() {
     worksheetSeed: "grade3-batch1-grade2-isolation"
   });
 
-  assert.strictEqual(grade1.layout.header.title, "Extend Pattern — Grade 1");
+  assert.strictEqual(grade1.layout.header.title, "Extend Pattern");
   assert.strictEqual(grade1.layout.instruction, "Extend each pattern. Write the next number.");
   assert.strictEqual(grade2.layout.header.title, "Identify Pattern Rule");
-  assert.strictEqual(grade2.layout.instruction, "Write the number that is added each time.");
+  assert.strictEqual(grade2.layout.instruction, "Write the rule for each pattern.");
   assert.strictEqual(grade2.contentObject.meta.curriculum.footerText, "Grade 2 • Math • Patterning & Algebra");
 }
 

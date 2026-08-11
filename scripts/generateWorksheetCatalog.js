@@ -9,6 +9,7 @@ const grade4 = require("../config/worksheetCatalog/grade4");
 const grade5 = require("../config/worksheetCatalog/grade5");
 const grade6 = require("../config/worksheetCatalog/grade6");
 const { applyWorksheetPublicCopy } = require("../config/worksheetPublicCopy");
+const { applyFounderReviewCurrentOutput } = require("../config/founderReviewCurrentOutput");
 
 const GENERATED_ENTRY_OVERRIDES = Object.freeze({
   grade1_data_display_graphing_complete_graph: Object.freeze({
@@ -416,7 +417,7 @@ function generateDraftCatalog() {
         });
 
         if (!curatedIds.has(entry.id)) {
-          generated.push(applyWorksheetPublicCopy(applyGeneratedEntryOverrides(entry)));
+          generated.push(applyFounderReviewCurrentOutput(applyWorksheetPublicCopy(applyGeneratedEntryOverrides(entry))));
         }
       });
     });

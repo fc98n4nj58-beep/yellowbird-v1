@@ -20,7 +20,7 @@ const SPECS = Object.freeze({
   grade3_place_value_representation_number_word_match: Object.freeze({
     title: "Write Number Words",
     instruction: "Write each number in words.",
-    count: 12,
+    count: 10,
     pages: 2
   }),
   grade3_place_value_representation_standard_form: Object.freeze({
@@ -271,7 +271,7 @@ function testCrossGradeAndSplitIsolation() {
   });
   assert.strictEqual(grade2Words.layout.header.title, "Write Number Words to 200");
   assert.strictEqual(grade2Words.layout.instruction, "Write each number in words.");
-  assert.strictEqual(grade2Words.normalizedContentObject.content.items.length, 12);
+  assert.strictEqual(grade2Words.normalizedContentObject.content.items.length, 10);
 
   const finalizedBaseTen = buildCatalogWorksheetRuntime("grade3_place_value_representation_base_ten_blocks", {
     worksheetSeed: "grade3-b2-final-isolation"

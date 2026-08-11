@@ -97,11 +97,11 @@ function assertKeyParity(runtime, fields) {
 function assertCompare(runtime) {
   const problems = items(runtime);
   assert.strictEqual(runtime.layout.template.columns, 2);
-  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 12);
+  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 20);
   assert.strictEqual(runtime.layout.display.standardShortAnswerTarget, true);
   assert.deepStrictEqual(
     problems.reduce((counts, item) => ({ ...counts, [item.answer]: (counts[item.answer] || 0) + 1 }), {}),
-    { "<": 4, ">": 4, "=": 4 }
+    { "<": 8, ">": 8, "=": 4 }
   );
   assert.strictEqual(new Set(problems.map((item) => item.duplicateSignature)).size, problems.length);
   problems.forEach((item) => {
@@ -178,7 +178,7 @@ async function run() {
     title: "Compare Fractions",
     instruction: "Write >, <, or = to compare each pair of fractions.",
     status: "ready",
-    questionCount: 12
+    questionCount: 20
   });
   assertPublicContract(numberLine, {
     title: "Fractions on a Number Line",
@@ -322,7 +322,7 @@ async function run() {
       worksheetSeed: `grade3-batch6-example-${id}`,
       includeExample: true
     });
-    const expected = id === IDS.compare ? 13 : 7;
+    const expected = id === IDS.compare ? 21 : 7;
     assert.strictEqual(items(example).length, expected);
     assert.strictEqual(items(example)[0].isExample, true);
     assert.strictEqual(items(example).filter((item) => item.isExample).length, 1);

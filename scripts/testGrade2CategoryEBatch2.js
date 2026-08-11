@@ -92,10 +92,11 @@ function assertShared(runtime, id) {
   assert.strictEqual(runtime.contentObject.meta.curriculum.footerText, FOOTER);
   assert(!runtime.contentObject.meta.curriculum.footerText.includes("_"));
   assert(!runtime.contentObject.meta.curriculum.footerText.includes(runtime.item.skillKey));
-  assert.strictEqual(runtime.normalizedContentObject.content.items.length, 12);
+  const founderReviewGrid = [IDS.missing, IDS.subtraction].includes(id);
+  assert.strictEqual(runtime.normalizedContentObject.content.items.length, founderReviewGrid ? 30 : 12);
   assert.strictEqual(runtime.layout.template.id, "fluency_grid");
-  assert.strictEqual(runtime.layout.template.columns, 4);
-  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 60);
+  assert.strictEqual(runtime.layout.template.columns, founderReviewGrid ? 3 : 4);
+  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, founderReviewGrid ? 30 : 60);
   assert.strictEqual(runtime.layout.display.answerTargetVariant, "shortNumeric");
   assert.strictEqual(runtime.layout.display.standardShortAnswerTarget, true);
   assert.strictEqual(runtime.layout.display.equalHeightItems, true);
@@ -359,10 +360,10 @@ function assertCatalogReconciliationAndIsolation() {
   assert.strictEqual(grade1Addition.normalizedContentObject.content.items.length, 60);
   assert(grade1Addition.normalizedContentObject.content.items.every((item) => item.answer <= 20));
   const grade1Missing = buildCatalogWorksheetRuntime("g1_missing_addends_within_20", { worksheetSeed: "g2-e2-isolation" });
-  assert.strictEqual(grade1Missing.normalizedContentObject.content.items.length, 60);
+  assert.strictEqual(grade1Missing.normalizedContentObject.content.items.length, 30);
   assert(grade1Missing.normalizedContentObject.content.items.every((item) => item.total <= 20));
   const grade1Subtraction = buildCatalogWorksheetRuntime("g1_subtraction_facts_within_20", { worksheetSeed: "g2-e2-isolation" });
-  assert.strictEqual(grade1Subtraction.normalizedContentObject.content.items.length, 60);
+  assert.strictEqual(grade1Subtraction.normalizedContentObject.content.items.length, 30);
   assert(grade1Subtraction.normalizedContentObject.content.items.every((item) => item.minuend <= 20));
 
   const grade3Addition = buildCatalogWorksheetRuntime("grade3_addition_subtraction_facts_fact_fluency", { worksheetSeed: "g2-e2-isolation" });

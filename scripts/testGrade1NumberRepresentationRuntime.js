@@ -144,11 +144,11 @@ function assertNumberWordResource() {
   assert.strictEqual(runtime.layout.header.title, "Write Number Words to 50");
   assertFooter(runtime, "Grade 1 • Math • Number Representation: Number Words to 50");
   assert.strictEqual(runtime.layout.instruction, "Write each number in words.");
-  assert.strictEqual(runtime.layout.template.columns, 2);
-  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 20);
+  assert.strictEqual(runtime.layout.template.columns, 1);
+  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 10);
   assert.strictEqual(runtime.layout.display.hideSubtitle, true);
   assert.strictEqual(runtime.layout.display.numberWordResponseTarget, "writtenWord");
-  assert.strictEqual(items.length, 20);
+  assert.strictEqual(items.length, 10);
   assertUnique(items);
   items.forEach((item) => {
     assert.strictEqual(item.numberWordMode, "numeral_to_word");

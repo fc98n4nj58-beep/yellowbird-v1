@@ -21,10 +21,10 @@ const IDS = Object.freeze({
   takeAwayWord: "grade2_addition_subtraction_word_problems_subtraction_word_problem"
 });
 const SPECS = Object.freeze({
-  [IDS.factFamily]: { title: "Fact Families Within 20", instruction: "Complete the fact family.", pages: 2 },
-  [IDS.missingAddend]: { title: "Missing Addends Within 20", instruction: "Write the missing number in each equation.", pages: 2 },
-  [IDS.missingWord]: { title: "Missing Addend Word Problems", instruction: "Solve each problem. Show your thinking in the box.", pages: 6 },
-  [IDS.takeAwayWord]: { title: "Take Away Word Problems", instruction: "Solve each problem. Show your thinking in the box.", pages: 6 }
+  [IDS.factFamily]: { title: "Fact Families Within 20", instruction: "Complete the fact family.", count: 12, pages: 2 },
+  [IDS.missingAddend]: { title: "Missing Addends Within 20", instruction: "Write the missing number in each equation.", count: 30, pages: 2 },
+  [IDS.missingWord]: { title: "Missing Addend Word Problems", instruction: "Solve each problem. Show your thinking in the box.", count: 12, pages: 6 },
+  [IDS.takeAwayWord]: { title: "Take Away Word Problems", instruction: "Solve each problem. Show your thinking in the box.", count: 12, pages: 6 }
 });
 const FOOTER = "Grade 2 • Math • Addition and Subtraction";
 
@@ -88,7 +88,7 @@ function assertSharedContract(runtime, id) {
   assert.strictEqual(runtime.contentObject.meta.curriculum.footerText, FOOTER);
   assert(!runtime.contentObject.meta.curriculum.footerText.includes("_"));
   assert(!runtime.layout.header.title.includes("Grade 2"));
-  assert.strictEqual(runtime.layout.problems.length, 12);
+  assert.strictEqual(runtime.layout.problems.length, spec.count);
   assert.strictEqual(runtime.layout.problems.some((item) => !item.prompt), false);
   assert.strictEqual(runtime.layout.problems.some((item) => item.answer == null), false);
   assert.strictEqual(runtime.layout.problems.some((item) => item.isExample), false);
@@ -129,7 +129,7 @@ function assertFactFamilies(items) {
 
 function assertMissingAddends(runtime) {
   const items = runtime.normalizedContentObject.content.items;
-  assert.strictEqual(items.length, 12);
+  assert.strictEqual(items.length, 30);
   assert.strictEqual(zeroRelatedCount(items), 1);
   items.forEach((item) => {
     const match = item.prompt.match(/^__ \+ (\d+) = (\d+)$/);
@@ -142,9 +142,9 @@ function assertMissingAddends(runtime) {
     assert(missing >= 0 && missing <= 20);
     assert.strictEqual(known + missing, total);
   });
-  assert.strictEqual(runtime.layout.template.columns, 2);
-  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 12);
-  assert.strictEqual(runtime.layout.display.denseGridRows, 6);
+  assert.strictEqual(runtime.layout.template.columns, 3);
+  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 30);
+  assert.strictEqual(runtime.layout.display.denseGridRows, 10);
   assert.strictEqual(runtime.layout.display.sequentialColumnFill, true);
   assert.strictEqual(runtime.layout.display.standardShortAnswerTarget, true);
   assert.strictEqual(runtime.layout.display.inlineEquationFontSize, 16);
@@ -275,7 +275,7 @@ async function run() {
       worksheetSeed: "g2-category-c-no-example",
       includeExample: true
     });
-    assert.strictEqual(withExampleRequested.normalizedContentObject.content.items.length, 12);
+    assert.strictEqual(withExampleRequested.normalizedContentObject.content.items.length, SPECS[id].count);
     assert.strictEqual(withExampleRequested.normalizedContentObject.content.items.some((item) => item.isExample), false);
 
     const pdf = await renderRuntime(withExampleRequested);

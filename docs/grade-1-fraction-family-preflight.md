@@ -321,8 +321,8 @@ Yellow Bird-quality output means exact equal parts, an unmistakable whole, Grade
 The focused validator passed and exactly five PDFs were generated in `review/grade-1-fraction-family/founder-review/`. Each PDF contains one student page and one matching answer-key page.
 
 1. `grade1_shade_equal_parts_founder_default.pdf` — six large strip models, approved fraction pool, separate `Try this one` model, grayscale shading/key parity.
-2. `grade1_one_half_two_fourths_founder_default.pdf` — four same-whole Yes/No pairs, true/false balance, no completed example.
-3. `grade1_compare_fair_shares_founder_default.pdf` — six unit-share comparisons, equal whole sizes, words/selection targets, default Q1 unsolved mode.
+2. `grade1_one_half_two_fourths_founder_default.pdf` — six same-whole Yes/No pairs, true/false balance, no completed example.
+3. `grade1_compare_fair_shares_founder_default.pdf` — eight unit-share comparisons, equal whole sizes, words/selection targets, default Q1 unsolved mode.
 4. `grade1_compare_fair_shares_founder_completed_q1.pdf` — the same family with the approved solved Question 1 treatment.
 5. `grade1_share_fairly_founder_default.pdf` — three 2-/4-sharer cases, separate `Try this one` model, prescribed remainder cases, student/key drawing parity.
 

@@ -154,37 +154,29 @@ function assertNumberLine(runtime) {
 function assertNumberWords(runtime, expectedMode = "numeral_to_word") {
   const source = items(runtime);
   assert.strictEqual(new Set(source.map((item) => item.representedValue)).size, source.length);
-  assert.strictEqual(runtime.layout.template.columns, 2);
-  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 12);
-  assert.strictEqual(runtime.layout.display.denseGridRows, 6);
-  assert.strictEqual(runtime.layout.display.equalHeightItems, true);
-  assert.strictEqual(runtime.layout.display.sequentialColumnFill, true);
-  const alignedColumns = rendererTest.distributeSequential(source, 2);
-  assert.deepStrictEqual(alignedColumns.map((column) => column.map((item) => item.id)), [
-    [1, 2, 3, 4, 5, 6],
-    [7, 8, 9, 10, 11, 12]
-  ]);
-  assert.strictEqual(alignedColumns[0].length, alignedColumns[1].length);
   if (expectedMode === "numeral_to_word") {
-    assert.strictEqual(runtime.layout.display.numberWordPromptZoneWidth, 52);
+    assert.strictEqual(runtime.layout.template.columns, 1);
+    assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 12);
+    assert.strictEqual(runtime.layout.display.denseGridRows, 12);
+    assert.strictEqual(runtime.layout.display.equalHeightItems, true);
+    assert.strictEqual(runtime.layout.display.sequentialColumnFill, true);
+    const alignedColumns = rendererTest.distributeSequential(source, 1);
+    assert.deepStrictEqual(alignedColumns.map((column) => column.map((item) => item.id)), [
+      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    ]);
+    assert.strictEqual(runtime.layout.display.numberWordPromptZoneWidth, null);
     assert.strictEqual(runtime.layout.display.answerLineBelowPrompt, true);
     assert.strictEqual(runtime.layout.display.shortWritingLine, false);
-    const assumedContentWidth = 468;
-    const columnGutter = 24;
-    const columnWidth = (assumedContentWidth - columnGutter) / 2;
-    const numberGutter = 44;
-    const responseStart = numberGutter;
-    const responseWidth = columnWidth - responseStart;
-    assert(responseWidth >= 170, "Grade 4 number-word response line must remain handwriting-safe in each aligned column");
-    assert(responseStart >= 40 && responseStart <= 48, "Grade 4 numeral-to-word response lines must use one bounded x-position");
+    assert.strictEqual(runtime.layout.display.grade5FullWidthNumberWordRows, true);
     assert.deepStrictEqual(
       rendererTest.paginateEven(source, 12).map((page) => page.map((item) => item.id)),
       [Array.from({ length: 12 }, (_, index) => index + 1)],
       "default numeral-to-word pagination must retain all 12 questions on one aligned page"
     );
   } else {
-    assert.strictEqual(runtime.layout.display.reverseNumberWordWrapPrompts, true);
+    assert.strictEqual(runtime.layout.template.columns, 2);
     assert.strictEqual(runtime.layout.display.reverseNumberWordRowsPerColumn, 6);
+    assert.strictEqual(runtime.layout.display.reverseNumberWordRespectPageCapacity, true);
   }
   source.forEach((item) => {
     assert.strictEqual(item.numberWord, grade4NumberToWords(item.representedValue));

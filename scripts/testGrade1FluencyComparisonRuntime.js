@@ -67,9 +67,9 @@ function studentInstruction(runtime) {
   return runtime.layout.instruction;
 }
 
-function assertDenseGrid(runtime) {
-  assert.strictEqual(runtime.layout.template.columns, 4);
-  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 60);
+function assertDenseGrid(runtime, columns, maxProblemsPerPage) {
+  assert.strictEqual(runtime.layout.template.columns, columns);
+  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, maxProblemsPerPage);
   assert.strictEqual(runtime.layout.display.standardShortAnswerTarget, true);
 }
 
@@ -182,10 +182,10 @@ function assertSameSeed(resourceId, options) {
 
 function run() {
   const subtractionRuntime = runtimeFor(SUBTRACTION_ID, { worksheetSeed: "sub-default" });
-  assertDenseGrid(subtractionRuntime);
+  assertDenseGrid(subtractionRuntime, 3, 30);
   assert.strictEqual(studentInstruction(subtractionRuntime), "Solve each subtraction fact.");
   const subtractionItems = subtractionRuntime.contentObject.content.items;
-  assert.strictEqual(subtractionItems.length, 60);
+  assert.strictEqual(subtractionItems.length, 30);
   assertSubtractionItems(subtractionItems);
   assertUniqueSignatures(subtractionItems);
 
@@ -208,10 +208,10 @@ function run() {
   assertQuestion1CompletedExample(SUBTRACTION_ID);
 
   const missingRuntime = runtimeFor(MISSING_ADDENDS_ID, { worksheetSeed: "missing-default" });
-  assertDenseGrid(missingRuntime);
+  assertDenseGrid(missingRuntime, 3, 30);
   assert.strictEqual(studentInstruction(missingRuntime), "Write the missing number in each equation.");
   const missingItems = missingRuntime.contentObject.content.items;
-  assert.strictEqual(missingItems.length, 60);
+  assert.strictEqual(missingItems.length, 30);
   assertMissingAddendItems(missingItems);
   assertUniqueSignatures(missingItems);
   const missingPositionCounts = countBy(missingItems, "missingPosition");
@@ -246,17 +246,17 @@ function run() {
   });
 
   const compareRuntime = runtimeFor(COMPARE_NUMBERS_ID, { worksheetSeed: "compare-default" });
-  assertDenseGrid(compareRuntime);
+  assertDenseGrid(compareRuntime, 2, 20);
   assert.strictEqual(studentInstruction(compareRuntime), "Write >, <, or = to compare each pair of numbers.");
   assert.strictEqual(compareRuntime.layout.display.answerTargetVariant, "comparisonSymbol");
   const compareItems = compareRuntime.contentObject.content.items;
-  assert.strictEqual(compareItems.length, 60);
+  assert.strictEqual(compareItems.length, 20);
   assertCompareItems(compareItems);
   assertUniqueSignatures(compareItems);
   const symbolCounts = countBy(compareItems, "expectedSymbol");
-  assert(symbolCounts[">"] >= 15, `too few greater-than comparisons: ${symbolCounts[">"]}`);
-  assert(symbolCounts["<"] >= 15, `too few less-than comparisons: ${symbolCounts["<"]}`);
-  assert(symbolCounts["="] >= 15, `too few equality comparisons: ${symbolCounts["="]}`);
+  assert(symbolCounts[">"] >= 6, `too few greater-than comparisons: ${symbolCounts[">"]}`);
+  assert(symbolCounts["<"] >= 6, `too few less-than comparisons: ${symbolCounts["<"]}`);
+  assert(symbolCounts["="] >= 6, `too few equality comparisons: ${symbolCounts["="]}`);
 
   const noEquals = itemsFor(COMPARE_NUMBERS_ID, {
     includeEqualPairs: false,

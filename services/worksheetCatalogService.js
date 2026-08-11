@@ -49,6 +49,11 @@ const {
 const {
   DATA_DISPLAY_VISUAL_SPECS
 } = require("../config/layout/dataDisplayVisualSpecs");
+const {
+  DEFAULT_OUTPUT: FOUNDER_REVIEW_DEFAULT_OUTPUT,
+  GRADE4_PATTERN_WORKSPACE_IDS,
+  PATTERN_RULE_RESPONSE_MODES
+} = require("../config/founderReviewCurrentOutput");
 
 const MASTER_CATALOG_PATH = path.join(__dirname, "../data/worksheetCatalog.master.json");
 
@@ -62,6 +67,27 @@ function loadMasterCatalog() {
 
 function getMasterWorksheetCatalog() {
   return loadMasterCatalog();
+}
+
+function hasExplicitOption(options, key) {
+  return Object.prototype.hasOwnProperty.call(options || {}, key) &&
+    options[key] !== undefined && options[key] !== null && options[key] !== "";
+}
+
+function applyFounderReviewDefaultOptions(item, normalizedOptions = {}, requestedOptions = {}) {
+  const defaults = FOUNDER_REVIEW_DEFAULT_OUTPUT[item?.id];
+  if (!defaults) return normalizedOptions;
+
+  const normalized = { ...normalizedOptions };
+  const hasQuestionCount = hasExplicitOption(requestedOptions, "questionCount");
+  const hasQuestionsPerPage = hasExplicitOption(requestedOptions, "questionsPerPage");
+  if (defaults.questionCount !== undefined && !hasQuestionCount) {
+    normalized.questionCount = defaults.questionCount;
+  }
+  if (defaults.questionsPerPage !== undefined && !hasQuestionCount && !hasQuestionsPerPage) {
+    normalized.questionsPerPage = defaults.questionsPerPage;
+  }
+  return normalized;
 }
 
 function listWorksheetCatalog() {
@@ -510,8 +536,8 @@ const GRADE1_FRACTION_ACTIVITY_MODES = Object.freeze({
 });
 const GRADE1_FRACTION_QUESTION_COUNTS = Object.freeze({
   grade1_fraction_equivalence_shade_fraction_models: 6,
-  grade1_fraction_equivalence_match_equivalent_fractions: 4,
-  grade1_fraction_equivalence_compare_fractions: 6,
+  grade1_fraction_equivalence_match_equivalent_fractions: 6,
+  grade1_fraction_equivalence_compare_fractions: 8,
   grade1_fraction_equivalence_fraction_word_problems: 3
 });
 
@@ -2257,8 +2283,8 @@ function validateGrade4StructuredFractionRawOptions(item, options = {}) {
   const isShade = item.id === GRADE4_SHADE_FRACTION_ID;
   const safeDenominators = isLine ? [2, 3, 4, 5, 6, 8, 10] : [2, 3, 4, 5, 6, 8, 10, 12];
   const defaultCount = isCompare ? 12 : isLine ? 6 : 8;
-  const maxCount = isCompare ? 24 : isLine ? 12 : 8;
-  const maxPerPage = defaultCount;
+  const maxCount = isCompare ? 30 : isLine ? 12 : 8;
+  const maxPerPage = isCompare ? 30 : defaultCount;
 
   const questionCount = grade4FractionAliasScalar(options, ["questionCount"], "question count", (value) => grade4FractionInteger(value, "question count", 1, maxCount)) ?? defaultCount;
   const questionsPerPage = grade4FractionAliasScalar(options, ["questionsPerPage"], "questions per page", (value) => grade4FractionInteger(value, "questions per page", 1, maxPerPage)) ?? defaultCount;
@@ -3845,7 +3871,11 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     grade5TextDataNormalized,
     options
   );
-  return normalizeGrade4EquationMatchOptions(item, grade5PlaceValueNormalized, options);
+  return applyFounderReviewDefaultOptions(
+    item,
+    normalizeGrade4EquationMatchOptions(item, grade5PlaceValueNormalized, options),
+    options
+  );
 }
 
 const NON_CUSTOMIZATION_QUERY_KEYS = new Set([
@@ -4911,7 +4941,7 @@ function patterningInstruction(item, activityType, normalizedOptions = {}) {
 
   if (activityType === "identify_pattern_rule") {
     if (GRADE2_NUMERIC_PATTERN_IDS.has(item.id)) {
-      return "Write the number that is added each time.";
+      return "Write the rule for each pattern.";
     }
     return "Write the rule for each pattern.";
   }
@@ -5479,6 +5509,7 @@ if (
   const isGrade2NumericPattern = GRADE2_NUMERIC_PATTERN_IDS.has(item.id);
   const isGrade4NumericPattern = GRADE4_NUMERIC_PATTERN_IDS.has(item.id);
   const isGrade5NumericPattern = GRADE5_NUMERIC_PATTERN_IDS.has(item.id);
+  const hasSideWorkspace = GRADE4_PATTERN_WORKSPACE_IDS.has(item.id) || isGrade5NumericPattern;
   const maxProblemsPerPage = resolvePatterningPageCapacity(item, activityType, normalizedOptions);
   const columns = isGrade2NumericPattern
     ? 2
@@ -5504,15 +5535,18 @@ if (
     patterningMissingTargetWidth: isGrade2NumericPattern ? 64 : isGrade4NumericPattern || isGrade5NumericPattern ? 62 : 58,
     patterningRuleTargetWidth: isGrade2NumericPattern ? 64 : 120,
     patterningResponseFontSize: isGrade2NumericPattern ? 15 : patterningSequenceFontSize(item, activityType, normalizedOptions),
-    patterningRuleResponseMode: isGrade2NumericPattern && activityType === "identify_pattern_rule"
-      ? "add_step"
-      : "written_rule",
+    patterningRuleResponseMode: PATTERN_RULE_RESPONSE_MODES[item.id] ||
+      (isGrade2NumericPattern && activityType === "identify_pattern_rule" ? "add_step" : "written_rule"),
+    patterningRuleFullWidth: [
+      "grade2_patterning_and_algebra_identify_pattern_rule",
+      "grade3_patterning_and_algebra_identify_pattern_rule"
+    ].includes(item.id),
     denseGridRows: isGrade2NumericPattern ? 6 : Math.ceil(maxProblemsPerPage / columns),
     sequentialColumnFill: true,
     equalHeightItems: true,
     hideItemSeparators: false,
     patterningPublicReady: true,
-    ...(isGrade5NumericPattern
+    ...(hasSideWorkspace
       ? {
           sideWorkspace: {
             enabled: true,
@@ -6470,6 +6504,48 @@ if (
     ...(layout.template || {}),
     maxProblemsPerPage: normalizedOptions.questionsPerPage
   };
+}
+
+const founderReviewOutput = FOUNDER_REVIEW_DEFAULT_OUTPUT[item.id];
+const useFounderReviewDefaultLayout = founderReviewOutput &&
+  !hasExplicitOption(options, "questionCount") &&
+  !hasExplicitOption(options, "questionsPerPage");
+if (useFounderReviewDefaultLayout) {
+  const columns = founderReviewOutput.columns || layout.template?.columns || 1;
+  const maxProblemsPerPage = finiteNumber(normalizedOptions.questionsPerPage) ||
+    founderReviewOutput.maxProblemsPerPage ||
+    layout.template?.maxProblemsPerPage;
+  layout.template = {
+    ...(layout.template || {}),
+    columns,
+    maxProblemsPerPage
+  };
+  layout.display = {
+    ...(layout.display || {}),
+    denseGridRows: maxProblemsPerPage
+      ? Math.ceil(maxProblemsPerPage / Math.max(1, columns))
+      : founderReviewOutput.denseGridRows,
+    sequentialColumnFill: true
+  };
+
+  if (founderReviewOutput.fullWidthNumberWordRows) {
+    layout.display = {
+      ...layout.display,
+      numberWordPromptZoneWidth: null,
+      answerLineBelowPrompt: !isReverseNumberWordMode,
+      standardAnswerLineWidth: 190,
+      shortWritingLine: isReverseNumberWordMode,
+      reverseNumberWordWriting: isReverseNumberWordMode,
+      reverseNumberWordRespectPageCapacity: true,
+      reverseNumberWordPromptZoneWidth: 999,
+      reverseNumberWordRowsPerColumn: maxProblemsPerPage,
+      numberWordAnswerKeySingleColumn: true,
+      atomicNumeralFormatting: true,
+      atomicWholeNumberAnswers: true,
+      grade5FullWidthNumberWordRows: !isReverseNumberWordMode,
+      grade5FullWidthReverseNumberWordRows: isReverseNumberWordMode
+    };
+  }
 }
 
 return layout;

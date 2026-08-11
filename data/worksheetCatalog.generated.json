@@ -1111,7 +1111,7 @@
     },
     {
       "id": "grade1_patterning_and_algebra_extend_pattern",
-      "title": "Extend Pattern — Grade 1",
+      "title": "Extend Pattern",
       "shortTitle": "Extend Pattern",
       "subject": "Math",
       "grades": [
@@ -1138,7 +1138,8 @@
         "extend pattern"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for extend pattern."
+      "description": "Generated worksheet for extend pattern.",
+      "studentInstruction": "Extend each pattern. Write the next number."
     },
     {
       "id": "grade1_patterning_and_algebra_function_table",
@@ -6103,7 +6104,7 @@
     },
     {
       "id": "grade5_fraction_equivalence_compare_fractions",
-      "title": "Compare Fractions — Grade 5",
+      "title": "Compare Fractions",
       "shortTitle": "Compare Fractions",
       "subject": "Math",
       "grades": [
@@ -6130,7 +6131,8 @@
         "compare fractions"
       ],
       "curriculumTags": [],
-      "description": "Students compare fractions as focused Grade 5 fraction review."
+      "description": "Students compare fractions as focused Grade 5 fraction review.",
+      "studentInstruction": "Write >, <, or = to compare each pair of fractions."
     },
     {
       "id": "grade5_fraction_equivalence_fraction_number_line",

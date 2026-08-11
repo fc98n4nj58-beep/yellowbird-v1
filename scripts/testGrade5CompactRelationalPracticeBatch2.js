@@ -548,7 +548,7 @@ function assertIsolation() {
     "grade3_addition_subtraction_facts_equation_match",
     "grade4_addition_subtraction_facts_equation_match"
   ];
-  const lowerEquationCounts = [12, 12, 12, 30];
+  const lowerEquationCounts = [20, 20, 20, 30];
   lowerEquationIds.forEach((id, index) => {
     const runtime = buildCatalogWorksheetRuntime(id, { worksheetSeed: "g5-b2-equation-isolation" });
     assert.strictEqual(items(runtime).filter((item) => !item.isExample).length, lowerEquationCounts[index]);

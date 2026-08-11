@@ -68,11 +68,27 @@ const ARRAYS = Object.freeze({
   })
 });
 
+const NUMERIC_PATTERNS = Object.freeze({
+  grade1_patterning_and_algebra_extend_pattern: Object.freeze({
+    title: "Extend Pattern",
+    instruction: "Extend each pattern. Write the next number."
+  })
+});
+
+const COMPARE_FRACTIONS = Object.freeze({
+  grade5_fraction_equivalence_compare_fractions: Object.freeze({
+    title: "Compare Fractions",
+    instruction: "Write >, <, or = to compare each pair of fractions."
+  })
+});
+
 const WORKSHEET_PUBLIC_COPY = Object.freeze({
   ...ADDITION_FACTS,
   ...FACT_FAMILIES,
   ...ADDITION_STORY_PROBLEMS,
-  ...ARRAYS
+  ...ARRAYS,
+  ...NUMERIC_PATTERNS,
+  ...COMPARE_FRACTIONS
 });
 
 function getWorksheetPublicCopy(id) {
@@ -91,6 +107,8 @@ module.exports = {
   FACT_FAMILIES,
   ADDITION_STORY_PROBLEMS,
   ARRAYS,
+  NUMERIC_PATTERNS,
+  COMPARE_FRACTIONS,
   WORKSHEET_PUBLIC_COPY,
   getWorksheetPublicCopy,
   applyWorksheetPublicCopy

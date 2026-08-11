@@ -13,7 +13,7 @@ const IDS = Object.freeze({
   shade: "grade4_fraction_equivalence_shade_fraction_models"
 });
 const SPECS = Object.freeze({
-  [IDS.compare]: { title: "Compare Fractions", instruction: "Write >, <, or = to compare each pair of fractions.", status: "ready", count: 12 },
+  [IDS.compare]: { title: "Compare Fractions", instruction: "Write >, <, or = to compare each pair of fractions.", status: "ready", count: 30 },
   [IDS.numberLine]: { title: "Fractions on a Number Line", instruction: "Write the fraction shown by the point on each number line.", status: "generated", count: 6 },
   [IDS.shade]: { title: "Shade the Fraction", instruction: "Shade each model to show the fraction.", status: "generated", count: 8 }
 });
@@ -97,11 +97,11 @@ function assertKeyParity(runtime, fields) {
 
 function assertCompare(runtime) {
   const problems = items(runtime);
-  assert.strictEqual(runtime.layout.template.columns, 2);
-  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 12);
+  assert.strictEqual(runtime.layout.template.columns, 3);
+  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 30);
   assert.deepStrictEqual(
     problems.reduce((counts, item) => ({ ...counts, [item.expectedSymbol]: (counts[item.expectedSymbol] || 0) + 1 }), {}),
-    { "<": 4, ">": 4, "=": 4 }
+    { "<": 13, ">": 13, "=": 4 }
   );
   assert.strictEqual(new Set(problems.map((item) => item.duplicateSignature)).size, problems.length);
   problems.forEach((item) => {

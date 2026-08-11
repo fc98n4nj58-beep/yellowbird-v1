@@ -2164,13 +2164,13 @@ function renderPatterningRow(doc, question, layoutBox, fonts = {}, display = {})
       lineBreak: false
     });
     const lineX = sequenceX + 38;
-    const lineWidth = Math.min(
-      260,
-      Math.max(
-        120,
-        sequenceWidth - Number(display.patterningRuleLineRightPadding || 42)
-      )
+    const availableLineWidth = Math.max(
+      120,
+      sequenceWidth - Number(display.patterningRuleLineRightPadding || 42)
     );
+    const lineWidth = display.patterningRuleFullWidth
+      ? availableLineWidth
+      : Math.min(260, availableLineWidth);
     drawShortAnswerLine(doc, lineX, ruleY + 14, lineWidth);
 
     if (showAnswers) {
@@ -4350,7 +4350,7 @@ function renderSharedFractionPages(doc, fonts, contentObject, pageState, layoutO
       );
     });
   } else if (taskMode === "half_two_fourths") {
-    const rowHeight = (bottomContentY - startY) / 4;
+    const rowHeight = (bottomContentY - startY) / Math.max(1, items.length);
     items.forEach((item, index) => {
       const y = startY + index * rowHeight;
       const models = item.fractionModel.models;
@@ -4379,7 +4379,7 @@ function renderSharedFractionPages(doc, fonts, contentObject, pageState, layoutO
   } else if (taskMode === "compare_fair_shares") {
     const gap = 18;
     const cellWidth = (cb.width - gap) / 2;
-    const rowHeight = (bottomContentY - startY) / 3;
+    const rowHeight = (bottomContentY - startY) / Math.max(1, Math.ceil(items.length / 2));
     items.forEach((item, index) => {
       const row = Math.floor(index / 2);
       const column = index % 2;

@@ -30,7 +30,7 @@ const RESOURCES = Object.freeze([
     title: "One Half and Two Fourths",
     instruction: "Look at each pair. Circle Yes if the shaded parts show the same amount. Circle No if they do not.",
     taskMode: "half_two_fourths",
-    count: 4,
+    count: 6,
     visualKind: "fraction_strip"
   },
   {
@@ -38,7 +38,7 @@ const RESOURCES = Object.freeze([
     title: "Compare Fair Shares",
     instruction: "Look at each pair. Circle the share that is greater, or circle Same.",
     taskMode: "compare_fair_shares",
-    count: 6,
+    count: 8,
     visualKind: "fraction_strip"
   },
   {
@@ -190,7 +190,7 @@ async function run() {
 
   const match = buildCatalogWorksheetRuntime(RESOURCES[1].id, { worksheetSeed: "grade1-match", includeExample: true });
   assert.strictEqual(match.layout.template.columns, 1);
-  assert.strictEqual(match.layout.template.maxProblemsPerPage, 4);
+  assert.strictEqual(match.layout.template.maxProblemsPerPage, 6);
   assert(match.contentObject.content.items.every(({ isExample }) => !isExample));
   assert(match.contentObject.content.items.every(({ fractionWorkedModel }) => !fractionWorkedModel));
   const matchAnswers = new Set(match.contentObject.content.items.map(({ answer }) => answer));
@@ -209,16 +209,16 @@ async function run() {
   const compareDefault = buildCatalogWorksheetRuntime(RESOURCES[2].id, { worksheetSeed: "grade1-compare" });
   const compareCompleted = buildCatalogWorksheetRuntime(RESOURCES[2].id, { worksheetSeed: "grade1-compare", includeExample: true });
   assert.strictEqual(compareDefault.layout.template.columns, 2);
-  assert.strictEqual(compareDefault.layout.template.maxProblemsPerPage, 6);
+  assert.strictEqual(compareDefault.layout.template.maxProblemsPerPage, 8);
   assert(compareDefault.contentObject.content.items.every(({ isExample }) => !isExample));
-  assert.strictEqual(compareCompleted.contentObject.content.items.length, 6);
+  assert.strictEqual(compareCompleted.contentObject.content.items.length, 8);
   assert.strictEqual(compareCompleted.contentObject.content.items.filter(({ isExample }) => isExample).length, 1);
   assert.strictEqual(compareCompleted.contentObject.content.items[0].isExample, true);
   assert.deepStrictEqual(
     compareDefault.contentObject.content.items.map(({ fractionModel, answerState }) => ({ fractionModel, answerState })),
     compareCompleted.contentObject.content.items.map(({ fractionModel, answerState }) => ({ fractionModel, answerState }))
   );
-  assert.strictEqual(new Set(compareDefault.contentObject.content.items.map(({ duplicateSignature }) => duplicateSignature)).size, 6);
+  assert.strictEqual(new Set(compareDefault.contentObject.content.items.map(({ duplicateSignature }) => duplicateSignature)).size, 8);
   compareDefault.contentObject.content.items.forEach((item) => {
     validateModelPair(item);
     assert.deepStrictEqual(item.responseValues, ["left", "Same", "right"]);
