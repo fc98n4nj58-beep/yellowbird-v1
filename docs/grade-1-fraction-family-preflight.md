@@ -4,6 +4,8 @@ Date: 2026-07-14
 
 Status: founder approved and implementation complete. Catalog status remains `generated`, no resource is promoted, and Grade 2+ behaviour is unchanged.
 
+Answer-box correction checkpoint, 2026-08-11: Share Fairly retains the approved two-column tray layout and exact structured sharing truth. The current two-sharer student tray establishes a 168 × 98 pt minimum box. Four-sharer questions now use two rows of boxes at that same size and row-aware pagination moves the following question to a second student page instead of halving drawing height. The matching answer key uses identical item grouping and tray geometry. The default is now two student pages plus two answer-key pages; no catalog, customization, lifecycle, or reconciliation state changed.
+
 ## Recommendation
 
 The implementation now provides four distinct, drawing-led Grade 1 tasks behind one shared fraction-family truth model:

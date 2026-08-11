@@ -123,6 +123,10 @@ function render(runtime) {
   });
 }
 
+function pageCount(buffer) {
+  return (buffer.toString("latin1").match(/\/Type\s*\/Page\b/g) || []).length;
+}
+
 async function run() {
   for (const resource of RESOURCES) {
     assert.strictEqual(RESOURCE_TASKS[resource.id], resource.taskMode);
@@ -230,6 +234,10 @@ async function run() {
   assert.strictEqual(share.layout.template.columns, 1);
   assert.strictEqual(share.layout.template.maxProblemsPerPage, 3);
   assert.strictEqual(share.layout.display.separateWorkedModel, true);
+  assert.strictEqual(share.layout.display.fairShareTrayColumns, 2);
+  assert.strictEqual(share.layout.display.fairShareMinimumTrayHeight, 98);
+  assert.strictEqual(share.layout.display.fairShareMaxTrayRowsPerPage, 3);
+  assert.strictEqual(share.layout.display.fairShareMaxItemsPerPage, 2);
   assert.strictEqual(share.contentObject.content.items.filter(({ fractionWorkedModel }) => fractionWorkedModel).length, 1);
   assert(share.contentObject.content.items.every(({ isExample }) => !isExample));
   const shareWorked = share.contentObject.content.items.find(({ fractionWorkedModel }) => fractionWorkedModel).fractionWorkedModel;
@@ -267,6 +275,32 @@ async function run() {
     assert.strictEqual(distributed, model.wholeEquivalentTotal);
   });
   assert.deepStrictEqual(shareObjectTypes, new Set(["apple", "granola_bar", "paper_strip"]));
+  const sharePages = rendererTest.paginateFairShareItems(share.contentObject.content.items, {
+    trayColumns: share.layout.display.fairShareTrayColumns,
+    maxTrayRowsPerPage: share.layout.display.fairShareMaxTrayRowsPerPage,
+    maxItemsPerPage: share.layout.display.fairShareMaxItemsPerPage
+  });
+  assert.deepStrictEqual(sharePages.map((page) => page.length), [2, 1]);
+  share.contentObject.content.items.forEach((item) => {
+    const rowCount = rendererTest.fairShareTrayRowCount(
+      item.fractionModel,
+      share.layout.display.fairShareTrayColumns
+    );
+    const modelBox = {
+      x: 58,
+      y: 0,
+      width: 496,
+      height: rowCount * 98 + (rowCount - 1) * 10
+    };
+    const geometry = rendererTest.buildFairShareModelGeometry(item.fractionModel, modelBox, {
+      trayColumns: share.layout.display.fairShareTrayColumns
+    });
+    assert.strictEqual(geometry.trayColumns, 2);
+    assert(Math.abs(geometry.trayWidth - 168) < 0.001);
+    geometry.trays.forEach((tray) => assert(Math.abs(tray.height - 98) < 0.001));
+  });
+  const sharePdf = await render(share);
+  assert.strictEqual(pageCount(sharePdf), 4);
   assert.strictEqual(Object.keys(FAIR_SHARE_OBJECTS).length, 4);
   Object.values(FAIR_SHARE_OBJECTS).forEach((object) => {
     assert(APPROVED_DIVISIBLE_OBJECTS.has(object.objectType));

@@ -6240,7 +6240,16 @@ if (GRADE1_FRACTION_ACTIVITY_MODES[item.id]) {
     equalHeightItems: true,
     hideItemSeparators: taskMode !== "half_two_fourths",
     separateWorkedModel: ["shade_equal_parts", "share_fairly"].includes(taskMode),
-    completedQuestionOne: taskMode === "compare_fair_shares" && Boolean(normalizedOptions.includeExample)
+    completedQuestionOne: taskMode === "compare_fair_shares" && Boolean(normalizedOptions.includeExample),
+    ...(taskMode === "share_fairly"
+      ? {
+          fairShareTrayColumns: 2,
+          fairShareMinimumTrayHeight: 98,
+          fairShareSlotGap: 14,
+          fairShareMaxTrayRowsPerPage: 3,
+          fairShareMaxItemsPerPage: 2
+        }
+      : {})
   };
 }
 
@@ -6314,7 +6323,13 @@ if (item.id === GRADE2_SHARE_FAIRLY_TO_10_ID) {
     separateWorkedModel: false,
     completedQuestionOne: false,
     fairShareItemsPerPage: 2,
+    fairShareMaxItemsPerPage: 2,
+    fairShareTrayColumns: 3,
+    fairShareMinimumTrayHeight: 190,
+    fairShareMaxTrayRowsPerPage: 2,
+    fairShareSlotGap: 18,
     fairShareResponseTarget: true,
+    fairShareResponseTargetHeight: 29,
     fairShareAnswerKeySlotGap: 18
   };
 }

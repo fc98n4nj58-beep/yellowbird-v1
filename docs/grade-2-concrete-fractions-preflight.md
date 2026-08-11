@@ -14,6 +14,8 @@ Founder quick-fix checkpoint, 2026-07-14: founder recheck identified left-biased
 
 Founder approval checkpoint, 2026-07-14: Share Fairly to 10 is approved after the page-slot, punctuation, and tray-row centring corrections. The final four-page proof, structured fair-sharing truth, 30-seed determinism, answer-key parity, Grade 1/Grade 3+ isolation, and catalog audit pass. The resource is reconciled from Category D to Category A, bringing Grade 2 to A24 / D5 / G14 / Total52. Catalog status remains `generated`, completed-example mode remains disabled, and no promotion occurs.
 
+Answer-box correction checkpoint, 2026-08-11: Share Fairly to 10 retains all four approved scenarios and exact whole-object sharing truth. Every question now uses the standard three-column Grade 2 tray grid, with incomplete rows centred, and the current three-sharer student tray establishes a 108.67 × 190 pt minimum box. Four- and six-sharer questions use two rows at that same box size. Sequential row-aware pagination preserves question order and moves later questions to a new page rather than shrinking boxes; for the canonical founder-review seed this produces four student pages plus four geometry-matched answer-key pages. No generator, public variable, catalog status, lifecycle, promotion, or reconciliation state changed.
+
 The protected untracked paths present before this pass are `engine/catalog/`, `engine/visuals/index`, `engine/visuals/renderVisual.js`, `public/styles/images/`, and `review/`. They are unrelated and must remain untouched.
 
 ## Resource inventory

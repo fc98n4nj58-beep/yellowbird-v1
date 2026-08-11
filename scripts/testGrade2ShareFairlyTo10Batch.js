@@ -60,6 +60,14 @@ function pageCount(buffer) {
   return (buffer.toString("latin1").match(/\/Type\s*\/Page\b/g) || []).length;
 }
 
+function permutations(values) {
+  if (values.length <= 1) return [values];
+  return values.flatMap((value, index) => permutations([
+    ...values.slice(0, index),
+    ...values.slice(index + 1)
+  ]).map((rest) => [value, ...rest]));
+}
+
 function validateRuntime(runtime) {
   assert.strictEqual(runtime.item.id, RESOURCE_ID);
   assert.strictEqual(runtime.item.status, "generated");
@@ -75,7 +83,13 @@ function validateRuntime(runtime) {
   assert.strictEqual(runtime.layout.display.sharedFractionRenderer, true);
   assert.strictEqual(runtime.layout.display.grade1FractionRenderer, undefined);
   assert.strictEqual(runtime.layout.display.fairShareItemsPerPage, 2);
+  assert.strictEqual(runtime.layout.display.fairShareMaxItemsPerPage, 2);
+  assert.strictEqual(runtime.layout.display.fairShareTrayColumns, 3);
+  assert.strictEqual(runtime.layout.display.fairShareMinimumTrayHeight, 190);
+  assert.strictEqual(runtime.layout.display.fairShareMaxTrayRowsPerPage, 2);
+  assert.strictEqual(runtime.layout.display.fairShareSlotGap, 18);
   assert.strictEqual(runtime.layout.display.fairShareResponseTarget, true);
+  assert.strictEqual(runtime.layout.display.fairShareResponseTargetHeight, 29);
   assert.strictEqual(runtime.layout.display.fairShareAnswerKeySlotGap, 18);
   assert.strictEqual(runtime.layout.display.separateWorkedModel, false);
   assert.strictEqual(runtime.layout.display.completedQuestionOne, false);
@@ -159,29 +173,57 @@ async function run() {
   const pdf = await render(proofRuntime);
   assert(pdf.length > 5000);
   assert.strictEqual(pdf.subarray(0, 4).toString(), "%PDF");
-  assert.strictEqual(pageCount(pdf), 4);
+  assert.strictEqual(pageCount(pdf), 8);
 
-  const pageStartY = 150;
-  const pageBottomY = 720;
-  const studentSlots = rendererTest.buildFairSharePageSlots(pageStartY, pageBottomY, 2, {
-    responseTarget: true
+  const display = proofRuntime.layout.display;
+  const pages = rendererTest.paginateFairShareItems(proofRuntime.contentObject.content.items, {
+    trayColumns: display.fairShareTrayColumns,
+    maxTrayRowsPerPage: display.fairShareMaxTrayRowsPerPage,
+    maxItemsPerPage: display.fairShareMaxItemsPerPage
   });
-  const answerKeySlots = rendererTest.buildFairSharePageSlots(pageStartY, pageBottomY, 2, {
-    slotGap: proofRuntime.layout.display.fairShareAnswerKeySlotGap,
-    responseTarget: true
+  assert.strictEqual(pages.length, 4);
+  permutations(proofRuntime.contentObject.content.items).forEach((orderedItems) => {
+    const orderedPages = rendererTest.paginateFairShareItems(orderedItems, {
+      trayColumns: display.fairShareTrayColumns,
+      maxTrayRowsPerPage: display.fairShareMaxTrayRowsPerPage,
+      maxItemsPerPage: display.fairShareMaxItemsPerPage
+    });
+    assert.deepStrictEqual(orderedPages.flat(), orderedItems);
+    orderedPages.forEach((page) => {
+      assert(page.length <= 2);
+      const rowCount = page.reduce((sum, item) => sum + rendererTest.fairShareTrayRowCount(
+        item.fractionModel,
+        display.fairShareTrayColumns
+      ), 0);
+      assert(rowCount <= 2);
+      if (page.some((item) => item.fractionModel.sharerCount >= 4)) assert.strictEqual(page.length, 1);
+    });
   });
-  assert.strictEqual(studentSlots[1].y, studentSlots[0].bottom, "student page slots must retain their existing geometry");
-  assert.strictEqual(answerKeySlots[1].y - answerKeySlots[0].bottom, 18, "answer-key scenarios must have a deliberate slot gap");
-  assert.strictEqual(answerKeySlots[1].bottom, pageBottomY, "answer-key slots must remain above the footer boundary");
-  answerKeySlots.forEach((slot) => {
-    assert(slot.modelBox.y >= slot.y);
-    assert(slot.modelBox.y + slot.modelBox.height < slot.responseY);
-    assert(slot.responseY < slot.bottom);
-  });
-  proofRuntime.contentObject.content.items.forEach((item) => {
-    answerKeySlots.forEach((slot) => {
-      const modelBox = { x: 40, y: slot.modelBox.y, width: 532, height: slot.modelBox.height };
-      const geometry = rendererTest.buildFairShareModelGeometry(item.fractionModel, modelBox);
+  const pageStartY = 168;
+  const pageBottomY = 714;
+  pages.forEach((page) => {
+    const slots = rendererTest.buildFairSharePageSlots(pageStartY, pageBottomY, page.length, {
+      slotGap: display.fairShareSlotGap,
+      responseTarget: true,
+      responseTargetHeight: display.fairShareResponseTargetHeight,
+      items: page,
+      minimumTrayHeight: display.fairShareMinimumTrayHeight,
+      trayColumns: display.fairShareTrayColumns
+    });
+    slots.forEach((slot, slotIndex) => {
+      assert(slot.modelBox.y >= slot.y);
+      assert(slot.modelBox.y + slot.modelBox.height < slot.responseY);
+      assert(slot.responseY < slot.bottom);
+      assert(slot.bottom <= pageBottomY);
+      if (slotIndex > 0) assert.strictEqual(slot.y - slots[slotIndex - 1].bottom, 18);
+      const item = page[slotIndex];
+      const modelBox = { x: 58, y: slot.modelBox.y, width: 496, height: slot.modelBox.height };
+      const geometry = rendererTest.buildFairShareModelGeometry(item.fractionModel, modelBox, {
+        trayColumns: display.fairShareTrayColumns
+      });
+      assert.strictEqual(geometry.trayColumns, 3);
+      assert(Math.abs(geometry.trayWidth - (326 / 3)) < 0.001);
+      geometry.trays.forEach((tray) => assert(Math.abs(tray.height - 190) < 0.001));
       geometry.trays.forEach((tray) => {
         assert(tray.x >= modelBox.x);
         assert(tray.y >= modelBox.y);
@@ -271,7 +313,7 @@ async function run() {
     differentSeedOrders: differentSeedOrders.size,
     scenarioCount: QUESTION_COUNT,
     sharerCounts: SHARER_COUNTS,
-    pageCount: 4,
+    pageCount: 8,
     answerKeySlotGap: 18,
     answerKeyGeometry: true,
     trayRowCentering: true,
