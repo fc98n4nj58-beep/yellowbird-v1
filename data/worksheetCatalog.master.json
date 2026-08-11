@@ -43,7 +43,7 @@
       ],
       "description": "Students practise basic addition facts within 20.",
       "sourceType": "curated",
-      "studentInstruction": "Solve each equation.",
+      "studentInstruction": "Solve each addition fact.",
       "pdfDisplay": {
         "hideSubtitle": true,
         "standardShortAnswerTarget": true
@@ -135,7 +135,7 @@
     },
     {
       "id": "g1_addition_word_problems",
-      "title": "Addition Word Problems",
+      "title": "Addition Story Problems Within 20",
       "shortTitle": "Addition Word Problems",
       "subject": "Math",
       "grades": [
@@ -165,7 +165,7 @@
       ],
       "description": "Students solve simple addition word problems with visual or equation support.",
       "sourceType": "curated",
-      "studentInstruction": "Read each problem. Show your work. Write or draw your answer.",
+      "studentInstruction": "Read each question. Show your thinking by writing and/or drawing your answer.",
       "generatorOptions": {
         "questionCount": 6,
         "minA": 0,
@@ -292,7 +292,7 @@
       ],
       "description": "Students connect related addition and subtraction facts as relationship practice.",
       "sourceType": "curated",
-      "studentInstruction": "Complete each fact family.",
+      "studentInstruction": "Complete the fact family.",
       "generatorOptions": {
         "minA": 0,
         "maxA": 10,
@@ -1111,7 +1111,7 @@
     },
     {
       "id": "grade1_multiplication_facts_arrays",
-      "title": "Arrays — Grade 1",
+      "title": "Arrays",
       "shortTitle": "Arrays",
       "subject": "Math",
       "grades": [
@@ -1139,7 +1139,8 @@
       ],
       "curriculumTags": [],
       "description": "Students interpret arrays and connect them to equations.",
-      "sourceType": "generated"
+      "sourceType": "generated",
+      "studentInstruction": "Use each array to complete the number sentence."
     },
     {
       "id": "grade1_multiplication_facts_equal_groups",
@@ -1846,7 +1847,7 @@
     },
     {
       "id": "g2_addition_fluency_within_100",
-      "title": "Addition Fluency Within 100",
+      "title": "Addition Facts Within 100",
       "shortTitle": "Addition Fluency",
       "subject": "Math",
       "grades": [
@@ -1876,7 +1877,8 @@
         "B2"
       ],
       "description": "Students practise addition fluency with age-appropriate number ranges.",
-      "sourceType": "curated"
+      "sourceType": "curated",
+      "studentInstruction": "Solve each addition fact."
     },
     {
       "id": "grade2_addition_subtraction_word_problems_addition_word_problem",
@@ -1912,7 +1914,7 @@
     },
     {
       "id": "g2_addition_word_problems_within_100",
-      "title": "Addition Word Problems Within 100",
+      "title": "Addition Story Problems Within 100",
       "shortTitle": "Addition Word Problems",
       "subject": "Math",
       "grades": [
@@ -1942,7 +1944,8 @@
         "B2"
       ],
       "description": "Students solve addition word problems using equations, drawings, or models.",
-      "sourceType": "curated"
+      "sourceType": "curated",
+      "studentInstruction": "Read each question. Show your thinking by writing and/or drawing your answer."
     },
     {
       "id": "grade2_addition_subtraction_facts_equation_match",
@@ -1985,7 +1988,7 @@
     },
     {
       "id": "grade2_addition_subtraction_facts_fact_family",
-      "title": "Fact Families",
+      "title": "Fact Families Within 20",
       "shortTitle": "Fact Families",
       "subject": "Math",
       "grades": [
@@ -2014,7 +2017,7 @@
       "curriculumTags": [],
       "description": "Students complete related addition and subtraction fact families.",
       "sourceType": "generated",
-      "studentInstruction": "Complete each fact family.",
+      "studentInstruction": "Complete the fact family.",
       "generatorOptions": {
         "minA": 0,
         "maxA": 10,
@@ -2728,7 +2731,7 @@
     },
     {
       "id": "grade2_multiplication_facts_arrays",
-      "title": "Arrays — Grade 2",
+      "title": "Multiplication with Arrays",
       "shortTitle": "Arrays",
       "subject": "Math",
       "grades": [
@@ -2756,7 +2759,8 @@
       ],
       "curriculumTags": [],
       "description": "Students interpret arrays and connect them to equations.",
-      "sourceType": "generated"
+      "sourceType": "generated",
+      "studentInstruction": "Use each array to write a multiplication equation."
     },
     {
       "id": "grade2_multiplication_facts_equal_groups",
@@ -3529,7 +3533,7 @@
     },
     {
       "id": "grade3_addition_subtraction_word_problems_addition_word_problem",
-      "title": "Addition Word Problem — Grade 3",
+      "title": "Addition Story Problems Within 100",
       "shortTitle": "Addition Word Problem",
       "subject": "Math",
       "grades": [
@@ -3557,7 +3561,8 @@
       ],
       "curriculumTags": [],
       "description": "Generated worksheet for addition word problem.",
-      "sourceType": "generated"
+      "sourceType": "generated",
+      "studentInstruction": "Read each question. Show your thinking by writing and/or drawing your answer."
     },
     {
       "id": "grade3_addition_subtraction_facts_equation_match",
@@ -3593,7 +3598,7 @@
     },
     {
       "id": "grade3_addition_subtraction_facts_fact_family",
-      "title": "Fact Families — Grade 3",
+      "title": "Fact Families Within 100",
       "shortTitle": "Fact Families",
       "subject": "Math",
       "grades": [
@@ -3621,7 +3626,8 @@
       ],
       "curriculumTags": [],
       "description": "Students connect related fact families.",
-      "sourceType": "generated"
+      "sourceType": "generated",
+      "studentInstruction": "Complete the fact family."
     },
     {
       "id": "grade3_addition_subtraction_facts_fact_fluency",
@@ -4665,7 +4671,8 @@
         "B2"
       ],
       "description": "Students interpret arrays and connect them to multiplication equations.",
-      "sourceType": "curated"
+      "sourceType": "curated",
+      "studentInstruction": "Use each array to write a multiplication equation."
     },
     {
       "id": "grade3_multiplication_facts_skip_counting",
@@ -5871,7 +5878,7 @@
     },
     {
       "id": "grade4_addition_subtraction_word_problems_addition_word_problem",
-      "title": "Addition Word Problem — Grade 4",
+      "title": "Addition Story Problems Within 5,000",
       "shortTitle": "Addition Word Problem",
       "subject": "Math",
       "grades": [
@@ -5899,7 +5906,8 @@
       ],
       "curriculumTags": [],
       "description": "Generated worksheet for addition word problem.",
-      "sourceType": "generated"
+      "sourceType": "generated",
+      "studentInstruction": "Read each question. Show your thinking by writing and/or drawing your answer."
     },
     {
       "id": "grade4_addition_subtraction_facts_equation_match",
@@ -6577,7 +6585,7 @@
     },
     {
       "id": "g4_array_interpretation",
-      "title": "Array Interpretation",
+      "title": "Multiplication with Arrays",
       "shortTitle": "Arrays",
       "subject": "Math",
       "grades": [
@@ -6606,7 +6614,8 @@
         "B2"
       ],
       "description": "Students interpret arrays and connect them to multiplication equations.",
-      "sourceType": "curated"
+      "sourceType": "curated",
+      "studentInstruction": "Use each array to write a multiplication equation."
     },
     {
       "id": "grade4_multiplication_facts_arrays",
@@ -7288,7 +7297,7 @@
     },
     {
       "id": "grade5_addition_subtraction_word_problems_addition_word_problem",
-      "title": "Addition Word Problem — Grade 5",
+      "title": "Addition Story Problems Within 100,000",
       "shortTitle": "Addition Word Problem",
       "subject": "Math",
       "grades": [
@@ -7316,7 +7325,8 @@
       ],
       "curriculumTags": [],
       "description": "Generated worksheet for addition word problem.",
-      "sourceType": "generated"
+      "sourceType": "generated",
+      "studentInstruction": "Read each question. Show your thinking by writing and/or drawing your answer."
     },
     {
       "id": "grade5_addition_subtraction_facts_equation_match",

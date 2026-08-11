@@ -8,6 +8,7 @@ const grade3 = require("../config/worksheetCatalog/grade3");
 const grade4 = require("../config/worksheetCatalog/grade4");
 const grade5 = require("../config/worksheetCatalog/grade5");
 const grade6 = require("../config/worksheetCatalog/grade6");
+const { applyWorksheetPublicCopy } = require("../config/worksheetPublicCopy");
 
 const skillsDir = path.join(__dirname, "..", "engine", "skills");
 const recipesDir = path.join(__dirname, "..", "engine", "activityRecipes");
@@ -400,7 +401,7 @@ function generateDraftCatalog() {
         });
 
         if (!curatedIds.has(entry.id)) {
-          generated.push(entry);
+          generated.push(applyWorksheetPublicCopy(entry));
         }
       });
     });

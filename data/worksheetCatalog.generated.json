@@ -754,7 +754,7 @@
     },
     {
       "id": "grade1_multiplication_facts_arrays",
-      "title": "Arrays — Grade 1",
+      "title": "Arrays",
       "shortTitle": "Arrays",
       "subject": "Math",
       "grades": [
@@ -781,7 +781,8 @@
         "array"
       ],
       "curriculumTags": [],
-      "description": "Students interpret arrays and connect them to equations."
+      "description": "Students interpret arrays and connect them to equations.",
+      "studentInstruction": "Use each array to complete the number sentence."
     },
     {
       "id": "grade1_multiplication_facts_equal_groups",
@@ -1334,7 +1335,7 @@
     },
     {
       "id": "grade2_addition_subtraction_facts_fact_family",
-      "title": "Fact Families",
+      "title": "Fact Families Within 20",
       "shortTitle": "Fact Families",
       "subject": "Math",
       "grades": [
@@ -1362,7 +1363,7 @@
       ],
       "curriculumTags": [],
       "description": "Students complete related addition and subtraction fact families.",
-      "studentInstruction": "Complete each fact family.",
+      "studentInstruction": "Complete the fact family.",
       "generatorOptions": {
         "minA": 0,
         "maxA": 10,
@@ -1991,7 +1992,7 @@
     },
     {
       "id": "grade2_multiplication_facts_arrays",
-      "title": "Arrays — Grade 2",
+      "title": "Multiplication with Arrays",
       "shortTitle": "Arrays",
       "subject": "Math",
       "grades": [
@@ -2018,7 +2019,8 @@
         "array"
       ],
       "curriculumTags": [],
-      "description": "Students interpret arrays and connect them to equations."
+      "description": "Students interpret arrays and connect them to equations.",
+      "studentInstruction": "Use each array to write a multiplication equation."
     },
     {
       "id": "grade2_multiplication_facts_equal_groups",
@@ -2523,7 +2525,7 @@
     },
     {
       "id": "grade3_addition_subtraction_word_problems_addition_word_problem",
-      "title": "Addition Word Problem — Grade 3",
+      "title": "Addition Story Problems Within 100",
       "shortTitle": "Addition Word Problem",
       "subject": "Math",
       "grades": [
@@ -2550,7 +2552,8 @@
         "addition word problem"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for addition word problem."
+      "description": "Generated worksheet for addition word problem.",
+      "studentInstruction": "Read each question. Show your thinking by writing and/or drawing your answer."
     },
     {
       "id": "grade3_addition_subtraction_facts_equation_match",
@@ -2585,7 +2588,7 @@
     },
     {
       "id": "grade3_addition_subtraction_facts_fact_family",
-      "title": "Fact Families — Grade 3",
+      "title": "Fact Families Within 100",
       "shortTitle": "Fact Families",
       "subject": "Math",
       "grades": [
@@ -2612,7 +2615,8 @@
         "fact family"
       ],
       "curriculumTags": [],
-      "description": "Students connect related fact families."
+      "description": "Students connect related fact families.",
+      "studentInstruction": "Complete the fact family."
     },
     {
       "id": "grade3_addition_subtraction_facts_fact_fluency",
@@ -4452,7 +4456,7 @@
     },
     {
       "id": "grade4_addition_subtraction_word_problems_addition_word_problem",
-      "title": "Addition Word Problem — Grade 4",
+      "title": "Addition Story Problems Within 5,000",
       "shortTitle": "Addition Word Problem",
       "subject": "Math",
       "grades": [
@@ -4479,7 +4483,8 @@
         "addition word problem"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for addition word problem."
+      "description": "Generated worksheet for addition word problem.",
+      "studentInstruction": "Read each question. Show your thinking by writing and/or drawing your answer."
     },
     {
       "id": "grade4_addition_subtraction_facts_equation_match",
@@ -5599,7 +5604,7 @@
     },
     {
       "id": "grade5_addition_subtraction_word_problems_addition_word_problem",
-      "title": "Addition Word Problem — Grade 5",
+      "title": "Addition Story Problems Within 100,000",
       "shortTitle": "Addition Word Problem",
       "subject": "Math",
       "grades": [
@@ -5626,7 +5631,8 @@
         "addition word problem"
       ],
       "curriculumTags": [],
-      "description": "Generated worksheet for addition word problem."
+      "description": "Generated worksheet for addition word problem.",
+      "studentInstruction": "Read each question. Show your thinking by writing and/or drawing your answer."
     },
     {
       "id": "grade5_addition_subtraction_facts_equation_match",

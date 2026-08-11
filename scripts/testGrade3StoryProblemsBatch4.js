@@ -16,8 +16,8 @@ const IDS = Object.freeze({
 const FOOTER = "Grade 3 • Math • Addition and Subtraction";
 const SPECS = Object.freeze({
   [IDS.addition]: {
-    title: "Addition Word Problems",
-    instruction: "Solve each addition word problem. Show your thinking in the box."
+    title: "Addition Story Problems Within 100",
+    instruction: "Read each question. Show your thinking by writing and/or drawing your answer."
   },
   [IDS.missing]: {
     title: "Missing Addend Word Problems",
@@ -452,7 +452,7 @@ function testCatalogIsolationAndRegistration() {
   assert.strictEqual(Boolean(grade1.layout.display.compactWordProblemAnswerKey), false);
   assert.strictEqual(grade1.normalizedContentObject.content.items.length, 6);
   const grade2 = buildCatalogWorksheetRuntime("g2_addition_word_problems_within_100", { worksheetSeed: "grade3-story-grade2-isolation" });
-  assert.strictEqual(grade2.layout.header.title, "Addition Word Problems Within 100");
+  assert.strictEqual(grade2.layout.header.title, "Addition Story Problems Within 100");
   assert.strictEqual(grade2.layout.display.compactWordProblemAnswerKey, true);
   assert.strictEqual(grade2.normalizedContentObject.content.items.length, 12);
 

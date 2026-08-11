@@ -15,8 +15,8 @@ const IDS = Object.freeze({
 });
 const SPECS = Object.freeze({
   [IDS.addition]: {
-    title: "Addition Story Problems",
-    instruction: "Solve each addition story problem. Show your work."
+    title: "Addition Story Problems Within 100,000",
+    instruction: "Read each question. Show your thinking by writing and/or drawing your answer."
   },
   [IDS.missing]: {
     title: "Missing Addend Story Problems",
@@ -393,7 +393,7 @@ async function run() {
   assert.strictEqual(grade1.normalizedContentObject.content.items.length, 6);
   assert.strictEqual(grade2.normalizedContentObject.content.items.length, 12);
   assert.strictEqual(grade3.normalizedContentObject.content.items.length, 12);
-  assert.strictEqual(grade3.layout.header.title, "Addition Word Problems");
+  assert.strictEqual(grade3.layout.header.title, "Addition Story Problems Within 100");
 
   console.log("Grade 5 Addition/Subtraction Stories Batch 6 tests passed.");
   console.log("Resources: 3; deterministic seeds: 30; same-seed failures: 0; different-seed variation: passed.");

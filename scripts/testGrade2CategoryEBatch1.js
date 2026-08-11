@@ -9,7 +9,7 @@ const { renderWorksheetPDF, buildAnswerKeyItems, __test: rendererTest } = requir
 const ARRAYS_ID = "grade2_multiplication_facts_arrays";
 const BASE_TEN_ID = "g2_base_ten_blocks_representation";
 const MULTIPLICATION_SYMBOL = "×";
-const ARRAYS_TITLE = "Arrays";
+const ARRAYS_TITLE = "Multiplication with Arrays";
 const ARRAYS_INSTRUCTION = "Use each array to write a multiplication equation.";
 const ARRAYS_FOOTER = "Grade 2 • Math • Multiplication & Division";
 const BASE_TEN_TITLE = "Base Ten Blocks";
@@ -81,7 +81,7 @@ function validateArrays(runtime) {
   assert.strictEqual(runtime.item.status, "ready");
   assert.strictEqual(runtime.layout.header.title, ARRAYS_TITLE);
   assert.strictEqual(runtime.contentObject.meta.title, ARRAYS_TITLE);
-  assert.strictEqual(`${runtime.contentObject.meta.title} ANSWER KEY`, "Arrays ANSWER KEY");
+  assert.strictEqual(`${runtime.contentObject.meta.title} ANSWER KEY`, "Multiplication with Arrays ANSWER KEY");
   assert.strictEqual(runtime.contentObject.meta.curriculum.footerText, ARRAYS_FOOTER);
   assert(!runtime.contentObject.meta.curriculum.footerText.includes("multiplication_facts"));
   assert.strictEqual(runtime.layout.instruction, ARRAYS_INSTRUCTION);
@@ -172,7 +172,7 @@ function assertCatalogReconciliationAndIsolation() {
 
   const grade1Arrays = buildCatalogWorksheetRuntime("grade1_multiplication_facts_arrays", { worksheetSeed: "g2-e1-isolation" });
   assert.strictEqual(grade1Arrays.normalizedContentObject.content.items.length, 8);
-  assert.strictEqual(grade1Arrays.layout.instruction, "Count the rows and columns. Complete the number sentence for each array.");
+  assert.strictEqual(grade1Arrays.layout.instruction, "Use each array to complete the number sentence.");
   const grade3Arrays = buildCatalogWorksheetRuntime("grade3_multiplication_facts_arrays", { worksheetSeed: "g2-e1-isolation" });
   assert.strictEqual(grade3Arrays.normalizedContentObject.content.items.length, 10);
   assert.strictEqual(grade3Arrays.layout.header.title, "Arrays — Grade 3");

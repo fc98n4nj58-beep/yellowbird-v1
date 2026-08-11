@@ -21,7 +21,7 @@ const IDS = Object.freeze({
   takeAwayWord: "grade2_addition_subtraction_word_problems_subtraction_word_problem"
 });
 const SPECS = Object.freeze({
-  [IDS.factFamily]: { title: "Fact Families", instruction: "Complete each fact family.", pages: 2 },
+  [IDS.factFamily]: { title: "Fact Families Within 20", instruction: "Complete the fact family.", pages: 2 },
   [IDS.missingAddend]: { title: "Missing Addends Within 20", instruction: "Write the missing number in each equation.", pages: 2 },
   [IDS.missingWord]: { title: "Missing Addend Word Problems", instruction: "Solve each problem. Show your thinking in the box.", pages: 6 },
   [IDS.takeAwayWord]: { title: "Take Away Word Problems", instruction: "Solve each problem. Show your thinking in the box.", pages: 6 }
@@ -222,7 +222,7 @@ function assertGradeIsolation() {
   const grade3Fact = buildCatalogWorksheetRuntime("grade3_addition_subtraction_facts_fact_family", { worksheetSeed: "g3-category-c-isolation" });
   const grade3Word = buildCatalogWorksheetRuntime("grade3_addition_subtraction_word_problems_subtraction_word_problem", { worksheetSeed: "g3-word-isolation" });
   assert.strictEqual(grade1Fact.item.title, "Fact Families — Grade 1");
-  assert.strictEqual(grade3Fact.item.title, "Fact Families — Grade 3");
+  assert.strictEqual(grade3Fact.item.title, "Fact Families Within 100");
   assert.strictEqual(Boolean(grade1Fact.item.generatorOptions?.requireDistinctAddends), false);
   assert.strictEqual(Boolean(grade3Fact.item.generatorOptions?.requireDistinctAddends), false);
   assert.strictEqual(Boolean(grade1Word.layout.display.compactWordProblemAnswerKey), false);

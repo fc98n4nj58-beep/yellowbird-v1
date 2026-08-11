@@ -8,6 +8,7 @@ const grade3 = require("../config/worksheetCatalog/grade3");
 const grade4 = require("../config/worksheetCatalog/grade4");
 const grade5 = require("../config/worksheetCatalog/grade5");
 const grade6 = require("../config/worksheetCatalog/grade6");
+const { applyWorksheetPublicCopy } = require("../config/worksheetPublicCopy");
 
 const generatedPath = path.join(__dirname, "..", "data", "worksheetCatalog.generated.json");
 const outputPath = path.join(__dirname, "..", "data", "worksheetCatalog.master.json");
@@ -21,14 +22,14 @@ const curated = [
   ...grade5,
   ...grade6
 ].map((item) => ({
-  ...item,
+  ...applyWorksheetPublicCopy(item),
   sourceType: "curated"
 }));
 
 function loadGenerated() {
   const raw = JSON.parse(fs.readFileSync(generatedPath, "utf8"));
   return (raw.items || []).map((item) => ({
-    ...item,
+    ...applyWorksheetPublicCopy(item),
     sourceType: "generated",
     status: item.status || "generated"
   }));

@@ -135,7 +135,7 @@ function assertSharedGrade1Contract(id, expected) {
 function assertArrayMetadata() {
   const runtime = assertSharedGrade1Contract(ARRAYS_ID, {
     title: "Arrays",
-    instruction: "Count the rows and columns. Complete the number sentence for each array.",
+    instruction: "Use each array to complete the number sentence.",
     visualKind: "array",
     orientation: "rows_columns"
   });

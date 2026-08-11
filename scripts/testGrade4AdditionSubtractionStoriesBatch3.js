@@ -17,7 +17,7 @@ const IDS = Object.freeze({
 });
 const FOOTER = "Grade 4 • Math • Addition & Subtraction";
 const SPECS = Object.freeze({
-  [IDS.addition]: { title: "Addition Story Problems", instruction: "Solve each addition story problem. Show your work." },
+  [IDS.addition]: { title: "Addition Story Problems Within 5,000", instruction: "Read each question. Show your thinking by writing and/or drawing your answer." },
   [IDS.missing]: { title: "Missing Addend Story Problems", instruction: "Find the missing amount in each story problem. Show your work." },
   [IDS.subtraction]: { title: "Subtraction Story Problems", instruction: "Solve each subtraction story problem. Show your work." }
 });
@@ -350,9 +350,9 @@ async function run() {
   const grade2 = buildCatalogWorksheetRuntime("g2_addition_word_problems_within_100", { worksheetSeed: "g4-b3-grade2-isolation" });
   const grade3 = buildCatalogWorksheetRuntime("grade3_addition_subtraction_word_problems_addition_word_problem", { worksheetSeed: "g4-b3-grade3-isolation" });
   assert.strictEqual(grade2.normalizedContentObject.content.items.length, 12);
-  assert.strictEqual(grade2.layout.header.title, "Addition Word Problems Within 100");
+  assert.strictEqual(grade2.layout.header.title, "Addition Story Problems Within 100");
   assert.strictEqual(grade3.normalizedContentObject.content.items.length, 12);
-  assert.strictEqual(grade3.layout.header.title, "Addition Word Problems");
+  assert.strictEqual(grade3.layout.header.title, "Addition Story Problems Within 100");
   assert.strictEqual(Object.prototype.hasOwnProperty.call(grade2.normalizedContentObject.content.items[0], "contextId"), false);
   assert.strictEqual(Object.prototype.hasOwnProperty.call(grade3.normalizedContentObject.content.items[0], "operationFamily"), false);
 

@@ -42,13 +42,19 @@ const {
 const {
   buildGrade5RepresentationTruth
 } = require("../engine/problemGenerators/grade5PlaceValueTruth");
+const {
+  getWorksheetPublicCopy,
+  applyWorksheetPublicCopy
+} = require("../config/worksheetPublicCopy");
 
 const MASTER_CATALOG_PATH = path.join(__dirname, "../data/worksheetCatalog.master.json");
 
 function loadMasterCatalog() {
   const raw = fs.readFileSync(MASTER_CATALOG_PATH, "utf8");
   const parsed = JSON.parse(raw);
-  return Array.isArray(parsed.items) ? parsed.items : [];
+  return Array.isArray(parsed.items)
+    ? parsed.items.map(applyWorksheetPublicCopy)
+    : [];
 }
 
 function getMasterWorksheetCatalog() {
@@ -4536,6 +4542,9 @@ function buildRangeNotice(item, options = {}) {
 
 function buildStudentFacingInstruction(item, fallback = "") {
  const activityType = item.activityTypes?.[0] || "";
+ const approvedCopy = getWorksheetPublicCopy(item.id);
+
+ if (approvedCopy) return approvedCopy.instruction;
 
  if (item.id === GRADE3_EQUAL_SHARING_ID) {
   return "Share the dots equally. Complete the division equation.";
@@ -4992,7 +5001,8 @@ function buildLayoutFromWorksheet(item, worksheet, options = {}) {
   instructionText = "Write the numeral for each number word.";
  }
 
-  const title = GRADE2_NUMERIC_PATTERN_TITLES[item.id] ||
+  const title = getWorksheetPublicCopy(item.id)?.title ||
+  GRADE2_NUMERIC_PATTERN_TITLES[item.id] ||
   GRADE3_NUMERIC_PATTERN_TITLES[item.id] ||
   GRADE4_NUMERIC_PATTERN_TITLES[item.id] ||
   GRADE5_NUMERIC_PATTERN_TITLES[item.id] ||

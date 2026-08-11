@@ -19,8 +19,8 @@ const IDS = Object.freeze({
 const SPECS = Object.freeze({
   [IDS.addition]: {
     status: "ready",
-    title: "Addition Word Problems Within 100",
-    instruction: "Solve each addition word problem. Show your thinking in the box.",
+    title: "Addition Story Problems Within 100",
+    instruction: "Read each question. Show your thinking by writing and/or drawing your answer.",
     footer: "Grade 2 • Math • Addition and Subtraction"
   },
   [IDS.multiplication]: {

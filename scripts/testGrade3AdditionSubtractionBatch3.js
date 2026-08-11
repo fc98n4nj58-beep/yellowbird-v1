@@ -14,7 +14,7 @@ const IDS = Object.freeze({
 const FOOTER = "Grade 3 • Math • Addition and Subtraction";
 const SPECS = Object.freeze({
   [IDS.equation]: { title: "Equal or Not Equal?", instruction: "Solve both sides. Write = if they have the same value. Write ≠ if they have different values.", count: 12 },
-  [IDS.family]: { title: "Addition and Subtraction Fact Families", instruction: "Use the numbers in each group to complete the related addition and subtraction facts.", count: 12 },
+  [IDS.family]: { title: "Fact Families Within 100", instruction: "Complete the fact family.", count: 12 },
   [IDS.fluency]: { title: "Addition and Subtraction Facts", instruction: "Solve each addition or subtraction fact.", count: 24 },
   [IDS.missing]: { title: "Missing Addends", instruction: "Write the missing number in each equation.", count: 24 }
 });
