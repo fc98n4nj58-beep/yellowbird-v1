@@ -3820,7 +3820,7 @@
       "useCase": "formative check",
       "prepLevel": "print-and-go",
       "formativeUse": true,
-      "studentInstructions": "Compare each pair of numbers using >, <, or =.",
+      "studentInstructions": "Write >, <, or = to compare each pair.",
       "teacherNote": "Use this quick check after place-value comparison practice to see whether students can compare 3-digit numbers using >, <, or =.",
       "activityTypes": [
         "compare_numbers"
@@ -3864,7 +3864,7 @@
       "useCase": "formative check",
       "prepLevel": "print-and-go",
       "formativeUse": true,
-      "studentInstructions": "Compare each pair of fractions using >, <, or =.",
+      "studentInstructions": "Write >, <, or = to compare each pair.",
       "teacherNote": "Use this quick check after fraction comparison practice to see whether students can compare simple fractions using >, <, or =.",
       "activityTypes": [
         "compare_fractions"
@@ -3906,7 +3906,7 @@
       "useCase": "formative check",
       "prepLevel": "print-and-go",
       "formativeUse": true,
-      "studentInstructions": "Find the missing number in each addition fact.",
+      "studentInstructions": "Write the missing number.",
       "teacherNote": "Use this quick check after missing-addend practice to see whether students can find the unknown part in addition facts within 20.",
       "activityTypes": [
         "missing_addend"
@@ -3917,7 +3917,7 @@
       "estimatedTimeMinutes": 8,
       "hasAnswerKey": true,
       "generatorOptions": {
-        "questionCount": 6,
+        "questionCount": 5,
         "maxTotal": 20
       },
       "tags": [
@@ -4389,7 +4389,7 @@
       "useCase": "formative check",
       "prepLevel": "print-and-go",
       "formativeUse": true,
-      "studentInstructions": "Compare each pair of numbers using >, <, or =.",
+      "studentInstructions": "Write >, <, or = to compare each pair.",
       "teacherNote": "Use this quick check after place-value comparison practice to see whether students can compare larger whole numbers.",
       "activityTypes": [
         "compare_numbers"
@@ -4434,7 +4434,7 @@
       "useCase": "formative check",
       "prepLevel": "print-and-go",
       "formativeUse": true,
-      "studentInstructions": "Write an equivalent fraction for each fraction.",
+      "studentInstructions": "Write the missing equivalent fraction.",
       "teacherNote": "Use this quick check after equivalent-fraction practice to see whether students can identify simple equivalent fractions.",
       "activityTypes": [
         "match_equivalent_fractions"

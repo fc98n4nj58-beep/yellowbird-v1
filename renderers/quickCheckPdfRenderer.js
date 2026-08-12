@@ -17,6 +17,16 @@ const GRADE2_COMPACT_QUICK_CHECK_IDS = new Set([
   "g2_subtraction_within_20_quick_check",
   "g2_missing_addends_within_20_quick_check"
 ]);
+const CUT_APART_QUICK_CHECKS = new Map([
+  ["g4_compare_fractions_quick_check", { copies: 2, items: 6 }],
+  ["g3_compare_3_digit_numbers_quick_check", { copies: 2, items: 6 }],
+  ["g5_place_value_to_100000_quick_check", { copies: 2, items: 6 }],
+  ["g5_equivalent_fractions_quick_check", { copies: 2, items: 6 }],
+  ["g3_place_value_hundreds_tens_ones_quick_check", { copies: 2, items: 6 }],
+  ["g2_subtraction_within_20_quick_check", { copies: 3, items: 6 }],
+  ["g3_expanded_form_to_standard_form_quick_check", { copies: 3, items: 6 }],
+  ["g2_missing_addends_within_20_quick_check", { copies: 4, items: 5 }]
+]);
 
 const GRADE2_QUICK_CHECK_LAYOUT = Object.freeze({
   columns: 2,
@@ -206,6 +216,115 @@ function isGrade2CompactQuickCheck(item) {
   return GRADE2_COMPACT_QUICK_CHECK_IDS.has(item?.id);
 }
 
+function concisePrompt(prompt) {
+  return safeStr(prompt).replace(/^Compare(?: the numbers)?:\s*/i, "").replace(/^Match the equivalent fractions:\s*/i, "").replace(/^Complete:\s*/i, "");
+}
+
+function conciseTeacherNote(note) {
+  return safeStr(note)
+    .replace(/^Use this quick check after .*? to see whether students can /i, "Check whether students can ")
+    .replace(/^Use this quick check to see whether students can /i, "Check whether students can ");
+}
+
+function renderCutApartQuickCheckPDF({ res, item, contentObject, options = {} }) {
+  const spec = CUT_APART_QUICK_CHECKS.get(item.id);
+  const doc = new PDFDocument({ size: "LETTER", margins: { top: 0, bottom: 0, left: 0, right: 0 } });
+  const fonts = assessmentFonts(doc);
+  const items = (contentObject?.content?.items || []).slice(0, spec.items);
+  const filename = safeStr(options.filename || `${item.id}.pdf`);
+  const disposition = safeStr(options.disposition || "attachment") === "inline" ? "inline" : "attachment";
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", `${disposition}; filename="${filename}"`);
+  doc.pipe(res);
+
+  const boxes = spec.copies === 2
+    ? [{ x: 42, y: 42, w: 528, h: 318 }, { x: 42, y: 432, w: 528, h: 318 }]
+    : spec.copies === 3
+      ? [{ x: 42, y: 24, w: 528, h: 230 }, { x: 42, y: 281, w: 528, h: 230 }, { x: 42, y: 538, w: 528, h: 230 }]
+      : [{ x: 24, y: 24, w: 276, h: 354 }, { x: 312, y: 24, w: 276, h: 354 }, { x: 24, y: 414, w: 276, h: 354 }, { x: 312, y: 414, w: 276, h: 354 }];
+
+  const drawTicket = (box) => {
+    const padding = 12;
+    const x = box.x + padding;
+    const width = box.w - padding * 2;
+    const columns = spec.copies === 4 ? 1 : spec.copies === 2 ? 2 : 3;
+    const rows = Math.ceil(items.length / columns);
+    const columnGap = 10;
+    const columnWidth = (width - columnGap * (columns - 1)) / columns;
+    const questionTop = box.y + 96;
+    const rowHeight = (box.h - 150) / rows;
+
+    doc.save().strokeColor("#302d29").lineWidth(0.75).rect(box.x, box.y, box.w, box.h).stroke().restore();
+    setAssessmentFont(doc, fonts.regular, 7.2);
+    doc.fillColor(COLORS.muted).text("QUICK CHECK", x, box.y + 10, { width, lineBreak: false });
+    setAssessmentFont(doc, fonts.bold, 12.5);
+    doc.fillColor(COLORS.text).text(item.shortTitle || item.title.replace(/ Quick Check$/, ""), x, box.y + 21, { width, lineBreak: false });
+    setAssessmentFont(doc, fonts.regular, 7.7);
+    doc.text("Name:", x, box.y + 43, { width: 28, lineBreak: false });
+    drawAssessmentRule(doc, x + 32, x + width, box.y + 52, { color: "#4f4942", width: 0.55 });
+    drawAssessmentRule(doc, x, x + width, box.y + 62, { color: COLORS.rule, width: 0.45 });
+    setAssessmentFont(doc, fonts.regular, columns === 1 ? 8.5 : 7.6);
+    doc.text(item.studentInstructions || "Complete each question.", x, box.y + 70, { width, lineBreak: false });
+
+    items.forEach((question, index) => {
+      const column = index % columns;
+      const row = Math.floor(index / columns);
+      const questionX = x + column * (columnWidth + columnGap);
+      const questionY = questionTop + row * rowHeight;
+      setAssessmentFont(doc, fonts.bold, 8.5);
+      doc.text(`${index + 1}.`, questionX, questionY, { width: 16, lineBreak: false });
+      setAssessmentFont(doc, fonts.regular, columns === 1 ? 10.5 : 8.7);
+      doc.text(concisePrompt(question.prompt), questionX + 16, questionY - 1, { width: columnWidth - 16, lineBreak: false });
+      if (row < rows - 1) {
+        drawAssessmentRule(doc, questionX, questionX + columnWidth, questionY + rowHeight - 10, { color: "#ddd7d0", width: 0.4 });
+      }
+    });
+
+    setAssessmentFont(doc, fonts.regular, 6.2);
+    doc.fillColor(COLORS.muted).text(
+      conciseTeacherNote(item.teacherNote || item.description),
+      x,
+      box.y + box.h - 36,
+      { width, height: 17, ellipsis: true, lineGap: 0, lineBreak: true }
+    );
+    drawAssessmentRule(doc, x, x + width, box.y + box.h - 18, { color: COLORS.rule, width: 0.4 });
+    setAssessmentFont(doc, fonts.regular, 6.8);
+    doc.fillColor(COLORS.muted).text(
+      `${item.gradeLabels?.[0] || ""} • Math • Quick Check`,
+      x,
+      box.y + box.h - 14,
+      { width, align: "center", lineBreak: false }
+    );
+  };
+
+  boxes.forEach(drawTicket);
+  if (spec.copies === 2) {
+    drawAssessmentRule(doc, 42, 570, 396, { color: "#514b44", width: 0.8, dash: 7, space: 4 });
+  }
+  if (spec.copies === 3) {
+    drawAssessmentRule(doc, 42, 570, 267, { color: "#514b44", width: 0.8, dash: 7, space: 4 });
+    drawAssessmentRule(doc, 42, 570, 524, { color: "#514b44", width: 0.8, dash: 7, space: 4 });
+  }
+  if (spec.copies === 4) {
+    doc.save()
+      .dash(7, { space: 4 })
+      .moveTo(306, 24).lineTo(306, 768).stroke()
+      .moveTo(24, 396).lineTo(588, 396).stroke()
+      .undash().restore();
+  }
+
+  if (options.includeAnswerKey !== false && item.hasAnswerKey !== false) {
+    doc.addPage();
+    setAssessmentFont(doc, fonts.bold, 18);
+    doc.text(`${item.shortTitle || item.title} Answer Key`, 54, 54, { width: 504 });
+    items.forEach((question, index) => {
+      setAssessmentFont(doc, fonts.regular, 11);
+      doc.text(`${index + 1}. ${concisePrompt(question.prompt)}  ${question.answer}`, 54, 115 + index * 42, { width: 504 });
+    });
+  }
+  doc.end();
+}
+
 function drawCompactHeader(doc, fonts, item, contentObject, options = {}) {
   const left = 54;
   const width = 504;
@@ -302,6 +421,7 @@ function renderGrade2CompactQuickCheckPDF({ res, item, contentObject, options = 
 }
 
 function renderQuickCheckPDF({ res, item, contentObject, options = {} }) {
+  if (CUT_APART_QUICK_CHECKS.has(item?.id)) return renderCutApartQuickCheckPDF({ res, item, contentObject, options });
   if (isGrade2CompactQuickCheck(item)) {
     return renderGrade2CompactQuickCheckPDF({ res, item, contentObject, options });
   }
@@ -365,7 +485,9 @@ module.exports = {
   renderQuickCheckPDF,
   __test: {
     GRADE2_QUICK_CHECK_LAYOUT,
+    CUT_APART_QUICK_CHECKS,
     isGrade2CompactQuickCheck,
+    concisePrompt,
     inlineEquationParts
   }
 };

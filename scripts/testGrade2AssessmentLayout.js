@@ -17,7 +17,7 @@ const QUICK_CHECKS = Object.freeze({
   },
   g2_missing_addends_within_20_quick_check: {
     title: "Missing Addends Within 20",
-    instruction: "Find the missing number in each addition fact."
+    instruction: "Write the missing number."
   }
 });
 
@@ -114,13 +114,14 @@ async function testQuickChecks() {
       assert.strictEqual(runtime.item.studentInstructions, spec.instruction);
       assert.strictEqual(runtime.layout.instruction, spec.instruction);
       assert.strictEqual(runtime.layout.template.columns, 2);
-      assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 6);
+      const expectedCount = id.includes("missing_addends") ? 5 : 6;
+      assert.strictEqual(runtime.layout.template.maxProblemsPerPage, expectedCount);
       assert.strictEqual(runtime.layout.display.resourceKindLabel, "Quick Check");
       assert.strictEqual(runtime.layout.display.showMetadataSubtitle, false);
       assert.strictEqual(runtime.layout.display.showTimeEstimate, false);
       assert.strictEqual(runtime.layout.display.showTeacherPanel, false);
       assert.strictEqual(runtime.layout.display.showRatingStrip, false);
-      assert.strictEqual(items.length, 6);
+      assert.strictEqual(items.length, expectedCount);
       assert(items.every((item) => !item.isExample));
       assert.deepStrictEqual(signatures(runtime), signatures(repeat));
       items.forEach((item) => {
@@ -133,7 +134,7 @@ async function testQuickChecks() {
       if (id.includes("missing_addends")) {
         assertMissingAddendTruth(items);
         assert(zeroRelatedCount(items) <= 1);
-        assert(items.length - zeroRelatedCount(items) >= 5);
+        assert(items.length - zeroRelatedCount(items) >= 4);
       }
 
       if (seedIndex === 0) {

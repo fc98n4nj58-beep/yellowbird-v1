@@ -1,8 +1,9 @@
 # Quick Check Cut-Apart Decision Proof
 
 Date: 2026-08-11
-Baseline: `e65baea`
-Scope: feasibility only; no production renderer, catalog, lifecycle, generator, or route changes
+Decision-proof baseline: `e65baea`
+Implementation baseline: `c0f69dd`
+Scope: bounded shared Quick Check cut-apart layout for the eight approved resources below
 
 ## Result
 
@@ -29,3 +30,17 @@ Each ticket repeats the Name line, concise title, direct instruction, teacher no
 ## Protected scope
 
 Preserve deterministic generator truth, student/key parity, catalog lifecycle, public customization, existing Quick Checks outside these IDs, Exit Tickets, standard worksheets, and historical review PDFs.
+
+## Implementation checkpoint
+
+The eight approved resources now use the shared cut-apart Quick Check renderer. The catalog and runtime layout metadata agree on copy count and items per ticket. Grade 2 Missing Addends now has the approved five-question default and direct instruction. The comparison and equivalent-fraction instructions were tightened so the action appears once per ticket rather than repeating in every prompt.
+
+Verification completed:
+
+- 30 deterministic seeds per resource, 240 seeded generations total, with same-seed equality, exact item counts, answer presence, copy-count metadata, and student/key pagination checks.
+- All eight final student/key PDFs, 16 pages total, rasterized and visually inspected; no clipping, overlap, footer pressure, truncated teacher notes, or weakened answer space was found.
+- Grade 2 compact assessment, Grade 4 reconciliation, Grade 5 reconciliation, founder-review remaining-corrections, and four-up Exit Ticket isolation suites passed.
+- Catalog audit: 102/102 ready resources working; the only failures are the seven established planned `pattern_word_problems` gaps.
+- Syntax checks, catalog JSON parsing, and diff hygiene passed.
+
+`g4_pattern_rule_quick_check` remains excluded and unchanged pending its separate seven-question truth and layout proof.

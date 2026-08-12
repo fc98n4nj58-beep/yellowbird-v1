@@ -662,6 +662,16 @@ const GRADE2_COMPACT_QUICK_CHECK_IDS = new Set([
   "g2_subtraction_within_20_quick_check",
   "g2_missing_addends_within_20_quick_check"
 ]);
+const CUT_APART_QUICK_CHECKS = new Map([
+  ["g4_compare_fractions_quick_check", { copies: 2, items: 6 }],
+  ["g3_compare_3_digit_numbers_quick_check", { copies: 2, items: 6 }],
+  ["g5_place_value_to_100000_quick_check", { copies: 2, items: 6 }],
+  ["g5_equivalent_fractions_quick_check", { copies: 2, items: 6 }],
+  ["g3_place_value_hundreds_tens_ones_quick_check", { copies: 2, items: 6 }],
+  ["g2_subtraction_within_20_quick_check", { copies: 3, items: 6 }],
+  ["g3_expanded_form_to_standard_form_quick_check", { copies: 3, items: 6 }],
+  ["g2_missing_addends_within_20_quick_check", { copies: 4, items: 5 }]
+]);
 
 const GRADE2_COMPACT_EXIT_TICKET_ID = "g2_missing_addends_within_20_exit_ticket";
 const FOUR_UP_EXIT_TICKET_IDS = new Set([
@@ -5458,18 +5468,20 @@ if (item.activityTypes?.[0] === "compare_numbers") {
 }
 
 if (GRADE2_COMPACT_QUICK_CHECK_IDS.has(item.id)) {
+  const cutApart = CUT_APART_QUICK_CHECKS.get(item.id);
   layout.instruction = item.studentInstructions || layout.instruction;
   layout.template = {
     ...(layout.template || {}),
     columns: 2,
-    maxProblemsPerPage: 6
+    maxProblemsPerPage: cutApart?.items || 6
   };
   layout.display = {
     ...(layout.display || {}),
     compactAssessmentLayout: true,
     resourceKindLabel: "Quick Check",
     assessmentColumns: 2,
-    assessmentRowsPerColumn: 3,
+    assessmentRowsPerColumn: cutApart?.copies === 4 ? cutApart.items : 2,
+    cutApartQuickCheckCount: cutApart?.copies || 1,
     inlineTargetsOnly: true,
     showMetadataSubtitle: false,
     showTimeEstimate: false,
@@ -5478,6 +5490,13 @@ if (GRADE2_COMPACT_QUICK_CHECK_IDS.has(item.id)) {
     denseGridRows: 3,
     sequentialColumnFill: true
   };
+}
+
+if (CUT_APART_QUICK_CHECKS.has(item.id) && !GRADE2_COMPACT_QUICK_CHECK_IDS.has(item.id)) {
+  const cutApart = CUT_APART_QUICK_CHECKS.get(item.id);
+  layout.instruction = item.studentInstructions || layout.instruction;
+  layout.template = { ...(layout.template || {}), columns: cutApart.copies === 4 ? 1 : cutApart.copies, maxProblemsPerPage: cutApart.items };
+  layout.display = { ...(layout.display || {}), compactAssessmentLayout: true, resourceKindLabel: "Quick Check", cutApartQuickCheckCount: cutApart.copies, assessmentItemsPerTicket: cutApart.items };
 }
 
 if (FOUR_UP_EXIT_TICKET_IDS.has(item.id)) {
