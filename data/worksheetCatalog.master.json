@@ -5461,7 +5461,7 @@
       "useCase": "lesson-close formative check",
       "prepLevel": "print-and-go",
       "formativeUse": true,
-      "studentInstructions": "Find the missing number in each addition fact.",
+      "studentInstructions": "Write the missing number.",
       "teacherNote": "Use this exit ticket after practice with missing addends to see whether students can find the unknown part in addition facts within 20.",
       "activityTypes": [
         "missing_addend"
@@ -5505,7 +5505,7 @@
       "useCase": "lesson-close formative check",
       "prepLevel": "print-and-go",
       "formativeUse": true,
-      "studentInstructions": "Compare each pair of numbers using >, <, or =.",
+      "studentInstructions": "Write >, <, or = to compare each pair.",
       "teacherNote": "Use this exit ticket after a place-value comparison lesson to see whether students can compare 3-digit numbers using >, <, or =.",
       "activityTypes": [
         "compare_numbers"
@@ -5640,7 +5640,7 @@
       "useCase": "lesson-close formative check",
       "prepLevel": "print-and-go",
       "formativeUse": true,
-      "studentInstructions": "Compare each pair of fractions using >, <, or =.",
+      "studentInstructions": "Write >, <, or = to compare each pair.",
       "teacherNote": "Use this exit ticket after fraction comparison practice to see whether students can compare simple fractions.",
       "activityTypes": [
         "compare_fractions"
@@ -5682,7 +5682,7 @@
       "useCase": "lesson-close formative check",
       "prepLevel": "print-and-go",
       "formativeUse": true,
-      "studentInstructions": "Compare each pair of numbers using >, <, or =.",
+      "studentInstructions": "Write >, <, or = to compare each pair.",
       "teacherNote": "Use this exit ticket after place-value comparison practice to see whether students can compare whole numbers to 100,000.",
       "activityTypes": [
         "compare_numbers"
@@ -5727,7 +5727,7 @@
       "useCase": "lesson-close formative check",
       "prepLevel": "print-and-go",
       "formativeUse": true,
-      "studentInstructions": "Write an equivalent fraction for each fraction.",
+      "studentInstructions": "Write the missing equivalent fraction.",
       "teacherNote": "Use this exit ticket after equivalent-fraction practice to see whether students can identify simple equivalent fractions.",
       "activityTypes": [
         "match_equivalent_fractions"

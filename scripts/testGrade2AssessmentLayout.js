@@ -147,7 +147,7 @@ async function testQuickChecks() {
 async function testExitTicket() {
   const layout = exitTicketTest.GRADE2_EXIT_TICKET_LAYOUT;
   assert.deepStrictEqual(layout, {
-    ticketsPerPage: 2,
+    ticketsPerPage: 4,
     itemsPerTicket: 3,
     equationFontSize: 14,
     targetWidth: 58,
@@ -163,11 +163,11 @@ async function testExitTicket() {
     assert.strictEqual(runtime.item.status, "ready");
     assert.strictEqual(runtime.item.title, "Missing Addends Within 20");
     assert(!runtime.item.title.includes("Exit Ticket"));
-    assert.strictEqual(runtime.item.studentInstructions, "Find the missing number in each addition fact.");
+    assert.strictEqual(runtime.item.studentInstructions, "Write the missing number.");
     assert.strictEqual(runtime.layout.instruction, runtime.item.studentInstructions);
     assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 3);
     assert.strictEqual(runtime.layout.display.resourceKindLabel, "Exit Ticket");
-    assert.strictEqual(runtime.layout.display.cutApartTicketCount, 2);
+    assert.strictEqual(runtime.layout.display.cutApartTicketCount, 4);
     assert.strictEqual(items.length, 3);
     assert(items.every((item) => !item.isExample));
     assert.deepStrictEqual(signatures(runtime), signatures(repeat));
@@ -194,7 +194,7 @@ async function testGradeIsolation() {
   });
   assert.strictEqual(exitTicketTest.isGrade2CompactExitTicket(grade1Exit.item), false);
   assert.strictEqual(quickCheckTest.isGrade2CompactQuickCheck(grade3Quick.item), false);
-  assert.strictEqual(exitTicketTest.isGrade2CompactExitTicket(grade3Exit.item), false);
+  assert.strictEqual(exitTicketTest.isFourUpExitTicket(grade3Exit.item), true);
   assert(grade3Quick.item.title.includes("Quick Check"));
   assert(grade3Exit.item.title.includes("Exit Ticket"));
   assert.strictEqual(pageCount(await renderPdf(renderExitTicketPDF, grade1Exit)), 2);

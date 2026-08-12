@@ -664,6 +664,14 @@ const GRADE2_COMPACT_QUICK_CHECK_IDS = new Set([
 ]);
 
 const GRADE2_COMPACT_EXIT_TICKET_ID = "g2_missing_addends_within_20_exit_ticket";
+const FOUR_UP_EXIT_TICKET_IDS = new Set([
+  "g4_compare_fractions_exit_ticket",
+  "g3_compare_3_digit_numbers_exit_ticket",
+  "g5_compare_numbers_to_100000_exit_ticket",
+  "g5_equivalent_fractions_exit_ticket",
+  GRADE2_COMPACT_EXIT_TICKET_ID,
+  "g3_expanded_form_to_standard_form_exit_ticket"
+]);
 
 const GRADE2_ADDITION_SUBTRACTION_CATEGORY_C_IDS = new Set([
   "grade2_addition_subtraction_facts_fact_family",
@@ -5472,7 +5480,7 @@ if (GRADE2_COMPACT_QUICK_CHECK_IDS.has(item.id)) {
   };
 }
 
-if (item.id === GRADE2_COMPACT_EXIT_TICKET_ID) {
+if (FOUR_UP_EXIT_TICKET_IDS.has(item.id)) {
   layout.instruction = item.studentInstructions || layout.instruction;
   layout.template = {
     ...(layout.template || {}),
@@ -5483,7 +5491,7 @@ if (item.id === GRADE2_COMPACT_EXIT_TICKET_ID) {
     ...(layout.display || {}),
     compactAssessmentLayout: true,
     resourceKindLabel: "Exit Ticket",
-    cutApartTicketCount: 2,
+    cutApartTicketCount: 4,
     assessmentItemsPerTicket: 3,
     inlineTargetsOnly: true,
     showMetadataSubtitle: false,

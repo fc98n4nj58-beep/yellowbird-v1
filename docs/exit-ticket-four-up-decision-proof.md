@@ -46,3 +46,9 @@ The Grade 2 Missing Addends special compact branch should be consolidated into t
 - Quick Checks and their separate two-, three-, and four-up requirements.
 - New teacher variables, A/B ticket versions, curriculum expansion, Grade 6 work, and lifecycle changes.
 - Broader assessment architecture redesign or changes to normal worksheet PDFs.
+
+## Implementation checkpoint
+
+Implemented 2026-08-11. The approved four-up layout now applies only to the six resources listed above. Each student page has four identical tickets, omits Date, uses the existing concise `shortTitle`, and removes repeated comparison/equivalent-fraction lead-in wording from individual prompts. The Grade 2 Missing Addends compact branch now resolves through this shared layout; its three-question, within-20, zero-balance generator contract remains unchanged.
+
+Focused 30-seed deterministic tests passed for every resource, as did the Grade 2 compact-assessment regression and the unrelated Grade 1 two-up Exit Ticket isolation check. Six fresh student/key proof PDFs were rendered and visually inspected. No catalog lifecycle, route, generator, Quick Check, variable, or reconciliation change was made.

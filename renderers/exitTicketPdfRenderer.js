@@ -14,8 +14,23 @@ const {
 } = require("./compactAssessmentPdfLayout");
 
 const GRADE2_COMPACT_EXIT_TICKET_ID = "g2_missing_addends_within_20_exit_ticket";
+const FOUR_UP_EXIT_TICKET_IDS = new Set([
+  "g4_compare_fractions_exit_ticket",
+  "g3_compare_3_digit_numbers_exit_ticket",
+  "g5_compare_numbers_to_100000_exit_ticket",
+  "g5_equivalent_fractions_exit_ticket",
+  GRADE2_COMPACT_EXIT_TICKET_ID,
+  "g3_expanded_form_to_standard_form_exit_ticket"
+]);
+const FOUR_UP_EXIT_TICKET_LAYOUT = Object.freeze({
+  ticketsPerPage: 4,
+  itemsPerTicket: 3,
+  titleFontSize: 13,
+  promptFontSize: 11.5,
+  omitsDate: true
+});
 const GRADE2_EXIT_TICKET_LAYOUT = Object.freeze({
-  ticketsPerPage: 2,
+  ticketsPerPage: 4,
   itemsPerTicket: 3,
   equationFontSize: 14,
   targetWidth: 58,
@@ -148,6 +163,137 @@ function drawAnswerKey(doc, fonts, item, items) {
 
 function isGrade2CompactExitTicket(item) {
   return item?.id === GRADE2_COMPACT_EXIT_TICKET_ID;
+}
+
+function isFourUpExitTicket(item) {
+  return FOUR_UP_EXIT_TICKET_IDS.has(item?.id);
+}
+
+function concisePrompt(prompt) {
+  return safeStr(prompt)
+    .replace(/^Compare(?: the numbers)?:\s*/i, "")
+    .replace(/^Match the equivalent fractions:\s*/i, "");
+}
+
+function drawFourUpTicket(doc, fonts, item, items, frame) {
+  const pad = 14;
+  const innerX = frame.x + pad;
+  const innerWidth = frame.width - pad * 2;
+  const title = safeStr(item.shortTitle || item.title).replace(/ Exit Ticket$/, "");
+
+  doc.save();
+  doc.strokeColor("#302d29").lineWidth(0.8).rect(frame.x, frame.y, frame.width, frame.height).stroke();
+  doc.restore();
+
+  setFont(doc, fonts.regular, 7.5);
+  doc.fillColor("#5d574f").text("EXIT TICKET", innerX, frame.y + 12, {
+    width: innerWidth,
+    characterSpacing: 0.45,
+    lineBreak: false
+  });
+  setFont(doc, fonts.bold, FOUR_UP_EXIT_TICKET_LAYOUT.titleFontSize);
+  doc.fillColor("#1f1d1a").text(title, innerX, frame.y + 24, {
+    width: innerWidth,
+    lineBreak: false
+  });
+  setFont(doc, fonts.regular, 8.5);
+  doc.fillColor("#2f2b27").text("Name:", innerX, frame.y + 46, { width: 30, lineBreak: false });
+  drawRule(doc, innerX + 34, innerX + innerWidth, frame.y + 56, { width: 0.55, color: "#4f4942" });
+  drawRule(doc, innerX, innerX + innerWidth, frame.y + 68, { width: 0.45, color: "#c9c1b8" });
+
+  setFont(doc, fonts.regular, 8.5);
+  doc.fillColor("#2f2b27").text(
+    safeStr(item.studentInstructions || "Complete each question."),
+    innerX,
+    frame.y + 78,
+    { width: innerWidth, lineBreak: false }
+  );
+
+  items.slice(0, FOUR_UP_EXIT_TICKET_LAYOUT.itemsPerTicket).forEach((problem, index) => {
+    const y = frame.y + 112 + index * 65;
+    setFont(doc, fonts.bold, 10.5);
+    doc.fillColor("#1f1d1a").text(`${index + 1}.`, innerX, y, { width: 18, lineBreak: false });
+    setFont(doc, fonts.regular, FOUR_UP_EXIT_TICKET_LAYOUT.promptFontSize);
+    doc.fillColor("#1f1d1a").text(concisePrompt(problem.prompt), innerX + 22, y - 1, {
+      width: innerWidth - 22,
+      lineBreak: false
+    });
+    if (index < items.length - 1) {
+      drawRule(doc, innerX, innerX + innerWidth, y + 47, { width: 0.4, color: "#ddd7d0" });
+    }
+  });
+
+  drawRule(doc, innerX, innerX + innerWidth, frame.y + frame.height - 22, { width: 0.4, color: "#c9c1b8" });
+  setFont(doc, fonts.regular, 7.2);
+  doc.fillColor("#655e56").text(`${item.gradeLabels?.[0] || ""} • Math`, innerX, frame.y + frame.height - 17, {
+    width: innerWidth,
+    align: "center",
+    lineBreak: false
+  });
+}
+
+function drawFourUpAnswerKey(doc, fonts, item, items) {
+  const left = 54;
+  const width = 504;
+  const title = safeStr(item.shortTitle || item.title).replace(/ Exit Ticket$/, "");
+
+  setFont(doc, fonts.regular, 10);
+  doc.fillColor("#5d574f").text("ANSWER KEY", left, 54, { width, characterSpacing: 0.45, lineBreak: false });
+  setFont(doc, fonts.bold, 20);
+  doc.fillColor("#1f1d1a").text(title, left, 72, { width, lineBreak: false });
+  drawRule(doc, left, left + width, 108, { width: 0.7, color: "#7c7368" });
+  setFont(doc, fonts.regular, 11);
+  doc.fillColor("#2f2b27").text(safeStr(item.studentInstructions || "Complete each question."), left, 126, {
+    width,
+    lineBreak: false
+  });
+  setFont(doc, fonts.regular, 11.5);
+  items.slice(0, FOUR_UP_EXIT_TICKET_LAYOUT.itemsPerTicket).forEach((problem, index) => {
+    const y = 176 + index * 52;
+    doc.fillColor("#1f1d1a").text(`${index + 1}. ${concisePrompt(problem.prompt)}  ${safeStr(problem.answer)}`, left, y, {
+      width,
+      lineBreak: false
+    });
+    drawRule(doc, left, left + width, y + 30, { width: 0.4, color: "#ddd7d0" });
+  });
+  setFont(doc, fonts.regular, 10);
+  doc.fillColor("#655e56").text("All four cut-apart tickets use the same generated questions and answer key.", left, 360, {
+    width,
+    lineBreak: false
+  });
+}
+
+function renderFourUpExitTicketPDF({ res, item, contentObject, options = {} }) {
+  const doc = new PDFDocument({
+    size: "LETTER",
+    margins: { top: 0, bottom: 0, left: 0, right: 0 },
+    bufferPages: false
+  });
+  const fonts = assessmentFonts(doc);
+  const filename = safeStr(options.filename || `${item.id}.pdf`);
+  const disposition = safeStr(options.disposition || "attachment") === "inline" ? "inline" : "attachment";
+  const items = (Array.isArray(contentObject?.content?.items) ? contentObject.content.items : [])
+    .slice(0, FOUR_UP_EXIT_TICKET_LAYOUT.itemsPerTicket);
+
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", `${disposition}; filename="${filename}"`);
+  doc.pipe(res);
+
+  const frames = [
+    { x: 24, y: 24, width: 276, height: 354 },
+    { x: 312, y: 24, width: 276, height: 354 },
+    { x: 24, y: 414, width: 276, height: 354 },
+    { x: 312, y: 414, width: 276, height: 354 }
+  ];
+  frames.forEach((frame) => drawFourUpTicket(doc, fonts, item, items, frame));
+  doc.save().strokeColor("#514b44").lineWidth(0.8).dash(7, { space: 4 }).moveTo(306, 24).lineTo(306, 768).stroke().undash().restore();
+  drawRule(doc, 24, 588, 396, { color: "#514b44", width: 0.8, dash: 7, space: 4 });
+
+  if (options.includeAnswerKey !== false && item.hasAnswerKey !== false) {
+    doc.addPage();
+    drawFourUpAnswerKey(doc, fonts, item, items);
+  }
+  doc.end();
 }
 
 function drawCompactTicketFooter(doc, fonts, item, frame) {
@@ -283,6 +429,9 @@ function renderGrade2CompactExitTicketPDF({ res, item, contentObject, options = 
 }
 
 function renderExitTicketPDF({ res, item, contentObject, options = {} }) {
+  if (isFourUpExitTicket(item)) {
+    return renderFourUpExitTicketPDF({ res, item, contentObject, options });
+  }
   if (isGrade2CompactExitTicket(item)) {
     return renderGrade2CompactExitTicketPDF({ res, item, contentObject, options });
   }
@@ -364,7 +513,10 @@ module.exports = {
   renderExitTicketPDF,
   __test: {
     GRADE2_EXIT_TICKET_LAYOUT,
+    FOUR_UP_EXIT_TICKET_LAYOUT,
     isGrade2CompactExitTicket,
+    isFourUpExitTicket,
+    concisePrompt,
     inlineEquationParts
   }
 };
