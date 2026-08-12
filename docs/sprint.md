@@ -1706,6 +1706,17 @@ Guiding phrase: build the flight network before inviting passengers.
 
 - Long-term destination: complete Ontario Mathematics curriculum coverage across Grades 1–6, meaning every expectation is intentionally accounted for through an appropriate Yellow Bird resource pathway.
 - Complete coverage does not mean one worksheet per expectation, every family in every grade, every missing grade is a defect, or every expectation should be forced into worksheet format. Future pathways may include print-first worksheets, Quick Checks, Exit Tickets, investigations, open tasks, task cards, centres or activities, teacher-led resources, or other genuinely appropriate formats.
-- Active primary workstream: continue the Grades 1–5 Founder Family Review by correcting and approving current default resources. Keep new teacher-variable ideas deferred, do not create missing-grade resources by default, do not begin Grade 6 implementation without separate authorization, and do not reopen approved family contracts without current defect evidence.
+- At the time of this direction, the active primary workstream was the Grades 1–5 Founder Family Review. The later closeout below supersedes that sequencing status while preserving its scope protections.
 - Authorized parallel work: a read-only Grades 1–6 resource and family coverage inventory to prepare for later Curriculum Alignment reconciliation.
 - Not authorized in this sequence: curriculum-gap implementation, new resource-family construction, missing-grade resource creation, Grade 6 implementation, lifecycle or catalog changes, or public coverage claims.
+
+### Grades 1-5 Founder Family Review Closeout
+
+- [x] Implement and verify all approved current-default Founder Review 1 corrections.
+- [x] Preserve missing-grade, duplicate-role, and unfinished-architecture items as explicit deferrals.
+- [x] Keep all variable/customization ideas in the separate future inventory.
+- [x] Verify the final catalog at 102 ready resources: 84 Worksheets, 11 Quick Checks, and 7 Exit Tickets.
+- [x] Confirm 102 / 102 ready resources build successfully; only seven established planned `pattern_word_problems` gaps remain.
+- [ ] Resume Milestone 7 by replacing the placeholder controlled-testing contact path.
+- [ ] Confirm teacher testing plan and feedback questions.
+- [ ] Complete production/deployment checks and final manual release walkthrough.

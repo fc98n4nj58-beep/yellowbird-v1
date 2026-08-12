@@ -459,6 +459,21 @@ Project Yellow Bird's long-term Grades 1–6 destination is complete Ontario Mat
 Rules:
 - Complete curriculum coverage does not mean one worksheet per expectation, every family in every grade, every missing grade is a defect, or every expectation belongs in worksheet format.
 - Appropriate future pathways may include print-first worksheets, Quick Checks, Exit Tickets, investigations, open tasks, task cards, centres or activities, teacher-led resources, or other formats that genuinely fit the expectation.
-- The Grades 1–5 Founder Family Review remains the active primary workstream: continue correcting and approving current default resources, keep new teacher-variable ideas deferred to the separate future inventory, do not create missing-grade resources by default, do not begin Grade 6 implementation without separate authorization, and do not reopen approved family contracts without current defect evidence.
+- At the time of this decision, the Grades 1–5 Founder Family Review remained the active primary workstream. The later closeout below supersedes that sequencing status while preserving its scope protections.
 - A parallel read-only Grades 1–6 resource and family coverage inventory is authorized to prepare for later Curriculum Alignment reconciliation.
 - This decision does not authorize curriculum-gap implementation, new resource families, missing-grade resources, Grade 6 implementation, lifecycle changes, or catalog changes.
+
+## August 11, 2026 - Grades 1-5 Founder Family Review Closeout
+
+Decision:
+Close the current-default Grades 1-5 Founder Family Review correction workstream and return the active product sequence to Milestone 7 deployment and controlled teacher testing preparation.
+
+Reason:
+All reviewed current-output corrections are committed, verified, or explicitly deferred. The final catalog has 102 ready resources - 84 Worksheets, 11 Quick Checks, and 7 Exit Tickets - with 102/102 ready resources working. No known active Founder Review 1 correction remains open.
+
+Rules:
+- Preserve all recorded missing-grade, duplicate-role, and architecture deferrals.
+- Preserve all Founder Review 1 variable/customization requests for a separate future inventory; do not treat them as implemented or launch blockers.
+- Do not create missing grades, add Grade 6 content, expand curriculum gaps, promote deferred records, or reopen approved family contracts without new defect evidence and explicit authorization.
+- Historical founder-review libraries remain evidence, not production truth.
+- Resume Milestone 7 with the real controlled-testing contact path, teacher feedback setup, production/deployment checks, final smoke testing, and manual release walkthrough.

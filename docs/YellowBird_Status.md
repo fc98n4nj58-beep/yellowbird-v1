@@ -2076,6 +2076,17 @@ Founder review pause:
 * Founder-approved long-term destination: complete Ontario Mathematics curriculum coverage across Grades 1–6, with every expectation intentionally accounted for through an appropriate Yellow Bird resource pathway.
 * This destination does not require one worksheet per expectation, every family in every grade, treating every missing grade as a defect, or forcing every expectation into worksheet format.
 * Future pathways may use print-first worksheets, Quick Checks, Exit Tickets, investigations, open tasks, task cards, centres or activities, teacher-led resources, or another format that genuinely fits the expectation.
-* Current primary workstream remains the Grades 1–5 Founder Family Review: correct and approve current defaults, defer new teacher-variable ideas to the separate future inventory, do not create missing-grade resources by default, do not begin Grade 6 implementation without separate authorization, and do not reopen approved family contracts without current defect evidence.
+* At the time of this direction, the primary workstream remained the Grades 1–5 Founder Family Review; the later closeout below supersedes that sequencing status while preserving its scope protections.
 * A parallel read-only Grades 1–6 resource and family coverage inventory is authorized as preparation for later Curriculum Alignment reconciliation.
 * No curriculum-gap implementation, new family construction, missing-grade creation, Grade 6 implementation, lifecycle movement, or catalog change is authorized by this status update.
+
+### Grades 1-5 Founder Family Review Closeout
+
+* The current-default Grades 1-5 Founder Family Review correction workstream is complete at commit `d35d5d1`.
+* Final launch-facing catalog: 102 ready resources - 84 Worksheets, 11 Quick Checks, and 7 Exit Tickets.
+* Catalog audit: 102 / 102 ready, 213 / 213 generated, and 5 / 5 partial resources build successfully; only the seven established planned `pattern_word_problems` gaps fail.
+* Fair Sharing, public family copy, remaining graph/data output, compact Quick Check, cut-apart Quick Check, four-up Exit Ticket, and Grade 4 Pattern Rule corrections are committed and verified.
+* Missing-grade, duplicate-role, unfinished-graph, and architecture decisions remain deferred exactly as recorded. Missing grades are not presumed defective.
+* All Founder Review 1 variable/customization ideas remain deferred to a separate future inventory.
+* No Grade 6 implementation, curriculum-gap expansion, new family construction, or lifecycle promotion is authorized by this closeout.
+* The active workstream returns to Milestone 7 - Deployment / Controlled Teacher Testing Preparation: replace the placeholder contact path, confirm teacher feedback collection, run production/deployment checks, and complete the final manual release walkthrough.
