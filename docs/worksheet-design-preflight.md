@@ -1,6 +1,6 @@
 # Founder Worksheet Design Preflight
 
-Status: Required before new worksheet-family implementation or major worksheet-family redesign
+Status: Authoritative and required before new worksheet activity/family implementation or material task-architecture redesign
 
 Source-of-truth role: This document captures founder worksheet design principles that must be applied before code is written.
 
@@ -17,20 +17,72 @@ The Founder Worksheet Design Preflight exists to:
 - improve founder review efficiency;
 - keep each worksheet family coherent.
 
-The preflight is not a replacement for founder review. It is the entry gate that makes first proofs closer to approval.
+The preflight predicts founder-likely acceptance; it does not replace or claim founder approval. A technically valid PDF is not automatically ready for founder review.
 
 ## When The Preflight Is Required
 
 Complete this preflight before:
 
+- every new worksheet activity type;
 - new worksheet families;
 - major family redesigns;
-- new task-family layouts;
+- a family extension with a meaningfully different mathematical interaction;
+- new or changed task architecture;
 - new public customization candidates;
 - generators that introduce new answer formats;
 - families with new pagination behavior.
 
 Do not treat this as optional because a runtime already exists. Architecture-first implementation is not enough when the worksheet design surface changes.
+
+The preflight is not required for purely mechanical metadata corrections, synchronized public-copy changes, or other changes that preserve the approved mathematical interaction and page architecture.
+
+## Founder-Likely Acceptance Review
+
+Before implementation, answer each area explicitly in the family preflight.
+
+### Nearest approved family
+
+Identify the nearest approved mathematical family, interaction type, and page/layout architecture. State what can safely inherit and what cannot. Do not choose generic `equation_practice` merely because it renders successfully.
+
+### Teacher use
+
+State the resource's role, when a teacher would use it, and whether that purpose is obvious within five seconds. Classify it honestly as practice, review, representation, reasoning, formative checking, or another specific role.
+
+### Mathematical design
+
+Define the exact thinking elicited, progression across the page, useful versus distracting task variety, required representations, likely misconceptions, and whether repetition creates meaningful practice. Sequencing should teach or reinforce a relationship rather than merely randomize examples.
+
+### Age appropriateness
+
+Evaluate reading load, vocabulary, writing and motor demands, number ranges, abstraction, visual support, response space, expected independence, and density. Primary and junior resources should not inherit the same assumptions automatically.
+
+### Student-facing instructions
+
+Use direct student language that states exactly what to do. Prefer one page-level instruction over repeated prompt prose where the task can be expressed structurally. Do not use teacher-facing or catalogue wording.
+
+### Completed model or strategy cue
+
+Decide whether a completed example, visual model, strategy cue, vocabulary cue, midpoint/reference marker, or worked demonstration improves independent success. Include one only when it teaches the interaction without displacing too much practice or revealing the task.
+
+### Page architecture
+
+Specify sections, columns, rows, question count, response positions, visual regions, model position, vertical rhythm, lower-page use, and page-break behavior. Density must have an instructional and print-safety rationale. Large unexplained empty regions and accidental crowding fail preflight.
+
+### Response architecture
+
+For every task mode, name the natural response: numeric, symbolic, written word, selection/circle/check, equation, drawing/model, or explanation. Match response targets to the mathematical demand and student age.
+
+### Answer-key architecture
+
+Preserve recognizable student-page geometry and the same generator-owned truth. Insert answers deliberately at the student response target; only inserted answers are bold and surrounding prompt text remains regular. Generic prose-appended answers and avoidable wrapping fail when a structured answer target is available.
+
+### Founder-likely objection review
+
+Explicitly answer: **What is the founder most likely to object to in this proposed worksheet?**
+
+Check for a generic-looking layout, missing question numbers, repeated instructions, unnecessary subtitle, weak answer space, shallow repetition, childish upper-grade presentation, teacher-facing wording, poorly mirrored keys, underused page space, unnecessary lines or boxes, inconsistent alignment, model sizing/spacing, and task/title mismatch. Revise the proposed contract in response before implementation.
+
+Approved family-specific contracts override a general recommendation here. Record the exception rather than flattening established family behavior into a new global rule.
 
 ## Required Outputs Before Implementation
 
@@ -52,7 +104,7 @@ Before implementation begins, record:
 
 Future worksheet-family workflow:
 
-Architecture scan -> Founder Design Preflight -> Variable contract -> Implementation -> Proof packet -> Founder review -> Commit
+Architecture scan -> Founder-Likely Acceptance Preflight -> Variable contract -> Implementation -> Internal design proof -> Internal acceptance -> Founder review proof -> Founder review -> Commit
 
 This workflow does not retroactively invalidate already approved families.
 
@@ -320,9 +372,23 @@ Acceptance criteria:
 - seeded preview/PDF parity is preserved;
 - inheritance boundaries are documented.
 
+## Internal Design-Proof Gate
+
+Do not label or export a PDF as a `founder-review` proof until an internal design proof confirms:
+
+- mathematical correctness and generator-owned answer truth;
+- age appropriateness and expected student independence;
+- an obvious, teacher-useful purpose;
+- intentional page density, hierarchy, progression, and lower-page use;
+- likely founder objections have been addressed;
+- answer-key geometry and answer-only bolding satisfy the family contract;
+- task, instructions, responses, and visuals form one coherent interaction.
+
+Failure at this gate returns the family to design or implementation. Passing it permits founder exposure but does not imply founder approval.
+
 ## Proof-Packet Requirements
 
-Before founder review, generate representative proofs covering:
+After internal acceptance and before founder review, generate representative proofs covering:
 
 - default;
 - minimum;

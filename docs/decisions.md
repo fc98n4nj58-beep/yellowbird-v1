@@ -477,3 +477,18 @@ Rules:
 - Do not create missing grades, add Grade 6 content, expand curriculum gaps, promote deferred records, or reopen approved family contracts without new defect evidence and explicit authorization.
 - Historical founder-review libraries remain evidence, not production truth.
 - Resume Milestone 7 with the real controlled-testing contact path, teacher feedback setup, production/deployment checks, final smoke testing, and manual release walkthrough.
+
+## August 12, 2026 - Founder-Likely Acceptance Preflight
+
+Decision:
+Adopt `docs/worksheet-design-preflight.md` as the authoritative Founder-Likely Acceptance contract for every new worksheet activity/family, materially different mathematical interaction, and task-architecture redesign.
+
+Reason:
+Mathematical correctness and successful PDF generation do not establish that a worksheet is teacher-useful, age appropriate, intentionally designed, or likely to pass founder review.
+
+Rules:
+- Complete the documented family preflight before implementation.
+- Pass an internal design proof before producing artifacts labelled for founder review.
+- Founder-likely acceptance is predictive and never replaces founder approval.
+- Preserve approved family-specific contracts over general guidance.
+- Purely mechanical metadata and synchronized-copy corrections do not require this gate when interaction and page architecture remain unchanged.
