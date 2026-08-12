@@ -1,0 +1,65 @@
+{
+  "proofCount": 6,
+  "proofs": [
+    {
+      "id": "g4_compare_fractions_exit_ticket",
+      "filePath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/exit-ticket-four-up-decision-proof/founder-review-2026-08-11/01_g4_compare_fractions_exit_ticket.pdf",
+      "title": "Compare Fractions",
+      "instruction": "Write >, <, or = to compare each pair.",
+      "pages": 2,
+      "maxPromptWidth": 47.012,
+      "promptCapacity": 226,
+      "promptFits": true
+    },
+    {
+      "id": "g3_compare_3_digit_numbers_exit_ticket",
+      "filePath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/exit-ticket-four-up-decision-proof/founder-review-2026-08-11/02_g3_compare_3_digit_numbers_exit_ticket.pdf",
+      "title": "Compare 3-Digit Numbers",
+      "instruction": "Write >, <, or = to compare each pair.",
+      "pages": 2,
+      "maxPromptWidth": 65.343,
+      "promptCapacity": 226,
+      "promptFits": true
+    },
+    {
+      "id": "g5_compare_numbers_to_100000_exit_ticket",
+      "filePath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/exit-ticket-four-up-decision-proof/founder-review-2026-08-11/03_g5_compare_numbers_to_100000_exit_ticket.pdf",
+      "title": "Compare to 100,000",
+      "instruction": "Write >, <, or = to compare each pair.",
+      "pages": 2,
+      "maxPromptWidth": 88.205,
+      "promptCapacity": 226,
+      "promptFits": true
+    },
+    {
+      "id": "g5_equivalent_fractions_exit_ticket",
+      "filePath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/exit-ticket-four-up-decision-proof/founder-review-2026-08-11/04_g5_equivalent_fractions_exit_ticket.pdf",
+      "title": "Equivalent Fractions",
+      "instruction": "Write the missing equivalent fraction.",
+      "pages": 2,
+      "maxPromptWidth": 48.771499999999996,
+      "promptCapacity": 226,
+      "promptFits": true
+    },
+    {
+      "id": "g2_missing_addends_within_20_exit_ticket",
+      "filePath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/exit-ticket-four-up-decision-proof/founder-review-2026-08-11/05_g2_missing_addends_within_20_exit_ticket.pdf",
+      "title": "Missing Addends Within 20",
+      "instruction": "Write the missing number.",
+      "pages": 2,
+      "maxPromptWidth": 54.993,
+      "promptCapacity": 226,
+      "promptFits": true
+    },
+    {
+      "id": "g3_expanded_form_to_standard_form_exit_ticket",
+      "filePath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/exit-ticket-four-up-decision-proof/founder-review-2026-08-11/06_g3_expanded_form_to_standard_form_exit_ticket.pdf",
+      "title": "Expanded to Standard Form",
+      "instruction": "Write each number in standard form.",
+      "pages": 2,
+      "maxPromptWidth": 82.48949999999999,
+      "promptCapacity": 226,
+      "promptFits": true
+    }
+  ]
+}
