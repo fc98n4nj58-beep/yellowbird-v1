@@ -21,6 +21,10 @@ function isNonEmptyString(value) {
 
 function validateCurriculum(data) {
   const issues = [];
+  const specificKeys = new Set();
+  let overallCount = 0;
+  let specificCount = 0;
+  let structuralCount = 0;
 
   if (!data || typeof data !== "object") {
     issues.push("Top-level curriculum object is missing or invalid.");
@@ -106,9 +110,40 @@ function validateCurriculum(data) {
         return;
       }
 
-      if (strandObj.topics.length === 0) {
+      const isStrandA = String(strandObj.id || "").trim().toUpperCase() === "A";
+      const overallExpectations = Array.isArray(strandObj.overallExpectations)
+        ? strandObj.overallExpectations
+        : [];
+      const structuralElements = Array.isArray(strandObj.structuralElements)
+        ? strandObj.structuralElements
+        : [];
+
+      if (!isStrandA && strandObj.topics.length === 0) {
         issues.push(`${strandPath}.topics must contain at least one topic.`);
       }
+
+      overallExpectations.forEach((overall, overallIndex) => {
+        const overallPath = `${strandPath}.overallExpectations[${overallIndex}]`;
+        overallCount += 1;
+        if (!isNonEmptyString(overall?.id) || !isNonEmptyString(overall?.code) || !isNonEmptyString(overall?.text)) {
+          issues.push(`${overallPath} requires id, code, and text.`);
+        }
+        if (overall?.recordType !== "overall_expectation") {
+          issues.push(`${overallPath}.recordType must be 'overall_expectation'.`);
+        }
+      });
+
+      structuralElements.forEach((element, elementIndex) => {
+        const elementPath = `${strandPath}.structuralElements[${elementIndex}]`;
+        structuralCount += 1;
+        if (!isStrandA) issues.push(`${elementPath} is only valid in Strand A.`);
+        if (!isNonEmptyString(element?.id) || !isNonEmptyString(element?.recordType) || !isNonEmptyString(element?.text)) {
+          issues.push(`${elementPath} requires id, recordType, and text.`);
+        }
+        if (isNonEmptyString(element?.code) || isNonEmptyString(element?.officialCode)) {
+          issues.push(`${elementPath} must not invent an official code for an uncoded Strand A element.`);
+        }
+      });
 
       strandObj.topics.forEach((topicObj, topicIndex) => {
         const topicPath = `${strandPath}.topics[${topicIndex}]`;
@@ -155,6 +190,16 @@ function validateCurriculum(data) {
             issues.push(`${expPath}.text is missing or empty.`);
           }
 
+          specificCount += 1;
+          if (expObj.recordType && expObj.recordType !== "specific_expectation") {
+            issues.push(`${expPath}.recordType must be 'specific_expectation' when supplied.`);
+          }
+          const gradeScopedKey = `${String(gradeObj.grade || "").toLowerCase()}|${String(code).toUpperCase()}`;
+          if (specificKeys.has(gradeScopedKey)) {
+            issues.push(`Duplicate grade-scoped specific expectation key '${gradeScopedKey}'.`);
+          }
+          specificKeys.add(gradeScopedKey);
+
           // Structural check only:
           // Example: B2.4 should be in strand B, topic B2
           if (isNonEmptyString(code)) {
@@ -188,6 +233,10 @@ function validateCurriculum(data) {
       });
     });
   });
+
+  if (overallCount !== 72) issues.push(`Expected 72 official overall expectations, found ${overallCount}.`);
+  if (specificCount !== 273) issues.push(`Expected 273 official specific expectations, found ${specificCount}.`);
+  if (structuralCount !== 42) issues.push(`Expected 42 official Strand A structural elements, found ${structuralCount}.`);
 
   return issues;
 }

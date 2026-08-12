@@ -101,6 +101,32 @@ function flattenCurriculum(raw) {
             })
           );
         }
+
+        const topics = strandEntry.topics || [];
+        for (const topicEntry of topics) {
+          const topicExpectations =
+            topicEntry.expectations ||
+            topicEntry.items ||
+            topicEntry.outcomes ||
+            [];
+
+          for (const exp of topicExpectations) {
+            flattened.push(
+              normalizeExpectationRecord({
+                ...exp,
+                grade: exp.grade || gradeId,
+                gradeLabel: exp.gradeLabel || gradeLabel,
+                strand: exp.strand || strandId,
+                strandLabel: exp.strandLabel || strandLabel,
+                subject:
+                  exp.subject ||
+                  raw.subject ||
+                  raw.subjectName ||
+                  'Math',
+              })
+            );
+          }
+        }
       }
     }
 
@@ -181,6 +207,20 @@ function loadCurriculum() {
 
 function getAllExpectations() {
   return loadCurriculum().expectations;
+}
+
+function getOverallExpectationsByGradeAndStrand(grade, strandId) {
+  const gradeNode = getGradeNode(grade);
+  const strand = (gradeNode?.strands || []).find(
+    (item) => String(item?.id || "").toUpperCase() === String(strandId || "").toUpperCase()
+  );
+  return Array.isArray(strand?.overallExpectations) ? strand.overallExpectations : [];
+}
+
+function getStrandStructuralElementsByGrade(grade) {
+  const gradeNode = getGradeNode(grade);
+  const strandA = (gradeNode?.strands || []).find((item) => String(item?.id || "").toUpperCase() === "A");
+  return Array.isArray(strandA?.structuralElements) ? strandA.structuralElements : [];
 }
 
 function getCurriculumRaw() {
@@ -494,6 +534,8 @@ module.exports = {
   loadCurriculum,
   getCurriculumRaw,
   getAllExpectations,
+  getOverallExpectationsByGradeAndStrand,
+  getStrandStructuralElementsByGrade,
   getExpectationByCode,
   getExpectationByRoute,
   getExpectationContext,
