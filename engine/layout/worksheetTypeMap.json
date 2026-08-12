@@ -66,6 +66,18 @@
     "interactionType": "write_answer",
     "instruction": "Solve each problem."
   },
+  "even_odd_numbers": {
+    "worksheetType": "equation_practice",
+    "templateId": "equation_practice",
+    "interactionType": "write_answer",
+    "instruction": "Use equal pairs to decide whether numbers are even or odd. Complete each section."
+  },
+  "round_whole_numbers": {
+    "worksheetType": "equation_practice",
+    "templateId": "equation_practice",
+    "interactionType": "write_answer",
+    "instruction": "Round each number to the place shown."
+  },
   "missing_addend": {
     "worksheetType": "missing_addend",
     "templateId": "fluency_grid",

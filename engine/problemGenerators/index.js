@@ -25,6 +25,8 @@ const generateNumberWordMatchProblem = require("./numberWordMatch");
 const generateTenFrameProblem = require("./tenFrame");
 const generateNumberLineIdentifyProblem = require("./numberLineIdentify");
 const generateAdditionNumberLineProblem = require("./additionNumberLine");
+const generateEvenOddNumbersProblem = require("./evenOddNumbers");
+const generateRoundWholeNumbersProblem = require("./roundWholeNumbers");
 
 const generateShadeFractionModels = require("./shadeFractionModels");
 const generateExtendPattern = require("./extendPattern");
@@ -92,6 +94,8 @@ function getGenerator(activityType) {
     ten_frame: generateTenFrameProblem,
     number_line_identify: generateNumberLineIdentifyProblem,
     addition_number_line: generateAdditionNumberLineProblem,
+    even_odd_numbers: generateEvenOddNumbersProblem,
+    round_whole_numbers: generateRoundWholeNumbersProblem,
     shade_fraction_models: generateShadeFractionModels,
     extend_pattern: generateExtendPattern,
     match_equivalent_fractions: generateMatchEquivalentFractions,

@@ -3166,6 +3166,307 @@ function drawFooter(doc, fonts, pageNum, meta = {}) {
   });
 }
 
+function drawWholeNumberSectionHeading(doc, fonts, x, y, width, title, instruction) {
+  doc.save();
+  setFont(doc, fonts.bold || fonts.regular, 12);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  doc.text(title, x, y, { width, align: "left", lineBreak: false });
+  setFont(doc, fonts.light || fonts.regular, 9.5);
+  doc.fillColor(pdfDesignTokens.colors.muted);
+  doc.text(instruction, x, y + 17, { width, align: "left", lineBreak: false });
+  doc.strokeColor(pdfDesignTokens.colors.lightRule).lineWidth(pdfDesignTokens.rules.thin);
+  doc.moveTo(x, y + 34).lineTo(x + width, y + 34).stroke();
+  doc.restore();
+  return y + 42;
+}
+
+function drawWholeNumberChoice(doc, fonts, x, y, label, selected) {
+  const radius = 6.5;
+  doc.save();
+  doc.strokeColor(pdfDesignTokens.colors.answerRule).lineWidth(0.8);
+  doc.circle(x, y, radius).stroke();
+  if (selected) {
+    setFont(doc, fonts.bold || fonts.regular, 10);
+    doc.fillColor(pdfDesignTokens.colors.text);
+    doc.text("X", x - radius, y - 5.5, {
+      width: radius * 2,
+      align: "center",
+      lineBreak: false
+    });
+  }
+  setFont(doc, fonts.regular, 11.5);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  doc.text(String(label), x + 11, y - 7, { width: 70, lineBreak: false });
+  doc.restore();
+}
+
+function drawParityPairModel(doc, fonts, x, y, title, count, unpaired) {
+  const width = 240;
+  doc.save();
+  setFont(doc, fonts.bold || fonts.regular, 11);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  doc.text(title, x, y, { width, align: "center", lineBreak: false });
+  const pairCount = Math.floor(count / 2);
+  const pairWidth = 44;
+  const gap = 10;
+  const totalWidth = pairCount * pairWidth + Math.max(0, pairCount - 1) * gap + (unpaired ? 28 : 0);
+  let cursorX = x + (width - totalWidth) / 2;
+  const centerY = y + 35;
+  for (let index = 0; index < pairCount; index += 1) {
+    doc.strokeColor(pdfDesignTokens.colors.lightRule).lineWidth(0.8);
+    doc.roundedRect(cursorX, centerY - 13, pairWidth, 26, 8).stroke();
+    doc.fillColor(pdfDesignTokens.colors.muted);
+    doc.circle(cursorX + 14, centerY, 3.5).fill();
+    doc.circle(cursorX + 30, centerY, 3.5).fill();
+    cursorX += pairWidth + gap;
+  }
+  if (unpaired) {
+    doc.fillColor(pdfDesignTokens.colors.muted);
+    doc.circle(cursorX + 8, centerY, 3.5).fill();
+    setFont(doc, fonts.light || fonts.regular, 8.5);
+    doc.fillColor(pdfDesignTokens.colors.muted);
+    doc.text("left over", cursorX - 8, centerY + 10, { width: 48, align: "center", lineBreak: false });
+  }
+  setFont(doc, fonts.regular, 9.5);
+  doc.fillColor(pdfDesignTokens.colors.muted);
+  doc.text(unpaired ? "One is unpaired." : "None are left over.", x, y + 58, {
+    width,
+    align: "center",
+    lineBreak: false
+  });
+  doc.restore();
+}
+
+function renderParityWholeNumberPage(doc, fonts, items, meta, instruction, pageState, answerKey) {
+  if (items.length !== 12) throw new Error("Parity family layout requires exactly 12 questions.");
+  const classify = items.filter((item) => item.taskMode === "classify");
+  const select = items.filter((item) => item.taskMode === "select");
+  const rules = items.filter((item) => item.taskMode === "rule");
+  if (classify.length !== 6 || select.length !== 4 || rules.length !== 2) {
+    throw new Error("Parity family layout requires 6 classify, 4 select, and 2 rule questions.");
+  }
+
+  const cb = layout.page.contentBox;
+  const gap = 24;
+  const colW = (cb.width - gap) / 2;
+  const xForCol = (index) => cb.x + index * (colW + gap);
+  let y = renderHeader(doc, fonts, meta);
+  setFont(doc, fonts.light || fonts.regular, 11);
+  doc.fillColor(pdfDesignTokens.colors.muted);
+  doc.text(instruction, cb.x, y - 12, { width: cb.width, lineBreak: false });
+  y += 25;
+
+  setFont(doc, fonts.bold || fonts.regular, 11.5);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  doc.text("Make equal pairs", cb.x, y, { width: cb.width, lineBreak: false });
+  y += 18;
+  doc.save();
+  doc.strokeColor(pdfDesignTokens.colors.lightRule).lineWidth(pdfDesignTokens.rules.thin);
+  doc.roundedRect(cb.x, y, cb.width, 78, 5).stroke();
+  doc.moveTo(cb.centerX, y + 8).lineTo(cb.centerX, y + 70).stroke();
+  doc.restore();
+  drawParityPairModel(doc, fonts, cb.x, y + 5, "6 is even", 6, false);
+  drawParityPairModel(doc, fonts, cb.centerX + 12, y + 5, "7 is odd", 7, true);
+  y += 92;
+
+  const classifyStart = drawWholeNumberSectionHeading(doc, fonts, cb.x, y, cb.width, "Part 1: Even or odd?", "Circle Even or Odd.");
+  const classifyRowH = 51;
+  classify.forEach((item, index) => {
+    const column = index % 2;
+    const row = Math.floor(index / 2);
+    const x = xForCol(column);
+    const rowY = classifyStart + row * classifyRowH;
+    setFont(doc, fonts.regular, 12);
+    doc.fillColor(pdfDesignTokens.colors.text);
+    doc.text(`${item.id})`, x, rowY + 10, { width: 26, lineBreak: false });
+    setFont(doc, fonts.bold || fonts.regular, 14);
+    doc.text(formatAtomicWholeNumber(item.value, true), x + 29, rowY + 8, { width: 48, align: "left", lineBreak: false });
+    drawWholeNumberChoice(doc, fonts, x + 100, rowY + 18, "Even", answerKey && String(item.answer).toLowerCase() === "even");
+    drawWholeNumberChoice(doc, fonts, x + 174, rowY + 18, "Odd", answerKey && String(item.answer).toLowerCase() === "odd");
+    doc.save();
+    doc.strokeColor(pdfDesignTokens.colors.lightRule).lineWidth(pdfDesignTokens.rules.thin);
+    doc.moveTo(x, rowY + classifyRowH - 5).lineTo(x + colW, rowY + classifyRowH - 5).stroke();
+    doc.restore();
+  });
+  y = classifyStart + classifyRowH * 3 + 4;
+
+  const selectStart = drawWholeNumberSectionHeading(doc, fonts, cb.x, y, cb.width, "Part 2: Apply the idea", "Circle the number that matches.");
+  const selectRowH = 54;
+  select.forEach((item, index) => {
+    const column = index % 2;
+    const row = Math.floor(index / 2);
+    const x = xForCol(column);
+    const rowY = selectStart + row * selectRowH;
+    setFont(doc, fonts.regular, 11.5);
+    doc.fillColor(pdfDesignTokens.colors.text);
+    doc.text(`${item.id}) ${item.prompt}`, x, rowY + 3, { width: colW, lineBreak: false });
+    drawWholeNumberChoice(doc, fonts, x + 72, rowY + 33, formatAtomicWholeNumber(item.leftValue, true), answerKey && Number(item.answer) === Number(item.leftValue));
+    drawWholeNumberChoice(doc, fonts, x + 154, rowY + 33, formatAtomicWholeNumber(item.rightValue, true), answerKey && Number(item.answer) === Number(item.rightValue));
+  });
+  y = selectStart + selectRowH * 2 + 5;
+
+  const ruleStart = drawWholeNumberSectionHeading(doc, fonts, cb.x, y, cb.width, "Part 3: Show the rule", "Complete each sentence.");
+  rules.forEach((item, index) => {
+    const x = xForCol(index);
+    const rowY = ruleStart + 4;
+    setFont(doc, fonts.regular, 11.5);
+    doc.fillColor(pdfDesignTokens.colors.text);
+    const evenRule = item.taskAction === "complete_even_rule";
+    const firstLine = evenRule
+      ? `${item.id}) An even number can be split into`
+      : `${item.id}) When you make pairs with an odd`;
+    const secondPrefix = evenRule ? "two " : "number, ";
+    const secondSuffix = evenRule ? " groups." : " is left over.";
+    doc.text(firstLine, x, rowY, { width: colW, lineBreak: false });
+    const secondY = rowY + 20;
+    doc.text(secondPrefix, x + 28, secondY, { lineBreak: false });
+    const lineX = x + 28 + doc.widthOfString(secondPrefix) + 3;
+    const lineY = secondY + 14;
+    const lineWidth = evenRule ? 68 : 60;
+    drawShortAnswerLine(doc, lineX, lineY, lineWidth);
+    if (answerKey) drawTextOnLine(doc, item.answer, lineX, lineY, lineWidth, fonts, { align: "center", fontSize: 11.5 });
+    restoreAnswerSurroundingTextStyle(doc, fonts, 11.5);
+    doc.text(secondSuffix, lineX + lineWidth + 3, secondY, {
+      width: Math.max(20, x + colW - lineX - lineWidth - 3),
+      lineBreak: false
+    });
+  });
+  drawFooter(doc, fonts, pageState.pageNum, meta);
+}
+
+function drawRoundingStrategyCue(doc, fonts, x, y, width, grade, answerKey) {
+  const example = grade === 4
+    ? { source: "3,500", answer: "4,000", place: "thousand", target: "3", deciding: "5" }
+    : { source: "350", answer: "400", place: "hundred", target: "3", deciding: "5" };
+  doc.save();
+  doc.strokeColor(pdfDesignTokens.colors.lightRule).lineWidth(pdfDesignTokens.rules.thin);
+  doc.roundedRect(x, y, width, 72, 5).stroke();
+  setFont(doc, fonts.bold || fonts.regular, 10.5);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  doc.text("Rounding strategy", x + 12, y + 9, { width: 112, lineBreak: false });
+  setFont(doc, fonts.regular, 10);
+  doc.text("Look at the digit to the right. 5 or more: round up. 4 or less: keep the target digit.", x + 128, y + 9, {
+    width: width - 140,
+    lineBreak: false
+  });
+  const prefix = `Example: ${example.source} -> `;
+  setFont(doc, fonts.regular, 11);
+  const prefixX = x + 12;
+  const exampleY = y + 36;
+  doc.text(prefix, prefixX, exampleY, { lineBreak: false });
+  const answerX = prefixX + doc.widthOfString(prefix);
+  setFont(doc, fonts.bold || fonts.regular, 11);
+  doc.text(example.answer, answerX, exampleY, { lineBreak: false });
+  const suffixX = answerX + doc.widthOfString(example.answer);
+  setFont(doc, fonts.regular, 11);
+  doc.text(` to the nearest ${example.place}.`, suffixX, exampleY, { lineBreak: false });
+  setFont(doc, fonts.light || fonts.regular, 9);
+  doc.fillColor(pdfDesignTokens.colors.muted);
+  doc.text(`Target digit: ${example.target}   Digit to the right: ${example.deciding}, so round up.`, x + 12, y + 53, {
+    width: width - 24,
+    lineBreak: false
+  });
+  doc.restore();
+}
+
+function drawRoundingRow(doc, fonts, item, x, y, width, answerKey) {
+  const numberWidth = 28;
+  const sourceWidth = 74;
+  const arrowWidth = 22;
+  const lineWidth = Math.min(94, width - numberWidth - sourceWidth - arrowWidth - 8);
+  const lineX = x + numberWidth + sourceWidth + arrowWidth;
+  const lineY = y + 27;
+  doc.save();
+  setFont(doc, fonts.regular, 11.5);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  doc.text(`${item.id})`, x, y + 10, { width: numberWidth, lineBreak: false });
+  setFont(doc, fonts.regular, 13);
+  doc.text(formatAtomicWholeNumber(item.value, true), x + numberWidth, y + 7, {
+    width: sourceWidth,
+    align: "right",
+    lineBreak: false
+  });
+  setFont(doc, fonts.light || fonts.regular, 12);
+  doc.fillColor(pdfDesignTokens.colors.muted);
+  doc.text("->", x + numberWidth + sourceWidth + 5, y + 9, { width: arrowWidth, align: "center", lineBreak: false });
+  drawShortAnswerLine(doc, lineX, lineY, lineWidth);
+  if (answerKey) {
+    drawTextOnLine(doc, item.answer, lineX, lineY, lineWidth, fonts, {
+      align: "center",
+      fontSize: 12,
+      formatThousands: true
+    });
+  }
+  doc.strokeColor(pdfDesignTokens.colors.lightRule).lineWidth(pdfDesignTokens.rules.thin);
+  doc.moveTo(x, y + 49).lineTo(x + width, y + 49).stroke();
+  doc.restore();
+}
+
+function renderRoundingWholeNumberPage(doc, fonts, items, meta, instruction, pageState, display, answerKey) {
+  if (items.length !== 12) throw new Error("Rounding family layout requires exactly 12 questions.");
+  const grade = Number(display.roundingGrade || 3);
+  const expected = grade === 4 ? [[10, 4], [100, 4], [1000, 4]] : [[10, 6], [100, 6]];
+  expected.forEach(([place, count]) => {
+    if (items.filter((item) => Number(item.interval) === place).length !== count) {
+      throw new Error(`Rounding family layout requires ${count} nearest-${place} questions.`);
+    }
+  });
+  const cb = layout.page.contentBox;
+  const gap = 24;
+  const colW = (cb.width - gap) / 2;
+  let y = renderHeader(doc, fonts, meta);
+  setFont(doc, fonts.light || fonts.regular, 11);
+  doc.fillColor(pdfDesignTokens.colors.muted);
+  doc.text(instruction, cb.x, y - 12, { width: cb.width, lineBreak: false });
+  y += 25;
+  drawRoundingStrategyCue(doc, fonts, cb.x, y, cb.width, grade, answerKey);
+  y += 86;
+
+  const label = (place) => place === 10 ? "Nearest ten" : place === 100 ? "Nearest hundred" : "Nearest thousand";
+  if (grade === 3) {
+    expected.forEach(([place], sectionIndex) => {
+      const x = cb.x + sectionIndex * (colW + gap);
+      const sectionItems = items.filter((item) => Number(item.interval) === place);
+      const rowStart = drawWholeNumberSectionHeading(doc, fonts, x, y, colW, label(place), "Write the rounded number.");
+      sectionItems.forEach((item, index) => drawRoundingRow(doc, fonts, item, x, rowStart + index * 65, colW, answerKey));
+    });
+  } else {
+    expected.slice(0, 2).forEach(([place], sectionIndex) => {
+      const x = cb.x + sectionIndex * (colW + gap);
+      const sectionItems = items.filter((item) => Number(item.interval) === place);
+      const rowStart = drawWholeNumberSectionHeading(doc, fonts, x, y, colW, label(place), "Write the rounded number.");
+      sectionItems.forEach((item, index) => drawRoundingRow(doc, fonts, item, x, rowStart + index * 54, colW, answerKey));
+    });
+    const lowerY = y + 275;
+    const thousandItems = items.filter((item) => Number(item.interval) === 1000);
+    const rowStart = drawWholeNumberSectionHeading(doc, fonts, cb.x, lowerY, cb.width, label(1000), "Write the rounded number.");
+    thousandItems.forEach((item, index) => {
+      const column = index % 2;
+      const row = Math.floor(index / 2);
+      const x = cb.x + column * (colW + gap);
+      drawRoundingRow(doc, fonts, item, x, rowStart + row * 58, colW, answerKey);
+    });
+  }
+  drawFooter(doc, fonts, pageState.pageNum, meta);
+}
+
+function renderWholeNumberFamilyPage(doc, fonts, contentObject, pageState, layoutObject) {
+  const display = layoutObject?.display || {};
+  const family = String(display.wholeNumberFamilyLayout || "");
+  const items = contentObject?.content?.items || [];
+  const meta = contentObject?.meta || {};
+  const instruction = layoutObject?.instruction || "";
+  if (family === "parity") {
+    renderParityWholeNumberPage(doc, fonts, items, meta, instruction, pageState, Boolean(display.answerKey));
+    return true;
+  }
+  if (family === "rounding") {
+    renderRoundingWholeNumberPage(doc, fonts, items, meta, instruction, pageState, display, Boolean(display.answerKey));
+    return true;
+  }
+  return false;
+}
+
 function drawNameDateLine(doc, fonts, y) {
   const header = layout.components.nameDateLine;
   const labelStyle = layout.typography.headerLabels;
@@ -4478,6 +4779,13 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
   const footerBufferH = layout.zones?.footerBuffer?.height ?? 24;
   const bottomContentY = footerRuleY - footerBufferH;
 
+  if (display.wholeNumberFamilyLayout) {
+    if (!renderWholeNumberFamilyPage(doc, fonts, contentObject, pageState, layoutObject)) {
+      throw new Error(`Unsupported whole-number family layout '${display.wholeNumberFamilyLayout}'.`);
+    }
+    return;
+  }
+
   if (display.grade1FractionRenderer || display.sharedFractionRenderer) {
     const fairSharePagination = display.fairShareTrayColumns && display.fairShareMaxTrayRowsPerPage;
     const fractionItemsPerPage = Number(display.fairShareMaxItemsPerPage || display.fairShareItemsPerPage || 0);
@@ -5142,7 +5450,8 @@ function renderAnswerKey(doc, fonts, contentObject, options, pageState, layoutOb
         layoutObject?.display?.factFamilyGrid ||
         layoutObject?.display?.compactExpandedForm ||
         layoutObject?.display?.skipCountingRow ||
-        layoutObject?.display?.patterningLayout
+        layoutObject?.display?.patterningLayout ||
+        layoutObject?.display?.wholeNumberFamilyLayout
         ? it.prompt
         : filledAnswerText(it.prompt, ans)
     };

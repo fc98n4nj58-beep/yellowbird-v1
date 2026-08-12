@@ -1,13 +1,13 @@
 {
   "summary": {
-    "generatedAt": "2026-03-15T20:22:23.828Z",
-    "curatedCount": 53,
-    "generatedCount": 259,
-    "totalCount": 312,
-    "readyCount": 46,
+    "generatedAt": "2026-08-12T16:50:04.303Z",
+    "curatedCount": 56,
+    "generatedCount": 277,
+    "totalCount": 333,
+    "readyCount": 104,
     "partialCount": 5,
-    "plannedCount": 9,
-    "generatedStatusCount": 252
+    "plannedCount": 11,
+    "generatedStatusCount": 213
   },
   "items": [
     {
@@ -42,20 +42,8 @@
         "B2"
       ],
       "description": "Students practise basic addition facts within 20.",
-      "sourceType": "curated",
       "studentInstruction": "Solve each addition fact.",
-      "pdfDisplay": {
-        "hideSubtitle": true,
-        "standardShortAnswerTarget": true
-      },
-      "generatorOptions": {
-        "minA": 0,
-        "maxA": 20,
-        "minB": 0,
-        "maxB": 20,
-        "questionCount": 60,
-        "maxTotal": 20
-      }
+      "sourceType": "curated"
     },
     {
       "id": "g1_addition_on_number_line_to_20",
@@ -89,7 +77,6 @@
         "B2"
       ],
       "description": "Students use forward jumps on number lines to solve addition questions within 20.",
-      "sourceType": "curated",
       "studentInstruction": "Use the number line to solve each addition question.",
       "generatorOptions": {
         "minStart": 0,
@@ -99,7 +86,42 @@
         "maxTotal": 20,
         "numberLineMaximum": 20,
         "questionCount": 6
-      }
+      },
+      "sourceType": "curated"
+    },
+    {
+      "id": "g1_addition_word_problems",
+      "title": "Addition Story Problems Within 20",
+      "shortTitle": "Addition Word Problems",
+      "subject": "Math",
+      "grades": [
+        "grade1"
+      ],
+      "gradeLabels": [
+        "Grade 1"
+      ],
+      "domain": "Addition & Subtraction",
+      "skillKey": "addition_subtraction_application",
+      "worksheetFamily": "problem_solving",
+      "activityTypes": [
+        "word_problems"
+      ],
+      "templateId": "equation_practice",
+      "status": "ready",
+      "difficulty": "easy",
+      "estimatedTimeMinutes": 12,
+      "hasAnswerKey": true,
+      "tags": [
+        "addition",
+        "word problems",
+        "grade 1"
+      ],
+      "curriculumTags": [
+        "B2"
+      ],
+      "description": "Students solve simple addition word problems with visual or equation support.",
+      "studentInstruction": "Read each question. Show your thinking by writing and/or drawing your answer.",
+      "sourceType": "curated"
     },
     {
       "id": "grade1_addition_subtraction_word_problems_addition_word_problem",
@@ -134,52 +156,6 @@
       "sourceType": "generated"
     },
     {
-      "id": "g1_addition_word_problems",
-      "title": "Addition Story Problems Within 20",
-      "shortTitle": "Addition Word Problems",
-      "subject": "Math",
-      "grades": [
-        "grade1"
-      ],
-      "gradeLabels": [
-        "Grade 1"
-      ],
-      "domain": "Addition & Subtraction",
-      "skillKey": "addition_subtraction_application",
-      "worksheetFamily": "problem_solving",
-      "activityTypes": [
-        "word_problems"
-      ],
-      "templateId": "equation_practice",
-      "status": "ready",
-      "difficulty": "easy",
-      "estimatedTimeMinutes": 12,
-      "hasAnswerKey": true,
-      "tags": [
-        "addition",
-        "word problems",
-        "grade 1"
-      ],
-      "curriculumTags": [
-        "B2"
-      ],
-      "description": "Students solve simple addition word problems with visual or equation support.",
-      "sourceType": "curated",
-      "studentInstruction": "Read each question. Show your thinking by writing and/or drawing your answer.",
-      "generatorOptions": {
-        "questionCount": 6,
-        "minA": 0,
-        "maxA": 20
-      },
-      "pdfDisplay": {
-        "hideSubtitle": true
-      },
-      "pdfLayout": {
-        "columns": 1,
-        "maxProblemsPerPage": 3
-      }
-    },
-    {
       "id": "grade1_addition_subtraction_facts_equation_match",
       "title": "Equal or Not Equal?",
       "shortTitle": "Equal or Not Equal?",
@@ -209,12 +185,11 @@
       ],
       "curriculumTags": [],
       "description": "Students decide whether pairs of addition and subtraction expressions have the same value.",
-      "sourceType": "generated",
       "studentInstruction": "Solve both sides. Write = if they have the same value. Write ≠ if they have different values.",
       "generatorOptions": {
         "minimumResult": 0,
         "maximumResult": 20,
-        "questionCount": 12
+        "questionCount": 20
       },
       "pdfDisplay": {
         "hideSubtitle": true,
@@ -225,7 +200,8 @@
       "pdfLayout": {
         "columns": 2,
         "maxProblemsPerPage": 12
-      }
+      },
+      "sourceType": "generated"
     },
     {
       "id": "grade1_addition_subtraction_facts_fact_family",
@@ -290,21 +266,9 @@
       "curriculumTags": [
         "B2"
       ],
-      "description": "Students connect related addition and subtraction facts as relationship practice.",
-      "sourceType": "curated",
+      "description": "Students connect related addition and subtraction facts.",
       "studentInstruction": "Complete the fact family.",
-      "generatorOptions": {
-        "minA": 0,
-        "maxA": 10,
-        "minB": 0,
-        "maxB": 10,
-        "questionCount": 12,
-        "factFamilyMode": "all"
-      },
-      "pdfDisplay": {
-        "hideSubtitle": true,
-        "standardShortAnswerTarget": true
-      }
+      "sourceType": "curated"
     },
     {
       "id": "grade1_addition_subtraction_facts_fact_fluency",
@@ -368,7 +332,6 @@
       ],
       "curriculumTags": [],
       "description": "Students solve missing-addend word problems for focused addition and subtraction practice.",
-      "sourceType": "generated",
       "studentInstruction": "Read each problem. Show your work. Write or draw your answer.",
       "generatorOptions": {
         "questionCount": 6,
@@ -381,7 +344,8 @@
       "pdfLayout": {
         "columns": 1,
         "maxProblemsPerPage": 3
-      }
+      },
+      "sourceType": "generated"
     },
     {
       "id": "grade1_addition_subtraction_facts_missing_addend",
@@ -432,6 +396,10 @@
       "activityTypes": [
         "missing_addend"
       ],
+      "generatorOptions": {
+        "maxTotal": 20,
+        "questionCount": 30
+      },
       "templateId": "fluency_grid",
       "status": "ready",
       "difficulty": "easy",
@@ -446,20 +414,7 @@
         "B2"
       ],
       "description": "Students fill in the missing addend in basic equations.",
-      "sourceType": "curated",
-      "generatorOptions": {
-        "minA": 0,
-        "maxA": 20,
-        "minB": 0,
-        "maxB": 20,
-        "maxTotal": 20,
-        "questionCount": 60
-      },
-      "studentInstruction": "Write the missing number.",
-      "pdfDisplay": {
-        "hideSubtitle": true,
-        "standardShortAnswerTarget": true
-      }
+      "sourceType": "curated"
     },
     {
       "id": "grade1_addition_subtraction_facts_related_subtraction",
@@ -525,19 +480,10 @@
         "B2"
       ],
       "description": "Students practise basic subtraction facts within 20.",
-      "sourceType": "curated",
-      "studentInstruction": "Solve each equation.",
-      "pdfDisplay": {
-        "hideSubtitle": true,
-        "standardShortAnswerTarget": true
-      },
       "generatorOptions": {
-        "minA": 0,
-        "maxA": 20,
-        "minB": 0,
-        "maxB": 20,
-        "questionCount": 60
-      }
+        "questionCount": 30
+      },
+      "sourceType": "curated"
     },
     {
       "id": "grade1_addition_subtraction_word_problems_subtraction_word_problem",
@@ -569,7 +515,6 @@
       ],
       "curriculumTags": [],
       "description": "Students solve subtraction word problems for focused Grade 1 practice.",
-      "sourceType": "generated",
       "studentInstruction": "Read each problem. Show your work. Write or draw your answer.",
       "generatorOptions": {
         "questionCount": 6,
@@ -582,12 +527,13 @@
       "pdfLayout": {
         "columns": 1,
         "maxProblemsPerPage": 3
-      }
+      },
+      "sourceType": "generated"
     },
     {
       "id": "g1_ten_frame_addition_within_10",
-      "title": "Counting With Ten Frames",
-      "shortTitle": "Counting With Ten Frames",
+      "title": "Ten Frame Addition Within 10",
+      "shortTitle": "Ten Frame Addition",
       "subject": "Math",
       "grades": [
         "grade1"
@@ -595,7 +541,7 @@
       "gradeLabels": [
         "Grade 1"
       ],
-      "domain": "Number Representation: Ten Frames Within 10",
+      "domain": "Addition & Subtraction",
       "skillKey": "addition_strategies",
       "worksheetFamily": "visual_models",
       "activityTypes": [
@@ -608,35 +554,15 @@
       "hasAnswerKey": true,
       "tags": [
         "ten frame",
-        "counting",
-        "quantity recognition",
+        "addition",
         "within 10",
         "grade 1"
       ],
       "curriculumTags": [
         "B2"
       ],
-      "formatLabel": "Recognize quantities in ten frames within 10",
-      "teacherNote": "Best used as focused Grade 1 number representation practice after hands-on work with ten frames.",
-      "description": "Students count or recognize quantities shown in ten frames within 10. Best used as focused Grade 1 number representation practice after hands-on work with ten frames.",
-      "sourceType": "curated",
-      "studentInstruction": "Count the dots. Write the number.",
-      "pdfDisplay": {
-        "hideItemPrompts": true,
-        "hideSubtitle": true,
-        "visualVerticalAlign": "topThird",
-        "shortVisualAnswerLine": true
-      },
-      "generatorOptions": {
-        "minA": 1,
-        "maxA": 10,
-        "questionCount": 10,
-        "tenFramesPerQuestion": 1
-      },
-      "pdfLayout": {
-        "columns": 1,
-        "maxProblemsPerPage": 10
-      }
+      "description": "Students use ten frames to solve addition problems.",
+      "sourceType": "curated"
     },
     {
       "id": "grade1_addition_subtraction_facts_ten_frame",
@@ -703,9 +629,9 @@
       "sourceType": "generated"
     },
     {
-      "id": "grade1_data_display_graphing_complete_graph",
-      "title": "Complete the Pictograph",
-      "shortTitle": "Complete the Pictograph",
+      "id": "grade1_data_display_graphing_match_data_to_graph",
+      "title": "Choose the Matching Graph",
+      "shortTitle": "Choose the Matching Graph",
       "subject": "Math",
       "grades": [
         "grade1"
@@ -717,9 +643,9 @@
       "skillKey": "data_display_graphing",
       "worksheetFamily": "data_graphing",
       "activityTypes": [
-        "complete_graph"
+        "match_data_to_graph"
       ],
-      "templateId": "visual_model",
+      "templateId": "matching",
       "status": "generated",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
@@ -728,95 +654,19 @@
         "grade 1",
         "data & graphing",
         "data display graphing",
-        "complete graph"
+        "match data to graph"
       ],
       "curriculumTags": [],
-      "description": "Students use a numeral data table to complete two rows of a one-to-one pictograph.",
-      "sourceType": "generated",
-      "studentInstruction": "Use the data table. Draw circles to complete the pictograph.",
-      "generatorOptions": { "questionCount": 2 },
-      "pdfLayout": { "columns": 1, "maxProblemsPerPage": 2 }
-    },
-    {
-      "id": "grade1_data_display_graphing_graph_questions",
-      "title": "Graph Questions",
-      "shortTitle": "Graph Questions",
-      "subject": "Math",
-      "grades": [
-        "grade1"
-      ],
-      "gradeLabels": [
-        "Grade 1"
-      ],
-      "domain": "Data & Graphing",
-      "skillKey": "data_display_graphing",
-      "worksheetFamily": "data_graphing",
-      "activityTypes": [
-        "graph_questions"
-      ],
-      "templateId": "equation_practice",
-      "status": "generated",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": 10,
-      "hasAnswerKey": true,
-      "tags": [
-        "grade 1",
-        "data & graphing",
-        "data display graphing",
-        "graph questions"
-      ],
-      "curriculumTags": [],
-      "description": "Students answer a mixed set of direct-reading and comparison questions about one pictograph.",
-      "sourceType": "generated",
-      "studentInstruction": "Use the graph to answer each question.",
+      "description": "Students compare a numeral data table with two one-to-one pictographs and circle the matching choice.",
+      "studentInstruction": "Look at each data set. Circle the graph that matches.",
       "generatorOptions": {
-        "questionCount": 8
-      },
-      "pdfDisplay": {
-        "hideSubtitle": true,
-        "hideItemSeparators": true,
-        "writingLine": true,
-        "answerLineBelowPrompt": true
+        "questionCount": 2
       },
       "pdfLayout": {
-        "columns": 2,
-        "maxProblemsPerPage": 8
-      }
-    },
-    {
-      "id": "grade1_data_display_graphing_graph_word_problems",
-      "title": "Use the Graph to Solve",
-      "shortTitle": "Use the Graph to Solve",
-      "subject": "Math",
-      "grades": [
-        "grade1"
-      ],
-      "gradeLabels": [
-        "Grade 1"
-      ],
-      "domain": "Data & Graphing",
-      "skillKey": "data_display_graphing",
-      "worksheetFamily": "data_graphing",
-      "activityTypes": [
-        "graph_word_problems"
-      ],
-      "templateId": "equation_practice",
-      "status": "generated",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": 10,
-      "hasAnswerKey": true,
-      "tags": [
-        "grade 1",
-        "data & graphing",
-        "data display graphing",
-        "graph word problems"
-      ],
-      "curriculumTags": [],
-      "description": "Students combine graph values with one new contextual fact using +1, +2, -1, or -2.",
-      "sourceType": "generated",
-      "studentInstruction": "Use the graph and the new information to answer each question.",
-      "generatorOptions": { "questionCount": 4 },
-      "pdfLayout": { "columns": 2, "maxProblemsPerPage": 4 }
+        "columns": 1,
+        "maxProblemsPerPage": 2
+      },
+      "sourceType": "generated"
     },
     {
       "id": "grade1_data_display_graphing_interpret_data",
@@ -848,7 +698,6 @@
       ],
       "curriculumTags": [],
       "description": "Students compare categories in one pictograph using most, least, more, fewer, same, and a small difference.",
-      "sourceType": "generated",
       "studentInstruction": "Use the graph to compare the categories and answer each question.",
       "generatorOptions": {
         "questionCount": 6
@@ -862,12 +711,13 @@
       "pdfLayout": {
         "columns": 2,
         "maxProblemsPerPage": 6
-      }
+      },
+      "sourceType": "generated"
     },
     {
-      "id": "grade1_data_display_graphing_match_data_to_graph",
-      "title": "Choose the Matching Graph",
-      "shortTitle": "Choose the Matching Graph",
+      "id": "grade1_data_display_graphing_complete_graph",
+      "title": "Complete the Pictograph",
+      "shortTitle": "Complete the Pictograph",
       "subject": "Math",
       "grades": [
         "grade1"
@@ -879,9 +729,9 @@
       "skillKey": "data_display_graphing",
       "worksheetFamily": "data_graphing",
       "activityTypes": [
-        "match_data_to_graph"
+        "complete_graph"
       ],
-      "templateId": "matching",
+      "templateId": "visual_model",
       "status": "generated",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
@@ -890,14 +740,65 @@
         "grade 1",
         "data & graphing",
         "data display graphing",
-        "match data to graph"
+        "complete graph"
       ],
       "curriculumTags": [],
-      "description": "Students compare a numeral data table with two one-to-one pictographs and circle the matching choice.",
-      "sourceType": "generated",
-      "studentInstruction": "Look at each data set. Circle the graph that matches.",
-      "generatorOptions": { "questionCount": 2 },
-      "pdfLayout": { "columns": 1, "maxProblemsPerPage": 2 }
+      "description": "Students use a numeral data table to complete two rows of a one-to-one pictograph.",
+      "studentInstruction": "Use the data table. Draw circles to complete the pictograph.",
+      "generatorOptions": {
+        "questionCount": 2
+      },
+      "pdfLayout": {
+        "columns": 1,
+        "maxProblemsPerPage": 2
+      },
+      "sourceType": "generated"
+    },
+    {
+      "id": "grade1_data_display_graphing_graph_questions",
+      "title": "Graph Questions",
+      "shortTitle": "Graph Questions",
+      "subject": "Math",
+      "grades": [
+        "grade1"
+      ],
+      "gradeLabels": [
+        "Grade 1"
+      ],
+      "domain": "Data & Graphing",
+      "skillKey": "data_display_graphing",
+      "worksheetFamily": "data_graphing",
+      "activityTypes": [
+        "graph_questions"
+      ],
+      "templateId": "equation_practice",
+      "status": "generated",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 10,
+      "hasAnswerKey": true,
+      "tags": [
+        "grade 1",
+        "data & graphing",
+        "data display graphing",
+        "graph questions"
+      ],
+      "curriculumTags": [],
+      "description": "Students answer a mixed set of direct-reading and comparison questions about one pictograph.",
+      "studentInstruction": "Use the graph to answer each question.",
+      "generatorOptions": {
+        "questionCount": 8
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "hideItemSeparators": true,
+        "writingLine": true,
+        "answerLineBelowPrompt": true
+      },
+      "pdfLayout": {
+        "columns": 2,
+        "maxProblemsPerPage": 8
+      },
+      "sourceType": "generated"
     },
     {
       "id": "grade1_data_display_graphing_read_graph",
@@ -929,7 +830,6 @@
       ],
       "curriculumTags": [],
       "description": "Students directly read category counts and the one-to-one key from one pictograph.",
-      "sourceType": "generated",
       "studentInstruction": "Use the graph to answer each question.",
       "generatorOptions": {
         "questionCount": 6
@@ -943,7 +843,48 @@
       "pdfLayout": {
         "columns": 2,
         "maxProblemsPerPage": 6
-      }
+      },
+      "sourceType": "generated"
+    },
+    {
+      "id": "grade1_data_display_graphing_graph_word_problems",
+      "title": "Use the Graph to Solve",
+      "shortTitle": "Use the Graph to Solve",
+      "subject": "Math",
+      "grades": [
+        "grade1"
+      ],
+      "gradeLabels": [
+        "Grade 1"
+      ],
+      "domain": "Data & Graphing",
+      "skillKey": "data_display_graphing",
+      "worksheetFamily": "data_graphing",
+      "activityTypes": [
+        "graph_word_problems"
+      ],
+      "templateId": "equation_practice",
+      "status": "generated",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 10,
+      "hasAnswerKey": true,
+      "tags": [
+        "grade 1",
+        "data & graphing",
+        "data display graphing",
+        "graph word problems"
+      ],
+      "curriculumTags": [],
+      "description": "Students combine graph values with one new contextual fact using +1, +2, -1, or -2.",
+      "studentInstruction": "Use the graph and the new information to answer each question.",
+      "generatorOptions": {
+        "questionCount": 4
+      },
+      "pdfLayout": {
+        "columns": 2,
+        "maxProblemsPerPage": 4
+      },
+      "sourceType": "generated"
     },
     {
       "id": "grade1_fraction_equivalence_compare_fractions",
@@ -976,6 +917,9 @@
       "curriculumTags": [],
       "description": "Compare drawing-led fair shares using equal-sized fraction strips.",
       "studentInstruction": "Look at each pair. Circle the share that is greater, or circle Same.",
+      "generatorOptions": {
+        "questionCount": 8
+      },
       "sourceType": "generated"
     },
     {
@@ -1011,39 +955,6 @@
       "sourceType": "generated"
     },
     {
-      "id": "grade1_fraction_equivalence_fraction_word_problems",
-      "title": "Share Fairly",
-      "shortTitle": "Share Fairly",
-      "subject": "Math",
-      "grades": [
-        "grade1"
-      ],
-      "gradeLabels": [
-        "Grade 1"
-      ],
-      "domain": "Fractions",
-      "skillKey": "fraction_equivalence",
-      "worksheetFamily": "generated",
-      "activityTypes": [
-        "fraction_word_problems"
-      ],
-      "templateId": "visual_model",
-      "status": "generated",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": 10,
-      "hasAnswerKey": true,
-      "tags": [
-        "grade 1",
-        "fractions",
-        "fraction equivalence",
-        "fraction word problems"
-      ],
-      "curriculumTags": [],
-      "description": "Draw equal shares for two or four children using concrete object sets.",
-      "studentInstruction": "Share the objects equally. You may split one object into equal halves. Draw whole objects and halves where needed.",
-      "sourceType": "generated"
-    },
-    {
       "id": "grade1_fraction_equivalence_match_equivalent_fractions",
       "title": "One Half and Two Fourths",
       "shortTitle": "One Half and Two Fourths",
@@ -1074,6 +985,9 @@
       "curriculumTags": [],
       "description": "Recognize when one half and two fourths show the same amount of an equal-sized whole.",
       "studentInstruction": "Look at each pair. Circle Yes if the shaded parts show the same amount. Circle No if they do not.",
+      "generatorOptions": {
+        "questionCount": 6
+      },
       "sourceType": "generated"
     },
     {
@@ -1110,6 +1024,39 @@
       "sourceType": "generated"
     },
     {
+      "id": "grade1_fraction_equivalence_fraction_word_problems",
+      "title": "Share Fairly",
+      "shortTitle": "Share Fairly",
+      "subject": "Math",
+      "grades": [
+        "grade1"
+      ],
+      "gradeLabels": [
+        "Grade 1"
+      ],
+      "domain": "Fractions",
+      "skillKey": "fraction_equivalence",
+      "worksheetFamily": "generated",
+      "activityTypes": [
+        "fraction_word_problems"
+      ],
+      "templateId": "visual_model",
+      "status": "generated",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 10,
+      "hasAnswerKey": true,
+      "tags": [
+        "grade 1",
+        "fractions",
+        "fraction equivalence",
+        "fraction word problems"
+      ],
+      "curriculumTags": [],
+      "description": "Draw equal shares for two or four children using concrete object sets.",
+      "studentInstruction": "Share the objects equally. You may split one object into equal halves. Draw whole objects and halves where needed.",
+      "sourceType": "generated"
+    },
+    {
       "id": "grade1_multiplication_facts_arrays",
       "title": "Arrays",
       "shortTitle": "Arrays",
@@ -1139,8 +1086,8 @@
       ],
       "curriculumTags": [],
       "description": "Students interpret arrays and connect them to equations.",
-      "sourceType": "generated",
-      "studentInstruction": "Use each array to complete the number sentence."
+      "studentInstruction": "Use each array to complete the number sentence.",
+      "sourceType": "generated"
     },
     {
       "id": "grade1_multiplication_facts_equal_groups",
@@ -1303,19 +1250,19 @@
       "formatLabel": "Identify numbers to 50 with tens and ones",
       "teacherNote": "Best used after hands-on base-ten modelling.",
       "description": "Students identify numbers to 50 shown with tens and ones. Best used after hands-on base-ten modelling.",
-      "sourceType": "generated",
       "generatorOptions": {
-        "minA": 0,
+        "minA": 10,
         "maxA": 50,
         "questionCount": 10
       },
-      "studentInstruction": "Count the base ten blocks. Write the number.",
+      "studentInstruction": "Write the number shown by each model.",
       "pdfDisplay": {
         "hideItemPrompts": true,
         "hideSubtitle": true,
         "shortVisualAnswerLine": true,
         "baseTenAlignedResponse": true
-      }
+      },
+      "sourceType": "generated"
     },
     {
       "id": "grade1_place_value_representation_compare_numbers",
@@ -1366,8 +1313,12 @@
       "activityTypes": [
         "compare_numbers"
       ],
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 20,
+        "questionCount": 20
+      },
       "templateId": "equation_practice",
-      "formatLabel": "Compare numbers to 20",
       "status": "ready",
       "difficulty": "easy",
       "estimatedTimeMinutes": 10,
@@ -1383,18 +1334,7 @@
         "B1"
       ],
       "description": "Students compare numbers and insert the correct symbol.",
-      "sourceType": "curated",
-      "generatorOptions": {
-        "minA": 0,
-        "maxA": 20,
-        "questionCount": 60,
-        "promptStyle": "bare"
-      },
-      "studentInstruction": "Write <, >, or = to compare each pair of numbers.",
-      "pdfDisplay": {
-        "hideSubtitle": true,
-        "standardShortAnswerTarget": true
-      }
+      "sourceType": "curated"
     },
     {
       "id": "grade1_place_value_representation_expanded_form",
@@ -1447,8 +1387,7 @@
       ],
       "generatorOptions": {
         "minA": 0,
-        "maxA": 20,
-        "questionCount": 10
+        "maxA": 20
       },
       "templateId": "visual_model",
       "status": "ready",
@@ -1465,20 +1404,7 @@
         "B1"
       ],
       "description": "Students identify and read numbers on a number line.",
-      "sourceType": "curated",
-      "studentInstruction": "What number is marked on each number line?",
-      "pdfDisplay": {
-        "hideSubtitle": true,
-        "hideItemPrompts": true,
-        "visualColumns": 1,
-        "hideItemSeparators": true,
-        "numberLineAnswerUnderTarget": true,
-        "numberLineRowGeometry": true
-      },
-      "pdfLayout": {
-        "columns": 1,
-        "maxProblemsPerPage": 5
-      }
+      "sourceType": "curated"
     },
     {
       "id": "grade1_place_value_representation_number_line_identify",
@@ -1546,8 +1472,8 @@
     },
     {
       "id": "g1_number_word_match_to_50",
-      "title": "Write Number Words to 50",
-      "shortTitle": "Write Number Words",
+      "title": "Number Word Match to 50",
+      "shortTitle": "Number Word Match",
       "subject": "Math",
       "grades": [
         "grade1"
@@ -1555,12 +1481,18 @@
       "gradeLabels": [
         "Grade 1"
       ],
-      "domain": "Number Representation: Number Words to 50",
+      "domain": "Number Sense",
       "skillKey": "number_representation",
       "worksheetFamily": "representation",
       "activityTypes": [
         "number_word_match"
       ],
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 50,
+        "questionCount": 10,
+        "questionsPerPage": 10
+      },
       "templateId": "matching",
       "status": "ready",
       "difficulty": "easy",
@@ -1568,90 +1500,15 @@
       "hasAnswerKey": true,
       "tags": [
         "number words",
-        "writing",
+        "match",
         "to 50",
         "grade 1"
       ],
       "curriculumTags": [
         "B1"
       ],
-      "formatLabel": "Write number words to 50",
-      "teacherNote": "Best used as supported late Grade 1 extension or Grade 2 readiness practice after number-word instruction.",
-      "description": "Students write number words for numbers to 50. Best used as supported late Grade 1 extension or Grade 2 readiness practice after number-word instruction.",
-      "sourceType": "curated",
-      "generatorOptions": {
-        "minA": 0,
-        "maxA": 50,
-        "promptStyle": "number_only",
-        "questionCount": 20,
-        "numberWordMode": "numeral_to_word"
-      },
-      "studentInstruction": "Write each number in words.",
-      "pdfDisplay": {
-        "hideSubtitle": true,
-        "hideItemSeparators": true,
-        "writingLine": true,
-        "equalHeightItems": true
-      },
-      "pdfLayout": {
-        "columns": 2,
-        "maxProblemsPerPage": 20
-      }
-    },
-    {
-      "id": "g1_write_the_numeral_to_50",
-      "title": "Write the Numeral to 50",
-      "shortTitle": "Write the Numeral",
-      "subject": "Math",
-      "grades": [
-        "grade1"
-      ],
-      "gradeLabels": [
-        "Grade 1"
-      ],
-      "domain": "Number Representation: Write the Numeral to 50",
-      "skillKey": "number_representation",
-      "worksheetFamily": "representation",
-      "activityTypes": [
-        "number_word_match"
-      ],
-      "templateId": "matching",
-      "status": "ready",
-      "difficulty": "easy",
-      "estimatedTimeMinutes": 10,
-      "hasAnswerKey": true,
-      "tags": [
-        "number words",
-        "numerals",
-        "writing",
-        "to 50",
-        "grade 1"
-      ],
-      "curriculumTags": [
-        "B1"
-      ],
-      "formatLabel": "Write numerals to 50",
-      "teacherNote": "Separate public resource using the shared number-word runtime without exposing a direction toggle.",
-      "description": "Students write numerals for number words to 50.",
-      "sourceType": "curated",
-      "generatorOptions": {
-        "minA": 0,
-        "maxA": 50,
-        "promptStyle": "number_only",
-        "questionCount": 20,
-        "numberWordMode": "word_to_numeral"
-      },
-      "studentInstruction": "Write the numeral for each number word.",
-      "pdfDisplay": {
-        "hideSubtitle": true,
-        "hideItemSeparators": true,
-        "writingLine": true,
-        "equalHeightItems": true
-      },
-      "pdfLayout": {
-        "columns": 2,
-        "maxProblemsPerPage": 20
-      }
+      "description": "Students match numerals and number words.",
+      "sourceType": "curated"
     },
     {
       "id": "grade1_place_value_representation_standard_form",
@@ -1686,6 +1543,51 @@
       "sourceType": "generated"
     },
     {
+      "id": "g1_compare_numbers_to_20_exit_ticket",
+      "title": "Compare Numbers to 20 Exit Ticket",
+      "shortTitle": "Compare to 20",
+      "subject": "Math",
+      "grades": [
+        "grade1"
+      ],
+      "gradeLabels": [
+        "Grade 1"
+      ],
+      "domain": "Number Sense: Compare Numbers to 20",
+      "skillKey": "number_magnitude",
+      "worksheetFamily": "representation",
+      "resourceType": "exit_ticket",
+      "formatLabel": "Exit Ticket",
+      "useCase": "lesson-close formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Compare each pair using >, <, or =.",
+      "teacherNote": "Use this exit ticket after practice comparing numbers to 20 to see whether students can compare two numbers using >, <, or =.",
+      "activityTypes": [
+        "compare_numbers"
+      ],
+      "templateId": "exit_ticket",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": "3-5",
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 3,
+        "minA": 0,
+        "maxA": 20
+      },
+      "tags": [
+        "grade 1",
+        "number sense",
+        "compare numbers",
+        "within 20",
+        "exit ticket"
+      ],
+      "curriculumTags": [],
+      "description": "Students compare numbers to 20 using >, <, or =. This cut-apart Exit Ticket is designed as a short lesson-close check after number comparison practice.",
+      "sourceType": "generated"
+    },
+    {
       "id": "grade1_patterning_and_algebra_extend_pattern",
       "title": "Extend Pattern",
       "shortTitle": "Extend Pattern",
@@ -1715,8 +1617,11 @@
       ],
       "curriculumTags": [],
       "description": "Generated worksheet for extend pattern.",
-      "sourceType": "generated",
-      "studentInstruction": "Extend each pattern. Write the next number."
+      "studentInstruction": "Extend each pattern. Write the next number.",
+      "generatorOptions": {
+        "questionCount": 30
+      },
+      "sourceType": "generated"
     },
     {
       "id": "grade1_patterning_and_algebra_function_table",
@@ -1812,6 +1717,9 @@
       ],
       "curriculumTags": [],
       "description": "Generated worksheet for missing value pattern.",
+      "generatorOptions": {
+        "questionCount": 20
+      },
       "sourceType": "generated"
     },
     {
@@ -1878,8 +1786,43 @@
         "B2"
       ],
       "description": "Students practise addition fluency with age-appropriate number ranges.",
-      "sourceType": "curated",
-      "studentInstruction": "Solve each addition fact."
+      "studentInstruction": "Solve each addition fact.",
+      "sourceType": "curated"
+    },
+    {
+      "id": "g2_addition_word_problems_within_100",
+      "title": "Addition Story Problems Within 100",
+      "shortTitle": "Addition Word Problems",
+      "subject": "Math",
+      "grades": [
+        "grade2"
+      ],
+      "gradeLabels": [
+        "Grade 2"
+      ],
+      "domain": "Addition & Subtraction",
+      "skillKey": "addition_subtraction_application",
+      "worksheetFamily": "problem_solving",
+      "activityTypes": [
+        "word_problems"
+      ],
+      "templateId": "equation_practice",
+      "status": "ready",
+      "difficulty": "easy",
+      "estimatedTimeMinutes": 12,
+      "hasAnswerKey": true,
+      "tags": [
+        "addition",
+        "word problems",
+        "within 100",
+        "grade 2"
+      ],
+      "curriculumTags": [
+        "B2"
+      ],
+      "description": "Students solve addition word problems using equations, drawings, or models.",
+      "studentInstruction": "Read each question. Show your thinking by writing and/or drawing your answer.",
+      "sourceType": "curated"
     },
     {
       "id": "grade2_addition_subtraction_word_problems_addition_word_problem",
@@ -1914,41 +1857,6 @@
       "sourceType": "generated"
     },
     {
-      "id": "g2_addition_word_problems_within_100",
-      "title": "Addition Story Problems Within 100",
-      "shortTitle": "Addition Word Problems",
-      "subject": "Math",
-      "grades": [
-        "grade2"
-      ],
-      "gradeLabels": [
-        "Grade 2"
-      ],
-      "domain": "Addition & Subtraction",
-      "skillKey": "addition_subtraction_application",
-      "worksheetFamily": "problem_solving",
-      "activityTypes": [
-        "word_problems"
-      ],
-      "templateId": "equation_practice",
-      "status": "ready",
-      "difficulty": "easy",
-      "estimatedTimeMinutes": 12,
-      "hasAnswerKey": true,
-      "tags": [
-        "addition",
-        "word problems",
-        "within 100",
-        "grade 2"
-      ],
-      "curriculumTags": [
-        "B2"
-      ],
-      "description": "Students solve addition word problems using equations, drawings, or models.",
-      "sourceType": "curated",
-      "studentInstruction": "Read each question. Show your thinking by writing and/or drawing your answer."
-    },
-    {
       "id": "grade2_addition_subtraction_facts_equation_match",
       "title": "Equal or Not Equal?",
       "shortTitle": "Equal or Not Equal?",
@@ -1974,7 +1882,7 @@
       "generatorOptions": {
         "minimumResult": 0,
         "maximumResult": 50,
-        "questionCount": 12,
+        "questionCount": 20,
         "includeExample": false
       },
       "tags": [
@@ -2017,7 +1925,6 @@
       ],
       "curriculumTags": [],
       "description": "Students complete related addition and subtraction fact families.",
-      "sourceType": "generated",
       "studentInstruction": "Complete the fact family.",
       "generatorOptions": {
         "minA": 0,
@@ -2032,7 +1939,8 @@
       "pdfDisplay": {
         "hideSubtitle": true,
         "standardShortAnswerTarget": true
-      }
+      },
+      "sourceType": "generated"
     },
     {
       "id": "grade2_addition_subtraction_facts_fact_fluency",
@@ -2096,7 +2004,6 @@
       ],
       "curriculumTags": [],
       "description": "Students solve missing-addend word problems and show their thinking.",
-      "sourceType": "generated",
       "studentInstruction": "Solve each problem. Show your thinking in the box.",
       "generatorOptions": {
         "questionCount": 12,
@@ -2109,63 +2016,8 @@
       "pdfLayout": {
         "columns": 1,
         "maxProblemsPerPage": 3
-      }
-    },
-    {
-      "id": "grade2_addition_subtraction_facts_missing_addend",
-      "title": "Missing Addends Within 20",
-      "shortTitle": "Missing Addends Within 20",
-      "subject": "Math",
-      "grades": [
-        "grade2"
-      ],
-      "gradeLabels": [
-        "Grade 2"
-      ],
-      "domain": "Addition & Subtraction",
-      "skillKey": "addition_subtraction_facts",
-      "worksheetFamily": "relational_thinking",
-      "activityTypes": [
-        "missing_addend"
-      ],
-      "templateId": "fluency_grid",
-      "status": "ready",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": 10,
-      "hasAnswerKey": true,
-      "tags": [
-        "grade 2",
-        "addition & subtraction",
-        "addition subtraction facts",
-        "missing addend"
-      ],
-      "curriculumTags": [],
-      "description": "Students solve addition facts with a missing addend and totals within 20.",
-      "sourceType": "generated",
-      "studentInstruction": "Write the missing number in each equation.",
-      "generatorOptions": {
-        "minA": 0,
-        "maxA": 20,
-        "minB": 0,
-        "maxB": 20,
-        "maxTotal": 20,
-        "questionCount": 12
       },
-      "pdfDisplay": {
-        "hideSubtitle": true,
-        "standardShortAnswerTarget": true,
-        "standardAnswerLineWidth": 58,
-        "inlineEquationFontSize": 16,
-        "equalHeightItems": true,
-        "denseGridRows": 6,
-        "sequentialColumnFill": true,
-        "hideItemSeparators": false,
-        "missingAddendWithin20Layout": true
-      },
-      "pdfLayout": {
-        "columns": 2,
-        "maxProblemsPerPage": 12
-      }
+      "sourceType": "generated"
     },
     {
       "id": "g2_missing_addends_within_100",
@@ -2198,7 +2050,66 @@
         "B2"
       ],
       "description": "Students solve equations with a missing addend.",
+      "generatorOptions": {
+        "questionCount": 30
+      },
       "sourceType": "curated"
+    },
+    {
+      "id": "grade2_addition_subtraction_facts_missing_addend",
+      "title": "Missing Addends Within 20",
+      "shortTitle": "Missing Addends Within 20",
+      "subject": "Math",
+      "grades": [
+        "grade2"
+      ],
+      "gradeLabels": [
+        "Grade 2"
+      ],
+      "domain": "Addition & Subtraction",
+      "skillKey": "addition_subtraction_facts",
+      "worksheetFamily": "relational_thinking",
+      "activityTypes": [
+        "missing_addend"
+      ],
+      "templateId": "fluency_grid",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 10,
+      "hasAnswerKey": true,
+      "tags": [
+        "grade 2",
+        "addition & subtraction",
+        "addition subtraction facts",
+        "missing addend"
+      ],
+      "curriculumTags": [],
+      "description": "Students solve addition facts with a missing addend and totals within 20.",
+      "studentInstruction": "Write the missing number in each equation.",
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 20,
+        "minB": 0,
+        "maxB": 20,
+        "maxTotal": 20,
+        "questionCount": 30
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "standardShortAnswerTarget": true,
+        "standardAnswerLineWidth": 58,
+        "inlineEquationFontSize": 16,
+        "equalHeightItems": true,
+        "denseGridRows": 6,
+        "sequentialColumnFill": true,
+        "hideItemSeparators": false,
+        "missingAddendWithin20Layout": true
+      },
+      "pdfLayout": {
+        "columns": 2,
+        "maxProblemsPerPage": 12
+      },
+      "sourceType": "generated"
     },
     {
       "id": "grade2_addition_subtraction_facts_related_subtraction",
@@ -2264,6 +2175,9 @@
         "B2"
       ],
       "description": "Students practise subtraction fluency with age-appropriate number ranges.",
+      "generatorOptions": {
+        "questionCount": 30
+      },
       "sourceType": "curated"
     },
     {
@@ -2296,7 +2210,6 @@
       ],
       "curriculumTags": [],
       "description": "Students solve take-away word problems and show their thinking.",
-      "sourceType": "generated",
       "studentInstruction": "Solve each problem. Show your thinking in the box.",
       "generatorOptions": {
         "questionCount": 12,
@@ -2310,7 +2223,8 @@
       "pdfLayout": {
         "columns": 1,
         "maxProblemsPerPage": 3
-      }
+      },
+      "sourceType": "generated"
     },
     {
       "id": "grade2_addition_subtraction_facts_ten_frame",
@@ -2377,6 +2291,90 @@
       "sourceType": "generated"
     },
     {
+      "id": "g2_addition_within_20_quick_check",
+      "title": "Addition Within 20",
+      "shortTitle": "Addition Within 20",
+      "subject": "Math",
+      "grades": [
+        "grade2"
+      ],
+      "gradeLabels": [
+        "Grade 2"
+      ],
+      "domain": "Addition and Subtraction Facts",
+      "skillKey": "addition_subtraction_facts",
+      "worksheetFamily": "facts",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Add.",
+      "teacherNote": "Use this quick check after addition practice to see whether students can add facts within 20.",
+      "activityTypes": [
+        "fact_fluency"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6
+      },
+      "tags": [
+        "grade 2",
+        "addition",
+        "within 20",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students solve addition facts within 20. This short Quick Check is designed for focused review after addition practice.",
+      "sourceType": "generated"
+    },
+    {
+      "id": "g2_subtraction_within_20_quick_check",
+      "title": "Subtraction Within 20",
+      "shortTitle": "Subtraction Within 20",
+      "subject": "Math",
+      "grades": [
+        "grade2"
+      ],
+      "gradeLabels": [
+        "Grade 2"
+      ],
+      "domain": "Addition and Subtraction Facts",
+      "skillKey": "addition_subtraction_facts",
+      "worksheetFamily": "facts",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Subtract.",
+      "teacherNote": "Use this quick check after subtraction practice to see whether students can subtract facts within 20.",
+      "activityTypes": [
+        "fact_fluency"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6
+      },
+      "tags": [
+        "grade 2",
+        "subtraction",
+        "within 20",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students solve subtraction facts within 20. This short Quick Check is designed for focused review after subtraction practice.",
+      "sourceType": "generated"
+    },
+    {
       "id": "grade2_data_display_graphing_complete_graph",
       "title": "Complete a Graph — Grade 2",
       "shortTitle": "Complete a Graph",
@@ -2406,9 +2404,14 @@
       ],
       "curriculumTags": [],
       "description": "Students complete graph displays from data.",
-      "sourceType": "generated",
-      "generatorOptions": { "questionCount": 2 },
-      "pdfLayout": { "columns": 1, "maxProblemsPerPage": 2 }
+      "generatorOptions": {
+        "questionCount": 2
+      },
+      "pdfLayout": {
+        "columns": 1,
+        "maxProblemsPerPage": 2
+      },
+      "sourceType": "generated"
     },
     {
       "id": "grade2_data_display_graphing_graph_questions",
@@ -2635,39 +2638,6 @@
       "sourceType": "generated"
     },
     {
-      "id": "grade2_fraction_equivalence_fraction_word_problems",
-      "title": "Share Fairly to 10",
-      "shortTitle": "Share Fairly to 10",
-      "subject": "Math",
-      "grades": [
-        "grade2"
-      ],
-      "gradeLabels": [
-        "Grade 2"
-      ],
-      "domain": "Fractions",
-      "skillKey": "fraction_equivalence",
-      "worksheetFamily": "generated",
-      "activityTypes": [
-        "fraction_word_problems"
-      ],
-      "templateId": "visual_model",
-      "status": "generated",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": 10,
-      "hasAnswerKey": true,
-      "tags": [
-        "grade 2",
-        "fractions",
-        "fair sharing",
-        "equal shares"
-      ],
-      "curriculumTags": [],
-      "studentInstruction": "Share the objects equally. Write how many each person gets.",
-      "description": "Students share countable object sets equally and state how many each person receives.",
-      "sourceType": "generated"
-    },
-    {
       "id": "grade2_fraction_equivalence_match_equivalent_fractions",
       "title": "Match Equivalent Fractions — Grade 2",
       "shortTitle": "Match Equivalent Fractions",
@@ -2733,9 +2703,42 @@
       "sourceType": "generated"
     },
     {
-      "id": "grade2_multiplication_facts_arrays",
-      "title": "Multiplication with Arrays",
-      "shortTitle": "Arrays",
+      "id": "grade2_fraction_equivalence_fraction_word_problems",
+      "title": "Share Fairly to 10",
+      "shortTitle": "Share Fairly to 10",
+      "subject": "Math",
+      "grades": [
+        "grade2"
+      ],
+      "gradeLabels": [
+        "Grade 2"
+      ],
+      "domain": "Fractions",
+      "skillKey": "fraction_equivalence",
+      "worksheetFamily": "generated",
+      "activityTypes": [
+        "fraction_word_problems"
+      ],
+      "templateId": "visual_model",
+      "status": "generated",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 10,
+      "hasAnswerKey": true,
+      "tags": [
+        "grade 2",
+        "fractions",
+        "fair sharing",
+        "equal shares"
+      ],
+      "curriculumTags": [],
+      "studentInstruction": "Share the objects equally. Write how many each person gets.",
+      "description": "Students share countable object sets equally and state how many each person receives.",
+      "sourceType": "generated"
+    },
+    {
+      "id": "grade2_multiplication_facts_missing_factor",
+      "title": "Missing Factors — Grade 2",
+      "shortTitle": "Missing Factors",
       "subject": "Math",
       "grades": [
         "grade2"
@@ -2745,12 +2748,12 @@
       ],
       "domain": "Multiplication & Division",
       "skillKey": "multiplication_facts",
-      "worksheetFamily": "visual_models",
+      "worksheetFamily": "relational_thinking",
       "activityTypes": [
-        "array"
+        "missing_factor"
       ],
-      "templateId": "model_interpretation",
-      "status": "ready",
+      "templateId": "fluency_grid",
+      "status": "generated",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -2758,12 +2761,11 @@
         "grade 2",
         "multiplication & division",
         "multiplication facts",
-        "array"
+        "missing factor"
       ],
       "curriculumTags": [],
-      "description": "Students interpret arrays and connect them to equations.",
-      "sourceType": "generated",
-      "studentInstruction": "Use each array to write a multiplication equation."
+      "description": "Students solve multiplication equations with a missing factor.",
+      "sourceType": "generated"
     },
     {
       "id": "grade2_multiplication_facts_equal_groups",
@@ -2811,9 +2813,9 @@
       "sourceType": "generated"
     },
     {
-      "id": "grade2_multiplication_facts_missing_factor",
-      "title": "Missing Factors — Grade 2",
-      "shortTitle": "Missing Factors",
+      "id": "grade2_multiplication_facts_arrays",
+      "title": "Multiplication with Arrays",
+      "shortTitle": "Arrays",
       "subject": "Math",
       "grades": [
         "grade2"
@@ -2823,12 +2825,12 @@
       ],
       "domain": "Multiplication & Division",
       "skillKey": "multiplication_facts",
-      "worksheetFamily": "relational_thinking",
+      "worksheetFamily": "visual_models",
       "activityTypes": [
-        "missing_factor"
+        "array"
       ],
-      "templateId": "fluency_grid",
-      "status": "generated",
+      "templateId": "model_interpretation",
+      "status": "ready",
       "difficulty": "grade-appropriate",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,
@@ -2836,10 +2838,11 @@
         "grade 2",
         "multiplication & division",
         "multiplication facts",
-        "missing factor"
+        "array"
       ],
       "curriculumTags": [],
-      "description": "Students solve multiplication equations with a missing factor.",
+      "description": "Students interpret arrays and connect them to equations.",
+      "studentInstruction": "Use each array to write a multiplication equation.",
       "sourceType": "generated"
     },
     {
@@ -2905,6 +2908,55 @@
       "curriculumTags": [],
       "description": "Students solve word problems in context.",
       "sourceType": "generated"
+    },
+    {
+      "id": "g2_even_and_odd_numbers",
+      "title": "Even and Odd Numbers",
+      "shortTitle": "Even and Odd Numbers",
+      "subject": "Math",
+      "grades": [
+        "grade2"
+      ],
+      "gradeLabels": [
+        "Grade 2"
+      ],
+      "domain": "Number Sense",
+      "skillKey": "place_value_representation",
+      "worksheetFamily": "relational_thinking",
+      "activityTypes": [
+        "even_odd_numbers"
+      ],
+      "generatorOptions": {
+        "minValue": 0,
+        "maxValue": 200,
+        "questionCount": 12
+      },
+      "studentInstruction": "Use equal pairs to decide whether numbers are even or odd. Complete each section.",
+      "templateId": "equation_practice",
+      "pdfLayout": {
+        "columns": 2,
+        "maxProblemsPerPage": 12
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "wholeNumberFamilyLayout": "parity"
+      },
+      "status": "ready",
+      "difficulty": "easy",
+      "estimatedTimeMinutes": 10,
+      "hasAnswerKey": true,
+      "tags": [
+        "even numbers",
+        "odd numbers",
+        "parity",
+        "grade 2"
+      ],
+      "curriculumTags": [
+        "B1",
+        "B1.5"
+      ],
+      "description": "Students classify numbers and use equal pairs to identify even and odd numbers.",
+      "sourceType": "curated"
     },
     {
       "id": "g2_skip_counting_by_10",
@@ -3015,6 +3067,94 @@
       "sourceType": "curated"
     },
     {
+      "id": "g2_missing_addends_within_20_quick_check",
+      "title": "Missing Addends Within 20",
+      "shortTitle": "Missing Addends Within 20",
+      "subject": "Math",
+      "grades": [
+        "grade2"
+      ],
+      "gradeLabels": [
+        "Grade 2"
+      ],
+      "domain": "Operations: Missing Addends Within 20",
+      "skillKey": "addition_subtraction_facts",
+      "worksheetFamily": "facts",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Write the missing number.",
+      "teacherNote": "Use this quick check after missing-addend practice to see whether students can find the unknown part in addition facts within 20.",
+      "activityTypes": [
+        "missing_addend"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 5,
+        "maxTotal": 20
+      },
+      "tags": [
+        "grade 2",
+        "addition",
+        "missing addends",
+        "within 20",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students find missing addends within 20. This short Quick Check is designed for focused part-whole review.",
+      "sourceType": "generated"
+    },
+    {
+      "id": "g2_missing_addends_within_20_exit_ticket",
+      "title": "Missing Addends Within 20",
+      "shortTitle": "Missing Addends Within 20",
+      "subject": "Math",
+      "grades": [
+        "grade2"
+      ],
+      "gradeLabels": [
+        "Grade 2"
+      ],
+      "domain": "Operations: Missing Addends Within 20",
+      "skillKey": "addition_subtraction_relationships",
+      "worksheetFamily": "facts",
+      "resourceType": "exit_ticket",
+      "formatLabel": "Exit Ticket",
+      "useCase": "lesson-close formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Write the missing number.",
+      "teacherNote": "Use this exit ticket after practice with missing addends to see whether students can find the unknown part in addition facts within 20.",
+      "activityTypes": [
+        "missing_addend"
+      ],
+      "templateId": "exit_ticket",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": "3-5",
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 3,
+        "maxTotal": 20
+      },
+      "tags": [
+        "grade 2",
+        "addition",
+        "missing addends",
+        "within 20",
+        "exit ticket"
+      ],
+      "curriculumTags": [],
+      "description": "Students find missing addends within 20. This cut-apart Exit Ticket is designed as a short lesson-close check after practice with part-whole relationships.",
+      "sourceType": "generated"
+    },
+    {
       "id": "grade2_patterning_and_algebra_extend_pattern",
       "title": "Extend Pattern — Grade 2",
       "shortTitle": "Extend Pattern",
@@ -3044,6 +3184,9 @@
       ],
       "curriculumTags": [],
       "description": "Students extend number patterns for focused Grade 2 patterning practice.",
+      "generatorOptions": {
+        "questionCount": 30
+      },
       "sourceType": "generated"
     },
     {
@@ -3108,6 +3251,9 @@
       ],
       "curriculumTags": [],
       "description": "Students identify rules in number patterns for focused Grade 2 patterning practice.",
+      "generatorOptions": {
+        "questionsPerPage": 10
+      },
       "sourceType": "generated"
     },
     {
@@ -3140,6 +3286,9 @@
       ],
       "curriculumTags": [],
       "description": "Students find missing values in number patterns for focused Grade 2 patterning practice.",
+      "generatorOptions": {
+        "questionCount": 20
+      },
       "sourceType": "generated"
     },
     {
@@ -3240,43 +3389,6 @@
       "sourceType": "curated"
     },
     {
-      "id": "grade2_place_value_representation_compare_numbers",
-      "title": "Compare 3-Digit Numbers",
-      "shortTitle": "Compare 3-Digit Numbers",
-      "subject": "Math",
-      "grades": [
-        "grade2"
-      ],
-      "gradeLabels": [
-        "Grade 2"
-      ],
-      "domain": "Place Value: Compare 3-Digit Numbers",
-      "skillKey": "place_value_representation",
-      "worksheetFamily": "relational_thinking",
-      "activityTypes": [
-        "compare_numbers"
-      ],
-      "templateId": "equation_practice",
-      "formatLabel": "Compare 3-digit numbers",
-      "status": "ready",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": 10,
-      "hasAnswerKey": true,
-      "tags": [
-        "grade 2",
-        "place value",
-        "place value representation",
-        "compare numbers",
-        "compare 3-digit numbers",
-        "upper grade 2 extension",
-        "grade 3 readiness"
-      ],
-      "curriculumTags": [],
-      "description": "Students compare 3-digit numbers. Best used as upper Grade 2 extension or Grade 3 readiness practice after instruction with hundreds, tens, and ones.",
-      "teacherNote": "Supports focused place-value comparison practice with 3-digit numbers. Best used for upper Grade 2 extension or Grade 3 readiness, not as standard Grade 2 number coverage.",
-      "sourceType": "generated"
-    },
-    {
       "id": "g2_compare_numbers_to_100",
       "title": "Compare Numbers to 100",
       "shortTitle": "Compare Numbers",
@@ -3293,6 +3405,11 @@
       "activityTypes": [
         "compare_numbers"
       ],
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 100,
+        "questionCount": 20
+      },
       "templateId": "equation_practice",
       "status": "ready",
       "difficulty": "easy",
@@ -3308,11 +3425,7 @@
         "B1"
       ],
       "description": "Students compare two-digit numbers using symbols and reasoning.",
-      "sourceType": "curated",
-      "generatorOptions": {
-        "minA": 0,
-        "maxA": 100
-      }
+      "sourceType": "curated"
     },
     {
       "id": "grade2_place_value_representation_expanded_form",
@@ -3409,7 +3522,12 @@
       "generatorOptions": {
         "minValue": 0,
         "maxValue": 200,
-        "allowedIntervals": [1, 2, 5, 10],
+        "allowedIntervals": [
+          1,
+          2,
+          5,
+          10
+        ],
         "tickCount": 10,
         "questionCount": 6,
         "includeExample": false
@@ -3422,47 +3540,6 @@
       ],
       "curriculumTags": [],
       "description": "Students identify marked values on number lines with intervals of 1, 2, 5, or 10.",
-      "sourceType": "generated"
-    },
-    {
-      "id": "grade2_place_value_representation_number_word_match",
-      "title": "Write Number Words to 200",
-      "shortTitle": "Number Words to 200",
-      "subject": "Math",
-      "grades": [
-        "grade2"
-      ],
-      "gradeLabels": [
-        "Grade 2"
-      ],
-      "domain": "Place Value",
-      "skillKey": "place_value_representation",
-      "worksheetFamily": "representation",
-      "activityTypes": [
-        "number_word_match"
-      ],
-      "templateId": "matching",
-      "status": "generated",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": 10,
-      "hasAnswerKey": true,
-      "studentInstruction": "Write each number in words.",
-      "generatorOptions": {
-        "minA": 0,
-        "maxA": 200,
-        "numberWordMode": "numeral_to_word",
-        "promptStyle": "number_only",
-        "questionCount": 12,
-        "includeExample": false
-      },
-      "tags": [
-        "grade 2",
-        "place value",
-        "place value representation",
-        "number word match"
-      ],
-      "curriculumTags": [],
-      "description": "Students write each numeral from 0 to 200 in words.",
       "sourceType": "generated"
     },
     {
@@ -3514,6 +3591,10 @@
       "activityTypes": [
         "standard_form"
       ],
+      "generatorOptions": {
+        "minA": 10,
+        "maxA": 100
+      },
       "templateId": "representation",
       "status": "ready",
       "difficulty": "easy",
@@ -3528,11 +3609,89 @@
         "B1"
       ],
       "description": "Students convert representations into standard form.",
-      "sourceType": "curated",
+      "sourceType": "curated"
+    },
+    {
+      "id": "grade2_place_value_representation_number_word_match",
+      "title": "Write Number Words to 200",
+      "shortTitle": "Number Words to 200",
+      "subject": "Math",
+      "grades": [
+        "grade2"
+      ],
+      "gradeLabels": [
+        "Grade 2"
+      ],
+      "domain": "Place Value",
+      "skillKey": "place_value_representation",
+      "worksheetFamily": "representation",
+      "activityTypes": [
+        "number_word_match"
+      ],
+      "templateId": "matching",
+      "status": "generated",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 10,
+      "hasAnswerKey": true,
+      "studentInstruction": "Write each number in words.",
       "generatorOptions": {
-        "minA": 10,
-        "maxA": 100
-      }
+        "minA": 0,
+        "maxA": 200,
+        "numberWordMode": "numeral_to_word",
+        "promptStyle": "number_only",
+        "questionCount": 10,
+        "includeExample": false,
+        "questionsPerPage": 10
+      },
+      "tags": [
+        "grade 2",
+        "place value",
+        "place value representation",
+        "number word match"
+      ],
+      "curriculumTags": [],
+      "description": "Students write each numeral from 0 to 200 in words.",
+      "sourceType": "generated"
+    },
+    {
+      "id": "grade2_place_value_representation_compare_numbers",
+      "title": "Compare 3-Digit Numbers",
+      "shortTitle": "Compare 3-Digit Numbers",
+      "subject": "Math",
+      "grades": [
+        "grade2"
+      ],
+      "gradeLabels": [
+        "Grade 2"
+      ],
+      "domain": "Place Value: Compare 3-Digit Numbers",
+      "skillKey": "place_value_representation",
+      "worksheetFamily": "relational_thinking",
+      "activityTypes": [
+        "compare_numbers"
+      ],
+      "templateId": "equation_practice",
+      "formatLabel": "Compare 3-digit numbers",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 10,
+      "hasAnswerKey": true,
+      "tags": [
+        "grade 2",
+        "place value",
+        "place value representation",
+        "compare numbers",
+        "compare 3-digit numbers",
+        "upper grade 2 extension",
+        "grade 3 readiness"
+      ],
+      "curriculumTags": [],
+      "description": "Students compare 3-digit numbers. Best used as upper Grade 2 extension or Grade 3 readiness practice after instruction with hundreds, tens, and ones.",
+      "teacherNote": "Supports focused place-value comparison practice with 3-digit numbers. Best used for upper Grade 2 extension or Grade 3 readiness, not as standard Grade 2 number coverage.",
+      "generatorOptions": {
+        "questionCount": 20
+      },
+      "sourceType": "generated"
     },
     {
       "id": "grade3_addition_subtraction_word_problems_addition_word_problem",
@@ -3564,8 +3723,8 @@
       ],
       "curriculumTags": [],
       "description": "Generated worksheet for addition word problem.",
-      "sourceType": "generated",
-      "studentInstruction": "Read each question. Show your thinking by writing and/or drawing your answer."
+      "studentInstruction": "Read each question. Show your thinking by writing and/or drawing your answer.",
+      "sourceType": "generated"
     },
     {
       "id": "grade3_addition_subtraction_facts_equation_match",
@@ -3597,6 +3756,9 @@
       ],
       "curriculumTags": [],
       "description": "Students match related equations.",
+      "generatorOptions": {
+        "questionCount": 20
+      },
       "sourceType": "generated"
     },
     {
@@ -3629,8 +3791,8 @@
       ],
       "curriculumTags": [],
       "description": "Students connect related fact families.",
-      "sourceType": "generated",
-      "studentInstruction": "Complete the fact family."
+      "studentInstruction": "Complete the fact family.",
+      "sourceType": "generated"
     },
     {
       "id": "grade3_addition_subtraction_facts_fact_fluency",
@@ -3662,6 +3824,9 @@
       ],
       "curriculumTags": [],
       "description": "Students practise facts with fluency and accuracy.",
+      "generatorOptions": {
+        "questionCount": 30
+      },
       "sourceType": "generated"
     },
     {
@@ -3726,6 +3891,9 @@
       ],
       "curriculumTags": [],
       "description": "Students solve equations with a missing addend.",
+      "generatorOptions": {
+        "questionCount": 30
+      },
       "sourceType": "generated"
     },
     {
@@ -3858,8 +4026,8 @@
     },
     {
       "id": "g3_complete_a_graph",
-      "title": "Grade 3 Data Questions",
-      "shortTitle": "Grade 3 Data",
+      "title": "Complete a Graph",
+      "shortTitle": "Complete a Graph",
       "subject": "Math",
       "grades": [
         "grade3"
@@ -3879,16 +4047,21 @@
       "estimatedTimeMinutes": 12,
       "hasAnswerKey": true,
       "tags": [
-        "data questions",
-        "text data",
+        "graph",
+        "complete graph",
         "grade 3"
       ],
       "curriculumTags": [
         "D1"
       ],
       "description": "Students use two provided data tables to complete two pictographs.",
-      "generatorOptions": { "questionCount": 2 },
-      "pdfLayout": { "columns": 1, "maxProblemsPerPage": 2 },
+      "generatorOptions": {
+        "questionCount": 2
+      },
+      "pdfLayout": {
+        "columns": 1,
+        "maxProblemsPerPage": 2
+      },
       "sourceType": "curated"
     },
     {
@@ -4087,8 +4260,8 @@
     },
     {
       "id": "g3_match_data_to_graph",
-      "title": "Match Data Descriptions",
-      "shortTitle": "Data Matching",
+      "title": "Match Data to Graph",
+      "shortTitle": "Match Data to Graph",
       "subject": "Math",
       "grades": [
         "grade3"
@@ -4116,7 +4289,7 @@
       "curriculumTags": [
         "D1"
       ],
-      "description": "Students match data descriptions using text-based graph information.",
+      "description": "Students match datasets to the correct graph.",
       "sourceType": "curated"
     },
     {
@@ -4153,8 +4326,8 @@
     },
     {
       "id": "g3_read_a_graph",
-      "title": "Read Data and Answer Questions",
-      "shortTitle": "Read Data",
+      "title": "Read a Graph",
+      "shortTitle": "Read a Graph",
       "subject": "Math",
       "grades": [
         "grade3"
@@ -4181,7 +4354,7 @@
       "curriculumTags": [
         "D1"
       ],
-      "description": "Students read data and answer text-based graph questions.",
+      "description": "Students read a graph and answer questions about the data.",
       "sourceType": "curated"
     },
     {
@@ -4246,6 +4419,10 @@
       ],
       "curriculumTags": [],
       "description": "Students compare fractions as focused Grade 3 fraction practice.",
+      "generatorOptions": {
+        "questionCount": 20,
+        "questionsPerPage": 20
+      },
       "sourceType": "generated"
     },
     {
@@ -4508,8 +4685,8 @@
     },
     {
       "id": "g3_missing_factors",
-      "title": "Missing Factors Within Multiplication Facts",
-      "shortTitle": "G3 Missing Factors",
+      "title": "Missing Factors",
+      "shortTitle": "Missing Factors",
       "subject": "Math",
       "grades": [
         "grade3"
@@ -4536,7 +4713,7 @@
       "curriculumTags": [
         "B2"
       ],
-      "description": "Students solve basic multiplication equations with a missing factor for focused fact practice.",
+      "description": "Students solve multiplication equations with a missing factor.",
       "sourceType": "curated"
     },
     {
@@ -4598,7 +4775,8 @@
         "minA": 1,
         "maxA": 10,
         "minB": 1,
-        "maxB": 10
+        "maxB": 10,
+        "questionCount": 24
       },
       "tags": [
         "fact families",
@@ -4660,7 +4838,7 @@
       "skillKey": "multiplication_foundations",
       "worksheetFamily": "visual_models",
       "activityTypes": [
-        "array"
+        "arrays"
       ],
       "templateId": "model_interpretation",
       "status": "ready",
@@ -4668,7 +4846,7 @@
       "estimatedTimeMinutes": 12,
       "hasAnswerKey": true,
       "tags": [
-        "array",
+        "arrays",
         "multiplication",
         "grade 3"
       ],
@@ -4676,8 +4854,8 @@
         "B2"
       ],
       "description": "Students interpret arrays and connect them to multiplication equations.",
-      "sourceType": "curated",
-      "studentInstruction": "Use each array to write a multiplication equation."
+      "studentInstruction": "Use each array to write a multiplication equation.",
+      "sourceType": "curated"
     },
     {
       "id": "grade3_multiplication_facts_skip_counting",
@@ -4773,6 +4951,9 @@
       ],
       "curriculumTags": [],
       "description": "Students extend number patterns for focused Grade 3 patterning practice.",
+      "generatorOptions": {
+        "questionCount": 30
+      },
       "sourceType": "generated"
     },
     {
@@ -4837,6 +5018,9 @@
       ],
       "curriculumTags": [],
       "description": "Students identify rules in number patterns for focused Grade 3 patterning practice.",
+      "generatorOptions": {
+        "questionsPerPage": 10
+      },
       "sourceType": "generated"
     },
     {
@@ -4869,6 +5053,9 @@
       ],
       "curriculumTags": [],
       "description": "Students find missing values in number patterns for focused Grade 3 patterning practice.",
+      "generatorOptions": {
+        "questionCount": 20
+      },
       "sourceType": "generated"
     },
     {
@@ -4936,6 +5123,51 @@
       "sourceType": "generated"
     },
     {
+      "id": "g3_compare_3_digit_numbers_quick_check",
+      "title": "Compare 3-Digit Numbers Quick Check",
+      "shortTitle": "Compare 3-Digit Numbers",
+      "subject": "Math",
+      "grades": [
+        "grade3"
+      ],
+      "gradeLabels": [
+        "Grade 3"
+      ],
+      "domain": "Place Value",
+      "skillKey": "number_magnitude",
+      "worksheetFamily": "representation",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Write >, <, or = to compare each pair.",
+      "teacherNote": "Use this quick check after place-value comparison practice to see whether students can compare 3-digit numbers using >, <, or =.",
+      "activityTypes": [
+        "compare_numbers"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6,
+        "minA": 100,
+        "maxA": 999
+      },
+      "tags": [
+        "grade 3",
+        "place value",
+        "compare numbers",
+        "3-digit numbers",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students compare 3-digit numbers using >, <, or =. This short Quick Check is designed for focused place-value review.",
+      "sourceType": "generated"
+    },
+    {
       "id": "grade3_place_value_representation_compare_numbers",
       "title": "Compare Numbers — Grade 3",
       "shortTitle": "Compare Numbers",
@@ -5000,6 +5232,51 @@
       "sourceType": "generated"
     },
     {
+      "id": "g3_place_value_hundreds_tens_ones_quick_check",
+      "title": "Hundreds, Tens, and Ones Quick Check",
+      "shortTitle": "Hundreds, Tens, and Ones",
+      "subject": "Math",
+      "grades": [
+        "grade3"
+      ],
+      "gradeLabels": [
+        "Grade 3"
+      ],
+      "domain": "Place Value",
+      "skillKey": "place_value_representation",
+      "worksheetFamily": "representation",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Show each number as hundreds, tens, and ones.",
+      "teacherNote": "Use this quick check after a place-value lesson to see whether students can represent 3-digit numbers using hundreds, tens, and ones.",
+      "activityTypes": [
+        "expanded_form"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6,
+        "minA": 100,
+        "maxA": 999,
+        "answerStyle": "hundreds_tens_ones"
+      },
+      "tags": [
+        "grade 3",
+        "place value",
+        "hundreds tens ones",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students represent 3-digit numbers by identifying the hundreds, tens, and ones. This short Quick Check is designed for focused place-value review.",
+      "sourceType": "generated"
+    },
+    {
       "id": "grade3_place_value_representation_number_line_identify",
       "title": "Number Line — Grade 3",
       "shortTitle": "Number Line",
@@ -5061,7 +5338,66 @@
       ],
       "curriculumTags": [],
       "description": "Students match numerals and number words.",
+      "generatorOptions": {
+        "questionCount": 10,
+        "questionsPerPage": 10
+      },
       "sourceType": "generated"
+    },
+    {
+      "id": "g3_round_whole_numbers",
+      "title": "Round Whole Numbers",
+      "shortTitle": "Round Whole Numbers",
+      "subject": "Math",
+      "grades": [
+        "grade3"
+      ],
+      "gradeLabels": [
+        "Grade 3"
+      ],
+      "domain": "Place Value",
+      "skillKey": "place_value_representation",
+      "worksheetFamily": "representation",
+      "activityTypes": [
+        "round_whole_numbers"
+      ],
+      "generatorOptions": {
+        "minValue": 0,
+        "maxValue": 1000,
+        "allowedPlaces": [
+          10,
+          100
+        ],
+        "questionCount": 12
+      },
+      "studentInstruction": "Round each number to the place shown.",
+      "templateId": "equation_practice",
+      "pdfLayout": {
+        "columns": 2,
+        "maxProblemsPerPage": 12
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "wholeNumberFamilyLayout": "rounding",
+        "roundingGrade": 3
+      },
+      "status": "ready",
+      "difficulty": "medium",
+      "estimatedTimeMinutes": 10,
+      "hasAnswerKey": true,
+      "tags": [
+        "rounding",
+        "whole numbers",
+        "nearest ten",
+        "nearest hundred",
+        "grade 3"
+      ],
+      "curriculumTags": [
+        "B1",
+        "B1.3"
+      ],
+      "description": "Students round whole numbers to the nearest ten or hundred.",
+      "sourceType": "curated"
     },
     {
       "id": "grade3_place_value_representation_standard_form",
@@ -5094,397 +5430,6 @@
       "curriculumTags": [],
       "description": "Students write numbers in standard form.",
       "sourceType": "generated"
-    },
-    {
-      "id": "g3_place_value_hundreds_tens_ones_quick_check",
-      "title": "Hundreds, Tens, and Ones Quick Check",
-      "shortTitle": "Hundreds, Tens, and Ones",
-      "subject": "Math",
-      "grades": [
-        "grade3"
-      ],
-      "gradeLabels": [
-        "Grade 3"
-      ],
-      "domain": "Place Value",
-      "skillKey": "place_value_representation",
-      "worksheetFamily": "representation",
-      "resourceType": "quick_check",
-      "formatLabel": "Quick Check",
-      "useCase": "formative check",
-      "prepLevel": "print-and-go",
-      "formativeUse": true,
-      "studentInstructions": "Show each number as hundreds, tens, and ones.",
-      "teacherNote": "Use this quick check after a place-value lesson to see whether students can represent 3-digit numbers using hundreds, tens, and ones.",
-      "activityTypes": [
-        "expanded_form"
-      ],
-      "templateId": "quick_check",
-      "status": "ready",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": 8,
-      "hasAnswerKey": true,
-      "generatorOptions": {
-        "questionCount": 6,
-        "minA": 100,
-        "maxA": 999,
-        "answerStyle": "hundreds_tens_ones"
-      },
-      "tags": [
-        "grade 3",
-        "place value",
-        "hundreds tens ones",
-        "quick check"
-      ],
-      "curriculumTags": [],
-      "description": "Students represent 3-digit numbers by identifying the hundreds, tens, and ones. This short Quick Check is designed for focused place-value review.",
-      "sourceType": "curated"
-    },
-    {
-      "id": "g2_subtraction_within_20_quick_check",
-      "title": "Subtraction Within 20",
-      "shortTitle": "Subtraction Within 20",
-      "subject": "Math",
-      "grades": [
-        "grade2"
-      ],
-      "gradeLabels": [
-        "Grade 2"
-      ],
-      "domain": "Addition and Subtraction Facts",
-      "skillKey": "addition_subtraction_facts",
-      "worksheetFamily": "facts",
-      "resourceType": "quick_check",
-      "formatLabel": "Quick Check",
-      "useCase": "formative check",
-      "prepLevel": "print-and-go",
-      "formativeUse": true,
-      "studentInstructions": "Subtract.",
-      "teacherNote": "Use this quick check after subtraction practice to see whether students can subtract facts within 20.",
-      "activityTypes": [
-        "fact_fluency"
-      ],
-      "templateId": "quick_check",
-      "status": "ready",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": 8,
-      "hasAnswerKey": true,
-      "generatorOptions": {
-        "questionCount": 6
-      },
-      "tags": [
-        "grade 2",
-        "subtraction",
-        "within 20",
-        "quick check"
-      ],
-      "curriculumTags": [],
-      "description": "Students solve subtraction facts within 20. This short Quick Check is designed for focused review after subtraction practice.",
-      "sourceType": "curated"
-    },
-    {
-      "id": "g2_addition_within_20_quick_check",
-      "title": "Addition Within 20",
-      "shortTitle": "Addition Within 20",
-      "subject": "Math",
-      "grades": [
-        "grade2"
-      ],
-      "gradeLabels": [
-        "Grade 2"
-      ],
-      "domain": "Addition and Subtraction Facts",
-      "skillKey": "addition_subtraction_facts",
-      "worksheetFamily": "facts",
-      "resourceType": "quick_check",
-      "formatLabel": "Quick Check",
-      "useCase": "formative check",
-      "prepLevel": "print-and-go",
-      "formativeUse": true,
-      "studentInstructions": "Add.",
-      "teacherNote": "Use this quick check after addition practice to see whether students can add facts within 20.",
-      "activityTypes": [
-        "fact_fluency"
-      ],
-      "templateId": "quick_check",
-      "status": "ready",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": 8,
-      "hasAnswerKey": true,
-      "generatorOptions": {
-        "questionCount": 6
-      },
-      "tags": [
-        "grade 2",
-        "addition",
-        "within 20",
-        "quick check"
-      ],
-      "curriculumTags": [],
-      "description": "Students solve addition facts within 20. This short Quick Check is designed for focused review after addition practice.",
-      "sourceType": "curated"
-    },
-    {
-      "id": "g3_compare_3_digit_numbers_quick_check",
-      "title": "Compare 3-Digit Numbers Quick Check",
-      "shortTitle": "Compare 3-Digit Numbers",
-      "subject": "Math",
-      "grades": [
-        "grade3"
-      ],
-      "gradeLabels": [
-        "Grade 3"
-      ],
-      "domain": "Place Value",
-      "skillKey": "number_magnitude",
-      "worksheetFamily": "representation",
-      "resourceType": "quick_check",
-      "formatLabel": "Quick Check",
-      "useCase": "formative check",
-      "prepLevel": "print-and-go",
-      "formativeUse": true,
-      "studentInstructions": "Write >, <, or = to compare each pair.",
-      "teacherNote": "Use this quick check after place-value comparison practice to see whether students can compare 3-digit numbers using >, <, or =.",
-      "activityTypes": [
-        "compare_numbers"
-      ],
-      "templateId": "quick_check",
-      "status": "ready",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": 8,
-      "hasAnswerKey": true,
-      "generatorOptions": {
-        "questionCount": 6,
-        "minA": 100,
-        "maxA": 999
-      },
-      "tags": [
-        "grade 3",
-        "place value",
-        "compare numbers",
-        "3-digit numbers",
-        "quick check"
-      ],
-      "curriculumTags": [],
-      "description": "Students compare 3-digit numbers using >, <, or =. This short Quick Check is designed for focused place-value review.",
-      "sourceType": "curated"
-    },
-    {
-      "id": "g4_compare_fractions_quick_check",
-      "title": "Compare Simple Fractions Quick Check",
-      "shortTitle": "Compare Simple Fractions",
-      "subject": "Math",
-      "grades": [
-        "grade4"
-      ],
-      "gradeLabels": [
-        "Grade 4"
-      ],
-      "domain": "Fractions: Compare Simple Fractions",
-      "skillKey": "fraction_equivalence",
-      "worksheetFamily": "fractions",
-      "resourceType": "quick_check",
-      "formatLabel": "Quick Check",
-      "useCase": "formative check",
-      "prepLevel": "print-and-go",
-      "formativeUse": true,
-      "studentInstructions": "Write >, <, or = to compare each pair.",
-      "teacherNote": "Use this quick check after fraction comparison practice to see whether students can compare simple fractions using >, <, or =.",
-      "activityTypes": [
-        "compare_fractions"
-      ],
-      "templateId": "quick_check",
-      "status": "ready",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": 8,
-      "hasAnswerKey": true,
-      "generatorOptions": {
-        "questionCount": 6
-      },
-      "tags": [
-        "grade 4",
-        "fractions",
-        "compare fractions",
-        "quick check"
-      ],
-      "curriculumTags": [],
-      "description": "Students compare simple fractions using >, <, or =. This short Quick Check is designed for focused fraction comparison review.",
-      "sourceType": "curated"
-    },
-    {
-      "id": "g2_missing_addends_within_20_quick_check",
-      "title": "Missing Addends Within 20",
-      "shortTitle": "Missing Addends Within 20",
-      "subject": "Math",
-      "grades": [
-        "grade2"
-      ],
-      "gradeLabels": [
-        "Grade 2"
-      ],
-      "domain": "Operations: Missing Addends Within 20",
-      "skillKey": "addition_subtraction_facts",
-      "worksheetFamily": "facts",
-      "resourceType": "quick_check",
-      "formatLabel": "Quick Check",
-      "useCase": "formative check",
-      "prepLevel": "print-and-go",
-      "formativeUse": true,
-      "studentInstructions": "Write the missing number.",
-      "teacherNote": "Use this quick check after missing-addend practice to see whether students can find the unknown part in addition facts within 20.",
-      "activityTypes": [
-        "missing_addend"
-      ],
-      "templateId": "quick_check",
-      "status": "ready",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": 8,
-      "hasAnswerKey": true,
-      "generatorOptions": {
-        "questionCount": 5,
-        "maxTotal": 20
-      },
-      "tags": [
-        "grade 2",
-        "addition",
-        "missing addends",
-        "within 20",
-        "quick check"
-      ],
-      "curriculumTags": [],
-      "description": "Students find missing addends within 20. This short Quick Check is designed for focused part-whole review.",
-      "sourceType": "curated"
-    },
-    {
-      "id": "g4_pattern_rule_quick_check",
-      "title": "Identify and Use Pattern Rules Quick Check",
-      "shortTitle": "Pattern Rules",
-      "subject": "Math",
-      "grades": [
-        "grade4"
-      ],
-      "gradeLabels": [
-        "Grade 4"
-      ],
-      "domain": "Patterns: Identify and Use Rules",
-      "skillKey": "patterning_and_algebra",
-      "worksheetFamily": "patterning",
-      "resourceType": "quick_check",
-      "formatLabel": "Quick Check",
-      "useCase": "formative check",
-      "prepLevel": "print-and-go",
-      "formativeUse": true,
-      "studentInstructions": "Read each pattern. Write the rule to answer each question.",
-      "teacherNote": "Use this quick check after pattern-rule practice to see whether students can describe a rule and use it to continue or complete a pattern.",
-      "activityTypes": [
-        "identify_pattern_rule"
-      ],
-      "templateId": "quick_check",
-      "status": "ready",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": 8,
-      "hasAnswerKey": true,
-      "generatorOptions": {
-        "questionCount": 7
-      },
-      "tags": [
-        "grade 4",
-        "patterning",
-        "pattern rules",
-        "quick check"
-      ],
-      "curriculumTags": [],
-      "description": "Students identify or use pattern rules to continue or complete patterns. This short Quick Check is designed for focused patterning review.",
-      "sourceType": "curated"
-    },
-    {
-      "id": "g3_expanded_form_to_standard_form_quick_check",
-      "title": "Expanded Form to Standard Form Quick Check",
-      "shortTitle": "Expanded to Standard Form",
-      "subject": "Math",
-      "grades": [
-        "grade3"
-      ],
-      "gradeLabels": [
-        "Grade 3"
-      ],
-      "domain": "Place Value: Standard Form",
-      "skillKey": "number_representation",
-      "worksheetFamily": "representation",
-      "resourceType": "quick_check",
-      "formatLabel": "Quick Check",
-      "useCase": "formative check",
-      "prepLevel": "print-and-go",
-      "formativeUse": true,
-      "studentInstructions": "Write each number in standard form.",
-      "teacherNote": "Use this quick check after place-value practice to see whether students can write 3-digit numbers in standard form from expanded form.",
-      "activityTypes": [
-        "standard_form"
-      ],
-      "templateId": "quick_check",
-      "status": "ready",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": 8,
-      "hasAnswerKey": true,
-      "generatorOptions": {
-        "questionCount": 6,
-        "minA": 100,
-        "maxA": 999
-      },
-      "tags": [
-        "grade 3",
-        "place value",
-        "standard form",
-        "expanded form",
-        "quick check"
-      ],
-      "curriculumTags": [],
-      "description": "Students write 3-digit numbers in standard form from expanded form. This short Quick Check is designed for focused place-value review.",
-      "sourceType": "curated"
-    },
-    {
-      "id": "g2_missing_addends_within_20_exit_ticket",
-      "title": "Missing Addends Within 20",
-      "shortTitle": "Missing Addends Within 20",
-      "subject": "Math",
-      "grades": [
-        "grade2"
-      ],
-      "gradeLabels": [
-        "Grade 2"
-      ],
-      "domain": "Operations: Missing Addends Within 20",
-      "skillKey": "addition_subtraction_relationships",
-      "worksheetFamily": "facts",
-      "resourceType": "exit_ticket",
-      "formatLabel": "Exit Ticket",
-      "useCase": "lesson-close formative check",
-      "prepLevel": "print-and-go",
-      "formativeUse": true,
-      "studentInstructions": "Write the missing number.",
-      "teacherNote": "Use this exit ticket after practice with missing addends to see whether students can find the unknown part in addition facts within 20.",
-      "activityTypes": [
-        "missing_addend"
-      ],
-      "templateId": "exit_ticket",
-      "status": "ready",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": "3-5",
-      "hasAnswerKey": true,
-      "generatorOptions": {
-        "questionCount": 3,
-        "maxTotal": 20
-      },
-      "tags": [
-        "grade 2",
-        "addition",
-        "missing addends",
-        "within 20",
-        "exit ticket"
-      ],
-      "curriculumTags": [],
-      "description": "Students find missing addends within 20. This cut-apart Exit Ticket is designed as a short lesson-close check after practice with part-whole relationships.",
-      "sourceType": "curated"
     },
     {
       "id": "g3_compare_3_digit_numbers_exit_ticket",
@@ -5529,7 +5474,7 @@
       ],
       "curriculumTags": [],
       "description": "Students compare 3-digit numbers using >, <, or =. This cut-apart Exit Ticket is designed as a short lesson-close check after place-value comparison instruction.",
-      "sourceType": "curated"
+      "sourceType": "generated"
     },
     {
       "id": "g3_expanded_form_to_standard_form_exit_ticket",
@@ -5574,249 +5519,31 @@
       ],
       "curriculumTags": [],
       "description": "Students write 3-digit numbers in standard form from expanded form. This cut-apart Exit Ticket is designed as a short lesson-close check after place-value instruction.",
-      "sourceType": "curated"
+      "sourceType": "generated"
     },
     {
-      "id": "g1_compare_numbers_to_20_exit_ticket",
-      "title": "Compare Numbers to 20 Exit Ticket",
-      "shortTitle": "Compare to 20",
+      "id": "g3_expanded_form_to_standard_form_quick_check",
+      "title": "Expanded Form to Standard Form Quick Check",
+      "shortTitle": "Expanded to Standard Form",
       "subject": "Math",
       "grades": [
-        "grade1"
+        "grade3"
       ],
       "gradeLabels": [
-        "Grade 1"
+        "Grade 3"
       ],
-      "domain": "Number Sense: Compare Numbers to 20",
-      "skillKey": "number_magnitude",
+      "domain": "Place Value: Standard Form",
+      "skillKey": "number_representation",
       "worksheetFamily": "representation",
-      "resourceType": "exit_ticket",
-      "formatLabel": "Exit Ticket",
-      "useCase": "lesson-close formative check",
-      "prepLevel": "print-and-go",
-      "formativeUse": true,
-      "studentInstructions": "Compare each pair using >, <, or =.",
-      "teacherNote": "Use this exit ticket after practice comparing numbers to 20 to see whether students can compare two numbers using >, <, or =.",
-      "activityTypes": [
-        "compare_numbers"
-      ],
-      "templateId": "exit_ticket",
-      "status": "ready",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": "3-5",
-      "hasAnswerKey": true,
-      "generatorOptions": {
-        "questionCount": 3,
-        "minA": 0,
-        "maxA": 20
-      },
-      "tags": [
-        "grade 1",
-        "number sense",
-        "compare numbers",
-        "within 20",
-        "exit ticket"
-      ],
-      "curriculumTags": [],
-      "description": "Students compare numbers to 20 using >, <, or =. This cut-apart Exit Ticket is designed as a short lesson-close check after number comparison practice.",
-      "sourceType": "curated"
-    },
-    {
-      "id": "g4_compare_fractions_exit_ticket",
-      "title": "Compare Simple Fractions Exit Ticket",
-      "shortTitle": "Compare Fractions",
-      "subject": "Math",
-      "grades": [
-        "grade4"
-      ],
-      "gradeLabels": [
-        "Grade 4"
-      ],
-      "domain": "Fractions: Compare Simple Fractions",
-      "skillKey": "fraction_equivalence",
-      "worksheetFamily": "fractions",
-      "resourceType": "exit_ticket",
-      "formatLabel": "Exit Ticket",
-      "useCase": "lesson-close formative check",
-      "prepLevel": "print-and-go",
-      "formativeUse": true,
-      "studentInstructions": "Write >, <, or = to compare each pair.",
-      "teacherNote": "Use this exit ticket after fraction comparison practice to see whether students can compare simple fractions.",
-      "activityTypes": [
-        "compare_fractions"
-      ],
-      "templateId": "exit_ticket",
-      "status": "ready",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": "3-5",
-      "hasAnswerKey": true,
-      "generatorOptions": {
-        "questionCount": 3
-      },
-      "tags": [
-        "grade 4",
-        "fractions",
-        "compare fractions",
-        "exit ticket"
-      ],
-      "curriculumTags": [],
-      "description": "Students compare simple fractions using >, <, or =. This cut-apart Exit Ticket is designed as a short lesson-close check after fraction comparison practice.",
-      "sourceType": "curated"
-    },
-    {
-      "id": "g5_compare_numbers_to_100000_exit_ticket",
-      "title": "Compare Numbers to 100,000 Exit Ticket",
-      "shortTitle": "Compare to 100,000",
-      "subject": "Math",
-      "grades": [
-        "grade5"
-      ],
-      "gradeLabels": [
-        "Grade 5"
-      ],
-      "domain": "Place Value: Compare Whole Numbers",
-      "skillKey": "number_magnitude",
-      "worksheetFamily": "relational_thinking",
-      "resourceType": "exit_ticket",
-      "formatLabel": "Exit Ticket",
-      "useCase": "lesson-close formative check",
-      "prepLevel": "print-and-go",
-      "formativeUse": true,
-      "studentInstructions": "Write >, <, or = to compare each pair.",
-      "teacherNote": "Use this exit ticket after place-value comparison practice to see whether students can compare whole numbers to 100,000.",
-      "activityTypes": [
-        "compare_numbers"
-      ],
-      "templateId": "exit_ticket",
-      "status": "ready",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": "3-5",
-      "hasAnswerKey": true,
-      "generatorOptions": {
-        "questionCount": 3,
-        "minA": 10000,
-        "maxA": 99999
-      },
-      "tags": [
-        "grade 5",
-        "place value",
-        "compare numbers",
-        "whole numbers",
-        "exit ticket"
-      ],
-      "curriculumTags": [],
-      "description": "Students compare whole numbers to 100,000 using >, <, or =. This cut-apart Exit Ticket is designed as a short lesson-close review after place-value comparison practice.",
-      "sourceType": "curated"
-    },
-    {
-      "id": "g5_equivalent_fractions_exit_ticket",
-      "title": "Equivalent Fractions Exit Ticket",
-      "shortTitle": "Equivalent Fractions",
-      "subject": "Math",
-      "grades": [
-        "grade5"
-      ],
-      "gradeLabels": [
-        "Grade 5"
-      ],
-      "domain": "Fractions: Equivalent Fractions",
-      "skillKey": "fraction_equivalence",
-      "worksheetFamily": "fractions",
-      "resourceType": "exit_ticket",
-      "formatLabel": "Exit Ticket",
-      "useCase": "lesson-close formative check",
-      "prepLevel": "print-and-go",
-      "formativeUse": true,
-      "studentInstructions": "Write the missing equivalent fraction.",
-      "teacherNote": "Use this exit ticket after equivalent-fraction practice to see whether students can identify simple equivalent fractions.",
-      "activityTypes": [
-        "match_equivalent_fractions"
-      ],
-      "templateId": "exit_ticket",
-      "status": "ready",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": "3-5",
-      "hasAnswerKey": true,
-      "generatorOptions": {
-        "questionCount": 3,
-        "worksheetSeed": "batch1b-g5-equivalent"
-      },
-      "tags": [
-        "grade 5",
-        "fractions",
-        "equivalent fractions",
-        "exit ticket"
-      ],
-      "curriculumTags": [],
-      "description": "Students identify simple equivalent fractions. This cut-apart Exit Ticket is designed as a short lesson-close review after equivalent-fraction practice.",
-      "sourceType": "curated"
-    },
-    {
-      "id": "g4_multiplication_word_problem_quick_check",
-      "title": "Equal-Groups Multiplication Quick Check",
-      "shortTitle": "Equal-Groups Multiplication",
-      "subject": "Math",
-      "grades": [
-        "grade4"
-      ],
-      "gradeLabels": [
-        "Grade 4"
-      ],
-      "domain": "Operations: Equal-Groups Multiplication Word Problems",
-      "skillKey": "multiplication_facts",
-      "worksheetFamily": "word_problems",
       "resourceType": "quick_check",
       "formatLabel": "Quick Check",
       "useCase": "formative check",
       "prepLevel": "print-and-go",
       "formativeUse": true,
-      "studentInstructions": "Solve each short equal-groups multiplication problem.",
-      "teacherNote": "Use this quick check after multiplication practice to see whether students can solve short equal-groups multiplication word problems.",
+      "studentInstructions": "Write each number in standard form.",
+      "teacherNote": "Use this quick check after place-value practice to see whether students can write 3-digit numbers in standard form from expanded form.",
       "activityTypes": [
-        "word_problems"
-      ],
-      "templateId": "quick_check",
-      "status": "ready",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": 8,
-      "hasAnswerKey": true,
-      "generatorOptions": {
-        "questionCount": 6
-      },
-      "tags": [
-        "grade 4",
-        "multiplication",
-        "word problems",
-        "equal groups",
-        "quick check"
-      ],
-      "curriculumTags": [],
-      "description": "Students solve short equal-groups multiplication word problems. This short Quick Check is designed for focused multiplication review or warm-up practice.",
-      "sourceType": "curated"
-    },
-    {
-      "id": "g5_place_value_to_100000_quick_check",
-      "title": "Compare Numbers to 100,000 Quick Check",
-      "shortTitle": "Compare to 100,000",
-      "subject": "Math",
-      "grades": [
-        "grade5"
-      ],
-      "gradeLabels": [
-        "Grade 5"
-      ],
-      "domain": "Place Value: Compare Whole Numbers",
-      "skillKey": "number_magnitude",
-      "worksheetFamily": "relational_thinking",
-      "resourceType": "quick_check",
-      "formatLabel": "Quick Check",
-      "useCase": "formative check",
-      "prepLevel": "print-and-go",
-      "formativeUse": true,
-      "studentInstructions": "Write >, <, or = to compare each pair.",
-      "teacherNote": "Use this quick check after place-value comparison practice to see whether students can compare larger whole numbers.",
-      "activityTypes": [
-        "compare_numbers"
+        "standard_form"
       ],
       "templateId": "quick_check",
       "status": "ready",
@@ -5825,61 +5552,19 @@
       "hasAnswerKey": true,
       "generatorOptions": {
         "questionCount": 6,
-        "minA": 10000,
-        "maxA": 99999
+        "minA": 100,
+        "maxA": 999
       },
       "tags": [
-        "grade 5",
+        "grade 3",
         "place value",
-        "compare numbers",
-        "whole numbers",
+        "standard form",
+        "expanded form",
         "quick check"
       ],
       "curriculumTags": [],
-      "description": "Students compare whole numbers to 100,000 using >, <, or =. This short Quick Check is designed for focused place-value review.",
-      "sourceType": "curated"
-    },
-    {
-      "id": "g5_equivalent_fractions_quick_check",
-      "title": "Equivalent Fractions Quick Check",
-      "shortTitle": "Equivalent Fractions",
-      "subject": "Math",
-      "grades": [
-        "grade5"
-      ],
-      "gradeLabels": [
-        "Grade 5"
-      ],
-      "domain": "Fractions: Equivalent Fractions",
-      "skillKey": "fraction_equivalence",
-      "worksheetFamily": "fractions",
-      "resourceType": "quick_check",
-      "formatLabel": "Quick Check",
-      "useCase": "formative check",
-      "prepLevel": "print-and-go",
-      "formativeUse": true,
-      "studentInstructions": "Write the missing equivalent fraction.",
-      "teacherNote": "Use this quick check after equivalent-fraction practice to see whether students can identify simple equivalent fractions.",
-      "activityTypes": [
-        "match_equivalent_fractions"
-      ],
-      "templateId": "quick_check",
-      "status": "ready",
-      "difficulty": "grade-appropriate",
-      "estimatedTimeMinutes": 8,
-      "hasAnswerKey": true,
-      "generatorOptions": {
-        "questionCount": 6
-      },
-      "tags": [
-        "grade 5",
-        "fractions",
-        "equivalent fractions",
-        "quick check"
-      ],
-      "curriculumTags": [],
-      "description": "Students identify simple equivalent fractions. This short Quick Check is designed for focused fraction review.",
-      "sourceType": "curated"
+      "description": "Students write 3-digit numbers in standard form from expanded form. This short Quick Check is designed for focused place-value review.",
+      "sourceType": "generated"
     },
     {
       "id": "grade4_addition_subtraction_word_problems_addition_word_problem",
@@ -5911,8 +5596,8 @@
       ],
       "curriculumTags": [],
       "description": "Generated worksheet for addition word problem.",
-      "sourceType": "generated",
-      "studentInstruction": "Read each question. Show your thinking by writing and/or drawing your answer."
+      "studentInstruction": "Read each question. Show your thinking by writing and/or drawing your answer.",
+      "sourceType": "generated"
     },
     {
       "id": "grade4_addition_subtraction_facts_equation_match",
@@ -5944,6 +5629,9 @@
       ],
       "curriculumTags": [],
       "description": "Students match related equations.",
+      "generatorOptions": {
+        "questionCount": 30
+      },
       "sourceType": "generated"
     },
     {
@@ -6396,8 +6084,8 @@
     },
     {
       "id": "g4_read_and_interpret_graphs",
-      "title": "Read Data and Interpret Results",
-      "shortTitle": "Interpret Data",
+      "title": "Read and Interpret Graphs",
+      "shortTitle": "Interpret Graphs",
       "subject": "Math",
       "grades": [
         "grade4"
@@ -6458,6 +6146,10 @@
       ],
       "curriculumTags": [],
       "description": "Students compare fractions as focused Grade 4 fraction practice.",
+      "generatorOptions": {
+        "questionCount": 30,
+        "questionsPerPage": 30
+      },
       "sourceType": "generated"
     },
     {
@@ -6589,9 +6281,9 @@
       "sourceType": "generated"
     },
     {
-      "id": "g4_array_interpretation",
-      "title": "Multiplication with Arrays",
-      "shortTitle": "Arrays",
+      "id": "g4_compare_fractions_exit_ticket",
+      "title": "Compare Simple Fractions Exit Ticket",
+      "shortTitle": "Compare Fractions",
       "subject": "Math",
       "grades": [
         "grade4"
@@ -6599,28 +6291,78 @@
       "gradeLabels": [
         "Grade 4"
       ],
-      "domain": "Multiplication & Division",
-      "skillKey": "multiplication_foundations",
-      "worksheetFamily": "visual_models",
+      "domain": "Fractions: Compare Simple Fractions",
+      "skillKey": "fraction_equivalence",
+      "worksheetFamily": "fractions",
+      "resourceType": "exit_ticket",
+      "formatLabel": "Exit Ticket",
+      "useCase": "lesson-close formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Write >, <, or = to compare each pair.",
+      "teacherNote": "Use this exit ticket after fraction comparison practice to see whether students can compare simple fractions.",
       "activityTypes": [
-        "array"
+        "compare_fractions"
       ],
-      "templateId": "model_interpretation",
+      "templateId": "exit_ticket",
       "status": "ready",
-      "difficulty": "medium",
-      "estimatedTimeMinutes": 12,
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": "3-5",
       "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 3
+      },
       "tags": [
-        "array",
-        "multiplication",
-        "grade 4"
+        "grade 4",
+        "fractions",
+        "compare fractions",
+        "exit ticket"
       ],
-      "curriculumTags": [
-        "B2"
+      "curriculumTags": [],
+      "description": "Students compare simple fractions using >, <, or =. This cut-apart Exit Ticket is designed as a short lesson-close check after fraction comparison practice.",
+      "sourceType": "generated"
+    },
+    {
+      "id": "g4_compare_fractions_quick_check",
+      "title": "Compare Simple Fractions Quick Check",
+      "shortTitle": "Compare Simple Fractions",
+      "subject": "Math",
+      "grades": [
+        "grade4"
       ],
-      "description": "Students interpret arrays and connect them to multiplication equations.",
-      "sourceType": "curated",
-      "studentInstruction": "Use each array to write a multiplication equation."
+      "gradeLabels": [
+        "Grade 4"
+      ],
+      "domain": "Fractions: Compare Simple Fractions",
+      "skillKey": "fraction_equivalence",
+      "worksheetFamily": "fractions",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Write >, <, or = to compare each pair.",
+      "teacherNote": "Use this quick check after fraction comparison practice to see whether students can compare simple fractions using >, <, or =.",
+      "activityTypes": [
+        "compare_fractions"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6
+      },
+      "tags": [
+        "grade 4",
+        "fractions",
+        "compare fractions",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students compare simple fractions using >, <, or =. This short Quick Check is designed for focused fraction comparison review.",
+      "sourceType": "generated"
     },
     {
       "id": "grade4_multiplication_facts_arrays",
@@ -6721,8 +6463,8 @@
     },
     {
       "id": "g4_missing_factors",
-      "title": "Missing Factors Review",
-      "shortTitle": "G4 Missing Factors",
+      "title": "Missing Factors",
+      "shortTitle": "Missing Factors",
       "subject": "Math",
       "grades": [
         "grade4"
@@ -6749,7 +6491,7 @@
       "curriculumTags": [
         "B2"
       ],
-      "description": "Students solve multiplication equations with a missing factor for focused review practice.",
+      "description": "Students solve multiplication equations with a missing factor.",
       "sourceType": "curated"
     },
     {
@@ -6819,6 +6561,40 @@
       "sourceType": "curated"
     },
     {
+      "id": "g4_array_interpretation",
+      "title": "Multiplication with Arrays",
+      "shortTitle": "Arrays",
+      "subject": "Math",
+      "grades": [
+        "grade4"
+      ],
+      "gradeLabels": [
+        "Grade 4"
+      ],
+      "domain": "Multiplication & Division",
+      "skillKey": "multiplication_foundations",
+      "worksheetFamily": "visual_models",
+      "activityTypes": [
+        "arrays"
+      ],
+      "templateId": "model_interpretation",
+      "status": "ready",
+      "difficulty": "medium",
+      "estimatedTimeMinutes": 12,
+      "hasAnswerKey": true,
+      "tags": [
+        "arrays",
+        "multiplication",
+        "grade 4"
+      ],
+      "curriculumTags": [
+        "B2"
+      ],
+      "description": "Students interpret arrays and connect them to multiplication equations.",
+      "studentInstruction": "Use each array to write a multiplication equation.",
+      "sourceType": "curated"
+    },
+    {
       "id": "grade4_multiplication_facts_skip_counting",
       "title": "Skip Counting — Grade 4",
       "shortTitle": "Skip Counting",
@@ -6880,6 +6656,49 @@
       ],
       "curriculumTags": [],
       "description": "Students solve word problems in context.",
+      "sourceType": "generated"
+    },
+    {
+      "id": "g4_multiplication_word_problem_quick_check",
+      "title": "Equal-Groups Multiplication Quick Check",
+      "shortTitle": "Equal-Groups Multiplication",
+      "subject": "Math",
+      "grades": [
+        "grade4"
+      ],
+      "gradeLabels": [
+        "Grade 4"
+      ],
+      "domain": "Operations: Equal-Groups Multiplication Word Problems",
+      "skillKey": "multiplication_facts",
+      "worksheetFamily": "word_problems",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Solve each short equal-groups multiplication problem.",
+      "teacherNote": "Use this quick check after multiplication practice to see whether students can solve short equal-groups multiplication word problems.",
+      "activityTypes": [
+        "word_problems"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6
+      },
+      "tags": [
+        "grade 4",
+        "multiplication",
+        "word problems",
+        "equal groups",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students solve short equal-groups multiplication word problems. This short Quick Check is designed for focused multiplication review or warm-up practice.",
       "sourceType": "generated"
     },
     {
@@ -7040,6 +6859,48 @@
       ],
       "curriculumTags": [],
       "description": "Deferred until a pattern word-problem generator is implemented.",
+      "sourceType": "generated"
+    },
+    {
+      "id": "g4_pattern_rule_quick_check",
+      "title": "Identify and Use Pattern Rules Quick Check",
+      "shortTitle": "Pattern Rules",
+      "subject": "Math",
+      "grades": [
+        "grade4"
+      ],
+      "gradeLabels": [
+        "Grade 4"
+      ],
+      "domain": "Patterns: Identify and Use Rules",
+      "skillKey": "patterning_and_algebra",
+      "worksheetFamily": "patterning",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Read each pattern. Write the rule to answer each question.",
+      "teacherNote": "Use this quick check after pattern-rule practice to see whether students can describe a rule and use it to continue or complete a pattern.",
+      "activityTypes": [
+        "identify_pattern_rule"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 7
+      },
+      "tags": [
+        "grade 4",
+        "patterning",
+        "pattern rules",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students identify or use pattern rules to continue or complete patterns. This short Quick Check is designed for focused patterning review.",
       "sourceType": "generated"
     },
     {
@@ -7233,7 +7094,68 @@
       ],
       "curriculumTags": [],
       "description": "Students match numerals and number words.",
+      "generatorOptions": {
+        "questionCount": 12,
+        "questionsPerPage": 12
+      },
       "sourceType": "generated"
+    },
+    {
+      "id": "g4_round_whole_numbers",
+      "title": "Round Whole Numbers",
+      "shortTitle": "Round Whole Numbers",
+      "subject": "Math",
+      "grades": [
+        "grade4"
+      ],
+      "gradeLabels": [
+        "Grade 4"
+      ],
+      "domain": "Place Value",
+      "skillKey": "place_value_representation",
+      "worksheetFamily": "representation",
+      "activityTypes": [
+        "round_whole_numbers"
+      ],
+      "generatorOptions": {
+        "minValue": 0,
+        "maxValue": 10000,
+        "allowedPlaces": [
+          10,
+          100,
+          1000
+        ],
+        "questionCount": 12
+      },
+      "studentInstruction": "Round each number to the place shown.",
+      "templateId": "equation_practice",
+      "pdfLayout": {
+        "columns": 2,
+        "maxProblemsPerPage": 12
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "wholeNumberFamilyLayout": "rounding",
+        "roundingGrade": 4
+      },
+      "status": "ready",
+      "difficulty": "medium",
+      "estimatedTimeMinutes": 10,
+      "hasAnswerKey": true,
+      "tags": [
+        "rounding",
+        "whole numbers",
+        "nearest ten",
+        "nearest hundred",
+        "nearest thousand",
+        "grade 4"
+      ],
+      "curriculumTags": [
+        "B1",
+        "B1.3"
+      ],
+      "description": "Students round whole numbers to the nearest ten, hundred, or thousand.",
+      "sourceType": "curated"
     },
     {
       "id": "grade4_place_value_representation_standard_form",
@@ -7330,8 +7252,8 @@
       ],
       "curriculumTags": [],
       "description": "Generated worksheet for addition word problem.",
-      "sourceType": "generated",
-      "studentInstruction": "Read each question. Show your thinking by writing and/or drawing your answer."
+      "studentInstruction": "Read each question. Show your thinking by writing and/or drawing your answer.",
+      "sourceType": "generated"
     },
     {
       "id": "grade5_addition_subtraction_facts_equation_match",
@@ -7363,6 +7285,9 @@
       ],
       "curriculumTags": [],
       "description": "Students match related equations.",
+      "generatorOptions": {
+        "questionCount": 30
+      },
       "sourceType": "generated"
     },
     {
@@ -7655,8 +7580,8 @@
     },
     {
       "id": "g5_complete_graphs",
-      "title": "Grade 5 Data Questions",
-      "shortTitle": "Grade 5 Data",
+      "title": "Complete Graphs",
+      "shortTitle": "Complete Graphs",
       "subject": "Math",
       "grades": [
         "grade5"
@@ -7676,8 +7601,8 @@
       "estimatedTimeMinutes": 12,
       "hasAnswerKey": true,
       "tags": [
-        "data questions",
-        "text data",
+        "graphs",
+        "complete graph",
         "grade 5"
       ],
       "curriculumTags": [
@@ -7784,8 +7709,8 @@
     },
     {
       "id": "g5_interpret_graphs",
-      "title": "Grade 5 Data Interpretation",
-      "shortTitle": "G5 Interpret Data",
+      "title": "Interpret Graphs",
+      "shortTitle": "Interpret Graphs",
       "subject": "Math",
       "grades": [
         "grade5"
@@ -7806,14 +7731,14 @@
       "estimatedTimeMinutes": 12,
       "hasAnswerKey": true,
       "tags": [
-        "data",
-        "interpret data",
+        "graphs",
+        "interpret",
         "grade 5"
       ],
       "curriculumTags": [
         "D1"
       ],
-      "description": "Students use information from a data set to answer comparison and interpretation questions.",
+      "description": "Students interpret graph displays and answer comparison questions.",
       "sourceType": "curated"
     },
     {
@@ -7910,8 +7835,12 @@
       ],
       "curriculumTags": [],
       "description": "Students compare fractions as focused Grade 5 fraction review.",
-      "sourceType": "generated",
-      "studentInstruction": "Write >, <, or = to compare each pair of fractions."
+      "studentInstruction": "Write >, <, or = to compare each pair of fractions.",
+      "generatorOptions": {
+        "questionCount": 30,
+        "questionsPerPage": 30
+      },
+      "sourceType": "generated"
     },
     {
       "id": "g5_fraction_equivalence",
@@ -8105,6 +8034,91 @@
       ],
       "curriculumTags": [],
       "description": "Generated worksheet for shade fraction models.",
+      "sourceType": "generated"
+    },
+    {
+      "id": "g5_equivalent_fractions_exit_ticket",
+      "title": "Equivalent Fractions Exit Ticket",
+      "shortTitle": "Equivalent Fractions",
+      "subject": "Math",
+      "grades": [
+        "grade5"
+      ],
+      "gradeLabels": [
+        "Grade 5"
+      ],
+      "domain": "Fractions: Equivalent Fractions",
+      "skillKey": "fraction_equivalence",
+      "worksheetFamily": "fractions",
+      "resourceType": "exit_ticket",
+      "formatLabel": "Exit Ticket",
+      "useCase": "lesson-close formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Write the missing equivalent fraction.",
+      "teacherNote": "Use this exit ticket after equivalent-fraction practice to see whether students can identify simple equivalent fractions.",
+      "activityTypes": [
+        "match_equivalent_fractions"
+      ],
+      "templateId": "exit_ticket",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": "3-5",
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 3,
+        "worksheetSeed": "batch1b-g5-equivalent"
+      },
+      "tags": [
+        "grade 5",
+        "fractions",
+        "equivalent fractions",
+        "exit ticket"
+      ],
+      "curriculumTags": [],
+      "description": "Students identify simple equivalent fractions. This cut-apart Exit Ticket is designed as a short lesson-close review after equivalent-fraction practice.",
+      "sourceType": "generated"
+    },
+    {
+      "id": "g5_equivalent_fractions_quick_check",
+      "title": "Equivalent Fractions Quick Check",
+      "shortTitle": "Equivalent Fractions",
+      "subject": "Math",
+      "grades": [
+        "grade5"
+      ],
+      "gradeLabels": [
+        "Grade 5"
+      ],
+      "domain": "Fractions: Equivalent Fractions",
+      "skillKey": "fraction_equivalence",
+      "worksheetFamily": "fractions",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Write the missing equivalent fraction.",
+      "teacherNote": "Use this quick check after equivalent-fraction practice to see whether students can identify simple equivalent fractions.",
+      "activityTypes": [
+        "match_equivalent_fractions"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6
+      },
+      "tags": [
+        "grade 5",
+        "fractions",
+        "equivalent fractions",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students identify simple equivalent fractions. This short Quick Check is designed for focused fraction review.",
       "sourceType": "generated"
     },
     {
@@ -8522,6 +8536,9 @@
       ],
       "curriculumTags": [],
       "description": "Students compare numbers using relational symbols.",
+      "generatorOptions": {
+        "questionCount": 30
+      },
       "sourceType": "generated"
     },
     {
@@ -8650,6 +8667,96 @@
       ],
       "curriculumTags": [],
       "description": "Students write numbers in standard form.",
+      "sourceType": "generated"
+    },
+    {
+      "id": "g5_compare_numbers_to_100000_exit_ticket",
+      "title": "Compare Numbers to 100,000 Exit Ticket",
+      "shortTitle": "Compare to 100,000",
+      "subject": "Math",
+      "grades": [
+        "grade5"
+      ],
+      "gradeLabels": [
+        "Grade 5"
+      ],
+      "domain": "Place Value: Compare Whole Numbers",
+      "skillKey": "number_magnitude",
+      "worksheetFamily": "relational_thinking",
+      "resourceType": "exit_ticket",
+      "formatLabel": "Exit Ticket",
+      "useCase": "lesson-close formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Write >, <, or = to compare each pair.",
+      "teacherNote": "Use this exit ticket after place-value comparison practice to see whether students can compare whole numbers to 100,000.",
+      "activityTypes": [
+        "compare_numbers"
+      ],
+      "templateId": "exit_ticket",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": "3-5",
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 3,
+        "minA": 10000,
+        "maxA": 99999
+      },
+      "tags": [
+        "grade 5",
+        "place value",
+        "compare numbers",
+        "whole numbers",
+        "exit ticket"
+      ],
+      "curriculumTags": [],
+      "description": "Students compare whole numbers to 100,000 using >, <, or =. This cut-apart Exit Ticket is designed as a short lesson-close review after place-value comparison practice.",
+      "sourceType": "generated"
+    },
+    {
+      "id": "g5_place_value_to_100000_quick_check",
+      "title": "Compare Numbers to 100,000 Quick Check",
+      "shortTitle": "Compare to 100,000",
+      "subject": "Math",
+      "grades": [
+        "grade5"
+      ],
+      "gradeLabels": [
+        "Grade 5"
+      ],
+      "domain": "Place Value: Compare Whole Numbers",
+      "skillKey": "number_magnitude",
+      "worksheetFamily": "relational_thinking",
+      "resourceType": "quick_check",
+      "formatLabel": "Quick Check",
+      "useCase": "formative check",
+      "prepLevel": "print-and-go",
+      "formativeUse": true,
+      "studentInstructions": "Write >, <, or = to compare each pair.",
+      "teacherNote": "Use this quick check after place-value comparison practice to see whether students can compare larger whole numbers.",
+      "activityTypes": [
+        "compare_numbers"
+      ],
+      "templateId": "quick_check",
+      "status": "ready",
+      "difficulty": "grade-appropriate",
+      "estimatedTimeMinutes": 8,
+      "hasAnswerKey": true,
+      "generatorOptions": {
+        "questionCount": 6,
+        "minA": 10000,
+        "maxA": 99999
+      },
+      "tags": [
+        "grade 5",
+        "place value",
+        "compare numbers",
+        "whole numbers",
+        "quick check"
+      ],
+      "curriculumTags": [],
+      "description": "Students compare whole numbers to 100,000 using >, <, or =. This short Quick Check is designed for focused place-value review.",
       "sourceType": "generated"
     },
     {
@@ -9006,8 +9113,8 @@
     },
     {
       "id": "g6_graph_interpretation",
-      "title": "Grade 6 Data Interpretation",
-      "shortTitle": "G6 Interpret Data",
+      "title": "Graph Interpretation",
+      "shortTitle": "Graph Interpretation",
       "subject": "Math",
       "grades": [
         "grade6"
@@ -9028,14 +9135,14 @@
       "estimatedTimeMinutes": 12,
       "hasAnswerKey": true,
       "tags": [
-        "data",
-        "interpret data",
+        "graphs",
+        "interpretation",
         "grade 6"
       ],
       "curriculumTags": [
         "D1"
       ],
-      "description": "Students use information from a data set to answer interpretation questions and justify conclusions.",
+      "description": "Students interpret graphs and justify conclusions using data.",
       "sourceType": "curated"
     },
     {
@@ -10660,6 +10767,11 @@
       "activityTypes": [
         "compare_numbers"
       ],
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 10,
+        "promptType": "sets"
+      },
       "templateId": "equation_practice",
       "status": "ready",
       "difficulty": "easy",
@@ -10677,12 +10789,7 @@
         "B1"
       ],
       "description": "Students compare quantities and identify which set has more, less, or the same.",
-      "sourceType": "curated",
-      "generatorOptions": {
-        "minA": 0,
-        "maxA": 10,
-        "promptType": "sets"
-      }
+      "sourceType": "curated"
     },
     {
       "id": "k_counting_collections_to_10",
@@ -10960,6 +11067,10 @@
       "activityTypes": [
         "number_word_match"
       ],
+      "generatorOptions": {
+        "minA": 0,
+        "maxA": 10
+      },
       "templateId": "matching",
       "status": "ready",
       "difficulty": "easy",
@@ -10975,11 +11086,7 @@
         "B1"
       ],
       "description": "Students match numerals to number words.",
-      "sourceType": "curated",
-      "generatorOptions": {
-        "minA": 0,
-        "maxA": 10
-      }
+      "sourceType": "curated"
     },
     {
       "id": "k_numbers_on_number_line_to_10",

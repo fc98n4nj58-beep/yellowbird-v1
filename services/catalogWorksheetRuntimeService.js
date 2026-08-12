@@ -60,6 +60,9 @@ const PUBLIC_SKILL_LABEL_HIDDEN_IDS = new Set([
   "g2_skip_counting_by_5",
   "g2_standard_form_to_100",
   "g4_standard_form_large_numbers",
+  "g2_even_and_odd_numbers",
+  "g3_round_whole_numbers",
+  "g4_round_whole_numbers",
   "g1_subtraction_facts_within_20",
   "grade1_addition_subtraction_word_problems_subtraction_word_problem"
 ]);
