@@ -663,6 +663,7 @@ const GRADE2_COMPACT_QUICK_CHECK_IDS = new Set([
   "g2_missing_addends_within_20_quick_check"
 ]);
 const CUT_APART_QUICK_CHECKS = new Map([
+  ["g4_pattern_rule_quick_check", { copies: 1, items: 7 }],
   ["g4_compare_fractions_quick_check", { copies: 2, items: 6 }],
   ["g3_compare_3_digit_numbers_quick_check", { copies: 2, items: 6 }],
   ["g5_place_value_to_100000_quick_check", { copies: 2, items: 6 }],

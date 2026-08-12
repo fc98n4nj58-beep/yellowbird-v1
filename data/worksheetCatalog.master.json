@@ -5374,7 +5374,7 @@
       "useCase": "formative check",
       "prepLevel": "print-and-go",
       "formativeUse": true,
-      "studentInstructions": "Read each pattern. Write or use the rule to answer each question.",
+      "studentInstructions": "Read each pattern. Write the rule to answer each question.",
       "teacherNote": "Use this quick check after pattern-rule practice to see whether students can describe a rule and use it to continue or complete a pattern.",
       "activityTypes": [
         "identify_pattern_rule"
@@ -5385,7 +5385,7 @@
       "estimatedTimeMinutes": 8,
       "hasAnswerKey": true,
       "generatorOptions": {
-        "questionCount": 6
+        "questionCount": 7
       },
       "tags": [
         "grade 4",

@@ -15,9 +15,9 @@ The following cut-apart formats are visually feasible and may proceed together o
 
 Each ticket repeats the Name line, concise title, direct instruction, teacher note, and Grade/Math/Quick Check footer. Repeated per-item lead-ins are removed when the ticket instruction supplies the action.
 
-## Separate decision
+## Separate decision - resolved
 
-`g4_pattern_rule_quick_check` requires a seven-question default and the approved instruction `Read each pattern. Write the rule to answer each question.` Its existing default generates six questions, so a dedicated seven-question truth and layout proof is still required before it joins an implementation batch.
+`g4_pattern_rule_quick_check` required a seven-question default and the approved instruction `Read each pattern. Write the rule to answer each question.` Its dedicated truth and layout proof passed, and the bounded correction is now implemented separately from the eight-resource cut-apart batch.
 
 ## Evidence
 
@@ -43,4 +43,4 @@ Verification completed:
 - Catalog audit: 102/102 ready resources working; the only failures are the seven established planned `pattern_word_problems` gaps.
 - Syntax checks, catalog JSON parsing, and diff hygiene passed.
 
-`g4_pattern_rule_quick_check` remains excluded and unchanged pending its separate seven-question truth and layout proof.
+`g4_pattern_rule_quick_check` was excluded from this eight-resource batch and subsequently closed through its separate seven-question decision proof and bounded implementation.

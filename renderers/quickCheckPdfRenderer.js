@@ -18,6 +18,7 @@ const GRADE2_COMPACT_QUICK_CHECK_IDS = new Set([
   "g2_missing_addends_within_20_quick_check"
 ]);
 const CUT_APART_QUICK_CHECKS = new Map([
+  ["g4_pattern_rule_quick_check", { copies: 1, items: 7 }],
   ["g4_compare_fractions_quick_check", { copies: 2, items: 6 }],
   ["g3_compare_3_digit_numbers_quick_check", { copies: 2, items: 6 }],
   ["g5_place_value_to_100000_quick_check", { copies: 2, items: 6 }],
@@ -237,17 +238,19 @@ function renderCutApartQuickCheckPDF({ res, item, contentObject, options = {} })
   res.setHeader("Content-Disposition", `${disposition}; filename="${filename}"`);
   doc.pipe(res);
 
-  const boxes = spec.copies === 2
-    ? [{ x: 42, y: 42, w: 528, h: 318 }, { x: 42, y: 432, w: 528, h: 318 }]
-    : spec.copies === 3
-      ? [{ x: 42, y: 24, w: 528, h: 230 }, { x: 42, y: 281, w: 528, h: 230 }, { x: 42, y: 538, w: 528, h: 230 }]
-      : [{ x: 24, y: 24, w: 276, h: 354 }, { x: 312, y: 24, w: 276, h: 354 }, { x: 24, y: 414, w: 276, h: 354 }, { x: 312, y: 414, w: 276, h: 354 }];
+  const boxes = spec.copies === 1
+    ? [{ x: 42, y: 42, w: 528, h: 708 }]
+    : spec.copies === 2
+      ? [{ x: 42, y: 42, w: 528, h: 318 }, { x: 42, y: 432, w: 528, h: 318 }]
+      : spec.copies === 3
+        ? [{ x: 42, y: 24, w: 528, h: 230 }, { x: 42, y: 281, w: 528, h: 230 }, { x: 42, y: 538, w: 528, h: 230 }]
+        : [{ x: 24, y: 24, w: 276, h: 354 }, { x: 312, y: 24, w: 276, h: 354 }, { x: 24, y: 414, w: 276, h: 354 }, { x: 312, y: 414, w: 276, h: 354 }];
 
   const drawTicket = (box) => {
     const padding = 12;
     const x = box.x + padding;
     const width = box.w - padding * 2;
-    const columns = spec.copies === 4 ? 1 : spec.copies === 2 ? 2 : 3;
+    const columns = spec.copies === 1 || spec.copies === 4 ? 1 : spec.copies === 2 ? 2 : 3;
     const rows = Math.ceil(items.length / columns);
     const columnGap = 10;
     const columnWidth = (width - columnGap * (columns - 1)) / columns;

@@ -6,6 +6,7 @@ const { buildCatalogWorksheetRuntime } = require("../services/catalogWorksheetRu
 const { renderQuickCheckPDF, __test } = require("../renderers/quickCheckPdfRenderer");
 
 const SPECS = {
+  g4_pattern_rule_quick_check: [1, 7, "Read each pattern. Write the rule to answer each question."],
   g4_compare_fractions_quick_check: [2, 6, "Write >, <, or = to compare each pair."],
   g3_compare_3_digit_numbers_quick_check: [2, 6, "Write >, <, or = to compare each pair."],
   g5_place_value_to_100000_quick_check: [2, 6, "Write >, <, or = to compare each pair."],
@@ -52,6 +53,22 @@ function pageCount(buffer) {
   return (buffer.toString("latin1").match(/\/Type\s*\/Page\b/g) || []).length;
 }
 
+function assertPatternRuleTruth(items) {
+  items.forEach((question) => {
+    assert(Array.isArray(question.sequence));
+    assert.strictEqual(question.sequence.length, 5);
+    assert(["add", "subtract"].includes(question.patternOperation));
+    const direction = question.patternOperation === "subtract" ? -1 : 1;
+    question.sequence.slice(1).forEach((value, index) => {
+      assert.strictEqual(value - question.sequence[index], direction * question.step);
+    });
+    assert.strictEqual(question.answer, question.patternRule);
+    assert.strictEqual(question.answerState.acceptedAnswerText, question.patternRule);
+    assert.strictEqual(question.answerState.responseTarget, "rule");
+  });
+  assert.strictEqual(new Set(items.map((question) => question.duplicateSignature)).size, items.length);
+}
+
 (async () => {
   for (const [id, [copies, count, instruction]] of Object.entries(SPECS)) {
     for (let seed = 0; seed < 30; seed += 1) {
@@ -63,6 +80,7 @@ function pageCount(buffer) {
       assert.strictEqual(items.length, count);
       assert.strictEqual(runtime.item.studentInstructions, instruction);
       assert.strictEqual(runtime.layout.display.cutApartQuickCheckCount, copies);
+      if (id === "g4_pattern_rule_quick_check") assertPatternRuleTruth(items);
       items.forEach((question) => {
         assert.notStrictEqual(question.answer, undefined);
         assert(!/^(Compare(?: the numbers)?:|Match the equivalent fractions:|Complete:)/i.test(__test.concisePrompt(question.prompt)));
