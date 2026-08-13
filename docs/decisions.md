@@ -492,3 +492,15 @@ Rules:
 - Founder-likely acceptance is predictive and never replaces founder approval.
 - Preserve approved family-specific contracts over general guidance.
 - Purely mechanical metadata and synchronized-copy corrections do not require this gate when interaction and page architecture remain unchanged.
+
+## August 13, 2026 - Modular Practice And Composition
+
+Decision:
+Larger-concept Yellow Bird worksheet families should be designed as modular concept/practice systems. Each concept module should be independently generatable where pedagogically useful, and the final integrated module should support standalone mixed review. The full default resource composes the approved modules into a coherent learning progression.
+
+Rules:
+- The family preflight decides whether modular architecture is mathematically warranted; simple focused families may remain simple.
+- Full-progression and standalone-practice quantities are separate contracts.
+- Preserve structured module, task, response, representation, progression, and mixed-practice metadata where practical.
+- This direction does not authorize a composition engine, public teacher controls, routes, or production redesign.
+- The authoritative contract is the [Founder Worksheet Design Preflight](worksheet-design-preflight.md).

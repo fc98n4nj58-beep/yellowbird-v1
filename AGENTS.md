@@ -73,6 +73,7 @@ Full verification means the documented checks appropriate to the affected surfac
 ## Tests, proofs, and output
 
 - For every new worksheet activity/family, materially different mathematical interaction, or task-architecture redesign, complete `docs/worksheet-design-preflight.md` before implementation and pass its internal design-proof gate before creating founder-review artifacts.
+- For a larger-concept family, preserve the preflight-approved modular concept structure and its standalone-module, integrated-review, and full-progression composition intent; do not flatten meaningful stages into generic prompts.
 - Run syntax checks for changed executable files.
 - Prefer focused tests first; add related regressions in proportion to shared impact.
 - Preserve deterministic seeds and validate actual structured truth, not only successful PDF creation.

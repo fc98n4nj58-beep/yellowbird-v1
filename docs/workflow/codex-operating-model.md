@@ -139,6 +139,8 @@ Proofs answer visual or product questions: readability, density, geometry, hiera
 
 For a new activity, substantially new family, meaningfully different mathematical interaction, or task-architecture redesign, first apply `docs/worksheet-design-preflight.md`. An internal design proof is project-side evidence that the proposed resource is mathematically correct, age appropriate, teacher-useful, intentionally composed, coherent across student and key modes, and revised for likely founder objections. It may remain temporary or use a clearly named internal-only proof location. It is not founder-review evidence and must not be labelled `founder-review`.
 
+For a larger-concept modular family, internal proof must additionally test concept-module clarity, standalone-module viability, full-progression coherence, integrated mixed-practice logic, module-specific practice sufficiency, and preservation of structured composition metadata. These checks validate the family contract; they do not authorize a public selector or composition engine.
+
 ### Founder review proof
 
 A founder review proof is generated only after the internal design proof passes the authoritative preflight. Successful generation, valid mathematical answers, route success, or a technically clean PDF does not by itself satisfy this gate. Founder review remains the approval step; the internal gate predicts likely acceptance but never claims it.

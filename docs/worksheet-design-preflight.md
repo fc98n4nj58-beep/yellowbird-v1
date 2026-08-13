@@ -108,6 +108,71 @@ Architecture scan -> Founder-Likely Acceptance Preflight -> Variable contract ->
 
 This workflow does not retroactively invalidate already approved families.
 
+## Modular Practice And Composition Contract
+
+Apply this section when the mathematics genuinely contains meaningful sub-concepts or stages that benefit from explicit progression, targeted practice, and later mixed application. Simple focused families may remain simple. The family preflight must decide whether modular architecture is warranted; this contract is not permission to overcomplicate every worksheet.
+
+### Concept modules
+
+List the approved mathematical modules in the family. For each module, define:
+
+- a stable module/activity identifier;
+- its mathematical purpose and grade-band role;
+- its natural response interaction and practice demand;
+- required representation, visual, or model support;
+- its answer-key behavior;
+- whether it can stand alone pedagogically.
+
+Treat modules as mathematical contracts, not merely page sections. Preserve structured distinctions when they would otherwise need to be rediscovered for targeted practice or future composition.
+
+### Full progression recipe
+
+Define the default learning sequence: what comes first, what understanding it establishes, what follows, why the order is mathematically sensible, and which final task integrates the earlier ideas. Do not randomly interleave concept modules during a learning progression.
+
+The preferred larger-concept model is:
+
+- **Concept 1 -> sufficient practice**
+- **Concept 2 -> sufficient practice**
+- **Concept 3 -> sufficient practice**
+- **Concept 4 -> sufficient practice**
+- **Integrated Concept 5 -> use the ideas together**
+
+Concept boundaries should have noticeably stronger whitespace separation than questions within a concept. Multi-page worksheets are acceptable and preferred over cramming. Questions should normally appear beside their question numbers with comfortable spacing.
+
+### Standalone practice mode
+
+Where pedagogically useful, each concept module must be capable of becoming a complete targeted-practice worksheet. A standalone module must have an appropriate title, direct instruction, useful question count, intentional density, response-appropriate space, and complete answer key. It must not refer to absent earlier or later sections or feel like a page removed from a packet.
+
+### Integrated or mixed-practice mode
+
+The final integrated module should also be independently generatable as a mixed-review resource for the teacher need: **“I already taught the component ideas. Give students more practice using them together.”**
+
+Integrated practice must combine only previously established concepts, require students to choose or apply appropriate thinking, provide meaningful variety, remain age appropriate, and avoid becoming a random collection of unrelated questions.
+
+### Practice sufficiency
+
+Define both counts for every standalone-capable module:
+
+- the module's count inside the full progression;
+- its default count when generated as standalone targeted practice.
+
+Do not assume that a short sampling inside the full sequence provides sufficient targeted practice. For example, four `compute` tasks may be appropriate inside a progression while standalone computation may require 12–20 tasks depending on grade and interaction. Page count and density follow the standalone learning purpose; they do not have to match the full resource.
+
+### Composition metadata
+
+Where practical, preserve structured internal metadata for:
+
+- concept/module;
+- task action;
+- response type;
+- representation or model;
+- difficulty or progression role;
+- integrated/mixed status.
+
+Do not flatten these distinctions into generic prompt strings when they can be preserved safely. This metadata supports later teacher-controlled composition without authorizing a composition engine, teacher-facing selector, public controls, routes, or runtime work now.
+
+Long-term product intent: a future teacher may choose an approved topic or model—such as Number Lines, Base Ten Blocks, Ten Frames, Rounding, or Addition/Subtraction strategies—and then request the full learning progression, a selected concept module, or integrated mixed practice. Yellow Bird should compose that resource from approved family/module rules rather than inventing a new sequence at request time.
+
 ## Header And Instruction Rules
 
 Default worksheet hierarchy:
@@ -383,6 +448,15 @@ Do not label or export a PDF as a `founder-review` proof until an internal desig
 - likely founder objections have been addressed;
 - answer-key geometry and answer-only bolding satisfy the family contract;
 - task, instructions, responses, and visuals form one coherent interaction.
+
+For a modular larger-concept family, the proof must also confirm:
+
+- module boundaries and mathematical purposes are visually clear;
+- each standalone-capable module has a viable complete worksheet contract;
+- the full progression is coherent rather than randomly interleaved;
+- integrated mixed practice combines established concepts meaningfully;
+- full-sequence and standalone counts provide sufficient practice for their different roles;
+- structured composition metadata survives generation and transformation.
 
 Failure at this gate returns the family to design or implementation. Passing it permits founder exposure but does not imply founder approval.
 
