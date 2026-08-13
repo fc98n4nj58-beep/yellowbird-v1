@@ -504,3 +504,14 @@ Rules:
 - Preserve structured module, task, response, representation, progression, and mixed-practice metadata where practical.
 - This direction does not authorize a composition engine, public teacher controls, routes, or production redesign.
 - The authoritative contract is the [Founder Worksheet Design Preflight](worksheet-design-preflight.md).
+
+## August 13, 2026 - Concept-Page And Ordinary-Practice Defaults
+
+Decision:
+Adopt self-contained concept-page instructions, brief backward learning connections where useful, concept-specific cues, tasks beside question numbers, top-to-bottom-by-column numbering, whitespace-led grouping without ordinary question separators, compact stacked-computation rules, prompt economy, immediate task clarity, approved Math Sentence inheritance, and intentional lower-page use as global Founder-Likely Acceptance defaults.
+
+Rules:
+- These are strong defaults with documented pedagogical exceptions for interactions whose table, matching, visual, grid, row, or graphic structure requires another treatment.
+- Family preflights own age-appropriate density and must evaluate, rather than automatically impose, a four-column by five-question computation layout where it safely fits.
+- The authoritative contract is the [Founder Worksheet Design Preflight](worksheet-design-preflight.md).
+- This decision records design governance only and does not authorize production output changes.

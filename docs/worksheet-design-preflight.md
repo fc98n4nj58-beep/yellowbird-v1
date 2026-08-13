@@ -60,9 +60,13 @@ Evaluate reading load, vocabulary, writing and motor demands, number ranges, abs
 
 Use direct student language that states exactly what to do. Prefer one page-level instruction over repeated prompt prose where the task can be expressed structurally. Do not use teacher-facing or catalogue wording.
 
+For a larger-concept resource that spans multiple pages, every concept/module page must have its own concept-specific instruction at the top. Do not rely on an instruction that appeared only on an earlier page: a student receiving one page independently should understand what to do.
+
 ### Completed model or strategy cue
 
 Decide whether a completed example, visual model, strategy cue, vocabulary cue, midpoint/reference marker, or worked demonstration improves independent success. Include one only when it teaches the interaction without displacing too much practice or revealing the task.
+
+Any model, example, or cue at the top of a concept page must directly support the concept practised on that page. In a progression, briefly connect the current concept to the preceding learning where pedagogically useful—for example, “You just learned X. Now use that idea to Y.” Keep the connection age appropriate, student-facing, and short enough that it does not become lesson-plan prose.
 
 ### Page architecture
 
@@ -80,7 +84,7 @@ Preserve recognizable student-page geometry and the same generator-owned truth. 
 
 Explicitly answer: **What is the founder most likely to object to in this proposed worksheet?**
 
-Check for a generic-looking layout, missing question numbers, repeated instructions, unnecessary subtitle, weak answer space, shallow repetition, childish upper-grade presentation, teacher-facing wording, poorly mirrored keys, underused page space, unnecessary lines or boxes, inconsistent alignment, model sizing/spacing, and task/title mismatch. Revise the proposed contract in response before implementation.
+Check for a generic-looking layout, missing or detached question numbers, incorrect multi-column reading order, repeated instructions, missing concept-page instructions, weak learning connections, unrelated models/examples, unnecessary subtitle, unclear task expectations, weak answer space, shallow repetition, childish upper-grade presentation, teacher-facing wording, poorly mirrored keys, underused lower-page space, ordinary question separators, unnecessarily long computation rules, inconsistent alignment, model sizing/spacing, and task/title mismatch. Revise the proposed contract in response before implementation.
 
 Approved family-specific contracts override a general recommendation here. Record the exception rather than flattening established family behavior into a new global rule.
 
@@ -137,7 +141,7 @@ The preferred larger-concept model is:
 - **Concept 4 -> sufficient practice**
 - **Integrated Concept 5 -> use the ideas together**
 
-Concept boundaries should have noticeably stronger whitespace separation than questions within a concept. Multi-page worksheets are acceptable and preferred over cramming. Questions should normally appear beside their question numbers with comfortable spacing.
+Concept boundaries should have noticeably stronger whitespace separation than questions within a concept. Multi-page worksheets are acceptable and preferred over cramming. Every concept page must remain independently actionable through its own instruction, and questions should normally appear beside their question numbers with comfortable spacing.
 
 ### Standalone practice mode
 
@@ -187,7 +191,7 @@ Acceptance criteria:
 - subtitles are hidden by default;
 - subtitles require explicit family justification;
 - metadata-style sentences do not appear as student instructions;
-- the instruction is written once near the top;
+- the instruction is written once near the top of each applicable worksheet or concept page;
 - repeated prompt prose does not appear in every question unless genuinely necessary;
 - grade and curriculum metadata are not repeated in the instruction.
 
@@ -202,6 +206,51 @@ Avoid:
 - Students extend number patterns for focused Grade 3 patterning practice.
 - Repeating "Extend the pattern:" before every question.
 
+## Concept-Page And Ordinary-Practice Defaults
+
+These are strong Yellow Bird defaults. A family may use a pedagogically necessary exception for a table, matching interaction, visual grid, row-based relationship, or other task whose structure carries mathematical meaning. Record the exception and its rationale in the family preflight rather than silently weakening the default.
+
+### Self-contained concept pages
+
+- Every page devoted to a concept/module has a concept-specific instruction at the top.
+- A page remains understandable when used independently from the rest of a progression.
+- Where useful, the concept header or cue briefly connects the new work to the preceding concept.
+- A completed model, example, or strategy cue relates directly to the page's concept; do not reuse one generic example across unrelated modules.
+
+### Task clarity and prompt economy
+
+- A student should immediately understand what to do, how to record the response, and what must be checked or explained.
+- Labels such as `Estimate and Check` are insufficient unless the page states what to estimate, the method or rounding place, where to record the estimate, what to check, and the expected response.
+- When a page or section instruction already states the operation, method, or response, use compact mathematical prompts instead of repeating the full prose in every question.
+- Repeat prose only when an individual context genuinely changes the task.
+
+### Question placement and numbering
+
+- Place an ordinary numeric or text task directly beside its question number with comfortable spacing: `1.   [task]`.
+- Detach the task onto a new line only when a visual, story, table, workspace, or other interaction genuinely needs the additional structure.
+- For ordinary multi-column practice, number top-to-bottom in the first column, then continue top-to-bottom through each subsequent column. For example, a four-column by five-row page uses 1–5, 6–10, 11–15, and 16–20 by column.
+- Tables, matching, visual grids, row-based relationships, and interactions with a mathematically meaningful alternate sequence may use a documented family-specific exception.
+
+### Whitespace, separators, and page use
+
+- Group questions within one concept through consistent alignment and question spacing.
+- Use noticeably more whitespace between mathematical concepts/modules than between questions inside a module.
+- Do not draw horizontal or vertical separator rules between ordinary numeric or text questions by default. Whitespace and alignment should carry the grouping.
+- Separator rules may remain appropriate for visual-model families, ten frames, arrays, base-ten blocks, graphic task cells, and explicitly approved family designs.
+- Large unexplained lower-page areas trigger design review. Add meaningful practice, enlarge appropriate workspace, rebalance sections, or move content deliberately; never add filler merely to occupy space.
+
+### Stacked computation
+
+- Keep the arithmetic rule under stacked operands approximately one digit-space longer than the widest number or result involved.
+- Align the complete computation block naturally with its question number; do not substitute a long worksheet-style response line.
+- When age, number width, model/instruction space, and response geometry permit, evaluate a four-column by five-question pattern (20 tasks) for suitable computation pages. This is a preferred candidate, not a universal density rule; the family preflight owns the final count.
+
+### Contextual addition and subtraction
+
+- Context problems inherit the approved Yellow Bird Math Sentence structure from established story-problem families.
+- Preserve the context prompt, appropriate workspace, explicit `Math Sentence` response where established, clear final-answer structure, and mirrored answer-key behavior.
+- Do not invent a new contextual-response format merely because the context appears inside a modular family.
+
 ## Task-Specific Layout Rules
 
 Each task family must have an intentional layout before implementation.
@@ -212,7 +261,7 @@ Before implementing any Grade 4–6 resource, compare the full approved family h
 
 Define:
 
-- one-column or two-column structure;
+- selected column structure and the ordinary top-to-bottom-by-column numbering order or documented exception;
 - row height;
 - answer-target placement;
 - writing-space needs;
@@ -448,6 +497,13 @@ Do not label or export a PDF as a `founder-review` proof until an internal desig
 - likely founder objections have been addressed;
 - answer-key geometry and answer-only bolding satisfy the family contract;
 - task, instructions, responses, and visuals form one coherent interaction.
+- each concept page contains a self-contained concept-specific instruction;
+- any learning connection and model/example directly support that concept;
+- ordinary tasks sit beside their numbers and multi-column numbering follows the documented order;
+- separator-line use is pedagogically justified;
+- prompt prose is not needlessly repeated;
+- the task and expected response are immediately clear;
+- lower-page space is used intentionally.
 
 For a modular larger-concept family, the proof must also confirm:
 

@@ -30,30 +30,33 @@ Representation/model metadata is module-owned. The full progression may begin wi
 
 ## Full Progression Recipe
 
-The default full learning sequence remains eight numbered tasks plus one concise unnumbered strategy connection:
+The learning order remains:
 
-1. `compute`: four tasks establish accurate calculation and place alignment.
-2. `estimate`: two tasks establish a defined estimation method and reasonableness sense.
-3. `apply`: one task transfers the operation choice into context.
-4. `reason_check`: one bounded task verifies or corrects thinking.
+1. `compute`: establish accurate calculation and place alignment.
+2. `estimate`: use rounding to anticipate and check a result.
+3. `apply`: transfer operation choice into an approved context structure.
+4. `reason_check`: verify, explain, or correct thinking.
+5. `integrated_mixed`: use the established ideas together.
 
-This current `4 + 2 + 1 + 1` sequence is a coherent compact progression, not sufficient standalone practice for every module. The future redesign should represent the full resource as a progression recipe composed from the four module contracts. `integrated_mixed` is a separate fifth recipe and is not an extra section appended to this already full page by default.
+The full progression is a coherent multi-page learning sequence, not a compact sampling forced onto one page. Each concept page needs its own concept-specific instruction and, where it improves learning, one brief connection to the preceding concept. Any example or cue must directly model that page's work. Section/page boundaries should be more visually pronounced than question spacing within a module.
 
-Section whitespace must be stronger than spacing between questions inside a section. Question content should normally sit beside its number. If a later proof shows that the progression needs more practice or response space, use a second page rather than shrinking type, decimal alignment, or explanation targets.
+Question content should normally sit beside its number. If sufficient practice or response space requires another page, add the page rather than shrinking type, decimal alignment, contextual workspace, or explanation targets.
 
 ## Standalone Practice Defaults
 
-| Module | Count in compact full sequence | Grade 3 standalone default | Grade 4 standalone default | Density/page intent |
+| Module | Full-progression count after this refinement | Grade 3 standalone default | Grade 4 standalone default | Density/page intent |
 | --- | ---: | ---: | ---: | --- |
-| `compute` | 4 | 16: balanced addition/subtraction with regrouping | 12: balanced whole-number and decimal-tenths work | Dense but calm numeric practice; one page if safe, otherwise balanced pages |
-| `estimate` | 2 | 12: balanced nearest-ten/hundred estimates | 12: whole-number and decimal estimates with stated rounding places | Group by estimation method; do not randomly mix before section mastery |
-| `apply` | 1 | 6 short contextual problems | 6 short contextual problems | Larger work areas; two pages are acceptable and likely preferable |
-| `reason_check` | 1 | 8 bounded checks | 8 bounded checks spanning whole-number and decimal reasoning | One structured line or selection-plus-line per task; no essays |
-| `integrated_mixed` | Not a learning-sequence section | 12 mixed tasks | 12 mixed tasks | Standalone review recipe; preserve response-specific geometry and meaningful balance |
+| `compute` | Pending renewed proof, including the 4 × 5 candidate | 16: balanced addition/subtraction with regrouping | 12: balanced whole-number and decimal-tenths work | Dense but calm numeric practice; one page if safe, otherwise balanced pages |
+| `estimate` | Pending the clarified Estimate/Check interaction proof | 12: balanced nearest-ten/hundred estimates | 12: whole-number and decimal estimates with stated rounding places | Group by estimation method; do not randomly mix before section mastery |
+| `apply` | Pending Math Sentence inheritance proof | 6 short contextual problems | 6 short contextual problems | Larger work areas; two pages are acceptable and likely preferable |
+| `reason_check` | Pending renewed concept-page proof | 8 bounded checks | 8 bounded checks spanning whole-number and decimal reasoning | One structured line or selection-plus-line per task; no essays |
+| `integrated_mixed` | Pending lower-page-use and balance proof | 12 mixed tasks | 12 mixed tasks | Standalone review recipe; preserve response-specific geometry and meaningful balance |
 
 These are design defaults for later implementation proof, not public controls. A later task may adjust a count only with visual evidence that practice sufficiency, page balance, and student independence improve.
 
 Every standalone worksheet must receive a self-contained title and instruction, restart numbering at 1, use intentional page density, include a complete answer key, and avoid references such as “Part 3” or “use your earlier answer” when those parts are absent.
+
+The next compute-page proof must evaluate a four-column by five-question (20-task) candidate where Grade 3/4 number width and response geometry permit. This is an explicit design evaluation, not a finalized count or universal family rule. The proof must compare practice sufficiency, print readability, question-number association, decimal alignment, and page balance before the family contract changes.
 
 ## Integrated Mixed-Practice Contract
 
@@ -70,11 +73,15 @@ Grade 3 uses approved whole-number boundaries and balances addition/subtraction.
 
 ## Page And Answer-Key Architecture
 
-- Full progression: retain visible ordered sections and the concise opening connection; one student page and mirrored key remain the current target, with multi-page permission if later practice increases.
+- Full progression: use visible ordered concept pages. Every concept page receives its own instruction, a brief backward learning connection where useful, and a concept-specific example or cue where one adds value. Do not rely on a model or instruction from an earlier page.
 - Standalone compute/estimate: use task-specific numeric geometry and section labels only where the module contains meaningful subtypes.
-- Standalone apply: provide an intentional short work region for every context; do not force six contexts into generic dense rows.
+- Compute: test a four-column by five-question candidate where safe; align each compact stacked computation with its number and keep the arithmetic rule approximately one digit-space longer than the widest value rather than using a long worksheet response rule.
+- Estimate/check: redesign the interaction so it explicitly states what to estimate, the rounding method, where to record the estimate, what exact result or claim to check, and the required response. Move repeated method prose to the page/section instruction when individual tasks do not change it.
+- Standalone apply: inherit the approved Yellow Bird Math Sentence format from established addition/subtraction story-problem families, including context, workspace, explicit Math Sentence response where established, final answer structure, and mirrored key behavior. Do not force six contexts into generic dense rows or invent a new contextual-response format.
 - Standalone reason/check: use structured selections, corrections, and approximately one explanation line.
-- Integrated mixed: use visible grouping or calm transitions without implying a new learning sequence; preserve each task's natural response target.
+- Integrated mixed: use visible grouping or calm transitions without implying a new learning sequence; preserve each task's natural response target and review large unused lower-page areas for meaningful rebalancing or enlarged task-appropriate workspace.
+- Ordinary numeric/text questions: place the task beside its number, number top-to-bottom by column, remove ordinary horizontal/vertical separators, and use whitespace/alignment for grouping. Document any table, visual, or interaction-specific exception.
+- Prompt economy: state repeated directions once at page/section level and keep ordinary prompts compact unless an individual context changes the task.
 - In every mode, the key mirrors recognizable student geometry, preserves numbering, and bolds only inserted answers.
 
 ## Grade-Specific Differences
@@ -102,10 +109,11 @@ Parity (`classify`, `select`, `rule`) and rounding (`nearest_ten`, `nearest_hund
 Before replacement production or founder-review artifacts:
 
 - prove each standalone module looks complete rather than extracted;
-- prove the `4 + 2 + 1 + 1` full sequence remains mathematically coherent;
+- prove every full-progression concept page has its own instruction, useful backward connection, and concept-specific cue where appropriate;
+- evaluate the four-column by five-question compute candidate without treating it as mandatory;
 - prove the 12-task integrated recipe is meaningfully balanced and not random;
 - inspect default and longest/widest cases for every standalone mode in both grades;
-- verify module-specific counts, response targets, page balance, decimal alignment, and mirrored key behavior;
+- verify task-beside-number placement, top-to-bottom-by-column numbering, compact arithmetic rules, absence of ordinary separators, prompt economy, immediate Estimate/Check clarity, Math Sentence inheritance, intentional lower-page use, module-specific counts, response targets, page balance, decimal alignment, and mirrored key behavior;
 - verify deterministic composition metadata and same-seed student/key parity;
 - confirm no public selector or unsupported customization appears.
 
