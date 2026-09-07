@@ -515,3 +515,15 @@ Rules:
 - Family preflights own age-appropriate density and must evaluate, rather than automatically impose, a four-column by five-question computation layout where it safely fits.
 - The authoritative contract is the [Founder Worksheet Design Preflight](worksheet-design-preflight.md).
 - This decision records design governance only and does not authorize production output changes.
+## Decision: Classroom Customization Pilot Checkpoint (2026-09-07)
+
+Decision:
+Accept the bounded Addition Facts download-consistency correction for local commit and retain it as the sole classroom-customization pilot checkpoint.
+
+Reason:
+For `g1_addition_facts_within_20`, primary preview/download actions now use the successfully applied normalized request; unavailable states remove stale PDF actions and viewer access; completed Question 1 is described as inside the total. Focused, ready-resource, PDF-parity, and responsive interaction evidence is recorded in [the pilot note](classroom-customization-pilot.md).
+
+Limits:
+- This does not approve general customization readiness, other resources, founder acceptance, or deployment.
+- The documented pre-existing Addition Facts public-copy signature failure remains unresolved and is not a passing result.
+- Selected-number feasibility, empty-pool feedback, wider-range wording, conflicting manual endpoint flags, and density remain separate work.
