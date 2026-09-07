@@ -362,23 +362,36 @@ async function run() {
     await test("number-line controls, applied actions, invalid recovery and late responses", async () => {
       const id="g1_addition_on_number_line_to_20";
       const html=libraryRoutes._test.renderWorksheetDetailPage(getWorksheetCatalogById(id));
-      assert(!html.includes('name="minimumValue"')); assert(!html.includes('name="selectedValues"')); assert(!html.includes('id="ybSelectedValuesButton"'));
+      assert(html.includes('name="minimumValue"')); assert(html.includes('name="maximumValue"')); assert(html.includes('name="numberLineArrows"')); assert(html.includes('Number-line range')); assert(!html.includes('name="rangeMode"')); assert(!html.includes('name="selectedValues"')); assert(!html.includes('id="ybSelectedValuesButton"'));
       assert(html.includes('max="6"')); assert(html.includes("Included in the question total."));
       let fail=false, release;
       const ui=mountCustomization(url => fail ? Promise.reject(new Error("network")) : release ? new Promise(resolve => { release.resolve=()=>resolve(fetch(new URL(url,baseUrl))); }) : fetch(new URL(url,baseUrl)),id);
       assert.equal(ui.get("ybPreviewStateLabel").dataset.state,"ready");
-      await ui.edit({questionCount:3,questionTextSize:16,includeExample:true,includeAnswerKey:false});
+      await ui.edit({questionCount:3,questionTextSize:16,minimumValue:10,maximumValue:20,numberLineArrows:"student_drawn",includeExample:true,includeAnswerKey:false});
       await assertUnavailable(ui);
       await ui.submit();
       assert(ui.get("ybCustomizationSummary").textContent.includes("3 numbered questions; 1 completed; 2 left to solve."));
       for(const link of [...ui.downloads(),ui.get("ybTopPreviewBtn")]) {
-        const url=new URL(link.href,baseUrl); assert.equal(url.searchParams.get("questionTextSize"),"16"); assert.equal(url.searchParams.get("questionCount"),"3"); assert.equal(url.searchParams.get("includeExample"),"true"); assert.equal(url.searchParams.get("answers"),"0"); assert.equal(url.searchParams.get("worksheetSeed"),"yellowbird-default"); assert(!url.searchParams.has("minimumValue"));
+        const url=new URL(link.href,baseUrl); assert.equal(url.searchParams.get("questionTextSize"),"16"); assert.equal(url.searchParams.get("questionCount"),"3"); assert.equal(url.searchParams.get("includeExample"),"true"); assert.equal(url.searchParams.get("answers"),"0"); assert.equal(url.searchParams.get("worksheetSeed"),"yellowbird-default"); assert.equal(url.searchParams.get("minimumValue"),"10"); assert.equal(url.searchParams.get("maximumValue"),"20"); assert.equal(url.searchParams.get("numberLineArrows"),"student_drawn");
+        const embedded=new URL(ui.get("ybPdfObject").data,baseUrl); for(const [key,value] of embedded.searchParams) if(key!=="disposition") assert.equal(url.searchParams.get(key),value);
         const response=await fetch(url); assert.equal(response.status,200); assert((await response.arrayBuffer()).byteLength>1000);
       }
+      assert(ui.get("ybCustomizationSummary").textContent.includes("Number line 10–20"));
+      assert(ui.get("ybCustomizationSummary").textContent.includes("Students draw arrows"));
+      assert.equal(ui.get("ybRangeNotice").hidden,false);
+      for(const invalid of [{minimumValue:20},{minimumValue:""},{minimumValue:10,maximumValue:51},{minimumValue:10,maximumValue:20,numberLineArrows:"invalid"}]) {
+        await ui.edit(invalid); await assertUnavailable(ui); await ui.submit(); await assertUnavailable(ui);
+        for(const [key,value]of Object.entries(invalid)) assert.equal(ui.form.elements[key].value,String(value),"invalid edit retained");
+      }
+      await ui.edit({minimumValue:10,maximumValue:20,numberLineArrows:"shown"}); await ui.submit();
+      await ui.edit({numberLineArrows:"student_drawn"}); await assertUnavailable(ui); await ui.submit();
       await ui.edit({questionCount:7}); await ui.submit(); await assertUnavailable(ui); assert(ui.get("ybQuestionCountError").textContent.includes("6 or less"));
       await ui.edit({questionCount:5}); fail=true; await ui.submit(); await assertUnavailable(ui); fail=false; await ui.submit(); assert.equal(ui.get("ybPreviewStateLabel").dataset.state,"customized");
-      release={}; await ui.edit({questionCount:1}); const pending=ui.submit(); await ui.edit({questionCount:6}); release.resolve(); await pending; await assertUnavailable(ui); release=null; await ui.submit();
+      release={}; await ui.edit({questionCount:1,minimumValue:7,maximumValue:17}); const pending=ui.submit(); await ui.edit({questionCount:6,numberLineArrows:"shown"}); release.resolve(); await pending; await assertUnavailable(ui); release=null; await ui.submit();
       assert(ui.get("ybCustomizationSummary").textContent.includes("6 numbered questions"));
+      await ui.get("ybRestoreBtn").emit("click"); await assertUnavailable(ui); await ui.submit();
+      assert.equal(ui.form.elements.minimumValue.value,"0"); assert.equal(ui.form.elements.maximumValue.value,"20"); assert.equal(ui.form.elements.numberLineArrows.value,"shown");
+      assert.equal(ui.get("ybPreviewStateLabel").dataset.state,"ready"); assert.equal(ui.get("ybRangeNotice").hidden,true);
     });
     await test("text sizes follow applied preview/download state and preserve the question set", async () => {
       let failure = false;

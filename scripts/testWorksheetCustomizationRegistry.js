@@ -276,10 +276,13 @@ console.log("\nWorksheet customization registry tests passed.");
 
  test("number-line pilot has only its approved controls and Q1 semantics", () => {
   const id="g1_addition_on_number_line_to_20", family=getCustomizationFamilyForResource(id);
-  assert.deepStrictEqual(Object.keys(family.controls).sort(), ["questionCount","questionTextSize","includeExample","includeAnswerKey","worksheetSeed"].sort());
+  assert.deepStrictEqual(Object.keys(family.controls).sort(), ["questionCount","questionTextSize","minimumValue","maximumValue","numberLineArrows","includeExample","includeAnswerKey","worksheetSeed"].sort());
   assert.strictEqual(family.exampleWithinQuestionTotal,true);
   const defaults=normalizeWorksheetCustomization(id,{});
   assert(defaults.ok); assert.strictEqual(defaults.normalizedOptions.questionCount,6);
   assert(!normalizeWorksheetCustomization(id,{questionCount:7}).ok);
-  assert(!normalizeWorksheetCustomization(id,{minimumValue:0}).ok);
+  assert(normalizeWorksheetCustomization(id,{minimumValue:0}).ok);
+  assert.strictEqual(defaults.normalizedOptions.numberLineArrows,"shown");
+  assert.deepStrictEqual([defaults.normalizedOptions.minimumValue,defaults.normalizedOptions.maximumValue],[0,20]);
+  assert(!normalizeWorksheetCustomization(id,{numberLineArrows:"other"}).ok);
 });

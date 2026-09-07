@@ -13,6 +13,25 @@ function buildAdditionNumberLineLayout(questionTextSize = 12) {
   return { questionTextSize, ...profiles[questionTextSize], modelWidth: 504, modelHeight: 52, tickLabelWidth: 18, answerWidth: 42 };
 }
 
+// Labels use the same scale for every item. Their schedule never reads a
+// start/landing answer; unit ticks and the shared renderer coordinate map stay intact.
+function additionNumberLineScaleLabels(min, max, profile) {
+  if (min === 0 && max === 20) return null; // accepted default label policy
+  const stepWidth = profile.modelWidth / (max - min);
+  const labelWidth = profile.tickLabelWidth;
+  // Inset endpoint labels need 1.5 label boxes plus a 4 pt gutter to a
+  // centred neighbour. Source Sans 3's widest supported label (100) fits 18 pt.
+  const clearance = 1.5 * labelWidth + 4;
+  const labelEvery = [1, 2, 5, 10].find(interval => interval * stepWidth >= clearance);
+  if (!labelEvery) throw new Error("Number-line labels exceed the supported print density.");
+  const labels = [min];
+  for (let i = labelEvery; i < max - min; i += labelEvery) {
+    if (i * stepWidth >= clearance && (max - min - i) * stepWidth >= clearance) labels.push(min + i);
+  }
+  labels.push(max);
+  return { labels, labelEvery };
+}
+
 function additionNumberLinePageGeometry(itemCount, profile, startY, bottomY) {
   const available = bottomY - startY;
   const blockHeight = profile.questionTextSize === 12 ? available / 6 : profile.minimumBlockHeight;
@@ -23,4 +42,4 @@ function additionNumberLinePageGeometry(itemCount, profile, startY, bottomY) {
   return { rows: itemCount, rowHeight, blockHeight, topOffset: (rowHeight - blockHeight) / 2 };
 }
 
-module.exports = { QUESTION_TEXT_SIZES, buildAdditionNumberLineLayout, additionNumberLinePageGeometry };
+module.exports = { QUESTION_TEXT_SIZES, buildAdditionNumberLineLayout, additionNumberLinePageGeometry, additionNumberLineScaleLabels };

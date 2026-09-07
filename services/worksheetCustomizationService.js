@@ -81,8 +81,9 @@ function getSupportedOptionNames(family) {
   return names;
 }
 
-function coerceValue(variableId, value, result) {
-  const definition = getVariableDefinition(variableId);
+function coerceValue(variableId, value, result, control = {}) {
+  const baseDefinition = getVariableDefinition(variableId);
+  const definition = baseDefinition && { ...baseDefinition, label: control.label || baseDefinition.label };
 
   if (!definition) {
     result.errors.push({
@@ -108,7 +109,8 @@ function coerceValue(variableId, value, result) {
 
   if (definition.type === "integer") {
     const n = Number(value);
-    if (!Number.isFinite(n) || !Number.isInteger(n)) {
+    if (!Number.isFinite(n) || !Number.isInteger(n) || (control.strictInput &&
+        ((typeof value !== "number" && typeof value !== "string") || String(value).trim() === ""))) {
       result.errors.push({
         field: variableId,
         code: "invalid_integer",
@@ -133,6 +135,10 @@ function coerceValue(variableId, value, result) {
   }
 
   if (definition.type === "string") {
+    if (control.strictInput && typeof value !== "string") {
+      result.errors.push({ field: variableId, code: "invalid_string", message: `${definition.label} must be one of: ${control.allowedValues.join(", ")}.` });
+      return undefined;
+    }
     return String(value ?? "").trim();
   }
 
@@ -140,6 +146,16 @@ function coerceValue(variableId, value, result) {
 }
 
 function resolveSubmittedValue(variableId, input, family, result) {
+  const control = family.controls?.[variableId] || {};
+  if (control.rejectAliasConflicts) {
+    const keys = [variableId, ...(family.aliases?.resource?.[variableId] || []), ...(family.aliases?.legacy?.[variableId] || [])]
+      .filter(key => hasOwn(input, key));
+    const values = keys.length > 1 ? keys.map(key => coerceValue(variableId, input[key], result, control)) : [];
+    if (values.some(value => value !== values[0])) result.errors.push({
+      field: variableId, code: "alias_conflict",
+      message: `${control.label || variableId} has conflicting values (${keys.join(", ")}). Submit one consistent endpoint.`
+    });
+  }
   if (hasOwn(input, variableId)) {
     return {
       found: true,
@@ -188,7 +204,7 @@ function resolveSubmittedValue(variableId, input, family, result) {
 
 function validateControl(variableId, value, family, resourceDeclaration, result) {
   const control = family.controls?.[variableId] || {};
-  const definition = variables[variableId] || {};
+  const definition = { ...(variables[variableId] || {}), ...(control.label ? { label: control.label } : {}) };
 
   if (value === undefined) return;
 
@@ -207,13 +223,15 @@ function validateControl(variableId, value, family, resourceDeclaration, result)
         message: `${definition.label} must be ${control.max} or less.`
       });
     }
-    if (Array.isArray(control.allowedValues) && !control.allowedValues.includes(value)) {
-      result.errors.push({
-        field: variableId,
-        code: "unsupported_value",
-        message: `${definition.label} is not approved at that value for this worksheet.`
-      });
-    }
+  }
+  if (Array.isArray(control.allowedValues) && !control.allowedValues.includes(value)) {
+    result.errors.push({
+      field: variableId,
+      code: "unsupported_value",
+      message: definition.type === "integer"
+        ? `${definition.label} is not approved at that value for this worksheet.`
+        : `${definition.label} must be one of: ${control.allowedValues.join(", ")}.`
+    });
   }
 
   if (definition.type === "numberList") {
@@ -238,6 +256,7 @@ function validateControl(variableId, value, family, resourceDeclaration, result)
   }
 
   if (
+    family.range?.kind !== "linkedNumberLine" &&
     variableId === "maximumValue" &&
     resourceDeclaration?.suggestedRange &&
     value > resourceDeclaration.suggestedRange.maximumValue
@@ -250,8 +269,22 @@ function validateControl(variableId, value, family, resourceDeclaration, result)
   }
 }
 
-function validateCrossFields(options, result) {
-  if (
+function validateCrossFields(options, result, family, resourceDeclaration) {
+  if (family.range?.kind === "linkedNumberLine") {
+    const min = options.minimumValue, max = options.maximumValue;
+    if (Number.isInteger(min) && Number.isInteger(max) &&
+        !result.errors.some(error => ["minimumValue", "maximumValue"].includes(error.field))) {
+      if (max - min < family.range.minimumSpan) result.errors.push({
+        field: "maximumValue", code: "empty_number_line_range", message: "To must be greater than From. Choose a range with at least one forward step."
+      });
+      if (max - min > family.range.maximumSpan) result.errors.push({
+        field: "maximumValue", code: "number_line_span_too_wide", message: `Keep To minus From at ${family.range.maximumSpan} or less so unit ticks and arrows remain readable.`
+      });
+      if (min !== resourceDeclaration.suggestedRange.minimumValue || max !== resourceDeclaration.suggestedRange.maximumValue) result.notices.push({
+        field: "maximumValue", code: "custom_range", message: resourceDeclaration.notices.customRange
+      });
+    }
+  } else if (
     Number.isFinite(options.minimumValue) &&
     Number.isFinite(options.maximumValue) &&
     options.minimumValue > options.maximumValue
@@ -372,7 +405,7 @@ function normalizeWorksheetCustomization(resourceId, input = {}) {
   supportedCanonical.forEach((variableId) => {
     const submitted = resolveSubmittedValue(variableId, sourceInput, family, result);
     const rawValue = submitted.found ? submitted.value : defaults[variableId];
-    const coerced = coerceValue(variableId, rawValue, result);
+    const coerced = coerceValue(variableId, rawValue, result, family.controls?.[variableId]);
 
     if (coerced !== undefined) {
       result.normalizedOptions[variableId] = coerced;
@@ -389,7 +422,7 @@ function normalizeWorksheetCustomization(resourceId, input = {}) {
     }
   });
 
-  validateCrossFields(result.normalizedOptions, result);
+  validateCrossFields(result.normalizedOptions, result, family, resourceDeclaration);
   if (family.id === "additionFactsWithin20") {
     validateAdditionFactsDomain(result.normalizedOptions, result);
   }

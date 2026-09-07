@@ -40,6 +40,15 @@ const variables = Object.freeze({
     fallback: null,
     serialization: { includeInHash: true }
   },
+  numberLineArrows: {
+    id: "numberLineArrows",
+    label: "Number-line arrows",
+    type: VARIABLE_TYPES.STRING,
+    group: CONTROL_GROUPS.STUDENT_SUPPORT,
+    publicClassification: "basic",
+    fallback: "shown",
+    serialization: { includeInHash: true }
+  },
   includeExample: {
     id: "includeExample",
     label: "Show one completed example",

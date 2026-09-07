@@ -386,6 +386,8 @@ function drawNumberLinePrimitive(doc, x, y, opts = {}) {
   const isAdditionModel = [additionStart, additionJump, additionLanding].every(Number.isFinite) &&
     additionJump > 0 && additionLanding > additionStart;
 
+  const studentDraws = isAdditionModel && opts.studentDraws === true;
+  const scaleLabels = opts.numberLineStyle?.scaleLabels;
   const width = Number(opts.width || 180);
   const height = Number(opts.height || 34);
   const interval = Math.max(Number.EPSILON, Number(opts.interval || 1));
@@ -426,9 +428,10 @@ doc.lineWidth(1);
       ? Math.abs(tickValue - value) < Number.EPSILON * 16
       : i === explicitTargetIndex;
     const isAdditionStart = isAdditionModel && tickValue === additionStart;
-    const shouldLabel = i === 0 || i === steps || i % labelEvery === 0 || isTargetValue || isAdditionStart;
+    const ordinaryLabel = scaleLabels ? scaleLabels.labels.includes(tickValue) : i === 0 || i === steps || i % labelEvery === 0;
+    const shouldLabel = ordinaryLabel || (!studentDraws && !scaleLabels && (isTargetValue || isAdditionStart));
 
-    if (shouldLabel && !(hideValueLabel && isTargetValue)) {
+    if (shouldLabel && !(!studentDraws && hideValueLabel && isTargetValue)) {
       const fractionLabels = Array.isArray(opts.fractionLabels) ? opts.fractionLabels : null;
       const labelText = fractionLabels && fractionLabels[i] != null
         ? String(fractionLabels[i])
@@ -460,15 +463,19 @@ doc.lineWidth(1);
   if (isAdditionModel) {
     const additionStartX = startX + ((additionStart - min) / interval) * stepWidth;
     const additionLandingX = startX + ((additionLanding - min) / interval) * stepWidth;
-    drawJumpArrow(doc, additionStartX, additionLandingX, lineY - 6, 0, 1);
     doc.save();
-    doc.fontSize(opts.numberLineStyle?.jumpTextSize || 9);
-    doc.fillColor("#374151");
-    doc.text(`+${additionJump}`, additionStartX, lineY - (opts.numberLineStyle?.jumpLabelOffset || 29), {
-      width: Math.max(24, additionLandingX - additionStartX),
-      align: "center",
-      lineBreak: false
-    });
+    if (!studentDraws) {
+      drawJumpArrow(doc, additionStartX, additionLandingX, lineY - 6, 0, 1);
+      doc.fontSize(opts.numberLineStyle?.jumpTextSize || 9);
+      doc.fillColor("#374151");
+      const annotationWidth = Math.max(24, additionLandingX - additionStartX);
+      const annotationX = scaleLabels ? Math.min(additionStartX, endX - annotationWidth) : additionStartX;
+      doc.text(`+${additionJump}`, annotationX, lineY - (opts.numberLineStyle?.jumpLabelOffset || 29), {
+        width: annotationWidth,
+        align: "center",
+        lineBreak: false
+      });
+    }
     doc.fillColor("#111111");
     doc.circle(additionStartX, lineY, 3).fill();
     doc.restore();
@@ -481,7 +488,7 @@ doc.fillColor("#acacac");
 doc.strokeColor("#111111");
 
 // draw both
-doc.circle(dotX, lineY, 3.2).fillAndStroke();
+if (!studentDraws) doc.circle(dotX, lineY, 3.2).fillAndStroke();
 
   doc.restore();
 
@@ -2896,7 +2903,7 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
 
     if (measured && placed) {
       try {
-        const renderMeta = renderVisualByKind(doc, visualForRender, placed, measured, display.additionNumberLineLayout);
+        const renderMeta = renderVisualByKind(doc, visualForRender, placed, measured, display.additionNumberLineLayout, display.numberLineArrows === "student_drawn" && !display.answerKey && !isExampleItem);
 
         if (visualForRender.kind === "number_line" && display.numberLineAnswerUnderTarget && renderMeta?.dotX) {
           const answerTarget = buildNumberLineAnswerTargetGeometry({
@@ -3064,7 +3071,7 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
     : Math.max(promptHeight, layout.typography.body?.lineHeight || 16);
 }
 
-function renderVisualByKind(doc, visual, placed, measured, numberLineStyle = null) {
+function renderVisualByKind(doc, visual, placed, measured, numberLineStyle = null, studentDraws = false) {
   if (!visual?.kind) return;
 
   if (visual.kind === "array") {
@@ -3120,7 +3127,8 @@ function renderVisualByKind(doc, visual, placed, measured, numberLineStyle = nul
       ...(visual.data || {}),
       width: measured.width,
       height: measured.height,
-      numberLineStyle
+      numberLineStyle,
+      studentDraws
     });
   }
 

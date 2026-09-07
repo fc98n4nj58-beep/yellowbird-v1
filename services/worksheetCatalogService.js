@@ -3922,7 +3922,7 @@ function resolveCatalogWorksheetOptions(item, options = {}) {
   // Existing raw number-line contracts (including wider counts/ranges/aliases)
   // remain internal. Public entry points normalize first and always supply the
   // canonical text setting; raw legacy calls retain their accepted behavior.
-  if (family.preserveLegacyRuntime && options.questionTextSize === undefined) return legacyOptions;
+  if (family.preserveLegacyRuntime && ["questionTextSize", "minimumValue", "maximumValue", "numberLineArrows"].every(key => options[key] === undefined)) return legacyOptions;
 
   const customization = normalizeWorksheetCustomization(
     item.id,
@@ -5822,9 +5822,18 @@ if (item.activityTypes?.[0] === "skip_counting") {
 }
 
 if (item.id === GRADE1_ADDITION_NUMBER_LINE_ID) {
-  const profile = normalizedOptions._customization
-    ? require("../config/layout/additionNumberLineLayout").buildAdditionNumberLineLayout(normalizedOptions._customization.normalizedOptions.questionTextSize)
-    : null;
+  const settings = normalizedOptions._customization?.normalizedOptions;
+  const { buildAdditionNumberLineLayout, additionNumberLineScaleLabels } = require("../config/layout/additionNumberLineLayout");
+  const profile = settings ? buildAdditionNumberLineLayout(settings.questionTextSize) : null;
+  if (settings) {
+    profile.scaleLabels = additionNumberLineScaleLabels(settings.minimumValue, settings.maximumValue, profile);
+    if (settings.minimumValue !== 0 || settings.maximumValue !== 20) {
+      layout.header.title = `Addition on a Number Line — ${settings.minimumValue} to ${settings.maximumValue}`;
+    }
+    if (settings.numberLineArrows === "student_drawn") {
+      layout.instruction = "Start at the first number. Draw a forward jump to add the second number. Write the answer.";
+    }
+  }
   layout.template = {
     ...(layout.template || {}),
     columns: 1,
@@ -5832,7 +5841,7 @@ if (item.id === GRADE1_ADDITION_NUMBER_LINE_ID) {
   };
   layout.display = {
     ...(layout.display || {}),
-    ...(profile ? { additionNumberLineLayout: profile, inlineEquationFontSize: profile.questionTextSize } : {}),
+    ...(profile ? { additionNumberLineLayout: profile, inlineEquationFontSize: profile.questionTextSize, numberLineArrows: settings.numberLineArrows } : {}),
     hideSubtitle: true,
     suppressExampleLabel: true,
     numberLineAddition: true,

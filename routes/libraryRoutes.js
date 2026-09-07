@@ -416,6 +416,7 @@ const CUSTOMIZATION_CONTROL_ORDER = [
   "minimumValue",
   "maximumValue",
   "selectedValues",
+  "numberLineArrows",
   "includeExample",
   "includeAnswerKey",
   "questionsPerPage"
@@ -459,6 +460,7 @@ function buildWorksheetCustomizationModel(item) {
     optionHash: defaults.optionHash,
     suggestedRange: resourceDeclaration.suggestedRange || null,
     safeRange: resourceDeclaration.safeRange || null,
+    range: family.range || null,
     controls,
     notices: {
       customRange: resourceDeclaration.notices?.customRange ||
@@ -506,6 +508,9 @@ function renderCustomizationPanel(model) {
 
   const defaults = model.defaults;
   const hasRangeControls = model.controls.some((control) => control.id === "minimumValue");
+  const linkedRange = model.range?.kind === "linkedNumberLine";
+  const hasSelectedValues = model.controls.some(control => control.id === "selectedValues");
+  const hasArrowControl = model.controls.some(control => control.id === "numberLineArrows");
   const questionControl = model.controls.find((control) => control.id === "questionCount") || {};
   const minControl = model.controls.find((control) => control.id === "minimumValue") || {};
   const maxControl = model.controls.find((control) => control.id === "maximumValue") || {};
@@ -523,7 +528,7 @@ function renderCustomizationPanel(model) {
 
       <div class="customization-error-summary" id="ybErrorSummary" role="alert" tabindex="-1" hidden></div>
       <div class="customization-notice" id="ybRangeNotice" hidden>
-        You are using numbers beyond this worksheet’s suggested range.
+        ${linkedRange ? escapeHtml(model.notices.customRange) : "You are using numbers beyond this worksheet’s suggested range."}
       </div>
       <div class="customization-notice" id="ybSelectionNotice" hidden></div>
 
@@ -548,7 +553,7 @@ function renderCustomizationPanel(model) {
             </div>
           </div>
 
-          ${hasRangeControls ? `<fieldset class="inline-choice-fieldset" aria-describedby="ybRangeHelp">
+          ${hasRangeControls && !linkedRange ? `<fieldset class="inline-choice-fieldset" aria-describedby="ybRangeHelp">
             <legend>Number range</legend>
             <div class="field-help" id="ybRangeHelp">Suggested for this worksheet: ${escapeHtml(suggested.minimumValue)}–${escapeHtml(suggested.maximumValue)}</div>
             <label class="radio-row">
@@ -574,9 +579,11 @@ function renderCustomizationPanel(model) {
             </div>
           </div>
 
-          ${hasRangeControls ? `<div id="ybCustomRangeFields">
+          ${hasRangeControls ? `${linkedRange ? `<fieldset class="inline-choice-fieldset" aria-describedby="ybRangeHelp">
+            <legend>Number-line range</legend>
+            <div class="field-help" id="ybRangeHelp">Starting numbers and answers stay within this range. Use whole numbers from 0 to ${escapeHtml(safe.maximumValue)}, with To minus From at most ${escapeHtml(model.range.maximumSpan)}.</div>` : ""}<div id="ybCustomRangeFields">
             <div class="control-row">
-              <label class="field-label" for="ybMinimumValue">Lowest number</label>
+              <label class="field-label" for="ybMinimumValue">${linkedRange ? "From" : "Lowest number"}</label>
               <div class="control-cell">
                 <input
                   id="ybMinimumValue"
@@ -592,7 +599,7 @@ function renderCustomizationPanel(model) {
               </div>
             </div>
             <div class="control-row">
-              <label class="field-label" for="ybMaximumValue">Highest number</label>
+              <label class="field-label" for="ybMaximumValue">${linkedRange ? "To" : "Highest number"}</label>
               <div class="control-cell">
                 <input
                   id="ybMaximumValue"
@@ -607,9 +614,9 @@ function renderCustomizationPanel(model) {
                 <div class="field-error" id="ybMaximumValueError"></div>
               </div>
             </div>
-          </div>
+          </div>${linkedRange ? "</fieldset>" : ""}` : ""}
 
-          <div class="control-row">
+          ${hasSelectedValues ? `<div class="control-row">
             <label class="field-label" id="ybSelectedValuesLabel" for="ybSelectedValuesButton">Numbers to practise</label>
             <div class="control-cell">
               <div class="number-selector" id="ybSelectedValues">
@@ -637,6 +644,17 @@ function renderCustomizationPanel(model) {
 
         <fieldset class="customization-fieldset">
           <legend>Student support</legend>
+          ${hasArrowControl ? `<div class="control-row">
+            <label class="field-label" for="ybNumberLineArrows">Number-line arrows</label>
+            <div class="control-cell">
+              <select id="ybNumberLineArrows" name="numberLineArrows" aria-describedby="ybNumberLineArrowsHelp ybNumberLineArrowsError">
+                <option value="shown">Show arrows</option>
+                <option value="student_drawn">Students draw arrows</option>
+              </select>
+              <div class="field-help" id="ybNumberLineArrowsHelp">Completed questions and the answer key always show the jumps.</div>
+              <div class="field-error" id="ybNumberLineArrowsError"></div>
+            </div>
+          </div>` : ""}
           <label class="checkbox-row" for="ybIncludeExample">
             <input id="ybIncludeExample" name="includeExample" type="checkbox" />
             <span>
@@ -708,6 +726,9 @@ function renderCustomizationScript(model) {
         document.body.appendChild(live);
 
         const hasRangeControls = model.controls.some((control) => control.id === "minimumValue");
+        const linkedRange = model.range?.kind === "linkedNumberLine";
+        const hasSelectedValues = model.controls.some(control => control.id === "selectedValues");
+        const hasArrowControl = model.controls.some(control => control.id === "numberLineArrows");
         const defaults = normalizeSettings(model.defaults);
         let selectedValueSet = new Set(defaults.selectedValues);
         let lastCustomRange = {
@@ -729,6 +750,7 @@ function renderCustomizationScript(model) {
           return {
             questionCount: Number(settings.questionCount),
             questionTextSize: Number(settings.questionTextSize ?? 12),
+            numberLineArrows: settings.numberLineArrows ?? "shown",
             minimumValue: Number(settings.minimumValue ?? 0),
             maximumValue: Number(settings.maximumValue ?? 20),
             selectedValues: Array.isArray(settings.selectedValues)
@@ -745,6 +767,7 @@ function renderCustomizationScript(model) {
           return JSON.stringify({
             questionCount: normalized.questionCount,
             questionTextSize: normalized.questionTextSize,
+            numberLineArrows: normalized.numberLineArrows,
             minimumValue: normalized.minimumValue,
             maximumValue: normalized.maximumValue,
             selectedValues: normalized.selectedValues,
@@ -762,6 +785,7 @@ function renderCustomizationScript(model) {
           const params = new URLSearchParams();
           params.set("questionCount", String(settings.questionCount));
           params.set("questionTextSize", String(settings.questionTextSize));
+          if (hasArrowControl) params.set("numberLineArrows", settings.numberLineArrows);
           if (hasRangeControls) {
             params.set("minimumValue", String(settings.minimumValue));
             params.set("maximumValue", String(settings.maximumValue));
@@ -786,7 +810,7 @@ function renderCustomizationScript(model) {
         }
 
         function currentRangeMode() {
-          return form.elements.rangeMode.value;
+          return linkedRange ? "custom" : form.elements.rangeMode.value;
         }
 
         function suggestedRange() {
@@ -814,18 +838,23 @@ function renderCustomizationScript(model) {
           }
         }
 
+        function readRangeValue(input) {
+          return linkedRange && input.value.trim() === "" ? NaN : Number(input.value);
+        }
+
         function readSettings() {
           const rangeMode = hasRangeControls ? currentRangeMode() : "fixed";
           const min = !hasRangeControls ? 0 : rangeMode === "suggested"
             ? model.suggestedRange.minimumValue
-            : Number(form.elements.minimumValue.value);
+            : readRangeValue(form.elements.minimumValue);
           const max = !hasRangeControls ? 20 : rangeMode === "suggested"
             ? model.suggestedRange.maximumValue
-            : Number(form.elements.maximumValue.value);
+            : readRangeValue(form.elements.maximumValue);
 
           return normalizeSettings({
             questionCount: Number(form.elements.questionCount.value),
             questionTextSize: Number(form.elements.questionTextSize.value),
+            numberLineArrows: hasArrowControl ? form.elements.numberLineArrows.value : "shown",
             minimumValue: min,
             maximumValue: max,
             selectedValues: Array.from(selectedValueSet),
@@ -836,7 +865,7 @@ function renderCustomizationScript(model) {
         }
 
         function setRangeMode(mode, options = {}) {
-          if (!hasRangeControls) return;
+          if (!hasRangeControls || linkedRange) return;
           const radio = Array.from(form.elements.rangeMode).find((item) => item.value === mode);
           if (radio) radio.checked = true;
           const suggested = suggestedRange();
@@ -859,11 +888,13 @@ function renderCustomizationScript(model) {
           const normalized = normalizeSettings(settings);
           form.elements.questionCount.value = String(normalized.questionCount);
           form.elements.questionTextSize.value = String(normalized.questionTextSize);
+          if (hasArrowControl) form.elements.numberLineArrows.value = normalized.numberLineArrows;
           form.elements.includeExample.checked = normalized.includeExample;
           form.elements.includeAnswerKey.checked = normalized.includeAnswerKey;
           if (!hasRangeControls) return;
           form.elements.minimumValue.value = String(normalized.minimumValue);
           form.elements.maximumValue.value = String(normalized.maximumValue);
+          if (linkedRange) return;
 
           const isSuggested =
             normalized.minimumValue === model.suggestedRange.minimumValue &&
@@ -880,7 +911,7 @@ function renderCustomizationScript(model) {
         }
 
         function refreshSelectedOptions(valuesToKeep) {
-          if (!hasRangeControls) return;
+          if (!hasSelectedValues) return;
           const settings = readSettingsWithoutSelected();
           const min = Number(settings.minimumValue);
           const max = Number(settings.maximumValue);
@@ -1009,7 +1040,9 @@ function renderCustomizationScript(model) {
         function updateRangeNotice(settings) {
           if (!hasRangeControls) return;
           const suggestedMax = Number(model.suggestedRange.maximumValue);
-          rangeNotice.hidden = !(Number(settings.maximumValue) > suggestedMax);
+          rangeNotice.hidden = linkedRange
+            ? settings.minimumValue === model.suggestedRange.minimumValue && settings.maximumValue === suggestedMax
+            : !(Number(settings.maximumValue) > suggestedMax);
         }
 
         function setPreviewState(state, message) {
@@ -1085,7 +1118,8 @@ function renderCustomizationScript(model) {
           const parts = [
             countSummary,
             "Question text: " + settings.questionTextSize + " pt",
-            !hasRangeControls ? "Forward addition on 0–20" : settings.minimumValue === model.suggestedRange.minimumValue && settings.maximumValue === model.suggestedRange.maximumValue
+            hasArrowControl ? (settings.numberLineArrows === "student_drawn" ? "Students draw arrows" : "Show arrows") : "",
+            linkedRange ? "Number line " + settings.minimumValue + "–" + settings.maximumValue : !hasRangeControls ? "Forward addition on 0–20" : settings.minimumValue === model.suggestedRange.minimumValue && settings.maximumValue === model.suggestedRange.maximumValue
               ? "Numbers " + settings.minimumValue + "–" + settings.maximumValue
               : "Custom range " + settings.minimumValue + "–" + settings.maximumValue,
             settings.selectedValues.length

@@ -70,7 +70,12 @@ function generateAdditionNumberLineProblem(options = {}) {
   }
 
   const fact = generatorState.additionNumberLinePools[poolKey].shift();
-  const lineMaximum = Math.max(20, Math.floor(finiteNumber(options.numberLineMaximum, 20)));
+  // Only the linked-range adapter supplies a line minimum. Legacy raw callers
+  // keep their accepted zero-based scale and minimum maximum of 20.
+  const linkedRange = options.numberLineMinimum !== undefined;
+  const lineMinimum = linkedRange ? options.numberLineMinimum : 0;
+  const lineMaximum = linkedRange ? options.numberLineMaximum
+    : Math.max(20, Math.floor(finiteNumber(options.numberLineMaximum, 20)));
 
   return {
     type: "equation",
@@ -88,7 +93,7 @@ function generateAdditionNumberLineProblem(options = {}) {
     visual: {
       kind: "number_line",
       data: {
-        min: 0,
+        min: lineMinimum,
         max: lineMaximum,
         value: fact.landing,
         hideValueLabel: true,
