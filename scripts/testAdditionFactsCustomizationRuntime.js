@@ -120,14 +120,21 @@ function run() {
     filename: "ignored-by-customization.pdf"
   }));
 
-  assert.throws(
-    () => buildCatalogWorksheetRuntime(RESOURCE_ID, {
-      minimumValue: 30,
-      maximumValue: 30,
-      questionCount: 2
-    }),
-    (err) => err.status === 400 && /No addition facts are available/.test(err.message)
-  );
+  for (const selectedValues of [[15], [10, 15], [10, 15, 18]]) {
+    assertThrowsCustomization({ minimumValue: 10, maximumValue: 20, selectedValues, questionCount: 12 }, "selected_values_infeasible");
+  }
+  for (const minimumValue of [12, 20]) {
+    assertThrowsCustomization({ minimumValue, maximumValue: 20 }, "empty_addition_fact_pool");
+  }
+  assertThrowsCustomization({ minimumValue: 30, maximumValue: 30, questionCount: 2 }, "empty_addition_fact_pool");
+
+  const feasibleRepeat = itemsFor({ minimumValue: 10, maximumValue: 20, selectedValues: [10], questionCount: 12 });
+  assert.strictEqual(feasibleRepeat.length, 12);
+  assert(feasibleRepeat.every(item => item.a === 10 && item.b === 10 && item.answer === 20));
+  const shortEmphasis = itemsFor({ questionCount: 1, selectedValues: [7, 8] });
+  assert.strictEqual(shortEmphasis.length, 1);
+  assertValidAdditionFacts(shortEmphasis);
+  assertValidAdditionFacts(itemsFor({ maximumValue: 30, selectedValues: [25] }), { max: 30 });
 
   const tightRange = itemsFor({
     minimumValue: 10,

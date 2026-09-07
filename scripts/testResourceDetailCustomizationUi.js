@@ -351,13 +351,81 @@ async function run() {
       "updateSelectedSummary",
       "selectedButton.addEventListener(\"keydown\"",
       "selectedList.addEventListener(\"change\"",
-      "Numbers outside the active range were removed"
+      "Selected numbers outside the active range"
     ].forEach((text) => assert(html.includes(text), `missing selector logic ${text}`));
   });
 
   const { server, baseUrl } = await startTestServer();
 
   try {
+    await test("impossible selections are rejected by shared validation in preview and PDF", async () => {
+      for (const [query, code, field, message] of [
+        ["minimumValue=10&maximumValue=20&selectedValues=15", "selected_values_infeasible", "selectedValues", "15 cannot be used"],
+        ["minimumValue=10&maximumValue=20&selectedValues=10,15", "selected_values_infeasible", "selectedValues", "15 cannot be used"],
+        ["minA=10&maxTotal=20&onlyNumbers=15,18", "selected_values_infeasible", "selectedValues", "15, 18 cannot be used"],
+        ["minimumValue=12&maximumValue=20", "empty_addition_fact_pool", "minimumValue", "Lower the lowest number or raise the highest number"],
+        ["minimumValue=10&maximumValue=20&selectedValues=9", "selected_values_outside_range", "selectedValues", "inside the selected range"]
+      ]) {
+        let expectedErrors;
+        for (const endpoint of ["catalog-preview", "catalog-pdf"]) {
+          const response = await fetch(`${baseUrl}/api/${endpoint}/${RESOURCE_ID}?${query}`);
+          assert.strictEqual(response.status, 400);
+          assert(response.headers.get("content-type").includes("application/json"));
+          const data = await response.json();
+          assert.strictEqual(data.ok, false);
+          assert.strictEqual(data.preview, undefined, "invalid request must not return default or partial content");
+          if (endpoint === "catalog-preview") {
+            expectedErrors = data.customization.errors;
+            assert(expectedErrors.some(error => error.code === code && error.field === field && error.message.includes(message)));
+          } else {
+            // The existing PDF error envelope exposes the first message;
+            // preview exposes structured field errors for the website form.
+            assert.strictEqual(data.error, expectedErrors[0].message);
+          }
+        }
+      }
+    });
+
+    await test("impossible emphasis preserves drafts and recovers with truthful applied wording", async () => {
+      const ui = mountCustomization(url => fetch(new URL(url, baseUrl)));
+      await ui.edit({ questionCount: 1, selectedValues: [7, 8] });
+      await ui.submit();
+      await assertAppliedRequests(ui, baseUrl, { questionCount: 1, selectedValues: [7, 8] });
+      assert(ui.get("ybCustomizationSummary").textContent.includes("Requested emphasis: 7, 8"));
+      assert(!additionHtml().includes('"Practising "'));
+      assert(additionHtml().includes("individual selections are not guaranteed to appear"));
+      await ui.edit({ selectedValues: [10, 15], rangeMode: "custom", minimumValue: 10, questionCount: 12 });
+      await ui.submit();
+      await assertUnavailable(ui);
+      assert.strictEqual(ui.document.activeElement, ui.get("ybErrorSummary"));
+      assert.strictEqual(ui.get("ybSelectedValuesButton").getAttribute("aria-invalid"), "true");
+      assert(ui.get("ybSelectedValuesError").textContent.includes("15 cannot be used"));
+      assert.strictEqual(ui.get("ybSelectedValuesSummary").textContent, "10, 15");
+      assert(ui.get("ybCustomizationSummary").textContent.startsWith("Last applied worksheet (preview unavailable):"));
+      assert(ui.get("ybCustomizationSummary").textContent.includes("Requested emphasis: 7, 8"));
+      await ui.edit({ selectedValues: [10] });
+      await ui.submit();
+      await assertAppliedRequests(ui, baseUrl, { questionCount: 12, minimumValue: 10, maximumValue: 20, selectedValues: [10] });
+      assert(ui.get("ybCustomizationSummary").textContent.includes("Requested emphasis: 10"));
+    });
+
+    await test("range edits retain selected numbers for explicit teacher correction", async () => {
+      const ui = mountCustomization(url => fetch(new URL(url, baseUrl)));
+      await ui.edit({ selectedValues: [7, 15] });
+      await ui.edit({ rangeMode: "custom", maximumValue: 10 });
+      assert.strictEqual(ui.get("ybSelectedValuesSummary").textContent, "7, 15");
+      const fifteen = ui.get("ybSelectedValuesList").querySelectorAll("input").find(input => input.value === "15");
+      assert.strictEqual(fifteen.checked, true);
+      assert.strictEqual(ui.get("ybSelectionNotice").hidden, false);
+      await ui.submit();
+      await assertUnavailable(ui);
+      assert(ui.get("ybSelectedValuesError").textContent.includes("inside the selected range"));
+      await ui.edit({ selectedValues: [7] });
+      assert.strictEqual(ui.get("ybSelectionNotice").hidden, true);
+      await ui.submit();
+      await assertAppliedRequests(ui, baseUrl, { maximumValue: 10, selectedValues: [7] });
+    });
+
     await test("applied customization updates both primary download destinations", async () => {
       let applied;
       const ui = mountCustomization(async (url) => {
@@ -436,6 +504,8 @@ async function run() {
       assert.strictEqual(ui.form.elements.minimumValue.value, "30");
       assert.strictEqual(ui.form.elements.maximumValue.value, "30");
       assert.strictEqual(ui.get("ybErrorSummary").hidden, false);
+      assert(ui.get("ybMinimumValueError").textContent.includes("Lower the lowest number or raise the highest number"));
+      assert.strictEqual(ui.form.elements.minimumValue.getAttribute("aria-invalid"), "true");
       await ui.get("ybRestoreBtn").emit("click");
       await assertAppliedRequests(ui, baseUrl, { questionCount: 60, minimumValue: 0, maximumValue: 20 });
       assert.strictEqual(ui.get("ybErrorSummary").hidden, true);

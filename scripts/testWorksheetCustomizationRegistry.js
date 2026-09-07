@@ -209,4 +209,48 @@ test("normalization does not mutate input objects", () => {
   assert.strictEqual(JSON.stringify(input), before);
 });
 
+test("impossible selected addends are rejected without dropping any selections", () => {
+  for (const selectedValues of [[15], [10, 15], [10, 15, 18]]) {
+    const result = normalizeWorksheetCustomization(ADDITION_FACTS_RESOURCE_ID, {
+      minimumValue: 10, maximumValue: 20, selectedValues, questionCount: 12
+    });
+    assert.strictEqual(result.ok, false, "in-range but impossible selections must be rejected");
+    assert.deepStrictEqual(result.normalizedOptions.selectedValues, selectedValues);
+    const error = result.errors.find((entry) => entry.code === "selected_values_infeasible");
+    assert.strictEqual(error?.field, "selectedValues");
+    assert.strictEqual(error.message, `${selectedValues.filter(value => value !== 10).join(", ")} cannot be used with numbers from 10 to 20 and sums up to 20. Remove ${selectedValues.length === 3 ? "them" : "it"} or change the number range.`);
+  }
+});
+
+test("empty Addition Facts domains return actionable range errors", () => {
+  for (const [minimumValue, maximumValue] of [[12, 20], [30, 30]]) {
+    const result = normalizeWorksheetCustomization(ADDITION_FACTS_RESOURCE_ID, { minimumValue, maximumValue });
+    assert.strictEqual(result.ok, false);
+    const error = result.errors.find(entry => entry.code === "empty_addition_fact_pool");
+    assert.strictEqual(error?.field, "minimumValue");
+    assert(error.message.includes("Lower the lowest number or raise the highest number"));
+  }
+});
+
+test("feasibility allows repetition, short emphasis, zero, and wider overrides", () => {
+  for (const options of [
+    { minimumValue: 10, maximumValue: 20, selectedValues: [10], questionCount: 12 },
+    { minimumValue: 0, maximumValue: 20, selectedValues: [7, 8], questionCount: 1 },
+    { minimumValue: 0, maximumValue: 30, selectedValues: [25] },
+    { minimumValue: 0, maximumValue: 0, selectedValues: [0] },
+    { minimumValue: 10, maximumValue: 21, selectedValues: [11] }
+  ]) assert.strictEqual(normalizeWorksheetCustomization(ADDITION_FACTS_RESOURCE_ID, options).ok, true);
+});
+
+test("feasibility follows normalized aliases and preserves out-of-range rejection", () => {
+  const alias = normalizeWorksheetCustomization(ADDITION_FACTS_RESOURCE_ID, { minA: "10", maxTotal: "20", onlyNumbers: "15,10" });
+  assert.strictEqual(alias.ok, false);
+  assert.deepStrictEqual(alias.normalizedOptions.selectedValues, [10, 15]);
+  assert(alias.errors.some(entry => entry.code === "selected_values_infeasible"));
+  const outside = normalizeWorksheetCustomization(ADDITION_FACTS_RESOURCE_ID, { minimumValue: 10, maximumValue: 20, selectedValues: [9, 15, 21] });
+  assert(outside.errors.some(entry => entry.code === "selected_values_outside_range"));
+  assert(outside.errors.some(entry => entry.code === "selected_values_infeasible" && entry.message.startsWith("15 cannot")));
+  assert.deepStrictEqual(outside.normalizedOptions.selectedValues, [9, 15, 21]);
+});
+
 console.log("\nWorksheet customization registry tests passed.");

@@ -614,7 +614,7 @@ function renderCustomizationPanel(model) {
                   <div class="number-selector-list" id="ybSelectedValuesList" role="group" aria-labelledby="ybSelectedValuesLabel"></div>
                 </div>
               </div>
-              <div class="field-help" id="ybSelectedValuesHelp">These numbers will appear more often.</div>
+              <div class="field-help" id="ybSelectedValuesHelp">Request more practice with these numbers. Other numbers may appear, and individual selections are not guaranteed to appear.</div>
               <div class="field-error" id="ybSelectedValuesError"></div>
             </div>
           </div>
@@ -860,10 +860,13 @@ function renderCustomizationScript(model) {
           const max = Number(settings.maximumValue);
           const keep = valuesToKeep ? new Set(valuesToKeep.map(Number)) : null;
           const selected = keep || selectedValueSet;
-          const removed = [];
 
           selectedList.innerHTML = "";
+          const choices = new Set(selected);
           for (let value = min; value <= max; value += 1) {
+            choices.add(value);
+          }
+          Array.from(choices).sort((a, b) => a - b).forEach((value) => {
             const label = document.createElement("label");
             label.className = "number-selector-option";
             const checkbox = document.createElement("input");
@@ -875,24 +878,10 @@ function renderCustomizationScript(model) {
             label.appendChild(checkbox);
             label.appendChild(text);
             selectedList.appendChild(label);
-          }
-
-          selected.forEach((value) => {
-            if (value < min || value > max) removed.push(value);
           });
 
-          selectedValueSet = new Set(
-            Array.from(selected).filter((value) => value >= min && value <= max)
-          );
+          selectedValueSet = new Set(selected);
           updateSelectedSummary();
-
-          if (removed.length) {
-            selectionNotice.hidden = false;
-            selectionNotice.textContent = "Numbers outside the active range were removed: " + removed.join(", ") + ".";
-          } else {
-            selectionNotice.hidden = true;
-            selectionNotice.textContent = "";
-          }
         }
 
         function readSettingsWithoutSelected() {
@@ -909,6 +898,12 @@ function renderCustomizationScript(model) {
 
         function updateSelectedSummary() {
           const values = Array.from(selectedValueSet).sort((a, b) => a - b);
+          const range = readSettingsWithoutSelected();
+          const outside = values.filter(value => value < range.minimumValue || value > range.maximumValue);
+          selectionNotice.hidden = !outside.length;
+          selectionNotice.textContent = outside.length
+            ? "Selected numbers outside the active range: " + outside.join(", ") + ". Remove them or change the number range."
+            : "";
           if (!values.length) {
             selectedSummary.textContent = "Choose numbers…";
             return;
@@ -1064,7 +1059,7 @@ function renderCustomizationScript(model) {
               ? "Numbers " + settings.minimumValue + "–" + settings.maximumValue
               : "Custom range " + settings.minimumValue + "–" + settings.maximumValue,
             settings.selectedValues.length
-              ? "Practising " + settings.selectedValues.join(" and ")
+              ? "Requested emphasis: " + settings.selectedValues.join(", ")
               : "",
             settings.includeAnswerKey ? "Answer key included" : "Answer key off"
           ].filter(Boolean);

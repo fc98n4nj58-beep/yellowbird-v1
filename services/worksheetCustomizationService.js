@@ -284,6 +284,35 @@ function resolveFamily(resourceId) {
   return getCustomizationFamilyForResource(resourceId);
 }
 
+function validateAdditionFactsDomain(options, result) {
+  const min = options.minimumValue;
+  const max = options.maximumValue;
+  if (!Number.isInteger(min) || !Number.isInteger(max) ||
+      result.errors.some(error => ["minimumValue", "maximumValue"].includes(error.field))) return;
+
+  // This family's adapter applies one range to both addends and caps sums at
+  // maximumValue. The smallest partner is min, so these are domain checks,
+  // independent of random selection, weighting, and requested question count.
+  if (min + min > max) {
+    result.errors.push({
+      field: "minimumValue",
+      code: "empty_addition_fact_pool",
+      message: `No addition facts can use numbers from ${min} to ${max} with sums up to ${max}. Lower the lowest number or raise the highest number.`
+    });
+  }
+
+  const impossible = (options.selectedValues || []).filter(value =>
+    value >= min && value <= max && value + min > max
+  );
+  if (impossible.length) {
+    result.errors.push({
+      field: "selectedValues",
+      code: "selected_values_infeasible",
+      message: `${impossible.join(", ")} cannot be used with numbers from ${min} to ${max} and sums up to ${max}. Remove ${impossible.length === 1 ? "it" : "them"} or change the number range.`
+    });
+  }
+}
+
 function normalizeWorksheetCustomization(resourceId, input = {}) {
   const sourceInput = deepClone(input);
   const family = resolveFamily(resourceId);
@@ -361,6 +390,9 @@ function normalizeWorksheetCustomization(resourceId, input = {}) {
   });
 
   validateCrossFields(result.normalizedOptions, result);
+  if (family.id === "additionFactsWithin20") {
+    validateAdditionFactsDomain(result.normalizedOptions, result);
+  }
 
   if (typeof family.adapter === "function") {
     result.generatorOptions = family.adapter(result.normalizedOptions);
