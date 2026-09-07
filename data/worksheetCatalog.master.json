@@ -4,8 +4,8 @@
     "curatedCount": 56,
     "generatedCount": 277,
     "totalCount": 333,
-    "readyCount": 104,
-    "partialCount": 5,
+    "readyCount": 105,
+    "partialCount": 4,
     "plannedCount": 11,
     "generatedStatusCount": 213
   },
@@ -63,7 +63,7 @@
         "addition_number_line"
       ],
       "templateId": "visual_model",
-      "status": "partial",
+      "status": "ready",
       "difficulty": "easy",
       "estimatedTimeMinutes": 10,
       "hasAnswerKey": true,

@@ -196,7 +196,7 @@ function assertDefaultContract() {
   const catalogItem = getAnyWorksheetCatalogById(RESOURCE_ID);
   assert(catalogItem);
   assert.strictEqual(catalogItem.id, RESOURCE_ID);
-  assert.strictEqual(catalogItem.status, "partial");
+  assert.strictEqual(catalogItem.status, "ready");
   assert.deepStrictEqual(catalogItem.activityTypes, ["addition_number_line"]);
 
   const runtime = runtimeFor({ worksheetSeed: "g1-addition-number-line-default-test" });

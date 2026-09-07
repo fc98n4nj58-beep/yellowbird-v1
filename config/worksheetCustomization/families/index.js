@@ -1,6 +1,9 @@
 const { additionFactsWithin20 } = require("./additionFactsWithin20");
 
+const { additionNumberLine } = require("./additionNumberLine");
+
 const families = Object.freeze({
+  [additionNumberLine.id]: additionNumberLine,
   [additionFactsWithin20.id]: additionFactsWithin20
 });
 

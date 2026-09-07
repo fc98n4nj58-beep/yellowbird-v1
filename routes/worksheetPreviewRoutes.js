@@ -95,7 +95,7 @@ router.get("/api/worksheet-preview", (req, res) => {
 router.get("/api/catalog-preview/:id", (req, res) => {
   try {
     const { item, worksheet, layout, contentObject } =
-      buildCatalogWorksheetRuntime(req.params.id, req.query || {});
+      buildCatalogWorksheetRuntime(req.params.id, req.query || {}, { publicCustomization: true });
     const customization = publicCustomizationPayload(req.params.id, req.query || {});
 
     res.json({

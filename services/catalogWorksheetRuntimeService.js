@@ -250,7 +250,20 @@ function publicDomainLabel(item) {
   return item?.domain || "";
 }
 
-function buildCatalogWorksheetRuntime(id, query = {}) {
+function buildCatalogWorksheetRuntime(id, query = {}, { publicCustomization = false } = {}) {
+  const family = require("../config/worksheetCustomization").getCustomizationFamilyForResource(id);
+  if (publicCustomization && family?.preserveLegacyRuntime) {
+    const transport = new Set(["disposition", "filename", "source"]);
+    const input = Object.fromEntries(Object.entries(query).filter(([key]) => !transport.has(key)));
+    const result = require("./worksheetCustomizationService").normalizeWorksheetCustomization(id, input);
+    if (!result.ok) {
+      const error = new Error(result.errors[0].message);
+      error.status = 400;
+      error.details = result;
+      throw error;
+    }
+    query = result.normalizedOptions;
+  }
   const item = worksheetCatalogService.getWorksheetCatalogById(id);
 
   if (!item) {

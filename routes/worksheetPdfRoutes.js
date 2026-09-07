@@ -129,7 +129,8 @@ router.get("/api/catalog-pdf/:id", (req, res) => {
       normalizedContentObject
     } = buildCatalogWorksheetRuntime(
       req.params.id,
-      req.query || {}
+      req.query || {},
+      { publicCustomization: true }
     );
 
     const includeAnswerKey = catalogIncludeAnswerKey(req.query || {});

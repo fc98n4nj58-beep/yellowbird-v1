@@ -527,3 +527,12 @@ Limits:
 - This does not approve general customization readiness, other resources, founder acceptance, or deployment.
 - The documented pre-existing Addition Facts public-copy signature failure remains unresolved and is not a passing result.
 - Selected-number feasibility, empty-pool feedback, wider-range wording, conflicting manual endpoint flags, and density remain separate work.
+
+
+## Decision: Addition number-line customization pilot and single-resource lifecycle gate — 2026-09-07
+
+The Project Lead authorizes `g1_addition_on_number_line_to_20` only to move partial→ready in the isolated classroom-customization pilot after the recorded acceptance/runtime gate. That gate passed: the Grade 1 founder reconciliation records Category A acceptance of the real addition-jump model and full-width recheck and explicitly attributes partial status to missing promotion authority; matching baseline operation truth/PDF/key checks pass. This decision does not reinterpret other partial records or deferred missing-grade families.
+
+Expose count 1–6, Standard/Larger/Largest equation text at 12/14/16 pt with proportionately larger diagram labels, existing completed Q1 inside the question count, and key inclusion. Fixed initial public mathematics is positive forward addition on 0–20. Preserve all accepted raw internal options/aliases and deferred founder variable requests. Do not add subtraction, new task forms, range/start/jump/selection controls or model-size sliders. Preserve the accepted six-question Standard default exactly. Use measured family rows and additional balanced pages instead of shrinking text or models.
+
+Synchronize only this ID in the curated Grade 1 catalog and master record; update matching summary ready/partial counts without regeneration or changing total membership. The founder subsequently approved the count/text-size/layout flow and this single-resource lifecycle movement for one local checkpoint (`feat: customize addition number-line layouts`). This acceptance covers the shown-arrow 0–20 customized layouts with the recorded failures and limitations. It does not establish general classroom/deployment readiness or acceptance of the subsequent range and student-drawn-arrow enhancements. See the current classroom-customization pilot note for verification, known baseline failures, unchanged ten-frame/base-ten issues and external evidence.

@@ -453,7 +453,7 @@ function buildWorksheetCustomizationModel(item) {
   return {
     resourceId: item.id,
     familyId: family.id,
-    exampleWithinQuestionTotal: family.id === "additionFactsWithin20",
+    exampleWithinQuestionTotal: family.exampleWithinQuestionTotal === true || family.id === "additionFactsWithin20",
     label: family.label,
     defaults: defaults.normalizedOptions,
     optionHash: defaults.optionHash,
@@ -505,6 +505,7 @@ function renderCustomizationPanel(model) {
   if (!model) return "";
 
   const defaults = model.defaults;
+  const hasRangeControls = model.controls.some((control) => control.id === "minimumValue");
   const questionControl = model.controls.find((control) => control.id === "questionCount") || {};
   const minControl = model.controls.find((control) => control.id === "minimumValue") || {};
   const maxControl = model.controls.find((control) => control.id === "maximumValue") || {};
@@ -547,7 +548,7 @@ function renderCustomizationPanel(model) {
             </div>
           </div>
 
-          <fieldset class="inline-choice-fieldset" aria-describedby="ybRangeHelp">
+          ${hasRangeControls ? `<fieldset class="inline-choice-fieldset" aria-describedby="ybRangeHelp">
             <legend>Number range</legend>
             <div class="field-help" id="ybRangeHelp">Suggested for this worksheet: ${escapeHtml(suggested.minimumValue)}–${escapeHtml(suggested.maximumValue)}</div>
             <label class="radio-row">
@@ -558,7 +559,7 @@ function renderCustomizationPanel(model) {
               <input type="radio" name="rangeMode" value="custom" />
               <span>Choose a custom range</span>
             </label>
-          </fieldset>
+          </fieldset>` : ""}
 
           <div class="control-row">
             <label class="field-label" for="ybQuestionTextSize">Question text size</label>
@@ -573,7 +574,7 @@ function renderCustomizationPanel(model) {
             </div>
           </div>
 
-          <div id="ybCustomRangeFields">
+          ${hasRangeControls ? `<div id="ybCustomRangeFields">
             <div class="control-row">
               <label class="field-label" for="ybMinimumValue">Lowest number</label>
               <div class="control-cell">
@@ -631,7 +632,7 @@ function renderCustomizationPanel(model) {
               <div class="field-help" id="ybSelectedValuesHelp">Request more practice with these numbers. Other numbers may appear, and individual selections are not guaranteed to appear.</div>
               <div class="field-error" id="ybSelectedValuesError"></div>
             </div>
-          </div>
+          </div>` : ""}
         </fieldset>
 
         <fieldset class="customization-fieldset">
@@ -706,6 +707,7 @@ function renderCustomizationScript(model) {
         live.setAttribute("aria-atomic", "true");
         document.body.appendChild(live);
 
+        const hasRangeControls = model.controls.some((control) => control.id === "minimumValue");
         const defaults = normalizeSettings(model.defaults);
         let selectedValueSet = new Set(defaults.selectedValues);
         let lastCustomRange = {
@@ -727,8 +729,8 @@ function renderCustomizationScript(model) {
           return {
             questionCount: Number(settings.questionCount),
             questionTextSize: Number(settings.questionTextSize ?? 12),
-            minimumValue: Number(settings.minimumValue),
-            maximumValue: Number(settings.maximumValue),
+            minimumValue: Number(settings.minimumValue ?? 0),
+            maximumValue: Number(settings.maximumValue ?? 20),
             selectedValues: Array.isArray(settings.selectedValues)
               ? settings.selectedValues.map(Number).filter(Number.isFinite).sort((a, b) => a - b)
               : [],
@@ -760,8 +762,10 @@ function renderCustomizationScript(model) {
           const params = new URLSearchParams();
           params.set("questionCount", String(settings.questionCount));
           params.set("questionTextSize", String(settings.questionTextSize));
-          params.set("minimumValue", String(settings.minimumValue));
-          params.set("maximumValue", String(settings.maximumValue));
+          if (hasRangeControls) {
+            params.set("minimumValue", String(settings.minimumValue));
+            params.set("maximumValue", String(settings.maximumValue));
+          }
           params.set("includeExample", settings.includeExample ? "true" : "false");
           params.set("includeAnswerKey", settings.includeAnswerKey ? "true" : "false");
           params.set("answers", settings.includeAnswerKey ? "1" : "0");
@@ -811,11 +815,11 @@ function renderCustomizationScript(model) {
         }
 
         function readSettings() {
-          const rangeMode = currentRangeMode();
-          const min = rangeMode === "suggested"
+          const rangeMode = hasRangeControls ? currentRangeMode() : "fixed";
+          const min = !hasRangeControls ? 0 : rangeMode === "suggested"
             ? model.suggestedRange.minimumValue
             : Number(form.elements.minimumValue.value);
-          const max = rangeMode === "suggested"
+          const max = !hasRangeControls ? 20 : rangeMode === "suggested"
             ? model.suggestedRange.maximumValue
             : Number(form.elements.maximumValue.value);
 
@@ -832,6 +836,7 @@ function renderCustomizationScript(model) {
         }
 
         function setRangeMode(mode, options = {}) {
+          if (!hasRangeControls) return;
           const radio = Array.from(form.elements.rangeMode).find((item) => item.value === mode);
           if (radio) radio.checked = true;
           const suggested = suggestedRange();
@@ -854,10 +859,11 @@ function renderCustomizationScript(model) {
           const normalized = normalizeSettings(settings);
           form.elements.questionCount.value = String(normalized.questionCount);
           form.elements.questionTextSize.value = String(normalized.questionTextSize);
-          form.elements.minimumValue.value = String(normalized.minimumValue);
-          form.elements.maximumValue.value = String(normalized.maximumValue);
           form.elements.includeExample.checked = normalized.includeExample;
           form.elements.includeAnswerKey.checked = normalized.includeAnswerKey;
+          if (!hasRangeControls) return;
+          form.elements.minimumValue.value = String(normalized.minimumValue);
+          form.elements.maximumValue.value = String(normalized.maximumValue);
 
           const isSuggested =
             normalized.minimumValue === model.suggestedRange.minimumValue &&
@@ -874,6 +880,7 @@ function renderCustomizationScript(model) {
         }
 
         function refreshSelectedOptions(valuesToKeep) {
+          if (!hasRangeControls) return;
           const settings = readSettingsWithoutSelected();
           const min = Number(settings.minimumValue);
           const max = Number(settings.maximumValue);
@@ -933,6 +940,7 @@ function renderCustomizationScript(model) {
         }
 
         function setSelectorOpen(open) {
+          if (!selectedPanel) return;
           selectedPanel.hidden = !open;
           selectedButton.setAttribute("aria-expanded", String(open));
         }
@@ -999,6 +1007,7 @@ function renderCustomizationScript(model) {
         }
 
         function updateRangeNotice(settings) {
+          if (!hasRangeControls) return;
           const suggestedMax = Number(model.suggestedRange.maximumValue);
           rangeNotice.hidden = !(Number(settings.maximumValue) > suggestedMax);
         }
@@ -1076,7 +1085,7 @@ function renderCustomizationScript(model) {
           const parts = [
             countSummary,
             "Question text: " + settings.questionTextSize + " pt",
-            settings.minimumValue === model.suggestedRange.minimumValue && settings.maximumValue === model.suggestedRange.maximumValue
+            !hasRangeControls ? "Forward addition on 0–20" : settings.minimumValue === model.suggestedRange.minimumValue && settings.maximumValue === model.suggestedRange.maximumValue
               ? "Numbers " + settings.minimumValue + "–" + settings.maximumValue
               : "Custom range " + settings.minimumValue + "–" + settings.maximumValue,
             settings.selectedValues.length
@@ -1181,11 +1190,11 @@ function renderCustomizationScript(model) {
           applyStaleState();
         });
 
-        selectedButton.addEventListener("click", () => {
+        selectedButton?.addEventListener("click", () => {
           setSelectorOpen(selectedPanel.hidden);
         });
 
-        selectedButton.addEventListener("keydown", (event) => {
+        selectedButton?.addEventListener("keydown", (event) => {
           if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
             event.preventDefault();
             setSelectorOpen(true);
@@ -1197,7 +1206,7 @@ function renderCustomizationScript(model) {
           }
         });
 
-        selectedList.addEventListener("change", (event) => {
+        selectedList?.addEventListener("change", (event) => {
           if (event.target.type !== "checkbox") return;
           const value = Number(event.target.value);
           if (event.target.checked) {
@@ -1210,7 +1219,7 @@ function renderCustomizationScript(model) {
           applyStaleState();
         });
 
-        selectedList.addEventListener("keydown", (event) => {
+        selectedList?.addEventListener("keydown", (event) => {
           if (event.key === "Escape") {
             setSelectorOpen(false);
             selectedButton.focus();
@@ -1218,7 +1227,7 @@ function renderCustomizationScript(model) {
         });
 
         document.addEventListener("click", (event) => {
-          if (!selectedValues.contains(event.target)) {
+          if (selectedValues && !selectedValues.contains(event.target)) {
             setSelectorOpen(false);
           }
         });

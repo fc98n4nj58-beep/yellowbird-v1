@@ -3,6 +3,7 @@
 const layout = require("../config/layout/layoutSpec.json");
 const { pdfDesignTokens } = require("../config/layout/pdfDesignTokens");
 const { additionFactsPageGeometry } = require("../config/layout/additionFactsLayout");
+const { additionNumberLinePageGeometry } = require("../config/layout/additionNumberLineLayout");
 const { DATA_DISPLAY_VISUAL_SPECS } = require("../config/layout/dataDisplayVisualSpecs");
 const path = require("path");
 const PDFDocument = require("pdfkit");
@@ -442,7 +443,7 @@ doc.lineWidth(1);
       const labelAlign = insetEndpointLabel
         ? (i === 0 ? "left" : "right")
         : "center";
-      doc.fontSize(fractionLabels ? 7.5 : 8);
+      doc.fontSize(opts.numberLineStyle?.tickTextSize || (fractionLabels ? 7.5 : 8));
       doc.text(labelText, labelX, lineY + 8, {
         width: labelWidth,
         align: labelAlign
@@ -461,9 +462,9 @@ doc.lineWidth(1);
     const additionLandingX = startX + ((additionLanding - min) / interval) * stepWidth;
     drawJumpArrow(doc, additionStartX, additionLandingX, lineY - 6, 0, 1);
     doc.save();
-    doc.fontSize(9);
+    doc.fontSize(opts.numberLineStyle?.jumpTextSize || 9);
     doc.fillColor("#374151");
-    doc.text(`+${additionJump}`, additionStartX, lineY - 29, {
+    doc.text(`+${additionJump}`, additionStartX, lineY - (opts.numberLineStyle?.jumpLabelOffset || 29), {
       width: Math.max(24, additionLandingX - additionStartX),
       align: "center",
       lineBreak: false
@@ -2513,7 +2514,7 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
 
   doc.fillColor("#111827");
   doc.font(fonts.regular || "Helvetica");
-  doc.fontSize(display.additionFactsLayout?.questionTextSize || 12);
+  doc.fontSize(display.additionNumberLineLayout?.questionTextSize || display.additionFactsLayout?.questionTextSize || 12);
 
   if (isExampleItem && !exampleCountsAsQuestion) {
     setFont(doc, fonts.lightItalic || fonts.regular || "Helvetica", 9);
@@ -2873,6 +2874,13 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
     );
 
     const placed = placeVisualInRegionWithDisplay(region, measured, display);
+    const numberLineProfile = display.additionNumberLineLayout;
+    if (placed && numberLineProfile?.lineOffset && isNumberLine) {
+      // Enlarged text gets explicit vertical clearance; model width/scale and
+      // arrow shape remain unchanged. Standard uses the exact legacy placement.
+      measured.height = numberLineProfile.modelHeight;
+      placed.y = promptY + numberLineProfile.lineOffset - measured.height * 0.7;
+    }
     const baseTenCellGeometry = measured && visualForRender.kind === "base_ten_blocks" && display.baseTenMeasuredCellCenter
       ? buildBaseTenCellGeometry({
           cellTopY: y,
@@ -2888,7 +2896,7 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
 
     if (measured && placed) {
       try {
-        const renderMeta = renderVisualByKind(doc, visualForRender, placed, measured);
+        const renderMeta = renderVisualByKind(doc, visualForRender, placed, measured, display.additionNumberLineLayout);
 
         if (visualForRender.kind === "number_line" && display.numberLineAnswerUnderTarget && renderMeta?.dotX) {
           const answerTarget = buildNumberLineAnswerTargetGeometry({
@@ -3056,7 +3064,7 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
     : Math.max(promptHeight, layout.typography.body?.lineHeight || 16);
 }
 
-function renderVisualByKind(doc, visual, placed, measured) {
+function renderVisualByKind(doc, visual, placed, measured, numberLineStyle = null) {
   if (!visual?.kind) return;
 
   if (visual.kind === "array") {
@@ -3111,7 +3119,8 @@ function renderVisualByKind(doc, visual, placed, measured) {
     return drawNumberLinePrimitive(doc, placed.x, placed.y, {
       ...(visual.data || {}),
       width: measured.width,
-      height: measured.height
+      height: measured.height,
+      numberLineStyle
     });
   }
 
@@ -5322,6 +5331,9 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     const additionGeometry = display.additionFactsLayout
       ? additionFactsPageGeometry(pageItems.length, display.additionFactsLayout, startY, bottomContentY)
       : null;
+    const numberLineGeometry = display.additionNumberLineLayout
+      ? additionNumberLinePageGeometry(pageItems.length, display.additionNumberLineLayout, startY, bottomContentY)
+      : null;
     let pageDisplay = additionGeometry
       ? { ...display, denseGridRows: additionGeometry.rows }
       : display.patterningLayout
@@ -5393,7 +5405,7 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
 	  pageXForCol,
 	  pageColW,
   (item, x, y, w, itemHeight = 0) => {
-    const cellHeight = hasVisuals
+    const cellHeight = numberLineGeometry ? numberLineGeometry.blockHeight : hasVisuals
       ? (bottomContentY - startY) / questionsPerColumn
       : itemHeight;
 
@@ -5402,7 +5414,7 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
       item,
       {
         x,
-        y: y + (additionGeometry?.topOffset || 0),
+        y: y + (numberLineGeometry?.topOffset || additionGeometry?.topOffset || 0),
         width: w,
         height: cellHeight,
         dividerY: null
@@ -5412,7 +5424,7 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     );
   },
 	  itemGap,
-	  pageQuestionsPerColumn,
+	  numberLineGeometry?.rows || pageQuestionsPerColumn,
 	  pageDisplay
 	);
 

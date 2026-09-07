@@ -198,7 +198,7 @@ const grade1Catalog = [
     worksheetFamily: "visual_models",
     activityTypes: ["addition_number_line"],
     templateId: "visual_model",
-    status: "partial",
+    status: "ready",
     difficulty: "easy",
     estimatedTimeMinutes: 10,
     hasAnswerKey: true,

@@ -58,9 +58,9 @@ function unsupportedHtml() {
 
 // Execute the actual rendered script with a small DOM/event harness. This keeps
 // regression coverage dependency-free; real browser focus/layout checks remain separate.
-function mountCustomization(fetchPreview) {
+function mountCustomization(fetchPreview, resourceId = RESOURCE_ID) {
   const vm = require("vm");
-  const html = additionHtml();
+  const html = libraryRoutes._test.renderWorksheetDetailPage(getWorksheetCatalogById(resourceId));
   const script = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)]
     .map((match) => match[1]).find((text) => text.includes("YELLOW_BIRD_CUSTOMIZATION"));
   let document;
@@ -162,9 +162,9 @@ function mountCustomization(fetchPreview) {
     if (element.type === "radio") (form.elements[element.name] ||= []).push(element);
     else form.elements[element.name] = element;
   }
-  Object.defineProperty(form.elements.rangeMode, "value", { get() { return this.find((radio) => radio.checked)?.value; } });
+  if (form.elements.rangeMode) Object.defineProperty(form.elements.rangeMode, "value", { get() { return this.find((radio) => radio.checked)?.value; } });
   // Native radio groups uncheck their peers when checked programmatically.
-  for (const radio of form.elements.rangeMode) {
+  for (const radio of form.elements.rangeMode || []) {
     Object.defineProperty(radio, "checked", {
       get() { return this.hasAttribute("checked"); },
       set(value) {
@@ -242,7 +242,7 @@ async function assertUnavailable(ui) {
 }
 
 async function run() {
-  await test("only Addition Facts receives customization metadata", () => {
+  await test("registered families receive customization metadata", () => {
     assert(libraryRoutes._test.buildWorksheetCustomizationModel(getWorksheetCatalogById(RESOURCE_ID)));
     assert.strictEqual(
       libraryRoutes._test.buildWorksheetCustomizationModel(getWorksheetCatalogById(UNSUPPORTED_RESOURCE_ID)),
@@ -350,8 +350,8 @@ async function run() {
       "ybSelectedValuesList",
       "setSelectorOpen",
       "updateSelectedSummary",
-      "selectedButton.addEventListener(\"keydown\"",
-      "selectedList.addEventListener(\"change\"",
+      "selectedButton?.addEventListener(\"keydown\"",
+      "selectedList?.addEventListener(\"change\"",
       "Selected numbers outside the active range"
     ].forEach((text) => assert(html.includes(text), `missing selector logic ${text}`));
   });
@@ -359,6 +359,27 @@ async function run() {
   const { server, baseUrl } = await startTestServer();
 
   try {
+    await test("number-line controls, applied actions, invalid recovery and late responses", async () => {
+      const id="g1_addition_on_number_line_to_20";
+      const html=libraryRoutes._test.renderWorksheetDetailPage(getWorksheetCatalogById(id));
+      assert(!html.includes('name="minimumValue"')); assert(!html.includes('name="selectedValues"')); assert(!html.includes('id="ybSelectedValuesButton"'));
+      assert(html.includes('max="6"')); assert(html.includes("Included in the question total."));
+      let fail=false, release;
+      const ui=mountCustomization(url => fail ? Promise.reject(new Error("network")) : release ? new Promise(resolve => { release.resolve=()=>resolve(fetch(new URL(url,baseUrl))); }) : fetch(new URL(url,baseUrl)),id);
+      assert.equal(ui.get("ybPreviewStateLabel").dataset.state,"ready");
+      await ui.edit({questionCount:3,questionTextSize:16,includeExample:true,includeAnswerKey:false});
+      await assertUnavailable(ui);
+      await ui.submit();
+      assert(ui.get("ybCustomizationSummary").textContent.includes("3 numbered questions; 1 completed; 2 left to solve."));
+      for(const link of [...ui.downloads(),ui.get("ybTopPreviewBtn")]) {
+        const url=new URL(link.href,baseUrl); assert.equal(url.searchParams.get("questionTextSize"),"16"); assert.equal(url.searchParams.get("questionCount"),"3"); assert.equal(url.searchParams.get("includeExample"),"true"); assert.equal(url.searchParams.get("answers"),"0"); assert.equal(url.searchParams.get("worksheetSeed"),"yellowbird-default"); assert(!url.searchParams.has("minimumValue"));
+        const response=await fetch(url); assert.equal(response.status,200); assert((await response.arrayBuffer()).byteLength>1000);
+      }
+      await ui.edit({questionCount:7}); await ui.submit(); await assertUnavailable(ui); assert(ui.get("ybQuestionCountError").textContent.includes("6 or less"));
+      await ui.edit({questionCount:5}); fail=true; await ui.submit(); await assertUnavailable(ui); fail=false; await ui.submit(); assert.equal(ui.get("ybPreviewStateLabel").dataset.state,"customized");
+      release={}; await ui.edit({questionCount:1}); const pending=ui.submit(); await ui.edit({questionCount:6}); release.resolve(); await pending; await assertUnavailable(ui); release=null; await ui.submit();
+      assert(ui.get("ybCustomizationSummary").textContent.includes("6 numbered questions"));
+    });
     await test("text sizes follow applied preview/download state and preserve the question set", async () => {
       let failure = false;
       const ui = mountCustomization(url => failure

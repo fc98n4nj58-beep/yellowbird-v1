@@ -3919,6 +3919,10 @@ function resolveCatalogWorksheetOptions(item, options = {}) {
   const family = getCustomizationFamilyForResource(item.id);
 
   if (!family) return legacyOptions;
+  // Existing raw number-line contracts (including wider counts/ranges/aliases)
+  // remain internal. Public entry points normalize first and always supply the
+  // canonical text setting; raw legacy calls retain their accepted behavior.
+  if (family.preserveLegacyRuntime && options.questionTextSize === undefined) return legacyOptions;
 
   const customization = normalizeWorksheetCustomization(
     item.id,
@@ -5818,13 +5822,17 @@ if (item.activityTypes?.[0] === "skip_counting") {
 }
 
 if (item.id === GRADE1_ADDITION_NUMBER_LINE_ID) {
+  const profile = normalizedOptions._customization
+    ? require("../config/layout/additionNumberLineLayout").buildAdditionNumberLineLayout(normalizedOptions._customization.normalizedOptions.questionTextSize)
+    : null;
   layout.template = {
     ...(layout.template || {}),
     columns: 1,
-    maxProblemsPerPage: 6
+    maxProblemsPerPage: profile?.capacity || 6
   };
   layout.display = {
     ...(layout.display || {}),
+    ...(profile ? { additionNumberLineLayout: profile, inlineEquationFontSize: profile.questionTextSize } : {}),
     hideSubtitle: true,
     suppressExampleLabel: true,
     numberLineAddition: true,
