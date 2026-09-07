@@ -253,4 +253,23 @@ test("feasibility follows normalized aliases and preserves out-of-range rejectio
   assert.deepStrictEqual(outside.normalizedOptions.selectedValues, [9, 15, 21]);
 });
 
+test("question text size is normalized, bounded, and excluded from mathematical options", () => {
+  const missing = normalizeWorksheetCustomization(ADDITION_FACTS_RESOURCE_ID, {});
+  assert.strictEqual(missing.normalizedOptions.questionTextSize, 12);
+  for (const size of [12, 14, 16]) {
+    const result = normalizeWorksheetCustomization(ADDITION_FACTS_RESOURCE_ID, { questionTextSize: String(size) });
+    assert(result.ok);
+    assert.strictEqual(result.normalizedOptions.questionTextSize, size);
+    assert.strictEqual(result.generatorOptions.questionTextSize, undefined);
+    assert.strictEqual(result.canonicalPayload.effectiveSeed, missing.canonicalPayload.effectiveSeed);
+    if (size === 12) assert.strictEqual(result.optionHash, missing.optionHash);
+    else assert.notStrictEqual(result.optionHash, missing.optionHash);
+  }
+  for (const size of [0, 11, 13, 18, 14.5, "big"]) {
+    const result = normalizeWorksheetCustomization(ADDITION_FACTS_RESOURCE_ID, { questionTextSize: size });
+    assert.strictEqual(result.ok, false);
+    assert(result.errors.some(error => error.field === "questionTextSize"));
+  }
+});
+
 console.log("\nWorksheet customization registry tests passed.");

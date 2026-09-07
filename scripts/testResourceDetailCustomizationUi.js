@@ -158,7 +158,7 @@ function mountCustomization(fetchPreview) {
   }
   const form = document.getElementById("ybCustomizationForm");
   form.elements = {};
-  for (const element of form.querySelectorAll("input")) {
+  for (const element of form.querySelectorAll("input, select")) {
     if (element.type === "radio") (form.elements[element.name] ||= []).push(element);
     else form.elements[element.name] = element;
   }
@@ -269,7 +269,8 @@ async function run() {
     assert(!html.includes("A completed example is additional"));
     assert(!html.includes("Added before the student questions"));
     assert(!html.includes("Questions per page"));
-    assert(!html.includes("<select"));
+    assert.strictEqual((html.match(/<select\b/g) || []).length, 1);
+    assert(html.includes('id="ybQuestionTextSize"'));
   });
 
   await test("unsupported family detail page shows no customization UI", () => {
@@ -358,6 +359,42 @@ async function run() {
   const { server, baseUrl } = await startTestServer();
 
   try {
+    await test("text sizes follow applied preview/download state and preserve the question set", async () => {
+      let failure = false;
+      const ui = mountCustomization(url => failure
+        ? Promise.resolve({ok:false,status:500,json:async()=>({ok:false,error:"Test failure"})})
+        : fetch(new URL(url,baseUrl)));
+      const original = await (await fetch(`${baseUrl}/api/catalog-preview/${RESOURCE_ID}?questionCount=12`)).json();
+      await ui.edit({questionCount:12});
+      for (const size of [12,14,16]) {
+        await ui.edit({questionTextSize:size});
+        await assertUnavailable(ui);
+        await ui.submit();
+        await assertAppliedRequests(ui,baseUrl,{questionCount:12,questionTextSize:size},original.preview.contentObject.content.items);
+        assert(ui.get("ybCustomizationSummary").textContent.includes(`Question text: ${size} pt`));
+      }
+      failure=true;
+      await ui.edit({questionTextSize:14,includeAnswerKey:false});
+      await ui.submit();
+      await assertUnavailable(ui);
+      assert.strictEqual(ui.form.elements.questionTextSize.value,"14");
+      failure=false;
+      await ui.submit();
+      await assertAppliedRequests(ui,baseUrl,{questionTextSize:14,includeAnswerKey:false});
+      for (const endpoint of ["catalog-preview","catalog-pdf"]) {
+        const response=await fetch(`${baseUrl}/api/${endpoint}/${RESOURCE_ID}?questionTextSize=13`);
+        assert.strictEqual(response.status,400);
+        assert.strictEqual((await response.json()).ok,false);
+      }
+      await ui.edit({questionTextSize:13});
+      await ui.submit();
+      await assertUnavailable(ui);
+      assert(ui.get("ybQuestionTextSizeError").textContent.includes("Question text size"));
+      await ui.get("ybRestoreBtn").emit("click");
+      await ui.submit();
+      await assertAppliedRequests(ui,baseUrl,{questionTextSize:12,includeAnswerKey:true,questionCount:60});
+    });
+
     await test("impossible selections are rejected by shared validation in preview and PDF", async () => {
       for (const [query, code, field, message] of [
         ["minimumValue=10&maximumValue=20&selectedValues=15", "selected_values_infeasible", "selectedValues", "15 cannot be used"],

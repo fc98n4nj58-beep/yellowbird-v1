@@ -254,6 +254,13 @@ function run() {
   normalizeWorksheetCustomization(RESOURCE_ID, noMutationInput);
   assert.strictEqual(JSON.stringify(noMutationInput), before);
 
+  for (const options of [{}, { questionCount: 12 }, { questionCount: 75, includeExample: true, selectedValues: [7, 8] }, { questionCount: 180, maximumValue: 50 }]) {
+    const original = itemsFor({ ...options, worksheetSeed: "font-identity" });
+    for (const size of [12, 14, 16]) {
+      assert.deepStrictEqual(itemsFor({ ...options, worksheetSeed: "font-identity", questionTextSize: size }), original);
+    }
+  }
+  assertThrowsCustomization({ questionTextSize: 13 }, "unsupported_value");
   console.log("Addition Facts customization runtime tests passed.");
 }
 

@@ -412,6 +412,7 @@ const PUBLIC_CONTROL_STATUSES = new Set([
 
 const CUSTOMIZATION_CONTROL_ORDER = [
   "questionCount",
+  "questionTextSize",
   "minimumValue",
   "maximumValue",
   "selectedValues",
@@ -558,6 +559,19 @@ function renderCustomizationPanel(model) {
               <span>Choose a custom range</span>
             </label>
           </fieldset>
+
+          <div class="control-row">
+            <label class="field-label" for="ybQuestionTextSize">Question text size</label>
+            <div class="control-cell">
+              <select id="ybQuestionTextSize" name="questionTextSize" aria-describedby="ybQuestionTextSizeHelp ybQuestionTextSizeError">
+                <option value="12">Standard — 12 pt</option>
+                <option value="14">Larger — 14 pt</option>
+                <option value="16">Largest — 16 pt</option>
+              </select>
+              <div class="field-help" id="ybQuestionTextSizeHelp">Larger text may use more pages.</div>
+              <div class="field-error" id="ybQuestionTextSizeError"></div>
+            </div>
+          </div>
 
           <div id="ybCustomRangeFields">
             <div class="control-row">
@@ -712,6 +726,7 @@ function renderCustomizationScript(model) {
         function normalizeSettings(settings) {
           return {
             questionCount: Number(settings.questionCount),
+            questionTextSize: Number(settings.questionTextSize ?? 12),
             minimumValue: Number(settings.minimumValue),
             maximumValue: Number(settings.maximumValue),
             selectedValues: Array.isArray(settings.selectedValues)
@@ -727,6 +742,7 @@ function renderCustomizationScript(model) {
           const normalized = normalizeSettings(settings);
           return JSON.stringify({
             questionCount: normalized.questionCount,
+            questionTextSize: normalized.questionTextSize,
             minimumValue: normalized.minimumValue,
             maximumValue: normalized.maximumValue,
             selectedValues: normalized.selectedValues,
@@ -743,6 +759,7 @@ function renderCustomizationScript(model) {
         function buildParams(settings, disposition) {
           const params = new URLSearchParams();
           params.set("questionCount", String(settings.questionCount));
+          params.set("questionTextSize", String(settings.questionTextSize));
           params.set("minimumValue", String(settings.minimumValue));
           params.set("maximumValue", String(settings.maximumValue));
           params.set("includeExample", settings.includeExample ? "true" : "false");
@@ -804,6 +821,7 @@ function renderCustomizationScript(model) {
 
           return normalizeSettings({
             questionCount: Number(form.elements.questionCount.value),
+            questionTextSize: Number(form.elements.questionTextSize.value),
             minimumValue: min,
             maximumValue: max,
             selectedValues: Array.from(selectedValueSet),
@@ -835,6 +853,7 @@ function renderCustomizationScript(model) {
         function writeSettings(settings) {
           const normalized = normalizeSettings(settings);
           form.elements.questionCount.value = String(normalized.questionCount);
+          form.elements.questionTextSize.value = String(normalized.questionTextSize);
           form.elements.minimumValue.value = String(normalized.minimumValue);
           form.elements.maximumValue.value = String(normalized.maximumValue);
           form.elements.includeExample.checked = normalized.includeExample;
@@ -921,7 +940,7 @@ function renderCustomizationScript(model) {
         function clearErrors() {
           errorSummary.hidden = true;
           errorSummary.innerHTML = "";
-          ["questionCount", "minimumValue", "maximumValue", "selectedValues", "includeExample", "includeAnswerKey"].forEach((field) => {
+          ["questionCount", "questionTextSize", "minimumValue", "maximumValue", "selectedValues", "includeExample", "includeAnswerKey"].forEach((field) => {
             const error = document.getElementById("yb" + field.charAt(0).toUpperCase() + field.slice(1) + "Error");
             if (error) error.textContent = "";
           });
@@ -933,6 +952,7 @@ function renderCustomizationScript(model) {
         function fieldElementFor(field) {
           const map = {
             questionCount: form.elements.questionCount,
+            questionTextSize: form.elements.questionTextSize,
             minimumValue: form.elements.minimumValue,
             maximumValue: form.elements.maximumValue,
             selectedValues: selectedButton,
@@ -1055,6 +1075,7 @@ function renderCustomizationScript(model) {
             : settings.questionCount + " questions";
           const parts = [
             countSummary,
+            "Question text: " + settings.questionTextSize + " pt",
             settings.minimumValue === model.suggestedRange.minimumValue && settings.maximumValue === model.suggestedRange.maximumValue
               ? "Numbers " + settings.minimumValue + "–" + settings.maximumValue
               : "Custom range " + settings.minimumValue + "–" + settings.maximumValue,

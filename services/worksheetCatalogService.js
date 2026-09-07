@@ -6576,6 +6576,20 @@ if (useFounderReviewDefaultLayout) {
   }
 }
 
+if (item.id === "g1_addition_facts_within_20") {
+  const { buildAdditionFactsLayout } = require("../config/layout/additionFactsLayout");
+  const profile = buildAdditionFactsLayout(
+    layout.problems,
+    normalizedOptions._customization.normalizedOptions.questionTextSize
+  );
+  layout.template = { ...layout.template, columns: profile.columns, maxProblemsPerPage: profile.capacity };
+  layout.display = {
+    ...layout.display,
+    additionFactsLayout: profile,
+    inlineEquationFontSize: profile.questionTextSize
+  };
+}
+
 return layout;
 }
 

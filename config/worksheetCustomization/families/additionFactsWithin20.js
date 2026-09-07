@@ -1,4 +1,5 @@
 const ADDITION_FACTS_RESOURCE_ID = "g1_addition_facts_within_20";
+const { QUESTION_TEXT_SIZES } = require("../../layout/additionFactsLayout");
 
 function adaptAdditionFactsOptions(normalizedOptions = {}) {
   const minimumValue = normalizedOptions.minimumValue;
@@ -35,6 +36,7 @@ const additionFactsWithin20 = Object.freeze({
   status: "foundation",
   defaults: Object.freeze({
     questionCount: 60,
+    questionTextSize: 12,
     questionsPerPage: 60,
     includeExample: false,
     includeAnswerKey: true,
@@ -44,6 +46,12 @@ const additionFactsWithin20 = Object.freeze({
     worksheetSeed: "yellowbird-default"
   }),
   controls: Object.freeze({
+    questionTextSize: {
+      allowedValues: QUESTION_TEXT_SIZES,
+      integer: true,
+      layoutRisk: "medium",
+      publicStatus: "public_prototype"
+    },
     questionCount: {
       min: 1,
       max: 180,

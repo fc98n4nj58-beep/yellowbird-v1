@@ -2,6 +2,7 @@
 
 const layout = require("../config/layout/layoutSpec.json");
 const { pdfDesignTokens } = require("../config/layout/pdfDesignTokens");
+const { additionFactsPageGeometry } = require("../config/layout/additionFactsLayout");
 const { DATA_DISPLAY_VISUAL_SPECS } = require("../config/layout/dataDisplayVisualSpecs");
 const path = require("path");
 const PDFDocument = require("pdfkit");
@@ -2512,7 +2513,7 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
 
   doc.fillColor("#111827");
   doc.font(fonts.regular || "Helvetica");
-  doc.fontSize(12);
+  doc.fontSize(display.additionFactsLayout?.questionTextSize || 12);
 
   if (isExampleItem && !exampleCountsAsQuestion) {
     setFont(doc, fonts.lightItalic || fonts.regular || "Helvetica", 9);
@@ -5318,7 +5319,12 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
     let { colW: pageColW, xForCol: pageXForCol } = pageCols === cols
       ? { colW, xForCol }
       : getColumns(pageCols);
-    let pageDisplay = display.patterningLayout
+    const additionGeometry = display.additionFactsLayout
+      ? additionFactsPageGeometry(pageItems.length, display.additionFactsLayout, startY, bottomContentY)
+      : null;
+    let pageDisplay = additionGeometry
+      ? { ...display, denseGridRows: additionGeometry.rows }
+      : display.patterningLayout
       ? {
           ...display,
           denseGridRows: Math.max(
@@ -5396,7 +5402,7 @@ function renderQuestionsPages(doc, fonts, contentObject, options, pageState, lay
       item,
       {
         x,
-        y,
+        y: y + (additionGeometry?.topOffset || 0),
         width: w,
         height: cellHeight,
         dividerY: null

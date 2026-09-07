@@ -31,6 +31,15 @@ const variables = Object.freeze({
     fallback: null,
     serialization: { includeInHash: true }
   },
+  questionTextSize: {
+    id: "questionTextSize",
+    label: "Question text size",
+    type: VARIABLE_TYPES.INTEGER,
+    group: CONTROL_GROUPS.PRACTICE,
+    publicClassification: "basic",
+    fallback: null,
+    serialization: { includeInHash: true }
+  },
   includeExample: {
     id: "includeExample",
     label: "Show one completed example",
