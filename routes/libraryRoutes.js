@@ -452,6 +452,7 @@ function buildWorksheetCustomizationModel(item) {
   return {
     resourceId: item.id,
     familyId: family.id,
+    exampleWithinQuestionTotal: family.id === "additionFactsWithin20",
     label: family.label,
     defaults: defaults.normalizedOptions,
     optionHash: defaults.optionHash,
@@ -469,7 +470,7 @@ function buildWorksheetCustomizationModel(item) {
   };
 }
 
-function renderWorksheetPreviewObject(id) {
+function renderWorksheetPreviewObject(id, customizable = false) {
   const pdfUrl = worksheetPdfUrl(id);
 
   return `
@@ -494,6 +495,7 @@ function renderWorksheetPreviewObject(id) {
           </div>
         </div>
       </object>
+      ${customizable ? '<div class="resource-preview-empty" id="ybPdfUnavailable" role="status" tabindex="-1" hidden></div>' : ""}
     </div>
   `;
 }
@@ -539,7 +541,7 @@ function renderCustomizationPanel(model) {
                 value="${escapeHtml(defaults.questionCount)}"
                 aria-describedby="ybQuestionCountHelp ybQuestionCountError"
               />
-              <div class="field-help" id="ybQuestionCountHelp">Student questions. A completed example is additional.</div>
+              <div class="field-help" id="ybQuestionCountHelp">${model.exampleWithinQuestionTotal ? "Total numbered questions, including the first question when completed." : "Number of practice questions."}</div>
               <div class="field-error" id="ybQuestionCountError"></div>
             </div>
           </div>
@@ -623,8 +625,8 @@ function renderCustomizationPanel(model) {
           <label class="checkbox-row" for="ybIncludeExample">
             <input id="ybIncludeExample" name="includeExample" type="checkbox" />
             <span>
-              <strong>Show one completed example</strong>
-              <small>Added before the student questions.</small>
+              <strong>${model.exampleWithinQuestionTotal ? "Show the first question completed" : "Show one completed example"}</strong>
+              <small>${model.exampleWithinQuestionTotal ? "Included in the question total." : "Show a completed example for support."}</small>
             </span>
           </label>
           <div class="field-error" id="ybIncludeExampleError"></div>
@@ -662,6 +664,9 @@ function renderCustomizationScript(model) {
         const restoreBtn = document.getElementById("ybRestoreBtn");
         const downloadBtn = document.getElementById("ybDownloadBtn");
         const downloadNote = document.getElementById("ybDownloadNote");
+        const downloadButtons = [downloadBtn, document.getElementById("ybTopDownloadBtn")];
+        const previewLink = document.getElementById("ybTopPreviewBtn");
+        const worksheetActions = [...downloadButtons, previewLink];
         const previewState = document.getElementById("ybPreviewStateLabel");
         const previewCopy = document.getElementById("ybPreviewCopy");
         const summary = document.getElementById("ybCustomizationSummary");
@@ -670,6 +675,9 @@ function renderCustomizationScript(model) {
         const selectionNotice = document.getElementById("ybSelectionNotice");
         const pdfObject = document.getElementById("ybPdfObject");
         const pdfFrame = document.getElementById("ybPdfFrame");
+        const pdfShell = document.getElementById("ybPdfShell");
+        const pdfUnavailable = document.getElementById("ybPdfUnavailable");
+        const pdfFallbackLink = pdfObject.querySelector("a");
         const selectedValues = document.getElementById("ybSelectedValues");
         const selectedButton = document.getElementById("ybSelectedValuesButton");
         const selectedPanel = document.getElementById("ybSelectedValuesPanel");
@@ -690,8 +698,11 @@ function renderCustomizationScript(model) {
           minimumValue: defaults.minimumValue,
           maximumValue: defaults.maximumValue
         };
+        let requestVersion = 0;
+        let downloadsEnabled = false;
         let lastSuccessful = {
           settings: { ...defaults },
+          summary: summarize(defaults),
           optionHash: model.optionHash,
           mode: "ready",
           downloadUrl: buildPdfUrl(defaults, "attachment"),
@@ -989,7 +1000,7 @@ function renderCustomizationScript(model) {
           const copy = {
             ready: "The approved worksheet is ready to preview, download, and print.",
             stale: "Your selections have changed. Update the preview before downloading.",
-            updating: "Keeping the previous preview visible while the new preview is generated.",
+            updating: "The preview and downloads will return when the update succeeds.",
             customized: "Preview updated to match your selections.",
             validation: "Your selections need attention. Update the preview before downloading.",
             generationError: "Your selections are still here. Try updating the preview again."
@@ -998,51 +1009,87 @@ function renderCustomizationScript(model) {
           previewCopy.textContent = message || copy[state] || copy.ready;
           previewState.dataset.state = state;
           live.textContent = labels[state] || "";
+          setDownloadEnabled(state === "ready" || state === "customized");
         }
 
-        function setDownloadEnabled(enabled, label) {
-          downloadBtn.toggleAttribute("aria-disabled", !enabled);
-          downloadBtn.classList.toggle("disabled", !enabled);
-          downloadBtn.textContent = label || downloadBtn.textContent;
+        function setDownloadEnabled(enabled) {
+          downloadsEnabled = enabled;
+          worksheetActions.forEach((link) => {
+            link.setAttribute("aria-disabled", String(!enabled));
+            link.classList.toggle("disabled", !enabled);
+            if (enabled) {
+              link.href = link === previewLink ? lastSuccessful.previewUrl : lastSuccessful.downloadUrl;
+              link.removeAttribute("tabindex");
+            } else {
+              link.removeAttribute("href");
+              link.setAttribute("tabindex", "-1");
+            }
+          });
+          downloadButtons.forEach((link) => {
+            link.textContent = lastSuccessful.mode === "customized" ? "Download customized PDF" : "Download worksheet PDF";
+          });
           downloadNote.hidden = enabled;
+          downloadNote.textContent = previewCopy.textContent;
+          summary.hidden = false;
+          summary.textContent = (enabled ? "Applied worksheet: " : "Last applied worksheet (preview unavailable): ") + lastSuccessful.summary;
+          pdfUnavailable.hidden = enabled;
+          if (enabled) {
+            const viewerUrl = lastSuccessful.previewUrl + "#toolbar=1&navpanes=0&view=FitH";
+            if (pdfObject.getAttribute("data") !== viewerUrl) pdfObject.data = viewerUrl;
+            if (pdfFrame.getAttribute("src") !== viewerUrl) pdfFrame.src = viewerUrl;
+            pdfFallbackLink.href = lastSuccessful.previewUrl;
+            if (!pdfObject.isConnected) pdfShell.prepend(pdfObject);
+          } else {
+            const moveFocus = pdfShell.contains(document.activeElement) || worksheetActions.includes(document.activeElement);
+            pdfObject.remove();
+            pdfObject.removeAttribute("data");
+            pdfFrame.removeAttribute("src");
+            pdfFallbackLink.removeAttribute("href");
+            pdfUnavailable.textContent = previewCopy.textContent;
+            if (moveFocus) pdfUnavailable.focus();
+          }
         }
 
-        function summarize(settings) {
+        function summarize(settings, items) {
+          // This prototype's approved Q1 contract supplies the initial summary;
+          // successful updates use the generated items without rebuilding truth.
+          const numbered = items ? items.length : settings.questionCount;
+          const completed = items ? items.filter((item) => item.isExample).length : (settings.includeExample ? 1 : 0);
+          const countSummary = model.exampleWithinQuestionTotal
+            ? numbered + " numbered questions; " + completed + " completed; " + (numbered - completed) + " left to solve."
+            : settings.questionCount + " questions";
           const parts = [
-            settings.questionCount + " student questions",
+            countSummary,
             settings.minimumValue === model.suggestedRange.minimumValue && settings.maximumValue === model.suggestedRange.maximumValue
               ? "Numbers " + settings.minimumValue + "–" + settings.maximumValue
               : "Custom range " + settings.minimumValue + "–" + settings.maximumValue,
             settings.selectedValues.length
               ? "Practising " + settings.selectedValues.join(" and ")
               : "",
-            settings.includeExample ? "Completed example on" : "Completed example off",
             settings.includeAnswerKey ? "Answer key included" : "Answer key off"
           ].filter(Boolean);
           return parts.join(" · ");
         }
 
         function applyStaleState() {
+          // Invalidate in-flight work on every edit/reset, including edits back
+          // to the previous settings. An older response cannot apply afterward.
+          requestVersion += 1;
+          updateBtn.disabled = false;
           const settings = readSettings();
           updateRangeNotice(settings);
-          const stale = !settingsEqual(settings, lastSuccessful.settings);
-          if (stale) {
-            setPreviewState("stale");
-            setDownloadEnabled(false, lastSuccessful.mode === "customized" ? "Download customized PDF" : "Download worksheet PDF");
-          } else {
-            setPreviewState(lastSuccessful.mode);
-            setDownloadEnabled(true, lastSuccessful.mode === "customized" ? "Download customized PDF" : "Download worksheet PDF");
-            downloadBtn.href = lastSuccessful.downloadUrl;
-          }
+          setPreviewState(settingsEqual(settings, lastSuccessful.settings) ? lastSuccessful.mode : "stale");
         }
 
         async function updatePreview(event) {
           event.preventDefault();
           clearErrors();
           const settings = readSettings();
+          const restoreUpdateFocus = document.activeElement === updateBtn;
+          const version = ++requestVersion;
+          const isCurrent = () => version === requestVersion && settingsEqual(settings, readSettings());
           updateRangeNotice(settings);
           setPreviewState("updating");
-          setDownloadEnabled(false, lastSuccessful.mode === "customized" ? "Download customized PDF" : "Download worksheet PDF");
           updateBtn.disabled = true;
 
           try {
@@ -1050,43 +1097,44 @@ function renderCustomizationScript(model) {
               headers: { "Accept": "application/json" }
             });
             const data = await response.json();
+            if (!isCurrent()) return;
 
             if (!response.ok || !data.ok) {
               const errors = data.customization?.errors || [{ message: data.error || "We could not update this preview." }];
               showErrors(errors);
               setPreviewState(response.status === 400 ? "validation" : "generationError");
+              errorSummary.focus();
               return;
             }
 
             const normalized = normalizeSettings(data.customization?.normalizedOptions || settings);
             lastSuccessful = {
               settings: normalized,
+              summary: summarize(normalized, data.preview?.contentObject?.content?.items),
               optionHash: data.customization?.optionHash || "",
               mode: settingsEqual(normalized, defaults) ? "ready" : "customized",
               downloadUrl: buildPdfUrl(normalized, "attachment"),
               previewUrl: buildPdfUrl(normalized, "inline")
             };
 
-            pdfObject.data = lastSuccessful.previewUrl + "#toolbar=1&navpanes=0&view=FitH";
-            pdfFrame.src = lastSuccessful.previewUrl + "#toolbar=1&navpanes=0&view=FitH";
-            downloadBtn.href = lastSuccessful.downloadUrl;
-            summary.hidden = false;
-            summary.textContent = summarize(normalized);
+            writeSettings(normalized);
             setPreviewState(lastSuccessful.mode);
-            setDownloadEnabled(true, lastSuccessful.mode === "customized" ? "Download customized PDF" : "Download worksheet PDF");
           } catch (error) {
+            if (!isCurrent()) return;
             setPreviewState("generationError");
             showErrors([{ message: "We could not update this preview." }]);
+            errorSummary.focus();
           } finally {
-            updateBtn.disabled = false;
+            if (version === requestVersion) {
+              updateBtn.disabled = false;
+              if (restoreUpdateFocus && document.activeElement === document.body) updateBtn.focus();
+            }
           }
         }
 
         function restoreDefaults() {
           writeSettings(defaults);
           setSelectorOpen(false);
-          summary.hidden = true;
-          summary.textContent = "";
           clearErrors();
           applyStaleState();
         }
@@ -1159,16 +1207,19 @@ function renderCustomizationScript(model) {
           }
         });
 
-        downloadBtn.addEventListener("click", (event) => {
-          if (downloadBtn.getAttribute("aria-disabled") === "true") {
-            event.preventDefault();
-            setPreviewState("stale");
-          }
+        worksheetActions.forEach((link) => {
+          const blockUnavailableAction = (event) => {
+            if (!downloadsEnabled) event.preventDefault();
+          };
+          link.addEventListener("click", blockUnavailableAction);
+          link.addEventListener("auxclick", blockUnavailableAction);
+          link.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") blockUnavailableAction(event);
+          });
         });
 
         writeSettings(defaults);
         setPreviewState("ready");
-        setDownloadEnabled(true, "Download worksheet PDF");
       })();
     </script>
   `;
@@ -1217,9 +1268,9 @@ function renderWorksheetDetailPage(item) {
             <div class="preview-state-pill" id="ybPreviewStateLabel">Ready-to-use worksheet</div>
           </div>
           <div class="customization-summary" id="ybCustomizationSummary" hidden></div>
-          ${renderWorksheetPreviewObject(id)}
+          ${renderWorksheetPreviewObject(id, true)}
           <div class="resource-actions preview-download-row">
-            <a class="btn primary" id="ybDownloadBtn" href="${escapeHtml(defaultPdfUrl)}">Download worksheet PDF</a>
+            <a class="btn primary" id="ybDownloadBtn" role="link" href="${escapeHtml(defaultPdfUrl)}">Download worksheet PDF</a>
             <span class="download-disabled-note" id="ybDownloadNote" hidden>Your selections have changed. Update the preview before downloading.</span>
           </div>
         </section>
@@ -1276,8 +1327,8 @@ function renderWorksheetDetailPage(item) {
         <p class="lede">${escapeHtml(item.description || "")}</p>
 
         <div class="resource-actions" style="margin-top:18px;">
-          <a class="btn" href="${escapeHtml(defaultPreviewUrl)}">Preview PDF</a>
-          <a class="btn primary" href="${escapeHtml(defaultPdfUrl)}">${customizationModel ? "Download worksheet PDF" : "Download PDF"}</a>
+          <a class="btn"${customizationModel ? ' id="ybTopPreviewBtn" role="link"' : ""} href="${escapeHtml(defaultPreviewUrl)}">Preview PDF</a>
+          <a class="btn primary"${customizationModel ? ' id="ybTopDownloadBtn" role="link"' : ""} href="${escapeHtml(defaultPdfUrl)}">${customizationModel ? "Download worksheet PDF" : "Download PDF"}</a>
           ${customizationToggle}
           <a class="btn" href="/browse">Browse More</a>
         </div>
