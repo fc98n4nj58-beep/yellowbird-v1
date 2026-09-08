@@ -13,6 +13,12 @@ const {
   getCustomizationFamilyForResource
 } = require("../config/worksheetCustomization");
 const {
+  resolveGrade1BaseTenTitle
+} = require("../config/worksheetCustomization/families/grade1BaseTenBlocks");
+const {
+  buildBaseTenResponseLayout
+} = require("../config/layout/grade1BaseTenBlocksLayout");
+const {
   validateGrade1FractionWorksheet
 } = require("../engine/problemGenerators/grade1Fractions");
 const {
@@ -6608,6 +6614,20 @@ if (item.id === "g1_addition_facts_within_20") {
     additionFactsLayout: profile,
     inlineEquationFontSize: profile.questionTextSize
   };
+}
+
+if (item.id === "grade1_place_value_representation_base_ten_blocks") {
+  const settings = normalizedOptions._customization?.normalizedOptions;
+  if (settings) {
+    layout.header = { ...layout.header, title: resolveGrade1BaseTenTitle(settings) };
+    layout.template = { ...layout.template, columns: 1, maxProblemsPerPage: settings.questionCount };
+    layout.display = {
+      ...layout.display,
+      baseTenQuestionTextSize: settings.questionTextSize,
+      baseTenResponseLayout: buildBaseTenResponseLayout(settings.questionTextSize),
+      baseTenTensOnesBoxes: settings.baseTenResponseMode === "tens_ones"
+    };
+  }
 }
 
 return layout;

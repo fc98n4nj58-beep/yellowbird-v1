@@ -49,6 +49,15 @@ const variables = Object.freeze({
     fallback: "shown",
     serialization: { includeInHash: true }
   },
+  baseTenResponseMode: {
+    id: "baseTenResponseMode",
+    label: "Answer format",
+    type: VARIABLE_TYPES.STRING,
+    group: CONTROL_GROUPS.STUDENT_SUPPORT,
+    publicClassification: "basic",
+    fallback: "standard_number",
+    serialization: { includeInHash: true }
+  },
   includeExample: {
     id: "includeExample",
     label: "Show one completed example",

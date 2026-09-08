@@ -416,6 +416,7 @@ const CUSTOMIZATION_CONTROL_ORDER = [
   "minimumValue",
   "maximumValue",
   "selectedValues",
+  "baseTenResponseMode",
   "numberLineArrows",
   "includeExample",
   "includeAnswerKey",
@@ -511,6 +512,7 @@ function renderCustomizationPanel(model) {
   const linkedRange = model.range?.kind === "linkedNumberLine";
   const hasSelectedValues = model.controls.some(control => control.id === "selectedValues");
   const hasArrowControl = model.controls.some(control => control.id === "numberLineArrows");
+  const hasBaseTenResponseMode = model.controls.some(control => control.id === "baseTenResponseMode");
   const questionControl = model.controls.find((control) => control.id === "questionCount") || {};
   const minControl = model.controls.find((control) => control.id === "minimumValue") || {};
   const maxControl = model.controls.find((control) => control.id === "maximumValue") || {};
@@ -655,6 +657,17 @@ function renderCustomizationPanel(model) {
               <div class="field-error" id="ybNumberLineArrowsError"></div>
             </div>
           </div>` : ""}
+          ${hasBaseTenResponseMode ? `<div class="control-row">
+            <label class="field-label" for="ybBaseTenResponseMode">Answer format</label>
+            <div class="control-cell">
+              <select id="ybBaseTenResponseMode" name="baseTenResponseMode" aria-describedby="ybBaseTenResponseModeHelp ybBaseTenResponseModeError">
+                <option value="standard_number">Write the number</option>
+                <option value="tens_ones">Tens and ones boxes</option>
+              </select>
+              <div class="field-help" id="ybBaseTenResponseModeHelp">Choose one answer line or separate tens and ones boxes.</div>
+              <div class="field-error" id="ybBaseTenResponseModeError"></div>
+            </div>
+          </div>` : ""}
           <label class="checkbox-row" for="ybIncludeExample">
             <input id="ybIncludeExample" name="includeExample" type="checkbox" />
             <span>
@@ -729,6 +742,7 @@ function renderCustomizationScript(model) {
         const linkedRange = model.range?.kind === "linkedNumberLine";
         const hasSelectedValues = model.controls.some(control => control.id === "selectedValues");
         const hasArrowControl = model.controls.some(control => control.id === "numberLineArrows");
+        const hasBaseTenResponseMode = model.controls.some(control => control.id === "baseTenResponseMode");
         const defaults = normalizeSettings(model.defaults);
         let selectedValueSet = new Set(defaults.selectedValues);
         let lastCustomRange = {
@@ -751,6 +765,7 @@ function renderCustomizationScript(model) {
             questionCount: Number(settings.questionCount),
             questionTextSize: Number(settings.questionTextSize ?? 12),
             numberLineArrows: settings.numberLineArrows ?? "shown",
+            baseTenResponseMode: settings.baseTenResponseMode ?? "standard_number",
             minimumValue: Number(settings.minimumValue ?? 0),
             maximumValue: Number(settings.maximumValue ?? 20),
             selectedValues: Array.isArray(settings.selectedValues)
@@ -768,6 +783,7 @@ function renderCustomizationScript(model) {
             questionCount: normalized.questionCount,
             questionTextSize: normalized.questionTextSize,
             numberLineArrows: normalized.numberLineArrows,
+            baseTenResponseMode: normalized.baseTenResponseMode,
             minimumValue: normalized.minimumValue,
             maximumValue: normalized.maximumValue,
             selectedValues: normalized.selectedValues,
@@ -786,6 +802,7 @@ function renderCustomizationScript(model) {
           params.set("questionCount", String(settings.questionCount));
           params.set("questionTextSize", String(settings.questionTextSize));
           if (hasArrowControl) params.set("numberLineArrows", settings.numberLineArrows);
+          if (hasBaseTenResponseMode) params.set("baseTenResponseMode", settings.baseTenResponseMode);
           if (hasRangeControls) {
             params.set("minimumValue", String(settings.minimumValue));
             params.set("maximumValue", String(settings.maximumValue));
@@ -855,6 +872,7 @@ function renderCustomizationScript(model) {
             questionCount: Number(form.elements.questionCount.value),
             questionTextSize: Number(form.elements.questionTextSize.value),
             numberLineArrows: hasArrowControl ? form.elements.numberLineArrows.value : "shown",
+            baseTenResponseMode: hasBaseTenResponseMode ? form.elements.baseTenResponseMode.value : "standard_number",
             minimumValue: min,
             maximumValue: max,
             selectedValues: Array.from(selectedValueSet),
@@ -889,6 +907,7 @@ function renderCustomizationScript(model) {
           form.elements.questionCount.value = String(normalized.questionCount);
           form.elements.questionTextSize.value = String(normalized.questionTextSize);
           if (hasArrowControl) form.elements.numberLineArrows.value = normalized.numberLineArrows;
+          if (hasBaseTenResponseMode) form.elements.baseTenResponseMode.value = normalized.baseTenResponseMode;
           form.elements.includeExample.checked = normalized.includeExample;
           form.elements.includeAnswerKey.checked = normalized.includeAnswerKey;
           if (!hasRangeControls) return;

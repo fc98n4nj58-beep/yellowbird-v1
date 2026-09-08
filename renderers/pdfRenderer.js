@@ -2933,32 +2933,41 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
 
         if (visualForRender.kind === "base_ten_blocks" && display.baseTenAlignedResponse) {
           const modelBottomY = baseTenCellGeometry?.answerLineY ?? placed.y + (measured.rodLength || measured.height);
+          const baseTenTextSize = Number(display.baseTenQuestionTextSize || 12);
 
           if (display.baseTenTensOnesBoxes) {
-          const totalWidth = 52;
-          const boxW = totalWidth / 2;
-          const boxH = totalWidth;
+          const responseLayout = display.baseTenResponseLayout || {
+            labelFontSize: baseTenTextSize,
+            columnWidth: 52,
+            totalWidth: 104,
+            boxHeight: 60,
+            headingGap: 3
+          };
+          const totalWidth = responseLayout.totalWidth;
+          const boxW = responseLayout.columnWidth;
+          const boxH = responseLayout.boxHeight;
           const startX = x + Math.max(0, width - totalWidth - 6);
           const boxY = modelBottomY - boxH;
           const tensValue = visual.data?.tens ?? Math.floor(Number(question.answer || 0) / 10);
           const onesValue = visual.data?.ones ?? Number(question.answer || 0) % 10;
 
           doc.save();
-          setFont(doc, fonts.light || fonts.regular || "Helvetica", 8);
+          setFont(doc, fonts.light || fonts.regular || "Helvetica", responseLayout.labelFontSize);
           doc.fillColor(pdfDesignTokens.colors.muted);
-          doc.text("TENS", startX, boxY - 12, { width: boxW, align: "center", lineBreak: false });
-          doc.text("ONES", startX + boxW, boxY - 12, { width: boxW, align: "center", lineBreak: false });
+          const headingY = boxY - responseLayout.labelFontSize - responseLayout.headingGap;
+          doc.text("TENS", startX, headingY, { width: boxW, align: "center", lineBreak: false });
+          doc.text("ONES", startX + boxW, headingY, { width: boxW, align: "center", lineBreak: false });
           doc.strokeColor(pdfDesignTokens.colors.answerRule);
           doc.lineWidth(0.8);
           doc.rect(startX, boxY, totalWidth, boxH).stroke();
           doc.moveTo(startX + boxW, boxY).lineTo(startX + boxW, boxY + boxH).stroke();
           if ((display.answerKey || isExample) && question.answer != null) {
-            setFont(doc, fonts.bold || fonts.regular || "Helvetica", 12);
+            setFont(doc, fonts.bold || fonts.regular || "Helvetica", baseTenTextSize);
             doc.fillColor(pdfDesignTokens.colors.text);
             const digitY = boxY + boxH / 2 - 7;
             doc.text(formatAnswerValue(tensValue), startX, digitY, { width: boxW, align: "center", lineBreak: false });
             doc.text(formatAnswerValue(onesValue), startX + boxW, digitY, { width: boxW, align: "center", lineBreak: false });
-            restoreAnswerSurroundingTextStyle(doc, fonts, 12);
+            restoreAnswerSurroundingTextStyle(doc, fonts, baseTenTextSize);
           }
           doc.restore();
 

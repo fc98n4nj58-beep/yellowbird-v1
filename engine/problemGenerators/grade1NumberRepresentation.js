@@ -228,8 +228,8 @@ function generateNumberWordProblem(options = {}) {
 
 function generateBaseTenProblem(options = {}) {
   const { min, max } = normalizeRange(options, { min: 0, max: 50 });
-  if (min < 0 || max > 50) {
-    throw new Error("Base Ten Blocks to 50 supports values from 0 to 50.");
+  if (min < 0 || max > 100) {
+    throw new Error("Base Ten Blocks supports values from 0 to 100.");
   }
 
   const labelMode = parseBoolean(
@@ -247,7 +247,7 @@ function generateBaseTenProblem(options = {}) {
   const state = getSequenceState(options, key, () =>
     buildCandidateSequence(
       "base_ten",
-      valueCandidates(`base_ten:${labelMode ? "labels" : "line"}`, options, { min: 0, max: 50 }),
+      valueCandidates(`base_ten:${labelMode ? "labels" : "line"}`, options, { min: 0, max: 100 }),
       options
     )
   );
