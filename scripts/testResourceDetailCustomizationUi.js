@@ -429,6 +429,32 @@ async function run() {
       await assertAppliedRequests(ui,baseUrl,{questionTextSize:12,includeAnswerKey:true,questionCount:60});
     });
 
+    await test("Addition Facts titles follow only the successfully applied range through 100", async () => {
+      const ui = mountCustomization((url) => fetch(new URL(url, baseUrl)));
+      assert(additionHtml().includes("Addition Facts to 20"));
+      await ui.edit({ rangeMode: "custom", minimumValue: 0, maximumValue: 100, selectedValues: [100] });
+      await assertUnavailable(ui);
+      await ui.submit();
+      const applied = await (await fetch(new URL(ui.get("ybPdfObject").data, baseUrl))).arrayBuffer();
+      assert(applied.byteLength > 1000);
+      const previewUrl = new URL(ui.get("ybPdfObject").data, baseUrl);
+      const preview = await (await fetch(`${baseUrl}/api/catalog-preview/${RESOURCE_ID}?${previewUrl.searchParams}`)).json();
+      assert.strictEqual(preview.preview.contentObject.meta.title, "Addition Facts to 100");
+      assert.strictEqual(preview.preview.layout.header.title, "Addition Facts to 100");
+      await ui.edit({ minimumValue: 20, maximumValue: 100, selectedValues: [] });
+      await ui.submit();
+      const positiveMinimum = await (await fetch(`${baseUrl}/api/catalog-preview/${RESOURCE_ID}?minimumValue=20&maximumValue=100`)).json();
+      assert.strictEqual(positiveMinimum.preview.contentObject.meta.title, "Addition Facts Between 20 and 100");
+      await ui.edit({ maximumValue: 101 });
+      await ui.submit();
+      await assertUnavailable(ui);
+      assert.strictEqual(ui.form.elements.maximumValue.value, "101");
+      await ui.get("ybRestoreBtn").emit("click");
+      await ui.submit();
+      const restored = await (await fetch(`${baseUrl}/api/catalog-preview/${RESOURCE_ID}`)).json();
+      assert.strictEqual(restored.preview.contentObject.meta.title, "Addition Facts to 20");
+    });
+
     await test("impossible selections are rejected by shared validation in preview and PDF", async () => {
       for (const [query, code, field, message] of [
         ["minimumValue=10&maximumValue=20&selectedValues=15", "selected_values_infeasible", "selectedValues", "15 cannot be used"],

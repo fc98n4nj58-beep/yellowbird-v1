@@ -8,6 +8,7 @@ const {
   normalizeWorksheetCustomization,
   hashCanonicalPayload
 } = require("../services/worksheetCustomizationService");
+const { resolveAdditionFactsTitle } = require("../config/worksheetCustomization/families/additionFactsWithin20");
 
 const RESOURCE_ID = "g1_addition_facts_within_20";
 
@@ -155,6 +156,24 @@ function run() {
   assertValidAdditionFacts(extendedRange, { min: 0, max: 30 });
   assert(extendedRange.some((item) => item.a >= 10 || item.b >= 10));
   assert(extendedRange.every((item) => item.prompt.length <= "30 + 30 = __".length));
+
+  for (const [options, title] of [
+    [{}, "Addition Facts to 20"],
+    [{ minimumValue: 0, maximumValue: 100 }, "Addition Facts to 100"],
+    [{ minimumValue: 20, maximumValue: 100 }, "Addition Facts Between 20 and 100"]
+  ]) {
+    const runtime = buildCatalogWorksheetRuntime(RESOURCE_ID, { ...options, worksheetSeed: "title-contract" });
+    assert.strictEqual(resolveAdditionFactsTitle(normalizeWorksheetCustomization(RESOURCE_ID, options).normalizedOptions), title);
+    assert.strictEqual(runtime.layout.header.title, title);
+    assert.strictEqual(runtime.contentObject.meta.title, title);
+  }
+  const maximumHundred = itemsFor({ minimumValue: 0, maximumValue: 100, selectedValues: [100], questionCount: 12, worksheetSeed: "maximum-hundred" });
+  assertValidAdditionFacts(maximumHundred, { min: 0, max: 100 });
+  assert(maximumHundred.some(item => item.a === 100 || item.b === 100));
+  assert.doesNotThrow(() => itemsFor({ minimumValue: 50, maximumValue: 100, questionCount: 6, worksheetSeed: "fifty-hundred" }));
+  assertThrowsCustomization({ minimumValue: 51, maximumValue: 100 }, "empty_addition_fact_pool");
+  assertThrowsCustomization({ minimumValue: 50, maximumValue: 100, selectedValues: [75] }, "selected_values_infeasible");
+  assertThrowsCustomization({ maximumValue: 101 }, "above_maximum");
 
   const uniqueTwenty = itemsFor({
     questionCount: 20,

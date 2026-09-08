@@ -67,7 +67,7 @@ const grade1Catalog = [
   },
   {
     id: "g1_addition_facts_within_20",
-    title: "Addition Facts Within 20",
+    title: "Addition Facts to 20",
     shortTitle: "Addition Facts",
     subject: "Math",
     grades: ["grade1"],

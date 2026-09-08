@@ -6595,6 +6595,9 @@ if (useFounderReviewDefaultLayout) {
 
 if (item.id === "g1_addition_facts_within_20") {
   const { buildAdditionFactsLayout } = require("../config/layout/additionFactsLayout");
+  const { resolveAdditionFactsTitle } = require("../config/worksheetCustomization/families/additionFactsWithin20");
+  const settings = normalizedOptions._customization?.normalizedOptions;
+  if (settings) layout.header.title = resolveAdditionFactsTitle(settings);
   const profile = buildAdditionFactsLayout(
     layout.problems,
     normalizedOptions._customization.normalizedOptions.questionTextSize

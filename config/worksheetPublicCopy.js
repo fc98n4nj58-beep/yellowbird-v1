@@ -2,7 +2,7 @@
 
 const ADDITION_FACTS = Object.freeze({
   g1_addition_facts_within_20: Object.freeze({
-    title: "Addition Facts Within 20",
+    title: "Addition Facts to 20",
     instruction: "Solve each addition fact."
   }),
   g2_addition_fluency_within_100: Object.freeze({

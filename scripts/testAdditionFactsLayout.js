@@ -27,6 +27,14 @@ for (const size of [12,14,16]) {
     checks++;
   }
 }
+for (const size of [12,14,16]) {
+  const runtime=buildCatalogWorksheetRuntime(id,{minimumValue:0,maximumValue:100,selectedValues:[100],questionTextSize:size,questionCount:60,includeExample:true,worksheetSeed:"three-digit-layout"});
+  const items=runtime.contentObject.content.items;
+  const profile=runtime.layout.display.additionFactsLayout;
+  assert(items.some(item=>item.a===100||item.b===100),"expected a three-digit operand");
+  assert(items.some(item=>item.answer===100),"expected a three-digit answer");
+  assert(profile.measuredWidth<=profile.columnWidth,"three-digit prompt must fit safely");
+}
 const standard=buildCatalogWorksheetRuntime(id,{}).layout.display.additionFactsLayout;
 assert.strictEqual(standard.capacity,60);
 assert.strictEqual(standard.columns,4);

@@ -28,6 +28,14 @@ function adaptAdditionFactsOptions(normalizedOptions = {}) {
   return generatorOptions;
 }
 
+function resolveAdditionFactsTitle(normalizedOptions = {}) {
+  const minimumValue = normalizedOptions.minimumValue;
+  const maximumValue = normalizedOptions.maximumValue;
+  return minimumValue === 0
+    ? `Addition Facts to ${maximumValue}`
+    : `Addition Facts Between ${minimumValue} and ${maximumValue}`;
+}
+
 const additionFactsWithin20 = Object.freeze({
   id: "additionFactsWithin20",
   label: "Addition Facts Within 20",
@@ -75,21 +83,21 @@ const additionFactsWithin20 = Object.freeze({
     },
     minimumValue: {
       min: 0,
-      max: 50,
+      max: 100,
       integer: true,
       layoutRisk: "medium",
       publicStatus: "public_prototype"
     },
     maximumValue: {
       min: 0,
-      max: 50,
+      max: 100,
       integer: true,
       layoutRisk: "medium",
       publicStatus: "public_prototype"
     },
     selectedValues: {
       min: 0,
-      max: 50,
+      max: 100,
       layoutRisk: "low",
       publicStatus: "public_prototype",
       semantics: "emphasis"
@@ -120,9 +128,9 @@ const additionFactsWithin20 = Object.freeze({
   resources: Object.freeze({
     [ADDITION_FACTS_RESOURCE_ID]: Object.freeze({
       id: ADDITION_FACTS_RESOURCE_ID,
-      title: "Addition Facts Within 20",
+      title: "Addition Facts to 20",
       suggestedRange: Object.freeze({ minimumValue: 0, maximumValue: 20 }),
-      safeRange: Object.freeze({ minimumValue: 0, maximumValue: 50 }),
+      safeRange: Object.freeze({ minimumValue: 0, maximumValue: 100 }),
       defaults: Object.freeze({
         questionCount: 60,
         questionsPerPage: 60,
@@ -154,5 +162,6 @@ const additionFactsWithin20 = Object.freeze({
 module.exports = {
   ADDITION_FACTS_RESOURCE_ID,
   additionFactsWithin20,
-  adaptAdditionFactsOptions
+  adaptAdditionFactsOptions,
+  resolveAdditionFactsTitle
 };
