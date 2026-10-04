@@ -6,7 +6,7 @@
       "kind": "quick_check",
       "title": "Addition Within 20",
       "instruction": "Add.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/01_g2_addition_within_20_quick_check.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/01_g2_addition_within_20_quick_check.pdf",
       "bytes": 9461,
       "pages": 2
     },
@@ -15,7 +15,7 @@
       "kind": "quick_check",
       "title": "Subtraction Within 20",
       "instruction": "Subtract.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/02_g2_subtraction_within_20_quick_check.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/02_g2_subtraction_within_20_quick_check.pdf",
       "bytes": 10360,
       "pages": 2
     },
@@ -24,7 +24,7 @@
       "kind": "quick_check",
       "title": "Missing Addends Within 20",
       "instruction": "Find the missing number in each addition fact.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/03_g2_missing_addends_within_20_quick_check.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/03_g2_missing_addends_within_20_quick_check.pdf",
       "bytes": 10708,
       "pages": 2
     },
@@ -33,7 +33,7 @@
       "kind": "worksheet",
       "title": "Arrays",
       "instruction": "Use each array to complete the number sentence.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/04_grade1_multiplication_facts_arrays.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/04_grade1_multiplication_facts_arrays.pdf",
       "bytes": 18018,
       "pages": 2
     },
@@ -42,7 +42,7 @@
       "kind": "worksheet",
       "title": "Multiplication with Arrays",
       "instruction": "Use each array to write a multiplication equation.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/05_grade2_multiplication_facts_arrays.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/05_grade2_multiplication_facts_arrays.pdf",
       "bytes": 21515,
       "pages": 2
     },
@@ -51,7 +51,7 @@
       "kind": "worksheet",
       "title": "Multiplication with Arrays",
       "instruction": "Use each array to write a multiplication equation.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/06_g3_multiplication_arrays.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/06_g3_multiplication_arrays.pdf",
       "bytes": 28265,
       "pages": 4
     },
@@ -60,7 +60,7 @@
       "kind": "worksheet",
       "title": "Multiplication with Arrays",
       "instruction": "Use each array to write a multiplication equation.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/07_g4_array_interpretation.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/07_g4_array_interpretation.pdf",
       "bytes": 28543,
       "pages": 4
     },
@@ -69,7 +69,7 @@
       "kind": "worksheet",
       "title": "Read the Graph",
       "instruction": "Use the graph to answer each question.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/08_grade1_data_display_graphing_read_graph.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/08_grade1_data_display_graphing_read_graph.pdf",
       "bytes": 17506,
       "pages": 2
     },
@@ -78,7 +78,7 @@
       "kind": "worksheet",
       "title": "Read the Pictograph",
       "instruction": "Use the pictograph to answer each question.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/09_grade2_data_display_graphing_read_graph.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/09_grade2_data_display_graphing_read_graph.pdf",
       "bytes": 17339,
       "pages": 2
     },
@@ -87,7 +87,7 @@
       "kind": "worksheet",
       "title": "Read the Graph",
       "instruction": "Use the graph to answer each question.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/10_g3_read_a_graph.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/10_g3_read_a_graph.pdf",
       "bytes": 17250,
       "pages": 2
     },
@@ -96,7 +96,7 @@
       "kind": "worksheet",
       "title": "Compare the Data",
       "instruction": "Use the graph to compare the categories and answer each question.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/11_grade1_data_display_graphing_interpret_data.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/11_grade1_data_display_graphing_interpret_data.pdf",
       "bytes": 17967,
       "pages": 2
     },
@@ -105,7 +105,7 @@
       "kind": "worksheet",
       "title": "Graph Questions",
       "instruction": "Use the graph to answer each question.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/12_grade1_data_display_graphing_graph_questions.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/12_grade1_data_display_graphing_graph_questions.pdf",
       "bytes": 18107,
       "pages": 2
     },
@@ -114,7 +114,7 @@
       "kind": "worksheet",
       "title": "Interpret the Pictograph",
       "instruction": "Use the pictograph to answer each question.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/13_grade2_data_display_graphing_interpret_data.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/13_grade2_data_display_graphing_interpret_data.pdf",
       "bytes": 17761,
       "pages": 2
     },
@@ -123,7 +123,7 @@
       "kind": "worksheet",
       "title": "Answer Questions About a Graph",
       "instruction": "Use the graph to answer each question.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/14_g3_graph_questions.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/14_g3_graph_questions.pdf",
       "bytes": 18279,
       "pages": 2
     },
@@ -132,7 +132,7 @@
       "kind": "worksheet",
       "title": "Interpret the Data",
       "instruction": "Read each statement. Write Yes if the graph supports it or No if it does not.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/15_g3_interpret_data.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/15_g3_interpret_data.pdf",
       "bytes": 17321,
       "pages": 2
     },
@@ -141,7 +141,7 @@
       "kind": "worksheet",
       "title": "Complete the Pictograph",
       "instruction": "Use the data table. Draw circles to complete the pictograph.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/16_grade1_data_display_graphing_complete_graph.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/16_grade1_data_display_graphing_complete_graph.pdf",
       "bytes": 19477,
       "pages": 2
     },
@@ -150,7 +150,7 @@
       "kind": "worksheet",
       "title": "Finish the Pictograph",
       "instruction": "Use the table to draw the missing circles in the pictograph.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/17_grade2_data_display_graphing_complete_graph.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/17_grade2_data_display_graphing_complete_graph.pdf",
       "bytes": 19441,
       "pages": 2
     },
@@ -159,7 +159,7 @@
       "kind": "worksheet",
       "title": "Complete the Graph",
       "instruction": "Use the data table to complete the pictograph.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/18_g3_complete_a_graph.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/18_g3_complete_a_graph.pdf",
       "bytes": 19563,
       "pages": 2
     },
@@ -168,7 +168,7 @@
       "kind": "worksheet",
       "title": "Choose the Matching Graph",
       "instruction": "Look at each data set. Circle the graph that matches.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/19_grade1_data_display_graphing_match_data_to_graph.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/19_grade1_data_display_graphing_match_data_to_graph.pdf",
       "bytes": 23944,
       "pages": 2
     },
@@ -177,7 +177,7 @@
       "kind": "worksheet",
       "title": "Choose the Matching Pictograph",
       "instruction": "Use the table. Circle A or B to show which pictograph matches the data.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/20_grade2_data_display_graphing_match_data_to_graph.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/20_grade2_data_display_graphing_match_data_to_graph.pdf",
       "bytes": 25014,
       "pages": 2
     },
@@ -186,7 +186,7 @@
       "kind": "worksheet",
       "title": "Choose the Matching Pictograph",
       "instruction": "Use the table. Circle A or B to show which pictograph matches the data.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/21_g3_match_data_to_graph.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/21_g3_match_data_to_graph.pdf",
       "bytes": 24690,
       "pages": 2
     },
@@ -195,7 +195,7 @@
       "kind": "worksheet",
       "title": "Use the Graph to Solve",
       "instruction": "Use the graph and the new information to answer each question.",
-      "outputPath": "/Users/davidbirnie/Desktop/yellowbird-v1/review/founder-review-remaining-corrections/founder-review-2026-08-11/22_grade1_data_display_graphing_graph_word_problems.pdf",
+      "outputPath": "review/founder-review-remaining-corrections/founder-review-2026-08-11/22_grade1_data_display_graphing_graph_word_problems.pdf",
       "bytes": 17251,
       "pages": 2
     }

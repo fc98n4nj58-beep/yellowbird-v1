@@ -8,7 +8,7 @@ const DEFAULT_OUTPUT = Object.freeze({
   grade5_addition_subtraction_facts_equation_match: Object.freeze({ questionCount: 30, columns: 2, maxProblemsPerPage: 30, denseGridRows: 15 }),
 
   grade1_fraction_equivalence_compare_fractions: Object.freeze({ questionCount: 8, columns: 2, maxProblemsPerPage: 8, denseGridRows: 4 }),
-  grade3_fraction_equivalence_compare_fractions: Object.freeze({ questionCount: 20, questionsPerPage: 20, columns: 2, maxProblemsPerPage: 20, denseGridRows: 10 }),
+  grade3_fraction_equivalence_compare_fractions: Object.freeze({ questionCount: 20, equalPairs: 4, questionsPerPage: 20, columns: 2, maxProblemsPerPage: 20, denseGridRows: 10 }),
   grade4_fraction_equivalence_compare_fractions: Object.freeze({ questionCount: 30, questionsPerPage: 30, columns: 3, maxProblemsPerPage: 30, denseGridRows: 10 }),
   grade5_fraction_equivalence_compare_fractions: Object.freeze({ questionCount: 30, questionsPerPage: 30, columns: 3, maxProblemsPerPage: 30, denseGridRows: 10 }),
 

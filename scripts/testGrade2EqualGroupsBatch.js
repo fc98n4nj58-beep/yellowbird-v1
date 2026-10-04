@@ -79,8 +79,8 @@ function assertCatalogAndReconciliation() {
       master.filter((item) => item.status === status).length
     ])
   );
-  assert.deepStrictEqual(counts, { ready: 102, generated: 213, partial: 5, planned: 11 });
-  assert.strictEqual(master.length, 331);
+  assert.deepStrictEqual(counts, { ready: 106, generated: 213, partial: 4, planned: 11 });
+  assert.strictEqual(master.length, 334);
 
   const reconciliation = fs.readFileSync(
     path.join(ROOT, "docs/grade-2-architecture-reconciliation-preflight.md"),

@@ -98,17 +98,17 @@ function assertDistinctUseAndDefaultContract() {
   assert.strictEqual(runtime.layout.display.answerTargetVariant, "comparisonSymbol");
   assert.strictEqual(runtime.layout.display.hideItemSeparators, true);
   assert.strictEqual(runtime.layout.template.columns, 2);
-  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 12);
-  assert.strictEqual(items.length, 12);
+  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 20);
+  assert.strictEqual(items.length, 20);
   assert(items.every((item) => !item.isExample));
   assert.strictEqual(runtime.contentObject.meta.curriculum.footerText, EXPECTED_FOOTER);
   assert(!EXPECTED_FOOTER.includes("addition_subtraction_facts"));
   assert(!Object.prototype.hasOwnProperty.call(runtime.layout, "overflow"));
 
   const symbols = items.map((item) => item.expectedSymbol);
-  assert.strictEqual(symbols.filter((symbol) => symbol === "=").length, 6);
-  assert.strictEqual(symbols.filter((symbol) => symbol === "≠").length, 6);
-  assert.strictEqual(new Set(items.map((item) => item.duplicateSignature)).size, 12);
+  assert.strictEqual(symbols.filter((symbol) => symbol === "=").length, 10);
+  assert.strictEqual(symbols.filter((symbol) => symbol === "≠").length, 10);
+  assert.strictEqual(new Set(items.map((item) => item.duplicateSignature)).size, 20);
 
   items.forEach((item, index) => {
     assert.strictEqual(item.id, index + 1);
@@ -136,11 +136,11 @@ function assertCompletedQuestionsOneAndTwo() {
     includeExample: true
   });
   const items = runtime.contentObject.content.items;
-  assert.strictEqual(items.length, 12);
+  assert.strictEqual(items.length, 20);
   assert.strictEqual(runtime.layout.header.title, EXPECTED_TITLE);
   assert.strictEqual(runtime.layout.instruction, EXPECTED_INSTRUCTION);
   assert.strictEqual(runtime.layout.template.columns, 2);
-  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 12);
+  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 20);
   assert.strictEqual(items[0].id, 1);
   assert.strictEqual(items[0].isExample, true);
   assert.strictEqual(items[0].leftValue, items[0].rightValue);
@@ -207,7 +207,7 @@ async function assertPdfAndAnswerKeyParity() {
     includeExample: true
   });
   const answerKeyItems = buildAnswerKeyItems(runtime.contentObject.content.items);
-  assert.strictEqual(answerKeyItems.length, 12);
+  assert.strictEqual(answerKeyItems.length, 20);
   answerKeyItems.forEach((item, index) => {
     const source = runtime.contentObject.content.items[index];
     assert.strictEqual(item.id, source.id);

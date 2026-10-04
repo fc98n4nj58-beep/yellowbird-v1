@@ -159,7 +159,7 @@ function assertCatalogBoundary() {
   assert.strictEqual(item.status, "generated");
   const master = JSON.parse(fs.readFileSync("data/worksheetCatalog.master.json", "utf8")).items;
   assert.strictEqual(master.filter((record) => record.id === RESOURCE_ID).length, 1);
-  assert.strictEqual(master.filter((record) => record.status === "ready").length, 102);
+  assert.strictEqual(master.filter((record) => record.status === "ready").length, 106);
   const reconciliation = fs.readFileSync("docs/grade-2-architecture-reconciliation-preflight.md", "utf8");
   const categoryA = reconciliation.match(/\*\*A \(35\):\*\*[^\n]+/)?.[0] || "";
   const categoryD = reconciliation.match(/\*\*D \(0\):\*\*[^\n]+/)?.[0] || "";

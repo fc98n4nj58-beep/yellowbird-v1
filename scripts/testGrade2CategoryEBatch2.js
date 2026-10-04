@@ -339,8 +339,8 @@ function assertCatalogReconciliationAndIsolation() {
     result[item.status] = (result[item.status] || 0) + 1;
     return result;
   }, {});
-  assert.deepStrictEqual(counts, { ready: 102, partial: 5, generated: 213, planned: 11 });
-  assert.strictEqual(master.length, 331);
+  assert.deepStrictEqual(counts, { ready: 106, partial: 4, generated: 213, planned: 11 });
+  assert.strictEqual(master.length, 334);
 
   const reconciliation = fs.readFileSync("docs/grade-2-architecture-reconciliation-preflight.md", "utf8");
   const categoryA = reconciliation.match(/\*\*A \(35\):\*\*[^\n]+/)?.[0] || "";
@@ -356,7 +356,7 @@ function assertCatalogReconciliationAndIsolation() {
   assert(!categoryE.includes(IDS.related));
 
   const grade1Addition = buildCatalogWorksheetRuntime("g1_addition_facts_within_20", { worksheetSeed: "g2-e2-isolation" });
-  assert.strictEqual(grade1Addition.layout.header.title, "Addition Facts Within 20");
+  assert.strictEqual(grade1Addition.layout.header.title, "Addition Facts to 20");
   assert.strictEqual(grade1Addition.normalizedContentObject.content.items.length, 60);
   assert(grade1Addition.normalizedContentObject.content.items.every((item) => item.answer <= 20));
   const grade1Missing = buildCatalogWorksheetRuntime("g1_missing_addends_within_20", { worksheetSeed: "g2-e2-isolation" });

@@ -25,7 +25,7 @@ Related Grade 1 catalog candidates are `grade1_multiplication_facts_missing_fact
 
 ## Founder evidence
 
-`/Users/davidbirnie/Desktop/Project Yellowbird/G1 Review.csv` contains 12 reviewed Grade 1 rows and contains no Arrays or Equal Groups row, title, or ID. Therefore there is no direct CSV mapping to either target and none is silently inferred.
+A founder-provided local `G1 Review.csv`, not committed to this repository, contains 12 reviewed Grade 1 rows and contains no Arrays or Equal Groups row, title, or ID. Therefore there is no direct CSV mapping to either target and none is silently inferred.
 
 The applicable founder direction is the task brief plus the approved shared-family closeout recorded in `docs/decisions.md` and `docs/YellowBird_Status.md`:
 

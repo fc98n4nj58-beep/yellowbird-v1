@@ -346,7 +346,7 @@ async function run() {
   const batch6Line = buildCatalogWorksheetRuntime("grade3_fraction_equivalence_fraction_number_line", { worksheetSeed: "grade3-b7-batch6-line" });
   assert.strictEqual(batch6Compare.layout.header.title, "Compare Fractions");
   assert.strictEqual(batch6Line.layout.header.title, "Fractions on a Number Line");
-  assert.strictEqual(items(batch6Compare).length, 12);
+  assert.strictEqual(items(batch6Compare).length, 20);
   assert.strictEqual(items(batch6Line).length, 6);
 
   const fullGeometry = rendererTest.buildSharedDataPictographGeometry({

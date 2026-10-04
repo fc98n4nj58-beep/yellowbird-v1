@@ -433,11 +433,31 @@ function buildGrade5BalancedPool(options = {}) {
 function buildGrade2BalancedPool(options = {}) {
   const random = options.random || Math.random;
   const candidates = buildGrade2Candidates(options);
+  const count = Math.max(1, finiteInteger(options.questionCount, 12));
+  const requestedEqualPairs = typeof options.equalPairs === "number" ||
+    (typeof options.equalPairs === "string" && /^\d+$/.test(options.equalPairs.trim()))
+    ? Number(options.equalPairs)
+    : NaN;
+  const equalTarget = options.includeEqualPairs === false
+    ? 0
+    : Number.isFinite(requestedEqualPairs)
+      ? Math.max(0, Math.min(count, Math.round(requestedEqualPairs)))
+      : Math.ceil(count / 2);
+  const notEqualTarget = count - equalTarget;
   const templates = ["addition_addition", "subtraction_subtraction", "addition_subtraction"];
   const usedSignatures = new Set();
   const usedLeftValues = new Set();
 
+  function templateCounts(total, offset = 0) {
+    const counts = Object.fromEntries(templates.map((template) => [template, 0]));
+    for (let index = 0; index < total; index += 1) {
+      counts[templates[(index + offset) % templates.length]] += 1;
+    }
+    return counts;
+  }
+
   function select(source, template, count) {
+    if (count === 0) return [];
     const candidatesForTemplate = shuffle(
       source.filter((candidate) => candidate.template === template),
       random
@@ -446,7 +466,7 @@ function buildGrade2BalancedPool(options = {}) {
 
     function take(requireNewLeftValue) {
       for (const candidate of candidatesForTemplate) {
-        const signature = `${candidate.left.text}:${candidate.right.text}`;
+        const signature = [candidate.left.text, candidate.right.text].sort().join(" :: ");
         if (usedSignatures.has(signature)) continue;
         if (requireNewLeftValue && usedLeftValues.has(candidate.left.value)) continue;
         usedSignatures.add(signature);
@@ -464,12 +484,21 @@ function buildGrade2BalancedPool(options = {}) {
     return selected;
   }
 
-  const equal = shuffle(templates.flatMap((template) => select(candidates.equal, template, 2)), random);
-  const notEqual = shuffle(templates.flatMap((template) => select(candidates.notEqual, template, 2)), random);
+  const equalCounts = templateCounts(equalTarget);
+  const notEqualCounts = templateCounts(notEqualTarget, 1);
+  const equal = shuffle(
+    templates.flatMap((template) => select(candidates.equal, template, equalCounts[template])),
+    random
+  );
+  const notEqual = shuffle(
+    templates.flatMap((template) => select(candidates.notEqual, template, notEqualCounts[template])),
+    random
+  );
   const pool = [];
-  for (let index = 0; index < 6; index += 1) {
-    pool.push(index % 2 === 0 ? equal[index] : notEqual[index]);
-    pool.push(index % 2 === 0 ? notEqual[index] : equal[index]);
+  while (equal.length || notEqual.length) {
+    const preferred = pool.length % 2 === 0 ? equal : notEqual;
+    const alternate = preferred === equal ? notEqual : equal;
+    pool.push((preferred.length ? preferred : alternate).shift());
   }
   return { ...candidates, pool };
 }

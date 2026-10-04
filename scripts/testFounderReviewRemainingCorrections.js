@@ -124,7 +124,7 @@ function run() {
     counts[item.status] = (counts[item.status] || 0) + 1;
     return counts;
   }, {});
-  assert.deepStrictEqual(statuses, { ready: 102, partial: 5, generated: 213, planned: 11 });
+  assert.deepStrictEqual(statuses, { ready: 106, partial: 4, generated: 213, planned: 11 });
   console.log("Founder Review remaining current-output correction checks passed.");
 }
 

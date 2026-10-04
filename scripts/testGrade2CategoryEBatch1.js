@@ -156,8 +156,8 @@ function assertCatalogReconciliationAndIsolation() {
     result[item.status] = (result[item.status] || 0) + 1;
     return result;
   }, {});
-  assert.deepStrictEqual(counts, { ready: 102, partial: 5, generated: 213, planned: 11 });
-  assert.strictEqual(master.length, 331);
+  assert.deepStrictEqual(counts, { ready: 106, partial: 4, generated: 213, planned: 11 });
+  assert.strictEqual(master.length, 334);
 
   const reconciliation = fs.readFileSync("docs/grade-2-architecture-reconciliation-preflight.md", "utf8");
   const categoryA = reconciliation.match(/\*\*A \(35\):\*\*[^\n]+/)?.[0] || "";

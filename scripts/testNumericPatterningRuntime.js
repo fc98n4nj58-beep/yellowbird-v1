@@ -312,7 +312,10 @@ async function testGrade2ControlledCorrection() {
     assert.strictEqual(runtime.layout.instruction, spec.instruction);
     assert.strictEqual(runtime.layout.display.patterningLayout, spec.mode);
     assert.strictEqual(runtime.layout.template.columns, 2);
-    assert.strictEqual(runtime.layout.template.maxProblemsPerPage, resourceId.includes("extend_pattern") ? 16 : 12);
+    const expectedMaxProblemsPerPage = resourceId.includes("extend_pattern")
+      ? 16
+      : resourceId.includes("identify_pattern_rule") ? 10 : 12;
+    assert.strictEqual(runtime.layout.template.maxProblemsPerPage, expectedMaxProblemsPerPage);
     assert.strictEqual(runtime.layout.display.denseGridRows, 6);
     assert(runtime.layout.display.patterningSequenceFontSize >= 16);
     assert(runtime.layout.display.patterningTargetStrokeWidth >= 1.1);
@@ -358,9 +361,10 @@ async function testGrade2ControlledCorrection() {
     }
 
     const pdf = await renderRuntimePdf(runtime);
-    assert.strictEqual(pdfPageCount(pdf), 2, `${resourceId} should render one student page and one answer-key page`);
-    assert.strictEqual(runtime.layout.patterningPagination.pageCount, 1);
-    assert.deepStrictEqual(runtime.layout.patterningPagination.pageItemCounts, [12]);
+    const expectedPageItemCounts = resourceId.includes("identify_pattern_rule") ? [6, 6] : [12];
+    assert.strictEqual(pdfPageCount(pdf), expectedPageItemCounts.length * 2, `${resourceId} should render matching student and answer-key pages`);
+    assert.strictEqual(runtime.layout.patterningPagination.pageCount, expectedPageItemCounts.length);
+    assert.deepStrictEqual(runtime.layout.patterningPagination.pageItemCounts, expectedPageItemCounts);
   }
 
   const grade1 = buildCatalogWorksheetRuntime("grade1_patterning_and_algebra_extend_pattern", {
@@ -376,7 +380,7 @@ async function testGrade2ControlledCorrection() {
   });
   assert.strictEqual(grade3.layout.instruction, "Write the rule for each pattern.");
   assert.strictEqual(grade3.layout.template.columns, 1);
-  assert.strictEqual(grade3.layout.template.maxProblemsPerPage, 8);
+  assert.strictEqual(grade3.layout.template.maxProblemsPerPage, 10);
   assert.strictEqual(grade3.layout.display.patterningRuleResponseMode, "written_rule");
 }
 

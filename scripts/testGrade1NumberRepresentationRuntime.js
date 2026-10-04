@@ -251,9 +251,15 @@ function assertBaseTenResource() {
   });
   assert(countSelected(selected, [12, 34]) >= 6);
 
+  const extended = runtimeFor(BASE_TEN_ID, {
+    maximumValue: 100,
+    worksheetSeed: "base-extended"
+  });
+  assert.strictEqual(extended.layout.header.title, "Base Ten Blocks to 100");
+  assert(extended.contentObject.content.items.every((item) => item.value >= 0 && item.value <= 100));
   assert.throws(
-    () => runtimeFor(BASE_TEN_ID, { maximumValue: 51 }),
-    /supports values from 0 to 50/
+    () => runtimeFor(BASE_TEN_ID, { maximumValue: 101 }),
+    /must be 100 or less/
   );
 }
 

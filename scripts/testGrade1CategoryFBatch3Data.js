@@ -340,9 +340,9 @@ async function run() {
 
   const catalog = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "data", "worksheetCatalog.master.json"), "utf8"));
   const statusCounts = catalog.items.reduce((counts, item) => ({ ...counts, [item.status]: (counts[item.status] || 0) + 1 }), {});
-  assert.strictEqual(statusCounts.ready, 102);
+  assert.strictEqual(statusCounts.ready, 106);
   assert.strictEqual(statusCounts.generated, 213);
-  assert.strictEqual(statusCounts.partial, 5);
+  assert.strictEqual(statusCounts.partial, 4);
   assert.strictEqual(catalog.items.filter((item) => item.activityTypes?.includes("pattern_word_problems")).length, 7);
 
   for (const resource of RESOURCES) {

@@ -32,13 +32,13 @@ function startServer() {
 
 async function run() {
   const ready = filterWorksheetCatalog({ status: "ready" });
-  assert.strictEqual(ready.length, 102);
+  assert.strictEqual(ready.length, 106);
   const counts = ready.reduce((result, item) => {
     const type = item.resourceType || "worksheet";
     result[type] = (result[type] || 0) + 1;
     return result;
   }, {});
-  assert.deepStrictEqual(counts, { worksheet: 84, quick_check: 11, exit_ticket: 7 });
+  assert.deepStrictEqual(counts, { worksheet: 88, quick_check: 11, exit_ticket: 7 });
 
   const { server, baseUrl } = await startServer();
   try {
@@ -48,7 +48,7 @@ async function run() {
     const catalogResponse = await fetch(`${baseUrl}/api/worksheet-catalog?status=ready`);
     const catalog = await catalogResponse.json();
     assert.strictEqual(catalogResponse.status, 200);
-    assert.strictEqual(catalog.total, 102);
+    assert.strictEqual(catalog.total, 106);
 
     for (const [type, id] of REPRESENTATIVES) {
       const detail = await fetch(`${baseUrl}/resource/worksheet/${id}`);

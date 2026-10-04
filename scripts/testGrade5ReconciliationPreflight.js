@@ -219,7 +219,7 @@ function run() {
       partial: allStatuses.partial,
       total: catalog.length
     },
-    { ready: 102, generated: 213, partial: 5, total: 331 }
+    { ready: 106, generated: 213, partial: 4, total: 334 }
   );
 
   grade5.forEach((item) => {

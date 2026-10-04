@@ -22,24 +22,77 @@ const grade1Catalog = [
   },
   {
     id: "g1_number_word_match_to_50",
-    title: "Number Word Match to 50",
-    shortTitle: "Number Word Match",
+    title: "Write Number Words to 50",
+    shortTitle: "Write Number Words",
     subject: "Math",
     grades: ["grade1"],
     gradeLabels: ["Grade 1"],
-    domain: "Number Sense",
+    domain: "Number Representation: Number Words to 50",
     skillKey: "number_representation",
     worksheetFamily: "representation",
     activityTypes: ["number_word_match"],
-    generatorOptions: { minA: 0, maxA: 50 },
+    generatorOptions: {
+      minA: 0,
+      maxA: 50,
+      promptStyle: "number_only",
+      questionCount: 20,
+      numberWordMode: "numeral_to_word"
+    },
     templateId: "matching",
     status: "ready",
     difficulty: "easy",
     estimatedTimeMinutes: 10,
     hasAnswerKey: true,
-    tags: ["number words", "match", "to 50", "grade 1"],
+    tags: ["number words", "writing", "to 50", "grade 1"],
     curriculumTags: ["B1"],
-    description: "Students match numerals and number words."
+    formatLabel: "Write number words to 50",
+    teacherNote: "Best used as supported late Grade 1 extension or Grade 2 readiness practice after number-word instruction.",
+    description: "Students write number words for numbers to 50. Best used as supported late Grade 1 extension or Grade 2 readiness practice after number-word instruction.",
+    studentInstruction: "Write each number in words.",
+    pdfDisplay: {
+      hideSubtitle: true,
+      hideItemSeparators: true,
+      writingLine: true,
+      equalHeightItems: true
+    },
+    pdfLayout: { columns: 2, maxProblemsPerPage: 20 }
+  },
+  {
+    id: "g1_write_the_numeral_to_50",
+    title: "Write the Numeral to 50",
+    shortTitle: "Write the Numeral",
+    subject: "Math",
+    grades: ["grade1"],
+    gradeLabels: ["Grade 1"],
+    domain: "Number Representation: Write the Numeral to 50",
+    skillKey: "number_representation",
+    worksheetFamily: "representation",
+    activityTypes: ["number_word_match"],
+    templateId: "matching",
+    status: "ready",
+    difficulty: "easy",
+    estimatedTimeMinutes: 10,
+    hasAnswerKey: true,
+    tags: ["number words", "numerals", "writing", "to 50", "grade 1"],
+    curriculumTags: ["B1"],
+    formatLabel: "Write numerals to 50",
+    teacherNote: "Separate public resource using the shared number-word runtime without exposing a direction toggle.",
+    description: "Students write numerals for number words to 50.",
+    generatorOptions: {
+      minA: 0,
+      maxA: 50,
+      promptStyle: "number_only",
+      questionCount: 20,
+      numberWordMode: "word_to_numeral"
+    },
+    studentInstruction: "Write the numeral for each number word.",
+    pdfDisplay: {
+      hideSubtitle: true,
+      hideItemSeparators: true,
+      writingLine: true,
+      equalHeightItems: true
+    },
+    pdfLayout: { columns: 2, maxProblemsPerPage: 20 }
   },
   {
     id: "g1_number_line_identify_to_20",
@@ -137,6 +190,14 @@ const grade1Catalog = [
     skillKey: "addition_subtraction_relationships",
     worksheetFamily: "relational_thinking",
     activityTypes: ["fact_family"],
+    generatorOptions: {
+      minA: 0,
+      maxA: 10,
+      minB: 0,
+      maxB: 10,
+      questionCount: 12,
+      factFamilyMode: "all"
+    },
     templateId: "matching",
     status: "ready",
     difficulty: "easy",
@@ -144,7 +205,8 @@ const grade1Catalog = [
     hasAnswerKey: true,
     tags: ["fact families", "addition", "subtraction", "grade 1"],
     curriculumTags: ["B2"],
-    description: "Students connect related addition and subtraction facts."
+    description: "Students connect related addition and subtraction facts as relationship practice.",
+    pdfDisplay: { hideSubtitle: true, standardShortAnswerTarget: true }
   },
   {
     id: "g1_addition_word_problems",
@@ -157,6 +219,7 @@ const grade1Catalog = [
     skillKey: "addition_subtraction_application",
     worksheetFamily: "problem_solving",
     activityTypes: ["word_problems"],
+    generatorOptions: { questionCount: 6, minA: 0, maxA: 20 },
     templateId: "equation_practice",
     status: "ready",
     difficulty: "easy",
@@ -164,16 +227,18 @@ const grade1Catalog = [
     hasAnswerKey: true,
     tags: ["addition", "word problems", "grade 1"],
     curriculumTags: ["B2"],
-    description: "Students solve simple addition word problems with visual or equation support."
+    description: "Students solve simple addition word problems with visual or equation support.",
+    pdfDisplay: { hideSubtitle: true },
+    pdfLayout: { columns: 1, maxProblemsPerPage: 3 }
   },
   {
     id: "g1_ten_frame_addition_within_10",
-    title: "Ten Frame Addition Within 10",
-    shortTitle: "Ten Frame Addition",
+    title: "Counting With Ten Frames",
+    shortTitle: "Counting With Ten Frames",
     subject: "Math",
     grades: ["grade1"],
     gradeLabels: ["Grade 1"],
-    domain: "Addition & Subtraction",
+    domain: "Number Representation: Ten Frames Within 10",
     skillKey: "addition_strategies",
     worksheetFamily: "visual_models",
     activityTypes: ["ten_frame"],
@@ -182,9 +247,25 @@ const grade1Catalog = [
     difficulty: "easy",
     estimatedTimeMinutes: 10,
     hasAnswerKey: true,
-    tags: ["ten frame", "addition", "within 10", "grade 1"],
+    tags: ["ten frame", "counting", "quantity recognition", "within 10", "grade 1"],
     curriculumTags: ["B2"],
-    description: "Students use ten frames to solve addition problems."
+    formatLabel: "Recognize quantities in ten frames within 10",
+    teacherNote: "Best used as focused Grade 1 number representation practice after hands-on work with ten frames.",
+    description: "Students count or recognize quantities shown in ten frames within 10. Best used as focused Grade 1 number representation practice after hands-on work with ten frames.",
+    studentInstruction: "Count the dots. Write the number.",
+    pdfDisplay: {
+      hideItemPrompts: true,
+      hideSubtitle: true,
+      visualVerticalAlign: "topThird",
+      shortVisualAnswerLine: true
+    },
+    generatorOptions: {
+      minA: 1,
+      maxA: 10,
+      questionCount: 10,
+      tenFramesPerQuestion: 1
+    },
+    pdfLayout: { columns: 1, maxProblemsPerPage: 10 }
   },
   {
     id: "g1_addition_on_number_line_to_20",

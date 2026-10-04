@@ -6,6 +6,7 @@ const path = require("path");
 const { Writable } = require("stream");
 
 const { buildCatalogWorksheetRuntime } = require("../services/catalogWorksheetRuntimeService");
+const { applyFounderReviewCurrentOutput } = require("../config/founderReviewCurrentOutput");
 const { getMasterWorksheetCatalog } = require("../services/worksheetCatalogService");
 const { renderWorksheetPDF, buildAnswerKeyItems, __test: rendererTest } = require("../renderers/pdfRenderer");
 const layoutSpec = require("../config/layout/layoutSpec.json");
@@ -21,7 +22,7 @@ const SPECS = Object.freeze({
     title: "Equal or Not Equal?",
     instruction: "Solve both sides. Write = if they have the same value. Write ≠ if they have different values.",
     footer: "Grade 2 • Math • Addition and Subtraction",
-    count: 12
+    count: 20
   },
   [IDS.numberLine]: {
     title: "Identify Numbers on a Number Line",
@@ -33,7 +34,7 @@ const SPECS = Object.freeze({
     title: "Write Number Words to 200",
     instruction: "Write each number in words.",
     footer: "Grade 2 • Math • Number Representation",
-    count: 12
+    count: 10
   }
 });
 
@@ -103,11 +104,11 @@ function assertSharedContract(runtime, id) {
 function assertEquationContract(runtime) {
   const items = runtime.normalizedContentObject.content.items;
   assert.strictEqual(runtime.layout.template.columns, 2);
-  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 12);
-  assert.strictEqual(runtime.layout.display.denseGridRows, 6);
+  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 20);
+  assert.strictEqual(runtime.layout.display.denseGridRows, 10);
   assert.strictEqual(runtime.layout.display.answerTargetVariant, "comparisonSymbol");
-  assert.strictEqual(items.filter((item) => item.answer === "=").length, 6);
-  assert.strictEqual(items.filter((item) => item.answer === "≠").length, 6);
+  assert.strictEqual(items.filter((item) => item.answer === "=").length, 10);
+  assert.strictEqual(items.filter((item) => item.answer === "≠").length, 10);
   const templateCounts = {
     addition_addition: 0,
     subtraction_subtraction: 0,
@@ -136,11 +137,8 @@ function assertEquationContract(runtime) {
     assert.strictEqual(item.answer, item.leftValue === item.rightValue ? "=" : "≠");
     assert.strictEqual(item.responseMode, "equation_equivalence");
   });
-  assert.deepStrictEqual(templateCounts, {
-    addition_addition: 4,
-    subtraction_subtraction: 4,
-    addition_subtraction: 4
-  });
+  assert.strictEqual(Object.values(templateCounts).reduce((sum, count) => sum + count, 0), 20);
+  assert(Object.values(templateCounts).every((count) => count >= 5 && count <= 8));
   assert(zeroRelated <= 2, `Zero-related question count was ${zeroRelated}.`);
   assert(fiftyMinus <= 2, `50 - n question count was ${fiftyMinus}.`);
   assert(leftValues.size >= 10, `Only ${leftValues.size} left-side totals were observed.`);
@@ -198,13 +196,13 @@ function assertNumberLineContract(runtime) {
 
 function assertNumberWordContract(runtime) {
   const items = runtime.normalizedContentObject.content.items;
-  assert.strictEqual(runtime.layout.template.columns, 2);
-  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 12);
-  assert.strictEqual(runtime.layout.display.denseGridRows, undefined);
+  assert.strictEqual(runtime.layout.template.columns, 1);
+  assert.strictEqual(runtime.layout.template.maxProblemsPerPage, 10);
+  assert.strictEqual(runtime.layout.display.denseGridRows, 10);
   assert.strictEqual(runtime.layout.display.numberWordResponseTarget, "writtenWord");
   assert.strictEqual(runtime.layout.display.writingLine, true);
   assert(runtime.layout.display.standardAnswerLineWidth >= 150);
-  assert.strictEqual(new Set(items.map((item) => item.value)).size, 12);
+  assert.strictEqual(new Set(items.map((item) => item.value)).size, 10);
   items.forEach((item) => {
     assert(/^\d+$/.test(item.prompt));
     assert(item.value >= 0 && item.value <= 200);
@@ -219,13 +217,13 @@ function assertCatalogParityAndCounts() {
   const master = getMasterWorksheetCatalog();
   const generated = JSON.parse(fs.readFileSync(path.join(ROOT, "data/worksheetCatalog.generated.json"), "utf8")).items;
   const count = (status) => master.filter((item) => item.status === status).length;
-  assert.strictEqual(master.length, 331);
-  assert.strictEqual(count("ready"), 102);
+  assert.strictEqual(master.length, 334);
+  assert.strictEqual(count("ready"), 106);
   assert.strictEqual(count("generated"), 213);
-  assert.strictEqual(count("partial"), 5);
+  assert.strictEqual(count("partial"), 4);
   Object.values(IDS).forEach((id) => {
     const masterItem = master.find((item) => item.id === id);
-    const generatedItem = generated.find((item) => item.id === id);
+    const generatedItem = applyFounderReviewCurrentOutput(generated.find((item) => item.id === id));
     assert.strictEqual(masterItem.status, "generated");
     assert.strictEqual(generatedItem.status, "generated");
     ["title", "shortTitle", "description", "studentInstruction", "generatorOptions"]
@@ -247,6 +245,40 @@ function assertCatalogParityAndCounts() {
   });
 }
 
+function assertEquationUniquenessSweep() {
+  const metrics = {
+    seedsChecked: 500,
+    questionsPerSeed: SPECS[IDS.equation].count,
+    duplicateFailures: 0,
+    generationFailures: 0
+  };
+  const failures = [];
+  const originalLog = console.log;
+  console.log = () => {};
+  try {
+    for (let seedIndex = 0; seedIndex < metrics.seedsChecked; seedIndex += 1) {
+      try {
+        const runtime = buildCatalogWorksheetRuntime(IDS.equation, {
+          worksheetSeed: `g2-equation-uniqueness-${seedIndex}`
+        });
+        const items = runtime.normalizedContentObject.content.items;
+        const signatures = items.map((item) => item.duplicateSignature).filter(Boolean);
+        if (items.length !== metrics.questionsPerSeed || new Set(signatures).size !== items.length) {
+          metrics.duplicateFailures += 1;
+          failures.push(`seed ${seedIndex}: ${items.length} questions, ${new Set(signatures).size} unique`);
+        }
+      } catch (error) {
+        metrics.generationFailures += 1;
+        failures.push(`seed ${seedIndex}: ${error.message}`);
+      }
+    }
+  } finally {
+    console.log = originalLog;
+  }
+  assert.deepStrictEqual(failures, []);
+  return metrics;
+}
+
 function assertRouteAndGradeIsolation() {
   const previewRoute = fs.readFileSync(path.join(ROOT, "routes/worksheetPreviewRoutes.js"), "utf8");
   const pdfRoute = fs.readFileSync(path.join(ROOT, "routes/worksheetPdfRoutes.js"), "utf8");
@@ -258,7 +290,7 @@ function assertRouteAndGradeIsolation() {
     { worksheetSeed: "g1-relational-isolation", includeExample: true }
   );
   assert.strictEqual(grade1Equation.layout.header.title, "Equal or Not Equal?");
-  assert.strictEqual(grade1Equation.normalizedContentObject.content.items.length, 12);
+  assert.strictEqual(grade1Equation.normalizedContentObject.content.items.length, 20);
   assert.strictEqual(grade1Equation.normalizedContentObject.content.items[0].isExample, true);
   assert(grade1Equation.normalizedContentObject.content.items.every((item) => item.leftValue <= 20 && item.rightValue <= 20));
 
@@ -288,6 +320,7 @@ function assertRouteAndGradeIsolation() {
 async function run() {
   assertCatalogParityAndCounts();
   assertRouteAndGradeIsolation();
+  const uniquenessSweep = assertEquationUniquenessSweep();
 
   const observedSignatures = new Map(Object.values(IDS).map((id) => [id, new Set()]));
   for (let seedIndex = 0; seedIndex < 30; seedIndex += 1) {
@@ -318,6 +351,7 @@ async function run() {
     assert.strictEqual(pageCount(pdf), 2, `${id} student + answer-key page count`);
   }
 
+  console.log("Grade 2 equation-match uniqueness sweep:", uniquenessSweep);
   console.log("Grade 2 Category D low-risk shared-family checks passed.");
 }
 

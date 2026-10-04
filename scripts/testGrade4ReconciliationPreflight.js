@@ -11,6 +11,7 @@ const { buildCatalogWorksheetRuntime } = require("../services/catalogWorksheetRu
 const ROOT = path.join(__dirname, "..");
 const PREFLIGHT_PATH = path.join(ROOT, "docs", "grade-4-architecture-reconciliation-preflight.md");
 const PLAN_PATH = path.join(ROOT, "docs", "grade-4-founder-review-batch-plan.md");
+const POST_RECONCILIATION_APPROVED_IDS = new Set(["g4_round_whole_numbers"]);
 
 const CATEGORIES = Object.freeze({
   A: Object.freeze([
@@ -131,13 +132,16 @@ function run() {
   const grade4 = catalog.filter((item) => item.grades?.includes("grade4"));
   const grade4Ids = grade4.map((item) => item.id);
   const grade4Set = new Set(grade4Ids);
+  const historicalGrade4Set = new Set(
+    grade4Ids.filter((id) => !POST_RECONCILIATION_APPROVED_IDS.has(id))
+  );
   const rows = parseLedger(preflight);
 
-  assert.strictEqual(grade4.length, 48);
-  assert.strictEqual(grade4Set.size, 48);
+  assert.strictEqual(grade4.length, 49);
+  assert.strictEqual(grade4Set.size, 49);
   assert.strictEqual(rows.length, 48);
   assert.strictEqual(new Set(rows.map((row) => row.id)).size, 48);
-  assert.deepStrictEqual(new Set(rows.map((row) => row.id)), grade4Set);
+  assert.deepStrictEqual(new Set(rows.map((row) => row.id)), historicalGrade4Set);
   assert.deepStrictEqual(rows.map((row) => row.reviewNumber), Array.from({ length: 48 }, (_, index) => index + 1));
   assert(grade4.every((item) => item.gradeLabels?.includes("Grade 4")));
   assert(grade4.every((item) => /^(g4_|grade4_)/.test(item.id)));
@@ -191,7 +195,7 @@ function run() {
   }, {});
   assert.deepStrictEqual(
     { ready: statuses.ready, generated: statuses.generated, partial: statuses.partial, planned: statuses.planned, total: catalog.length },
-    { ready: 102, generated: 213, partial: 5, planned: 11, total: 331 }
+    { ready: 106, generated: 213, partial: 4, planned: 11, total: 334 }
   );
   assert(preflight.includes("Grade 2 remains A35 / D0 / E0 / G17 / Total52."));
   assert(preflight.includes("Grade 3 remains A36 / D0 / E0 / G17 / Total53."));
@@ -216,10 +220,11 @@ function run() {
   console.log(JSON.stringify({
     grade4Records: grade4.length,
     uniqueGrade4Ids: grade4Set.size,
-    catalogStatuses: { ready: 17, generated: 29, planned: 2 },
-    currentReconciliation: { A: 24, D: 0, E: 0, G: 24, Total: 48 },
+    catalogStatuses: { ready: 18, generated: 29, planned: 2 },
+    historicalReconciliation: { A: 24, D: 0, E: 0, G: 24, Total: 48 },
+    postReconciliationApproved: [...POST_RECONCILIATION_APPROVED_IDS],
     batches: Object.fromEntries(Object.entries(BATCHES).map(([batch, ids]) => [batch, ids.length])),
-    readyRuntimeDeterminism: "17/17",
+    readyRuntimeDeterminism: "18/18",
     publicGrade4CustomizationFamilies: 0,
     grade2Closed: "A35/D0/E0/G17/Total52",
     grade3Closed: "A36/D0/E0/G17/Total53"

@@ -440,13 +440,13 @@ async function testCountsExamplesAndPagination() {
 
 function testCatalogIsolationAndRegistration() {
   const master = getMasterWorksheetCatalog();
-  assert.strictEqual(master.length, 331);
+  assert.strictEqual(master.length, 334);
   Object.values(IDS).forEach((id) => assert.strictEqual(master.find((item) => item.id === id)?.status, "generated"));
   const counts = Object.fromEntries(["ready", "generated", "partial", "planned"].map((status) => [
     status,
     master.filter((item) => item.status === status).length
   ]));
-  assert.deepStrictEqual(counts, { ready: 102, generated: 213, partial: 5, planned: 11 });
+  assert.deepStrictEqual(counts, { ready: 106, generated: 213, partial: 4, planned: 11 });
 
   const grade1 = buildCatalogWorksheetRuntime("g1_addition_word_problems", { worksheetSeed: "grade3-story-grade1-isolation" });
   assert.strictEqual(Boolean(grade1.layout.display.compactWordProblemAnswerKey), false);

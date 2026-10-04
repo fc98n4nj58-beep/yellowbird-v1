@@ -6,6 +6,7 @@ const path = require("path");
 const { Writable } = require("stream");
 
 const { buildCatalogWorksheetRuntime } = require("../services/catalogWorksheetRuntimeService");
+const { applyFounderReviewCurrentOutput } = require("../config/founderReviewCurrentOutput");
 const { getMasterWorksheetCatalog } = require("../services/worksheetCatalogService");
 const {
   renderWorksheetPDF,
@@ -237,13 +238,13 @@ function assertCatalogCounts() {
     fs.readFileSync(path.join(ROOT, "data/worksheetCatalog.generated.json"), "utf8")
   ).items;
   const count = (status) => catalog.filter((item) => item.status === status).length;
-  assert.strictEqual(catalog.length, 331);
-  assert.strictEqual(count("ready"), 102);
+  assert.strictEqual(catalog.length, 334);
+  assert.strictEqual(count("ready"), 106);
   assert.strictEqual(count("generated"), 213);
-  assert.strictEqual(count("partial"), 5);
+  assert.strictEqual(count("partial"), 4);
   Object.values(IDS).forEach((id) => {
     const masterItem = catalog.find((item) => item.id === id);
-    const generatedItem = generatedCatalog.find((item) => item.id === id);
+    const generatedItem = applyFounderReviewCurrentOutput(generatedCatalog.find((item) => item.id === id));
     assert.strictEqual(masterItem?.status, "ready");
     assert.strictEqual(generatedItem?.status, "ready");
     ["title", "shortTitle", "description", "studentInstruction", "generatorOptions", "pdfDisplay", "pdfLayout"]

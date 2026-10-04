@@ -502,9 +502,9 @@ function testInvalidInputs() {
 
 function testCrossGradeIsolation() {
   const expectations = [
-    ["grade1_patterning_and_algebra_extend_pattern", "Extend Pattern — Grade 1", "Extend each pattern. Write the next number.", 12],
-    ["grade2_patterning_and_algebra_identify_pattern_rule", "Identify Pattern Rule", "Write the number that is added each time.", 12],
-    ["grade3_patterning_and_algebra_extend_pattern", "Extend the Pattern", "Extend each pattern. Write the next number.", 12],
+    ["grade1_patterning_and_algebra_extend_pattern", "Extend Pattern", "Extend each pattern. Write the next number.", 30],
+    ["grade2_patterning_and_algebra_identify_pattern_rule", "Identify Pattern Rule", "Write the rule for each pattern.", 12],
+    ["grade3_patterning_and_algebra_extend_pattern", "Extend the Pattern", "Extend each pattern. Write the next number.", 30],
     ["grade4_patterning_and_algebra_extend_pattern", "Extend the Pattern", "Find the rule. Then write the next numbers in each pattern.", 12]
   ];
   expectations.forEach(([resourceId, title, instruction, count]) => {
@@ -515,7 +515,11 @@ function testCrossGradeIsolation() {
     assert.strictEqual(runtime.layout.instruction, instruction);
     assert.strictEqual(runtime.contentObject.content.items.length, count);
     assert.strictEqual(runtime.contentObject.content.items[0].startingValue, undefined);
-    assert.strictEqual(runtime.layout.display.sideWorkspace, undefined);
+    if (resourceId.startsWith("grade4_")) {
+      assert.strictEqual(runtime.layout.display.sideWorkspace?.enabled, true);
+    } else {
+      assert.strictEqual(runtime.layout.display.sideWorkspace, undefined);
+    }
   });
 }
 

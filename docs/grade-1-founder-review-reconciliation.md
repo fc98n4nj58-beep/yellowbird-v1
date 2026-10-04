@@ -16,7 +16,7 @@ Grade 1 founder review remains closed, and its final operational promotion gate 
 
 Authoritative source:
 
-- `/Users/davidbirnie/Desktop/Project Yellowbird/G1 Review.csv`
+- founder-provided local `G1 Review.csv` (not committed to this repository)
 - Modified 2026-07-10 07:01 local time; 12 Grade 1 rows; every row is marked `Reviewed`; recommendation text is populated.
 - The repository checklist at `review/grade1-founder-notes-implemented/founder-note-checklist.md` names this exact CSV as its source.
 

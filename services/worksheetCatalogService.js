@@ -87,11 +87,21 @@ function applyFounderReviewDefaultOptions(item, normalizedOptions = {}, requeste
   const normalized = { ...normalizedOptions };
   const hasQuestionCount = hasExplicitOption(requestedOptions, "questionCount");
   const hasQuestionsPerPage = hasExplicitOption(requestedOptions, "questionsPerPage");
+  const hasEqualPairs = hasExplicitOption(requestedOptions, "equalPairs");
+  const hasIncludeEqualPairs = hasExplicitOption(requestedOptions, "includeEqualPairs");
   if (defaults.questionCount !== undefined && !hasQuestionCount) {
     normalized.questionCount = defaults.questionCount;
   }
   if (defaults.questionsPerPage !== undefined && !hasQuestionCount && !hasQuestionsPerPage) {
     normalized.questionsPerPage = defaults.questionsPerPage;
+  }
+  if (
+    defaults.equalPairs !== undefined &&
+    !hasQuestionCount &&
+    !hasEqualPairs &&
+    !hasIncludeEqualPairs
+  ) {
+    normalized.equalPairs = defaults.equalPairs;
   }
   return normalized;
 }

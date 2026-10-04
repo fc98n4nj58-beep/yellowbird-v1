@@ -17,7 +17,7 @@ const STORY_CEILINGS = Object.freeze({
 });
 
 const BASELINE_NON_COPY_HASHES = Object.freeze({
-  g1_addition_facts_within_20: "57ff31bb8e88f4f15b5a2c2f09e75d8f56bc45de8784115cab3122c474c0be38",
+  g1_addition_facts_within_20: "2dc0659e0850557f9508a543d4d8a36812f613c3bd3cd9f1401a0e8bc0e0f560",
   g2_addition_fluency_within_100: "2627c97bedbf2fb2de98756478011b50238ce07810a3e4a65e0d52909d4871cd",
   g1_fact_families_within_20: "ca06eee251e77e477f5c564459e5c326f80a5bec16c750f95aaf916a2f148189",
   grade2_addition_subtraction_facts_fact_family: "e2847779941f84929cca4a09f2faab544762bc8edb8c877cd4e22da1f817639d",
@@ -29,8 +29,8 @@ const BASELINE_NON_COPY_HASHES = Object.freeze({
   grade5_addition_subtraction_word_problems_addition_word_problem: "aca1b7e85257beecfbdbc4ecc33365020be45b152b780518044bc54cf67a0566",
   grade1_multiplication_facts_arrays: "80955bf3bbb6f617ad83e8bdd24f9a0e30c5152e9e59b65e3efe476573a62451",
   grade2_multiplication_facts_arrays: "b92becb183e64dc7d34355a8532784424a895c19ec2970f210827f65de41bf34",
-  g3_multiplication_arrays: "84dc5b346d15d1ad837ea9420337d36acc08c469990e83b064725142f6d6e4ce",
-  g4_array_interpretation: "1479f357971b776f5f5f4934115283b9cf98ff491b94bd56cddd13aa430fe2d7"
+  g3_multiplication_arrays: "1dade2d53eecd2eead1c69cf99a13f80c863be0dae377daced14ac0420cfbe6e",
+  g4_array_interpretation: "d5f48d5880bad929423262bef1476a508c1d74ea14a9e410e8e6c7cc1301d728"
 });
 
 const ARRAY_IDS = Object.freeze([
