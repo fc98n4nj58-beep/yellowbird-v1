@@ -163,7 +163,7 @@ async function run() {
   assert.strictEqual(defaultRuntime.layout.display.baseTenMeasuredCellCenter, true);
   assert.strictEqual(defaultRuntime.layout.display.baseTenHundredsGap, 9);
   assert.strictEqual(defaultRuntime.layout.display.baseTenTensOnesBoxes, false);
-  assert.strictEqual(getCustomizationFamilyForResource(BASE_TEN_ID), null);
+  assert.strictEqual(getCustomizationFamilyForResource(BASE_TEN_ID)?.id, "grade3BaseTenBlocks");
   assertBaseTenTruth(defaultRuntime);
   assertBaseTenVerticalGeometry();
   assert.strictEqual(pageCount(await render(defaultRuntime)), 4);

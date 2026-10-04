@@ -346,6 +346,32 @@ function validateAdditionFactsDomain(options, result) {
   }
 }
 
+function validateExactSelection(options, input, result, family) {
+  if (family.controls?.selectedValues?.semantics !== "exact") return;
+  const selected = options.selectedValues || [];
+  const required = Number(options.questionCount || 0) + (options.includeExample ? 1 : 0);
+  if (selected.length && selected.length < required) {
+    result.errors.push({
+      field: "selectedValues",
+      code: "insufficient_exact_values",
+      message: `Choose at least ${required} unique numbers for the requested questions${options.includeExample ? " and separate example" : ""}.`
+    });
+  }
+
+  const keys = ["selectedValues", ...(family.aliases?.legacy?.selectedValues || [])];
+  const sourceKey = keys.find(key => hasOwn(input, key));
+  if (!sourceKey) return;
+  const raw = Array.isArray(input[sourceKey]) ? input[sourceKey] : String(input[sourceKey]).split(",");
+  const values = raw.map(value => Number(String(value).trim())).filter(Number.isFinite);
+  if (new Set(values).size !== values.length) {
+    result.errors.push({
+      field: "selectedValues",
+      code: "duplicate_exact_values",
+      message: "Numbers to practise must be unique for this worksheet."
+    });
+  }
+}
+
 function normalizeWorksheetCustomization(resourceId, input = {}) {
   const sourceInput = deepClone(input);
   const family = resolveFamily(resourceId);
@@ -423,6 +449,7 @@ function normalizeWorksheetCustomization(resourceId, input = {}) {
   });
 
   validateCrossFields(result.normalizedOptions, result, family, resourceDeclaration);
+  validateExactSelection(result.normalizedOptions, sourceInput, result, family);
   if (family.id === "additionFactsWithin20") {
     validateAdditionFactsDomain(result.normalizedOptions, result);
   }

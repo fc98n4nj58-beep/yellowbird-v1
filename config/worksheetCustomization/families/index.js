@@ -2,10 +2,12 @@ const { additionFactsWithin20 } = require("./additionFactsWithin20");
 
 const { additionNumberLine } = require("./additionNumberLine");
 const { grade1BaseTenBlocks } = require("./grade1BaseTenBlocks");
+const { grade3BaseTenBlocks } = require("./grade3BaseTenBlocks");
 
 const families = Object.freeze({
   [additionNumberLine.id]: additionNumberLine,
   [grade1BaseTenBlocks.id]: grade1BaseTenBlocks,
+  [grade3BaseTenBlocks.id]: grade3BaseTenBlocks,
   [additionFactsWithin20.id]: additionFactsWithin20
 });
 

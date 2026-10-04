@@ -11,6 +11,7 @@ const {
 
 const RESOURCE_ID = "g1_addition_facts_within_20";
 const UNSUPPORTED_RESOURCE_ID = "g1_subtraction_facts_within_20";
+const GRADE3_BASE_TEN_ID = "grade3_place_value_representation_base_ten_blocks";
 
 let passedTests = 0;
 async function test(name, fn) {
@@ -278,6 +279,20 @@ async function run() {
     assert(!html.includes("Customize this worksheet"));
     assert(!html.includes("ybCustomizationPanel"));
     assert(html.includes("Download PDF"));
+  });
+
+  await test("Grade 3 Base Ten detail exposes exact selection and three-place responses", () => {
+    const html = libraryRoutes._test.renderWorksheetDetailPage(getWorksheetCatalogById(GRADE3_BASE_TEN_ID));
+    [
+      "Suggested for this worksheet: 100–499",
+      "Hundreds, tens and ones boxes",
+      "Use exactly these numbers.",
+      "Show one completed example",
+      "Show a completed example for support."
+    ].forEach(text => assert(html.includes(text), `missing ${text}`));
+    assert(html.includes('max="8"'));
+    assert(html.includes('max="499"'));
+    assert(!html.includes("Included in the question total."));
   });
 
   await test("panel starts closed without stale preview copy", () => {

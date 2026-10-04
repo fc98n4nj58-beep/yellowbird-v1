@@ -2898,7 +2898,9 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
       : null;
 
     if (placed && baseTenCellGeometry) {
-      placed.y = baseTenCellGeometry.visualTop;
+      placed.y = display.baseTenResponseLayout?.placement === "below_model"
+        ? baseTenCellGeometry.usableTop
+        : baseTenCellGeometry.visualTop;
     }
 
     if (measured && placed) {
@@ -2935,44 +2937,67 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
           const modelBottomY = baseTenCellGeometry?.answerLineY ?? placed.y + (measured.rodLength || measured.height);
           const baseTenTextSize = Number(display.baseTenQuestionTextSize || 12);
 
-          if (display.baseTenTensOnesBoxes) {
-          const responseLayout = display.baseTenResponseLayout || {
-            labelFontSize: baseTenTextSize,
-            columnWidth: 52,
-            totalWidth: 104,
-            boxHeight: 60,
-            headingGap: 3
-          };
-          const totalWidth = responseLayout.totalWidth;
-          const boxW = responseLayout.columnWidth;
-          const boxH = responseLayout.boxHeight;
-          const startX = x + Math.max(0, width - totalWidth - 6);
-          const boxY = modelBottomY - boxH;
-          const tensValue = visual.data?.tens ?? Math.floor(Number(question.answer || 0) / 10);
-          const onesValue = visual.data?.ones ?? Number(question.answer || 0) % 10;
+          if (display.baseTenTensOnesBoxes || display.baseTenPlaceValueBoxes) {
+            const responseLayout = display.baseTenResponseLayout || {
+              labelFontSize: baseTenTextSize,
+              columnWidth: 52,
+              totalWidth: 104,
+              boxHeight: 60,
+              headingGap: 3
+            };
+            const responseLabels = Array.isArray(responseLayout.labels) && responseLayout.labels.length
+              ? responseLayout.labels
+              : [{ label: "TENS", responseKey: "tens" }, { label: "ONES", responseKey: "ones" }];
+            const defaultResponseKeys = responseLabels.length === 3
+              ? ['hundreds', 'tens', 'ones']
+              : ['tens', 'ones'];
+            const responseKeys = responseLayout.responseKeys || responseLabels.map(
+              (label, index) => label.responseKey || defaultResponseKeys[index]
+            );
+            const totalWidth = responseLayout.totalWidth;
+            const boxW = responseLayout.columnWidth;
+            const boxH = responseLayout.boxHeight;
+            const responseBelowModel = responseLayout.placement === "below_model";
+            const startX = responseBelowModel
+              ? x + Math.max(0, (width - totalWidth) / 2)
+              : x + Math.max(0, width - totalWidth - 6);
+            const responseGroupHeight = responseLayout.labelFontSize + responseLayout.headingGap + boxH;
+            const responseGroupTop = responseBelowModel
+              ? placed.y + measured.height + 12
+              : modelBottomY - responseGroupHeight;
+            const headingY = responseGroupTop;
+            const boxY = headingY + responseLayout.labelFontSize + responseLayout.headingGap;
+            const responseValues = {
+              hundreds: visual.data?.hundreds ?? Math.floor(Number(question.answer || 0) / 100),
+              tens: visual.data?.tens ?? Math.floor(Number(question.answer || 0) / 10) % 10,
+              ones: visual.data?.ones ?? Number(question.answer || 0) % 10
+            };
 
-          doc.save();
-          setFont(doc, fonts.light || fonts.regular || "Helvetica", responseLayout.labelFontSize);
-          doc.fillColor(pdfDesignTokens.colors.muted);
-          const headingY = boxY - responseLayout.labelFontSize - responseLayout.headingGap;
-          doc.text("TENS", startX, headingY, { width: boxW, align: "center", lineBreak: false });
-          doc.text("ONES", startX + boxW, headingY, { width: boxW, align: "center", lineBreak: false });
-          doc.strokeColor(pdfDesignTokens.colors.answerRule);
-          doc.lineWidth(0.8);
-          doc.rect(startX, boxY, totalWidth, boxH).stroke();
-          doc.moveTo(startX + boxW, boxY).lineTo(startX + boxW, boxY + boxH).stroke();
-          if ((display.answerKey || isExample) && question.answer != null) {
-            setFont(doc, fonts.bold || fonts.regular || "Helvetica", baseTenTextSize);
-            doc.fillColor(pdfDesignTokens.colors.text);
-            const digitY = boxY + boxH / 2 - 7;
-            doc.text(formatAnswerValue(tensValue), startX, digitY, { width: boxW, align: "center", lineBreak: false });
-            doc.text(formatAnswerValue(onesValue), startX + boxW, digitY, { width: boxW, align: "center", lineBreak: false });
-            restoreAnswerSurroundingTextStyle(doc, fonts, baseTenTextSize);
+            doc.save();
+            setFont(doc, fonts.light || fonts.regular || "Helvetica", responseLayout.labelFontSize);
+            doc.fillColor(pdfDesignTokens.colors.muted);
+            responseLabels.forEach((label, index) => {
+              doc.text(label.label, startX + boxW * index, headingY, { width: boxW, align: "center", lineBreak: false });
+            });
+            doc.strokeColor(pdfDesignTokens.colors.answerRule);
+            doc.lineWidth(0.8);
+            doc.rect(startX, boxY, totalWidth, boxH).stroke();
+            for (let index = 1; index < responseLabels.length; index += 1) {
+              doc.moveTo(startX + boxW * index, boxY).lineTo(startX + boxW * index, boxY + boxH).stroke();
+            }
+            if ((display.answerKey || isExample) && question.answer != null) {
+              setFont(doc, fonts.bold || fonts.regular || "Helvetica", baseTenTextSize);
+              doc.fillColor(pdfDesignTokens.colors.text);
+              const digitY = boxY + boxH / 2 - 7;
+              responseKeys.forEach((key, index) => {
+                doc.text(formatAnswerValue(responseValues[key]), startX + boxW * index, digitY, { width: boxW, align: "center", lineBreak: false });
+              });
+              restoreAnswerSurroundingTextStyle(doc, fonts, baseTenTextSize);
+            }
+            doc.restore();
+
+            return height;
           }
-          doc.restore();
-
-          return height;
-        }
 
           const lineWidth = Math.max(42, Math.min(region.answerWidth * 0.5, 70));
           const lineX = region.answerX;
@@ -2980,7 +3005,7 @@ function renderQuestionItem(doc, question, layoutBox, fonts = {}, display = {}) 
 
           if ((display.answerKey || isExample) && question.answer != null) {
             drawShortAnswerLine(doc, lineX, lineY, lineWidth);
-            drawTextOnLine(doc, question.answer, lineX, lineY, lineWidth, fonts);
+            drawTextOnLine(doc, question.answer, lineX, lineY, lineWidth, fonts, { fontSize: baseTenTextSize });
           } else {
             drawShortAnswerLine(doc, lineX, lineY, lineWidth);
           }

@@ -513,6 +513,10 @@ function renderCustomizationPanel(model) {
   const hasSelectedValues = model.controls.some(control => control.id === "selectedValues");
   const hasArrowControl = model.controls.some(control => control.id === "numberLineArrows");
   const hasBaseTenResponseMode = model.controls.some(control => control.id === "baseTenResponseMode");
+  const baseTenResponseControl = model.controls.find(control => control.id === "baseTenResponseMode");
+  const hasHundredsTensOnesMode = baseTenResponseControl?.allowedValues?.includes("hundreds_tens_ones");
+  const selectedValuesControl = model.controls.find(control => control.id === "selectedValues");
+  const exactSelectedValues = selectedValuesControl?.semantics === "exact";
   const questionControl = model.controls.find((control) => control.id === "questionCount") || {};
   const minControl = model.controls.find((control) => control.id === "minimumValue") || {};
   const maxControl = model.controls.find((control) => control.id === "maximumValue") || {};
@@ -638,7 +642,7 @@ function renderCustomizationPanel(model) {
                   <div class="number-selector-list" id="ybSelectedValuesList" role="group" aria-labelledby="ybSelectedValuesLabel"></div>
                 </div>
               </div>
-              <div class="field-help" id="ybSelectedValuesHelp">Request more practice with these numbers. Other numbers may appear, and individual selections are not guaranteed to appear.</div>
+              <div class="field-help" id="ybSelectedValuesHelp">${exactSelectedValues ? "Use exactly these numbers. Choose enough unique values for the questions and optional example." : "Request more practice with these numbers. Other numbers may appear, and individual selections are not guaranteed to appear."}</div>
               <div class="field-error" id="ybSelectedValuesError"></div>
             </div>
           </div>` : ""}
@@ -662,9 +666,9 @@ function renderCustomizationPanel(model) {
             <div class="control-cell">
               <select id="ybBaseTenResponseMode" name="baseTenResponseMode" aria-describedby="ybBaseTenResponseModeHelp ybBaseTenResponseModeError">
                 <option value="standard_number">Write the number</option>
-                <option value="tens_ones">Tens and ones boxes</option>
+                ${hasHundredsTensOnesMode ? '<option value="hundreds_tens_ones">Hundreds, tens and ones boxes</option>' : '<option value="tens_ones">Tens and ones boxes</option>'}
               </select>
-              <div class="field-help" id="ybBaseTenResponseModeHelp">Choose one answer line or separate tens and ones boxes.</div>
+              <div class="field-help" id="ybBaseTenResponseModeHelp">${hasHundredsTensOnesMode ? "Choose one answer line or separate hundreds, tens and ones boxes." : "Choose one answer line or separate tens and ones boxes."}</div>
               <div class="field-error" id="ybBaseTenResponseModeError"></div>
             </div>
           </div>` : ""}
@@ -741,6 +745,7 @@ function renderCustomizationScript(model) {
         const hasRangeControls = model.controls.some((control) => control.id === "minimumValue");
         const linkedRange = model.range?.kind === "linkedNumberLine";
         const hasSelectedValues = model.controls.some(control => control.id === "selectedValues");
+        const exactSelectedValues = model.controls.find(control => control.id === "selectedValues")?.semantics === "exact";
         const hasArrowControl = model.controls.some(control => control.id === "numberLineArrows");
         const hasBaseTenResponseMode = model.controls.some(control => control.id === "baseTenResponseMode");
         const defaults = normalizeSettings(model.defaults);
@@ -1142,7 +1147,7 @@ function renderCustomizationScript(model) {
               ? "Numbers " + settings.minimumValue + "–" + settings.maximumValue
               : "Custom range " + settings.minimumValue + "–" + settings.maximumValue,
             settings.selectedValues.length
-              ? "Requested emphasis: " + settings.selectedValues.join(", ")
+              ? (exactSelectedValues ? "Exact numbers: " : "Requested emphasis: ") + settings.selectedValues.join(", ")
               : "",
             settings.includeAnswerKey ? "Answer key included" : "Answer key off"
           ].filter(Boolean);

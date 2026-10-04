@@ -213,7 +213,8 @@ function suppliedAliasValues(options, aliases) {
 function validateGrade3BaseTenRawOptions(options = {}) {
   const minInputs = suppliedAliasValues(options, ["minA", "minimumValue", "minimumNumber"]);
   const maxInputs = suppliedAliasValues(options, ["maxA", "maximumValue", "maximumNumber"]);
-  const selectedInputs = suppliedAliasValues(options, ["selectedNumbers", "selectedValues", "onlyNumbers"]);
+  const selectedInputs = suppliedAliasValues(options, ["selectedNumbers", "selectedValues", "onlyNumbers"])
+    .filter(({ value }) => !Array.isArray(value) || value.length > 0);
 
   const normalizedAliasNumber = (inputs, fallback, label) => {
     const values = inputs.map(({ value }) => strictGrade3BaseTenInteger(value, label));
@@ -269,8 +270,10 @@ function validateGrade3BaseTenRawOptions(options = {}) {
     throw new Error("Grade 3 Base Ten Blocks range does not provide enough unique questions.");
   }
 
-  const labelInputs = suppliedAliasValues(options, ["showPlaceValueLabels", "baseTenTensOnesBoxes"]);
-  if (labelInputs.some(({ value, alias }) => strictGrade3BaseTenBoolean(value, alias))) {
+  const requestedResponseMode = String(options.responseMode || options.baseTenResponseMode || "standard_number").trim().toLowerCase();
+  const placeValueBoxes = requestedResponseMode === "hundreds_tens_ones";
+  const labelInputs = suppliedAliasValues(options, ["showPlaceValueLabels", "baseTenTensOnesBoxes", "baseTenPlaceValueBoxes"]);
+  if (!placeValueBoxes && labelInputs.some(({ value, alias }) => strictGrade3BaseTenBoolean(value, alias))) {
     throw new Error("Grade 3 Base Ten Blocks does not support place-value response labels in read-model mode.");
   }
   if (options.labelMode !== undefined && !["", "none"].includes(String(options.labelMode).trim().toLowerCase())) {
@@ -278,7 +281,7 @@ function validateGrade3BaseTenRawOptions(options = {}) {
   }
   if (
     options.responseMode !== undefined &&
-    !["number", "standard_number"].includes(String(options.responseMode).trim().toLowerCase())
+    !["number", "standard_number", "hundreds_tens_ones"].includes(String(options.responseMode).trim().toLowerCase())
   ) {
     throw new Error("Grade 3 Base Ten Blocks response mode must be standard-number reading.");
   }
@@ -835,7 +838,7 @@ function normalizeGrade3PlaceValueBatch2Options(item, options = {}) {
   if (item.id === GRADE3_BASE_TEN_ID) {
     const normalized = { ...options };
     const selectedSource = normalized.selectedNumbers ?? normalized.selectedValues ?? normalized.onlyNumbers;
-    const selectedNumbers = selectedSource === undefined
+    const selectedNumbers = selectedSource === undefined || (Array.isArray(selectedSource) && selectedSource.length === 0)
       ? []
       : strictGrade3BaseTenList(selectedSource, "selected numbers");
 
@@ -852,10 +855,13 @@ function normalizeGrade3PlaceValueBatch2Options(item, options = {}) {
     normalized.selectedNumbers = selectedNumbers;
     normalized.selectedValues = selectedNumbers;
     normalized.onlyNumbers = selectedNumbers.join(",");
+    const responseMode = String(normalized.baseTenResponseMode ?? normalized.responseMode ?? "standard_number").trim().toLowerCase();
+    const placeValueBoxes = responseMode === "hundreds_tens_ones";
     normalized.labelMode = "none";
-    normalized.showPlaceValueLabels = false;
+    normalized.showPlaceValueLabels = placeValueBoxes;
     normalized.baseTenTensOnesBoxes = false;
-    normalized.responseMode = "standard_number";
+    normalized.baseTenPlaceValueBoxes = placeValueBoxes;
+    normalized.responseMode = placeValueBoxes ? "hundreds_tens_ones" : "standard_number";
     return normalized;
   }
 
@@ -5214,10 +5220,22 @@ if (item.id === GRADE2_BASE_TEN_BLOCKS_ID) {
 }
 
 if (item.id === GRADE3_BASE_TEN_ID) {
+  const settings = normalizedOptions._customization?.normalizedOptions;
+  const { resolveGrade3BaseTenTitle } = require("../config/worksheetCustomization/families/grade3BaseTenBlocks");
+  const { buildGrade3BaseTenResponseLayout } = require("../config/layout/grade3BaseTenBlocksLayout");
+  const responseLayout = settings
+    ? buildGrade3BaseTenResponseLayout(settings.questionTextSize, settings.baseTenResponseMode)
+    : null;
+  if (settings) {
+    layout.header = { ...layout.header, title: resolveGrade3BaseTenTitle(settings) };
+    if (settings.baseTenResponseMode === "hundreds_tens_ones") {
+      layout.instruction = "Count the base ten blocks. Write the hundreds, tens, and ones.";
+    }
+  }
   layout.template = {
     ...(layout.template || {}),
     columns: 1,
-    maxProblemsPerPage: finiteNumber(normalizedOptions.questionsPerPage) || 4
+    maxProblemsPerPage: responseLayout?.maxProblemsPerPage || finiteNumber(normalizedOptions.questionsPerPage) || 4
   };
   layout.grid = {
     ...(layout.grid || {}),
@@ -5232,6 +5250,9 @@ if (item.id === GRADE3_BASE_TEN_ID) {
     baseTenMeasuredCellCenter: true,
     baseTenHundredsGap: 9,
     baseTenTensOnesBoxes: false,
+    baseTenPlaceValueBoxes: settings?.baseTenResponseMode === "hundreds_tens_ones",
+    baseTenQuestionTextSize: settings?.questionTextSize || 12,
+    ...(responseLayout ? { baseTenResponseLayout: responseLayout } : {}),
     visualVerticalAlign: "center"
   };
 }
@@ -5249,7 +5270,13 @@ if (normalizedOptions.includeExample && layout.problems?.length) {
   }));
 }
 
-if (Number.isFinite(normalizedOptions.questionsPerPage) && normalizedOptions.questionsPerPage > 0) {
+const usesGrade3BaseTenStackedResponses = item.id === GRADE3_BASE_TEN_ID &&
+  normalizedOptions._customization?.normalizedOptions?.baseTenResponseMode === "hundreds_tens_ones";
+if (
+  Number.isFinite(normalizedOptions.questionsPerPage) &&
+  normalizedOptions.questionsPerPage > 0 &&
+  !usesGrade3BaseTenStackedResponses
+) {
   layout.template = {
     ...(layout.template || {}),
     maxProblemsPerPage: normalizedOptions.questionsPerPage
@@ -6549,7 +6576,8 @@ if (isGrade1NumberWordMode || item.id === GRADE2_NUMBER_WORD_WRITE_ID || item.id
 if (
   GRADE3_PLACE_VALUE_BATCH2_IDS.has(item.id) &&
   Number.isFinite(normalizedOptions.questionsPerPage) &&
-  normalizedOptions.questionsPerPage > 0
+  normalizedOptions.questionsPerPage > 0 &&
+  !usesGrade3BaseTenStackedResponses
 ) {
   layout.template = {
     ...(layout.template || {}),
@@ -6559,6 +6587,7 @@ if (
 
 const founderReviewOutput = FOUNDER_REVIEW_DEFAULT_OUTPUT[item.id];
 const useFounderReviewDefaultLayout = founderReviewOutput &&
+  !usesGrade3BaseTenStackedResponses &&
   !hasExplicitOption(options, "questionCount") &&
   !hasExplicitOption(options, "questionsPerPage");
 if (useFounderReviewDefaultLayout) {
