@@ -78,6 +78,12 @@
     "interactionType": "write_answer",
     "instruction": "Round each number to the place shown."
   },
+  "addition_subtraction_estimate_solve_check": {
+    "worksheetType": "equation_practice",
+    "templateId": "equation_practice",
+    "interactionType": "write_answer",
+    "instruction": "Solve, estimate, apply, and check. Complete each section."
+  },
   "missing_addend": {
     "worksheetType": "missing_addend",
     "templateId": "fluency_grid",

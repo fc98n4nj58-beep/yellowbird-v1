@@ -56,6 +56,14 @@ const {
 } = require("../config/founderReviewCurrentOutput");
 
 const MASTER_CATALOG_PATH = path.join(__dirname, "../data/worksheetCatalog.master.json");
+const ADDITION_SUBTRACTION_PROGRESSION_IDS = new Set([
+  "g3_addition_subtraction_estimate_solve_check",
+  "g4_addition_subtraction_estimate_solve_check"
+]);
+const ADDITION_SUBTRACTION_PROGRESSION_COUNTS = Object.freeze({
+  grade3: Object.freeze({ full_progression: 58, compute: 20, estimate: 12, apply: 6, reason_check: 8, integrated_mixed: 12 }),
+  grade4: Object.freeze({ full_progression: 58, compute: 20, estimate: 12, apply: 6, reason_check: 8, integrated_mixed: 12 })
+});
 
 function loadMasterCatalog() {
   const raw = fs.readFileSync(MASTER_CATALOG_PATH, "utf8");
@@ -3666,6 +3674,20 @@ function normalizeCatalogWorksheetOptions(item, options = {}) {
     ...options
   };
 
+  if (ADDITION_SUBTRACTION_PROGRESSION_IDS.has(item.id)) {
+    const grade = item.grades?.[0] || "grade3";
+    const counts = ADDITION_SUBTRACTION_PROGRESSION_COUNTS[grade];
+    const requestedMode = hasExplicitOption(options, "_compositionMode")
+      ? String(options._compositionMode).trim().toLowerCase()
+      : String(item.generatorOptions?.compositionMode || "full_progression").trim().toLowerCase();
+    if (!Object.prototype.hasOwnProperty.call(counts, requestedMode)) {
+      throw new Error(`Unsupported internal addition/subtraction composition mode '${requestedMode}'.`);
+    }
+    normalized.compositionMode = requestedMode;
+    normalized.questionCount = counts[requestedMode];
+    delete normalized._compositionMode;
+  }
+
   [
     "questionCount",
     "questionsPerPage",
@@ -5165,6 +5187,33 @@ if (item.pdfDisplay && typeof item.pdfDisplay === "object") {
   layout.display = {
     ...(layout.display || {}),
     ...item.pdfDisplay
+  };
+}
+
+if (ADDITION_SUBTRACTION_PROGRESSION_IDS.has(item.id)) {
+  const mode = normalizedOptions.compositionMode || "full_progression";
+  const titles = {
+    full_progression: "Addition and Subtraction: Estimate, Solve, and Check",
+    compute: "Addition and Subtraction Computation",
+    estimate: "Addition and Subtraction Estimation",
+    apply: "Addition and Subtraction in Context",
+    reason_check: "Reason and Check",
+    integrated_mixed: "Addition and Subtraction Mixed Practice"
+  };
+  const instructions = {
+    full_progression: "Work through each concept in order. Finish with mixed practice.",
+    compute: "Solve each problem. Keep each place aligned.",
+    estimate: "Round both numbers to the named place, then estimate the answer.",
+    apply: "Choose addition or subtraction. Show a short calculation.",
+    reason_check: "Decide whether each answer is reasonable. Explain or correct it.",
+    integrated_mixed: "Use computation, estimation, application, and checking to complete each section."
+  };
+  layout.header = { ...(layout.header || {}), title: titles[mode], subtitle: "" };
+  layout.instruction = instructions[mode];
+  layout.display = {
+    ...(layout.display || {}),
+    progressionMode: mode,
+    progressionGrade: item.grades?.[0] === "grade4" ? 4 : 3
   };
 }
 

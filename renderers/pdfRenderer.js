@@ -88,6 +88,15 @@ function buildAnswerKeyItems(items) {
     showQuestionSentence: Boolean(it.showQuestionSentence),
     taskMode: it.taskMode || null,
     taskAction: it.taskAction || null,
+    family: it.family || null,
+    moduleId: it.moduleId || null,
+    recipeId: it.recipeId || null,
+    sequenceSection: it.sequenceSection || null,
+    numberDomain: it.numberDomain || null,
+    representation: it.representation || null,
+    progressionRole: it.progressionRole || null,
+    isIntegrated: Boolean(it.isIntegrated),
+    gradeBand: it.gradeBand || null,
     equationSupport: it.equationSupport || null,
     visual: it.visual || null,
     type: it.type || "equation",
@@ -3450,6 +3459,396 @@ function renderRoundingWholeNumberPage(doc, fonts, items, meta, instruction, pag
   drawFooter(doc, fonts, pageState.pageNum, meta);
 }
 
+const PROGRESSION_PAGE_COPY = Object.freeze({
+  compute: Object.freeze({
+    instruction: "Solve each addition or subtraction question. Keep each place aligned.",
+    connection: "Accurate computation gives you an exact answer to compare with an estimate."
+  }),
+  estimate: Object.freeze({
+    instruction: "Round both numbers to the named place, then estimate the answer.",
+    connection: "You solved exact answers. Now estimate so you can judge whether an answer makes sense."
+  }),
+  apply: Object.freeze({
+    instruction: "Read each problem. Show your work, write a Math Sentence, and answer the question.",
+    connection: "Use exact computation and estimation to choose and check the operation."
+  }),
+  reason_check: Object.freeze({
+    instruction: "Choose Yes or No. Then explain your choice or correct the answer.",
+    connection: "Use an estimate and the exact calculation to check whether each answer is reasonable."
+  }),
+  integrated_mixed: Object.freeze({
+    instruction: "Use the best strategy for each task. Show the response each task asks for.",
+    connection: "Bring together exact computation, estimation, application, and checking."
+  })
+});
+
+function drawProgressionConceptModel(doc, fonts, x, y, width, moduleId, model) {
+  if (!model) throw new Error(`Addition/subtraction progression is missing its ${moduleId} concept model.`);
+  const h = moduleId === "integrated_mixed" ? 50 : 68;
+  doc.save();
+  doc.strokeColor(pdfDesignTokens.colors.lightRule).lineWidth(pdfDesignTokens.rules.thin);
+  doc.roundedRect(x, y, width, h, 5).stroke();
+  setFont(doc, fonts.bold || fonts.regular, 9.5);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  doc.text("Example", x + 11, y + 8, { width: 56, lineBreak: false });
+  setFont(doc, fonts.regular, 10.2);
+
+  if (moduleId === "compute") {
+    const parts = String(model.expression).split(/\s([+−])\s/);
+    const operandWidth = 72;
+    const operandX = x + 82;
+    doc.text(parts[0], operandX, y + 7, { width: operandWidth, align: "right", lineBreak: false });
+    doc.text(`${parts[1] || "+"} ${parts[2] || ""}`, operandX - 10, y + 24, { width: operandWidth + 10, align: "right", lineBreak: false });
+    doc.moveTo(operandX + 9, y + 40).lineTo(operandX + operandWidth, y + 40).stroke();
+    setFont(doc, fonts.bold || fonts.regular, 10.2);
+    doc.text(model.result, operandX, y + 45, { width: operandWidth, align: "right", lineBreak: false });
+    setFont(doc, fonts.light || fonts.regular, 9.5);
+    doc.fillColor(pdfDesignTokens.colors.muted);
+    doc.text(model.cue, x + 180, y + 23, { width: width - 192, align: "left" });
+  } else if (moduleId === "estimate") {
+    doc.text(model.expression, x + 76, y + 8, { width: 125, lineBreak: false });
+    doc.text(`Rounded numbers: ${model.rounded}`, x + 76, y + 27, { width: 205, lineBreak: false });
+    doc.text(`Estimate: ${model.result}`, x + 290, y + 27, { width: 120, lineBreak: false });
+    setFont(doc, fonts.light || fonts.regular, 9.5);
+    doc.fillColor(pdfDesignTokens.colors.muted);
+    doc.text(model.cue, x + 76, y + 47, { width: width - 88, lineBreak: false });
+  } else if (moduleId === "apply") {
+    doc.text(model.context, x + 76, y + 8, { width: width - 88, lineBreak: false });
+    doc.text("Math Sentence:", x + 76, y + 29, { width: 78, lineBreak: false });
+    setFont(doc, fonts.bold || fonts.regular, 10.2);
+    doc.text(model.mathSentence, x + 154, y + 29, { width: 180, lineBreak: false });
+    setFont(doc, fonts.regular, 10.2);
+    doc.text("Answer:", x + 350, y + 29, { width: 45, lineBreak: false });
+    setFont(doc, fonts.bold || fonts.regular, 10.2);
+    doc.text(model.result, x + 398, y + 29, { width: width - 410, lineBreak: false });
+  } else if (moduleId === "reason_check") {
+    doc.text(model.claim, x + 76, y + 8, { width: 175, lineBreak: false });
+    doc.text(`Estimate: ${model.estimate}`, x + 260, y + 8, { width: 145, lineBreak: false });
+    setFont(doc, fonts.bold || fonts.regular, 10.2);
+    doc.text(model.decision, x + 76, y + 34, { width: width - 88, lineBreak: false });
+  } else {
+    setFont(doc, fonts.light || fonts.regular, 10);
+    doc.fillColor(pdfDesignTokens.colors.muted);
+    doc.text(model.cue, x + 76, y + 18, { width: width - 88, lineBreak: false });
+  }
+  doc.restore();
+  return h;
+}
+
+function drawProgressionComputeTask(doc, fonts, item, x, y, width, answerKey) {
+  const state = item.answerState || {};
+  const decimal = Number(state.decimalPlaces || 0) > 0;
+  doc.save();
+  setFont(doc, fonts.regular, 10.5);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  doc.text(`${item.id})`, x, y + 20, { width: 22, lineBreak: false });
+  setFont(doc, fonts.regular, decimal ? 11.2 : 11.6);
+  const a = String(state.displayA);
+  const b = `${item.operation === "add" ? "+" : "−"} ${state.displayB}`;
+  const answer = String(state.displayAnswer);
+  const digitSpace = doc.widthOfString("0");
+  const ruleWidth = Math.min(width - 26, Math.max(38, doc.widthOfString(a), doc.widthOfString(b), doc.widthOfString(answer)) + digitSpace);
+  const numberX = x + 24;
+  doc.text(a, numberX, y + 2, { width: ruleWidth, align: "right", lineBreak: false });
+  doc.text(b, numberX, y + 20, {
+    width: ruleWidth,
+    align: "right",
+    lineBreak: false
+  });
+  doc.strokeColor(pdfDesignTokens.colors.answerRule).lineWidth(0.8);
+  doc.moveTo(numberX, y + 38).lineTo(numberX + ruleWidth, y + 38).stroke();
+  if (answerKey) {
+    drawTextOnLine(doc, state.displayAnswer, numberX, y + 54, ruleWidth, fonts, {
+      align: "right",
+      fontSize: decimal ? 10.8 : 11.2,
+      formatThousands: false
+    });
+  }
+  doc.restore();
+}
+
+function drawProgressionEstimateTask(doc, fonts, item, x, y, width, answerKey) {
+  const state = item.answerState || {};
+  const placeLabel = item.taskAction.startsWith("round_decimal_operands_to_nearest_whole")
+    ? "Nearest whole"
+    : item.taskAction.startsWith("round_operands_to_nearest_thousand")
+      ? "Nearest thousand"
+      : item.taskAction.startsWith("round_operands_to_nearest_hundred")
+        ? "Nearest hundred"
+        : "Nearest ten";
+  doc.save();
+  setFont(doc, fonts.regular, 10.7);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  doc.text(`${item.id})  ${item.prompt}`, x, y + 2, { width: width - 94, lineBreak: false });
+  setFont(doc, fonts.light || fonts.regular, 9.2);
+  doc.fillColor(pdfDesignTokens.colors.muted);
+  doc.text(placeLabel, x + width - 92, y + 3, { width: 92, align: "right", lineBreak: false });
+  setFont(doc, fonts.regular, 9.7);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  doc.text("Rounded:", x + 24, y + 25, { width: 48, lineBreak: false });
+  const roundedAX = x + 74;
+  const roundedY = y + 39;
+  const roundedWidth = Math.min(52, (width - 128) / 2);
+  drawShortAnswerLine(doc, roundedAX, roundedY, roundedWidth);
+  doc.text(item.operation === "add" ? "+" : "−", roundedAX + roundedWidth + 5, y + 25, { width: 10, lineBreak: false });
+  const roundedBX = roundedAX + roundedWidth + 19;
+  drawShortAnswerLine(doc, roundedBX, roundedY, roundedWidth);
+  doc.text("Estimate:", x + 24, y + 51, { width: 48, lineBreak: false });
+  const estimateX = x + 74;
+  const estimateY = y + 65;
+  const estimateWidth = Math.min(92, width - 78);
+  drawShortAnswerLine(doc, estimateX, estimateY, estimateWidth);
+  if (answerKey) {
+    drawTextOnLine(doc, state.displayRoundedA, roundedAX, roundedY, roundedWidth, fonts, {
+      align: "center", fontSize: 9.5, formatThousands: false
+    });
+    drawTextOnLine(doc, state.displayRoundedB, roundedBX, roundedY, roundedWidth, fonts, {
+      align: "center", fontSize: 9.5, formatThousands: false
+    });
+    drawTextOnLine(doc, state.displayAnswer, estimateX, estimateY, estimateWidth, fonts, {
+      align: "center",
+      fontSize: 9.8,
+      formatThousands: false
+    });
+  }
+  doc.restore();
+}
+
+function drawProgressionApplicationTask(doc, fonts, item, x, y, width, answerKey, { compact = false } = {}) {
+  const state = item.answerState || {};
+  const workHeight = compact ? 27 : 42;
+  doc.save();
+  setFont(doc, fonts.regular, 10.8);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  doc.text(`${item.id})  ${item.prompt}`, x, y + 2, { width, height: 31, lineGap: 1 });
+  setFont(doc, fonts.light || fonts.regular, 9.2);
+  doc.fillColor(pdfDesignTokens.colors.muted);
+  doc.text("Work", x + 24, y + 35, { width: 30, lineBreak: false });
+  doc.strokeColor(pdfDesignTokens.colors.answerRule).lineWidth(0.7);
+  doc.roundedRect(x + 58, y + 34, width - 70, workHeight, 3).stroke();
+  const mathY = y + 48 + workHeight;
+  setFont(doc, fonts.regular, 9.8);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  doc.text("Math Sentence:", x + 24, mathY, { width: 76, lineBreak: false });
+  const mathX = x + 102;
+  const mathWidth = Math.min(210, width - 270);
+  drawShortAnswerLine(doc, mathX, mathY + 14, mathWidth);
+  const answerLabelX = mathX + mathWidth + 18;
+  doc.text("Answer:", answerLabelX, mathY, { width: 42, lineBreak: false });
+  const answerX = answerLabelX + 44;
+  const answerWidth = Math.max(70, x + width - answerX);
+  drawShortAnswerLine(doc, answerX, mathY + 14, answerWidth);
+  if (answerKey) {
+    drawTextOnLine(doc, state.displayMathSentence, mathX, mathY + 14, mathWidth, fonts, { align: "center", fontSize: 9.6, formatThousands: false });
+    drawTextOnLine(doc, item.answer, answerX, mathY + 14, answerWidth, fonts, { align: "center", fontSize: 10, formatThousands: true });
+  }
+  doc.restore();
+}
+
+function drawProgressionReasonTask(doc, fonts, item, x, y, width, answerKey) {
+  const state = item.answerState || {};
+  doc.save();
+  setFont(doc, fonts.regular, 10.6);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  doc.text(`${item.id}) ${item.prompt}`, x, y + 1, { width, lineBreak: false });
+  drawWholeNumberChoice(doc, fonts, x + 48, y + 31, "Yes", answerKey && state.expectedChoice === "Yes");
+  drawWholeNumberChoice(doc, fonts, x + 120, y + 31, "No", answerKey && state.expectedChoice === "No");
+  setFont(doc, fonts.light || fonts.regular, 9.2);
+  doc.fillColor(pdfDesignTokens.colors.muted);
+  doc.text("Explain:", x + 198, y + 24, { width: 42, lineBreak: false });
+  const lineX = x + 244;
+  const lineY = y + 40;
+  const lineWidth = width - 244;
+  drawShortAnswerLine(doc, lineX, lineY, lineWidth);
+  if (answerKey) {
+    drawTextOnLine(doc, state.sampleExplanation, lineX, lineY, lineWidth, fonts, { align: "left", fontSize: 8.3 });
+  }
+  doc.restore();
+}
+
+function drawProgressionPageChrome(doc, fonts, meta, instruction, pageNum) {
+  const cb = layout.page.contentBox;
+  doc.x = cb.x;
+  doc.y = cb.y;
+  const y = renderHeader(doc, fonts, meta);
+  setFont(doc, fonts.light || fonts.regular, 10.5);
+  doc.fillColor(pdfDesignTokens.colors.muted);
+  doc.text(instruction, cb.x, y - 12, { width: cb.width, lineBreak: false });
+  drawFooter(doc, fonts, pageNum, meta);
+}
+
+function progressionPageStart(doc, fonts, heading, moduleId, model) {
+  const cb = layout.page.contentBox;
+  const copy = PROGRESSION_PAGE_COPY[moduleId];
+  let y = 151;
+  setFont(doc, fonts.bold || fonts.regular, 12);
+  doc.fillColor(pdfDesignTokens.colors.text);
+  doc.text(heading, cb.x, y, { width: cb.width, lineBreak: false });
+  y += 21;
+  setFont(doc, fonts.light || fonts.regular, 9.5);
+  doc.fillColor(pdfDesignTokens.colors.muted);
+  doc.text(copy.connection, cb.x, y, { width: cb.width, lineBreak: false });
+  y += 20;
+  y += drawProgressionConceptModel(doc, fonts, cb.x, y, cb.width, moduleId, model) + 14;
+  return y;
+}
+
+function renderProgressionComputeModule(doc, fonts, items, meta, instruction, pageState, answerKey, { model = null, heading = "Compute" } = {}) {
+  const cb = layout.page.contentBox;
+  const gap = 10;
+  const columns = 4;
+  const rows = 5;
+  const colW = (cb.width - gap * (columns - 1)) / columns;
+  const start = progressionPageStart(doc, fonts, heading, "compute", model);
+  items.forEach((item, index) => {
+    const column = Math.floor(index / rows);
+    const row = index % rows;
+    drawProgressionComputeTask(doc, fonts, item, cb.x + column * (colW + gap), start + row * 76, colW, answerKey);
+  });
+  drawProgressionPageChrome(doc, fonts, meta, PROGRESSION_PAGE_COPY.compute.instruction, pageState.pageNum);
+}
+
+function renderProgressionEstimateModule(doc, fonts, items, meta, instruction, pageState, answerKey, { heading = "Estimate", model = null } = {}) {
+  const cb = layout.page.contentBox;
+  const gap = 24;
+  const colW = (cb.width - gap) / 2;
+  const start = progressionPageStart(doc, fonts, heading, "estimate", model);
+  items.forEach((item, index) => {
+    const column = Math.floor(index / 6);
+    const row = index % 6;
+    drawProgressionEstimateTask(doc, fonts, item, cb.x + column * (colW + gap), start + row * 72, colW, answerKey);
+  });
+  drawProgressionPageChrome(doc, fonts, meta, PROGRESSION_PAGE_COPY.estimate.instruction, pageState.pageNum);
+}
+
+function renderProgressionApplyModule(doc, fonts, items, meta, instruction, pageState, answerKey, { heading = "Apply in context", model = null, addPage } = {}) {
+  const cb = layout.page.contentBox;
+  const pages = [items.slice(0, 3), items.slice(3, 6)];
+  pages.forEach((pageItems, pageIndex) => {
+    if (pageIndex > 0) addPage();
+    const start = progressionPageStart(doc, fonts, `${heading}${pages.length > 1 ? ` (${pageIndex + 1} of ${pages.length})` : ""}`, "apply", model);
+    pageItems.forEach((item, index) => {
+      drawProgressionApplicationTask(doc, fonts, item, cb.x, start + index * 130, cb.width, answerKey);
+    });
+    drawProgressionPageChrome(doc, fonts, meta, PROGRESSION_PAGE_COPY.apply.instruction, pageState.pageNum);
+  });
+}
+
+function renderProgressionReasonModule(doc, fonts, items, meta, instruction, pageState, answerKey, { heading = "Reason and check", model = null } = {}) {
+  const cb = layout.page.contentBox;
+  const start = progressionPageStart(doc, fonts, heading, "reason_check", model);
+  items.forEach((item, index) => {
+    drawProgressionReasonTask(doc, fonts, item, cb.x, start + index * 53, cb.width, answerKey);
+  });
+  drawProgressionPageChrome(doc, fonts, meta, PROGRESSION_PAGE_COPY.reason_check.instruction, pageState.pageNum);
+}
+
+function renderProgressionIntegratedPages(doc, fonts, items, meta, instruction, pageState, answerKey, addPage) {
+  const cb = layout.page.contentBox;
+  const gap = 24;
+  const colW = (cb.width - gap) / 2;
+  const compute = items.filter((item) => item.taskMode === "compute");
+  const estimate = items.filter((item) => item.taskMode === "estimate");
+  const apply = items.filter((item) => item.taskMode === "apply");
+  const reason = items.filter((item) => item.taskMode === "reason_check");
+  if ([compute.length, estimate.length, apply.length, reason.length].join("|") !== "4|3|3|2") {
+    throw new Error("Integrated mixed practice requires 4 compute, 3 estimate, 3 apply, and 2 reason/check tasks.");
+  }
+
+  const model = items[0]?.answerState?.conceptModel;
+  let y = progressionPageStart(doc, fonts, "Integrated mixed practice (1 of 2)", "integrated_mixed", model);
+  y = drawWholeNumberSectionHeading(doc, fonts, cb.x, y, cb.width, "Compute", "Solve exactly.");
+  compute.forEach((item, index) => {
+    const column = Math.floor(index / 2);
+    const row = index % 2;
+    drawProgressionComputeTask(doc, fonts, item, cb.x + column * (colW + gap), y + row * 64, colW, answerKey);
+  });
+  y += 136;
+  const estimateStart = drawWholeNumberSectionHeading(doc, fonts, cb.x, y, cb.width, "Estimate", "Round both numbers, then estimate.");
+  estimate.forEach((item, index) => {
+    drawProgressionEstimateTask(doc, fonts, item, cb.x, estimateStart + index * 72, cb.width, answerKey);
+  });
+  drawProgressionPageChrome(doc, fonts, meta, PROGRESSION_PAGE_COPY.integrated_mixed.instruction, pageState.pageNum);
+
+  addPage();
+  y = progressionPageStart(doc, fonts, "Integrated mixed practice (2 of 2)", "integrated_mixed", model);
+  y = drawWholeNumberSectionHeading(doc, fonts, cb.x, y, cb.width, "Apply in context", "Show your work, Math Sentence, and answer.");
+  apply.forEach((item, index) => {
+    drawProgressionApplicationTask(doc, fonts, item, cb.x, y + index * 90, cb.width, answerKey, { compact: true });
+  });
+  y += 276;
+  const reasonStart = drawWholeNumberSectionHeading(doc, fonts, cb.x, y, cb.width, "Reason and check", "Use an estimate or exact result to explain your choice.");
+  reason.forEach((item, index) => {
+    drawProgressionReasonTask(doc, fonts, item, cb.x, reasonStart + index * 53, cb.width, answerKey);
+  });
+  drawProgressionPageChrome(doc, fonts, meta, PROGRESSION_PAGE_COPY.integrated_mixed.instruction, pageState.pageNum);
+}
+
+function renderAdditionSubtractionProgressionPages(doc, fonts, items, meta, instruction, pageState, display, answerKey) {
+  const mode = String(display.progressionMode || items[0]?.recipeId || "full_progression");
+  const expectedCounts = { full_progression: 58, compute: 20, estimate: 12, apply: 6, reason_check: 8, integrated_mixed: 12 };
+  if (items.length !== expectedCounts[mode]) {
+    throw new Error(`Addition/subtraction mode '${mode}' expected ${expectedCounts[mode]} questions, received ${items.length}.`);
+  }
+  let pageCount = 0;
+  const addPage = () => {
+    if (pageCount > 0) {
+      doc.addPage();
+      pageState.pageNum += 1;
+    }
+    pageCount += 1;
+  };
+  const renderModule = (moduleId, renderer, options = {}) => {
+    addPage();
+    const moduleItems = mode === "full_progression"
+      ? items.filter((item) => item.sequenceSection === moduleId)
+      : items;
+    renderer(doc, fonts, moduleItems, meta, instruction, pageState, answerKey, { ...options, addPage });
+  };
+
+  if (mode === "full_progression") {
+    const sectionModel = (section) => items.find((item) => item.sequenceSection === section)?.answerState?.conceptModel;
+    renderModule("compute", renderProgressionComputeModule, { model: sectionModel("compute"), heading: "Concept 1: Compute" });
+    renderModule("estimate", renderProgressionEstimateModule, { model: sectionModel("estimate"), heading: "Concept 2: Estimate" });
+    renderModule("apply", renderProgressionApplyModule, { model: sectionModel("apply"), heading: "Concept 3: Apply in context" });
+    renderModule("reason_check", renderProgressionReasonModule, { model: sectionModel("reason_check"), heading: "Concept 4: Reason and check" });
+    addPage();
+    renderProgressionIntegratedPages(
+      doc,
+      fonts,
+      items.filter((item) => item.sequenceSection === "integrated_mixed"),
+      meta,
+      instruction,
+      pageState,
+      answerKey,
+      addPage
+    );
+    return;
+  }
+  if (mode === "compute") {
+    renderModule("compute", renderProgressionComputeModule, { model: items[0].answerState?.conceptModel, heading: "Computation practice" });
+    return;
+  }
+  if (mode === "estimate") {
+    renderModule("estimate", renderProgressionEstimateModule, { model: items[0].answerState?.conceptModel, heading: "Estimation practice" });
+    return;
+  }
+  if (mode === "apply") {
+    renderModule("apply", renderProgressionApplyModule, { model: items[0].answerState?.conceptModel, heading: "Application practice" });
+    return;
+  }
+  if (mode === "reason_check") {
+    renderModule("reason_check", renderProgressionReasonModule, { model: items[0].answerState?.conceptModel, heading: "Reasoning practice" });
+    return;
+  }
+  if (mode === "integrated_mixed") {
+    addPage();
+    renderProgressionIntegratedPages(doc, fonts, items, meta, instruction, pageState, answerKey, addPage);
+    return;
+  }
+  throw new Error(`Unsupported addition/subtraction progression mode '${mode}'.`);
+}
+
 function renderWholeNumberFamilyPage(doc, fonts, contentObject, pageState, layoutObject) {
   const display = layoutObject?.display || {};
   const family = String(display.wholeNumberFamilyLayout || "");
@@ -3462,6 +3861,10 @@ function renderWholeNumberFamilyPage(doc, fonts, contentObject, pageState, layou
   }
   if (family === "rounding") {
     renderRoundingWholeNumberPage(doc, fonts, items, meta, instruction, pageState, display, Boolean(display.answerKey));
+    return true;
+  }
+  if (family === "additionSubtractionProgression") {
+    renderAdditionSubtractionProgressionPages(doc, fonts, items, meta, instruction, pageState, display, Boolean(display.answerKey));
     return true;
   }
   return false;
@@ -5457,7 +5860,22 @@ function renderAnswerKey(doc, fonts, contentObject, options, pageState, layoutOb
     };
   });
 
-  const answerKeyMeta = compactWordProblemAnswerKey
+  const structuredProgressionAnswerKey = layoutObject?.display?.wholeNumberFamilyLayout === "additionSubtractionProgression";
+  const progressionAnswerKeyTitles = {
+    full_progression: "Estimate, Solve, and Check - Answer Key",
+    compute: "Computation Practice - Answer Key",
+    estimate: "Estimation Practice - Answer Key",
+    apply: "Addition/Subtraction in Context - Answer Key",
+    reason_check: "Reason and Check - Answer Key",
+    integrated_mixed: "Mixed Practice - Answer Key"
+  };
+  const answerKeyMeta = structuredProgressionAnswerKey
+    ? {
+        ...meta,
+        title: progressionAnswerKeyTitles[layoutObject?.display?.progressionMode] || "Estimate, Solve, and Check - Answer Key",
+        subheading: ""
+      }
+    : compactWordProblemAnswerKey
     ? {
         ...meta,
         title: safeStr(meta.title).trim() || "Worksheet",

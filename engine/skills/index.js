@@ -29,6 +29,7 @@ function getSkillDefinition(skillKey) {
   addition_strategies: "addition_subtraction_facts.json",
   addition_subtraction_application: "additionSubtractionWordProblems.json",
   addition_subtraction_relationships: "addition_subtraction_facts.json",
+  addition_subtraction_estimate_solve_check: "addition_subtraction_estimate_solve_check.json",
   number_relationships: "place_value_representation.json",
   number_magnitude: "place_value_representation.json",
   number_representation: "place_value_representation.json",

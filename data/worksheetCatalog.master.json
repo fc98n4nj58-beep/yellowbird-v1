@@ -1,10 +1,10 @@
 {
   "summary": {
-    "generatedAt": "2026-08-12T16:50:04.303Z",
-    "curatedCount": 56,
+    "generatedAt": "2026-08-13T17:25:57.184Z",
+    "curatedCount": 58,
     "generatedCount": 277,
-    "totalCount": 333,
-    "readyCount": 104,
+    "totalCount": 335,
+    "readyCount": 106,
     "partialCount": 5,
     "plannedCount": 11,
     "generatedStatusCount": 213
@@ -4025,6 +4025,66 @@
       "sourceType": "generated"
     },
     {
+      "id": "g3_addition_subtraction_estimate_solve_check",
+      "title": "Addition and Subtraction: Estimate, Solve, and Check",
+      "shortTitle": "Estimate, Solve, and Check",
+      "subject": "Math",
+      "grades": [
+        "grade3"
+      ],
+      "gradeLabels": [
+        "Grade 3"
+      ],
+      "domain": "Addition and Subtraction",
+      "skillKey": "addition_subtraction_estimate_solve_check",
+      "worksheetFamily": "addition_subtraction_strategy",
+      "activityTypes": [
+        "addition_subtraction_estimate_solve_check"
+      ],
+      "generatorOptions": {
+        "compositionMode": "full_progression",
+        "questionCount": 58,
+        "wholeNumberCeiling": 1000,
+        "estimationPlaces": [
+          10,
+          100
+        ],
+        "explanationLineLimit": 1
+      },
+      "studentInstruction": "Work through each concept in order. Finish with mixed practice.",
+      "templateId": "equation_practice",
+      "pdfLayout": {
+        "columns": 2,
+        "maxProblemsPerPage": 16
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "wholeNumberFamilyLayout": "additionSubtractionProgression",
+        "progressionGrade": 3,
+        "progressionMode": "full_progression"
+      },
+      "status": "ready",
+      "difficulty": "medium",
+      "estimatedTimeMinutes": 45,
+      "hasAnswerKey": true,
+      "tags": [
+        "addition",
+        "subtraction",
+        "estimation",
+        "algorithms",
+        "reasonableness",
+        "grade 3"
+      ],
+      "curriculumTags": [
+        "B2",
+        "B2.3",
+        "B2.4",
+        "B2.5"
+      ],
+      "description": "Students connect accurate addition and subtraction within 1,000 with estimation, application, and reasonableness checks.",
+      "sourceType": "curated"
+    },
+    {
       "id": "g3_complete_a_graph",
       "title": "Complete a Graph",
       "shortTitle": "Complete a Graph",
@@ -5889,6 +5949,67 @@
       "curriculumTags": [],
       "description": "Students solve word problems in context.",
       "sourceType": "generated"
+    },
+    {
+      "id": "g4_addition_subtraction_estimate_solve_check",
+      "title": "Addition and Subtraction: Estimate, Solve, and Check",
+      "shortTitle": "Estimate, Solve, and Check",
+      "subject": "Math",
+      "grades": [
+        "grade4"
+      ],
+      "gradeLabels": [
+        "Grade 4"
+      ],
+      "domain": "Addition and Subtraction",
+      "skillKey": "addition_subtraction_estimate_solve_check",
+      "worksheetFamily": "addition_subtraction_strategy",
+      "activityTypes": [
+        "addition_subtraction_estimate_solve_check"
+      ],
+      "generatorOptions": {
+        "compositionMode": "full_progression",
+        "questionCount": 58,
+        "wholeNumberCeiling": 10000,
+        "decimalPrecision": 1,
+        "estimationPlaces": [
+          1,
+          1000
+        ],
+        "explanationLineLimit": 1
+      },
+      "studentInstruction": "Work through each concept in order. Finish with mixed practice.",
+      "templateId": "equation_practice",
+      "pdfLayout": {
+        "columns": 2,
+        "maxProblemsPerPage": 12
+      },
+      "pdfDisplay": {
+        "hideSubtitle": true,
+        "wholeNumberFamilyLayout": "additionSubtractionProgression",
+        "progressionGrade": 4,
+        "progressionMode": "full_progression"
+      },
+      "status": "ready",
+      "difficulty": "medium",
+      "estimatedTimeMinutes": 45,
+      "hasAnswerKey": true,
+      "tags": [
+        "addition",
+        "subtraction",
+        "estimation",
+        "decimals",
+        "algorithms",
+        "reasonableness",
+        "grade 4"
+      ],
+      "curriculumTags": [
+        "B2",
+        "B2.3",
+        "B2.4"
+      ],
+      "description": "Students solve and estimate whole-number and decimal-tenths addition and subtraction, then apply and check their reasoning.",
+      "sourceType": "curated"
     },
     {
       "id": "grade4_data_display_graphing_complete_graph",

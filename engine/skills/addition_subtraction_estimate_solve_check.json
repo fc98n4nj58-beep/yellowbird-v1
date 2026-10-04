@@ -1,0 +1,8 @@
+{
+  "skill": "addition_subtraction_estimate_solve_check",
+  "title": "Addition and Subtraction: Estimate, Solve, and Check",
+  "description": "Connect accurate addition and subtraction with estimation, application, and reasonableness checks.",
+  "activities": [
+    "addition_subtraction_estimate_solve_check"
+  ]
+}

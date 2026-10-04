@@ -1600,5 +1600,13 @@ generateWordProblem.generateAdditionWordProblem = generateAdditionWordProblem;
 generateWordProblem.generateSubtractionWordProblem = generateSubtractionWordProblem;
 generateWordProblem.generateMissingAddendWordProblem = generateMissingAddendWordProblem;
 generateWordProblem.generateMultiplicationWordProblem = generateMultiplicationWordProblem;
+generateWordProblem.pickAdditionSubtractionApplicationContext = function pickAdditionSubtractionApplicationContext(options = {}) {
+  const grade = Number(options.grade || 3);
+  const random = options.random || Math.random;
+  const pools = grade === 4 ? grade4StoryPools(options) : grade3StoryPools(options);
+  return grade === 4
+    ? pickGrade4StoryContext(pools.names, pools.objects, random, "estimateSolveCheck", options)
+    : pickGrade3StoryContext(pools.names, pools.objects, random, "estimateSolveCheck", options);
+};
 
 module.exports = generateWordProblem;
